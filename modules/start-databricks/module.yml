@@ -1,0 +1,20 @@
+title: Get started with Azure Databricks
+description: In this lesson, you'll learn how to get started with Azure Databricks.
+modality: lesson
+level: 200
+duration: 40 minutes
+topics:
+  - Azure Databricks
+  - AI agents
+audience:
+  - Developer
+  - Data Scientist
+  - Data Engineer
+pages:
+  - 01-introduction.md
+  - 02-azure-databricks.md
+  - 03-workloads.md
+  - 04-key-concepts.md
+  - 05-data-governance-using-unity-catalog-and-microsoft-purview.md
+  - 06-exercise-explore-databricks.md
+  - 08-summary.md
