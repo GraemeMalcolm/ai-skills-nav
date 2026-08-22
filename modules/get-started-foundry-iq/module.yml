@@ -1,0 +1,18 @@
+title: Get started with Foundry IQ
+description: In this lesson, you'll learn how to use Foundry IQ to provide an agent with knowledge.
+modality: lesson
+level: 200
+duration: 30 minutes
+topics:
+  - Microsoft Foundry
+  - AI agents
+  - Foundry IQ
+audience:
+  - Developer
+pages:
+  - 1-introduction.md
+  - 2-explore-foundry-iq.md
+  - 3-knowledge-bases.md
+  - 4-connect-agents.md
+  - 5-exercise.md
+  - 7-summary.md

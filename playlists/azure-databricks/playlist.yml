@@ -1,0 +1,12 @@
+title: Azure Databricks
+description: In this playlist, you'll learn how to get started with Azure Databricks.
+level: 200
+duration: 40 minutes
+topics:
+  - Azure Databricks
+audience:
+  - Developer
+  - Data Scientist
+  - Data Engineer
+modules:
+  - start-databricks
