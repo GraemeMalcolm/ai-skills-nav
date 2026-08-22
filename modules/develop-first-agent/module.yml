@@ -1,0 +1,16 @@
+title: Develop your first agent with Microsoft Foundry
+description: In this lesson, you'll learn how to develop an AI agent with Microsoft Foundry.
+modality: lesson
+level: 200
+duration: 40 minutes
+topics:
+  - Microsoft Foundry
+  - AI agents
+audience:
+  - Developer
+pages:
+  - 01-introduction.md
+  - 02-foundry.md
+  - 03-create-agent.md
+  - 04-exercise-create-an-agent.md
+  - 05-summary.md

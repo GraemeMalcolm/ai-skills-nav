@@ -1,0 +1,11 @@
+title: Agent Developer
+description: In this playlist, you'll learn how to develop AI agents.
+level: 200
+duration: 40 minutes
+topics:
+  - Microsoft Foundry
+  - AI agents
+audience:
+  - Developer
+modules:
+  - develop-first-agent

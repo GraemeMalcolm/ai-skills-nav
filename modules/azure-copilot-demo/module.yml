@@ -1,0 +1,11 @@
+title: Azure Copilot Demo
+description: In this video, you'll see how to manage virtual machines in Azure using Azure Copilot.
+modality: video
+level: 100
+duration: 10 minutes
+topics:
+  - Azure
+audience:
+  - Administrator
+pages:
+  - 01-azure-copilot.md
