@@ -121,8 +121,19 @@ function videoEmbed(url) {
   return `<div class="video-frame"><iframe src="${escapeHtml(source)}" title="Embedded video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>`;
 }
 
-function replaceVideos(markdown) {
-  return markdown.replace(/^\s*\[!VIDEO\s*:?\s*(https?:\/\/[^\]\s]+)\]\s*$/gim, (match, url) => videoEmbed(url));
+function renderMarkdown(markdown) {
+  const videoPattern = /^\s*\[!VIDEO\s*:?\s*(https?:\/\/[^\]\s]+)\]\s*$/gim;
+  const chunks = [];
+  let cursor = 0;
+  for (const match of markdown.matchAll(videoPattern)) {
+    const beforeVideo = markdown.slice(cursor, match.index).trim();
+    if (beforeVideo) chunks.push(marked.parse(beforeVideo));
+    chunks.push(videoEmbed(match[1]));
+    cursor = match.index + match[0].length;
+  }
+  const afterVideo = markdown.slice(cursor).trim();
+  if (afterVideo) chunks.push(marked.parse(afterVideo));
+  return chunks.join("\n");
 }
 
 function renderZones(markdown, groupSeed) {
@@ -134,7 +145,7 @@ function renderZones(markdown, groupSeed) {
 
   const flushPlain = () => {
     const value = plain.join("\n").trim();
-    if (value) chunks.push(marked.parse(replaceVideos(value)));
+    if (value) chunks.push(renderMarkdown(value));
     plain = [];
   };
 
@@ -155,7 +166,7 @@ function renderZones(markdown, groupSeed) {
       while (index < lines.length && !/^::: zone-end\s*$/.test(lines[index])) content.push(lines[index++]);
       if (index >= lines.length) throw new Error(`Unclosed zone pivot "${start[1]}"`);
       index++;
-      zones.push({ title: start[1], html: marked.parse(replaceVideos(content.join("\n"))) });
+      zones.push({ title: start[1], html: renderMarkdown(content.join("\n")) });
       const blankStart = index;
       while (index < lines.length && !lines[index].trim()) index++;
       if (!/^::: zone pivot=/.test(lines[index] || "")) {
