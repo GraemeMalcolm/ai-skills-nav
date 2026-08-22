@@ -1,4 +1,4 @@
->[!VIDEO https://learn-video.azurefd.net/vod/player?id=d4fcf5c1-5d99-439c-8bba-157f93385e15]
+[!VIDEO https://learn-video.azurefd.net/vod/player?id=d4fcf5c1-5d99-439c-8bba-157f93385e15]
 
 To use Azure Databricks, you must create an Azure Databricks workspace in your Azure subscription. A workspace is an Azure Databricks deployment in a cloud service account. It provides a unified environment for working with Azure Databricks assets for a specified set of users.
 
@@ -17,16 +17,14 @@ When you create a workspace, you must specify:
   - **Premium** - Role-based access controls, Unity Catalog, SQL, Mosaic AI, serverless compute, Genie Code, and other enterprise-level features.
   - **Trial** - A 14-day free trial of a Premium-level workspace
 
-  > [!NOTE]
-  > The Standard tier is no longer available for new workspaces as of April 1, 2026. All new workspaces are created on the Premium tier.
+  > **NOTE**: The Standard tier is no longer available for new workspaces as of April 1, 2026. All new workspaces are created on the Premium tier.
 
 - **Workspace type**:
   - **Serverless** - Pre-configured with serverless compute and managed storage. Recommended for most use cases.
   - **Hybrid** (also called Classic) - Provisions compute and storage in your Azure subscription. Best for custom networking or on-premises connectivity.
 - **Managed Resource Group name** (optional): an automatically created resource group where Azure provisions and manages the infrastructure resources needed for your Databricks workspace.
 
-> [!TIP]
-> A **Free Edition** is available for students and educators with no time limit and no payment required, though it has daily usage limits and no access to classic compute. See [Sign up for Azure Databricks](/azure/databricks/getting-started/free-trial-vs-free-edition) for a comparison.
+> **TIP**: A **Free Edition** is available for students and educators with no time limit and no payment required, though it has daily usage limits and no access to classic compute. See [Sign up for Azure Databricks](/azure/databricks/getting-started/free-trial-vs-free-edition) for a comparison.
 
 ![Screenshot of Azure Databricks in the Azure Portal.](../media/01-azure-databricks.png)
 
@@ -71,7 +69,7 @@ The workspace is available in **multiple languages.** To change the workspace la
 
 ## Get help from Genie Code
 
->[!VIDEO https://learn-video.azurefd.net/vod/player?id=06416086-5e53-47c0-8804-8387d1973871]
+[!VIDEO https://learn-video.azurefd.net/vod/player?id=06416086-5e53-47c0-8804-8387d1973871]
 
 **Genie Code** (formerly Databricks Assistant) is an AI-powered pair programmer and support tool that helps you work more efficiently in Databricks by generating, explaining, and fixing code or queries directly in notebooks, dashboards, and files.
 
