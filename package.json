@@ -1,0 +1,13 @@
+{
+  "name": "ai-skills-nav",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static learning site generator for AI Skills Navigator content.",
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "marked": "^16.2.1"
+  }
+}
