@@ -206,7 +206,7 @@ function icon(name) {
   return icons[name];
 }
 
-function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills Navigator", bodyClass = "" }) {
+function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills Nav", bodyClass = "" }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
@@ -216,7 +216,7 @@ function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f5f2">
-  <title>${escapeHtml(title)} | AI Skills Navigator</title>
+  <title>${escapeHtml(title)} | AI Skills Nav</title>
   <link rel="stylesheet" href="${styles}">
   <script src="${script}" defer></script>
 </head>
@@ -366,7 +366,7 @@ async function build() {
   }
 
   const homeFile = path.join(outputRoot, "index.html");
-  const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Navigator</p><h1>Skilling in the Name of...</h1><p>Choose a curated path or jump straight into a module.</p></section>
+  const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p>Choose a curated path or jump straight into a module.</p></section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Playlists</h2></div><div class="card-grid">${playlists.map((item) => card(homeFile, item, "playlists")).join("")}</div></section>
     <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Explore by topic</p><h2>Modules</h2></div><div class="card-grid">${modules.map((item) => card(homeFile, item, "modules")).join("")}</div></section>`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", content: homeContent, bodyClass: "home-page" }));

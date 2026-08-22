@@ -1,4 +1,4 @@
-# AI Skills Navigator
+# AI Skills Nav
 
 This repository contains Markdown and YAML source for a GitHub Pages learning site. The generated site provides a catalog of playlists and modules, playlist navigation, ordered module pages, zone pivots, embedded videos, and Markdown includes.
 
