@@ -1,5 +1,6 @@
 ---
 title: Exercise - Explore computer vision
+skillable_lab_id: "00005"
 ---
 
 > **TIP**: A hosted environment with an online virtual machine is provided for this lab. Alternatively, you can complete the lab using your own local computer and cloud subscription.

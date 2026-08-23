@@ -1,5 +1,6 @@
 ---
 title: Exercise - Explore information extraction
+skillable_lab_id: "00006"
 ---
 
 > **TIP**: A hosted environment with an online virtual machine is provided for this lab. Alternatively, you can complete the lab using your own local computer and cloud subscription.
