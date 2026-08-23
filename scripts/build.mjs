@@ -242,12 +242,14 @@ function agentFlyout(outputFile, avatar) {
   const avatarImage = relativeUrl(outputFile, path.join(avatarRoot, "avatar.png"));
   const knowledgeUrl = relativeUrl(outputFile, path.join(avatarRoot, "knowledge.json"));
   const audioRoot = relativeUrl(outputFile, path.join(avatarRoot, "audio"));
+  const moderationUrl = relativeUrl(outputFile, path.join(outputRoot, "assets", "moderation.txt"));
   const config = escapeHtml(JSON.stringify({
     name: avatar.name,
     welcomeMessage: avatar["welcome-message"],
     suggestedPrompts: avatar["suggested-prompts"],
     knowledgeUrl,
     audioRoot,
+    moderationUrl,
   }));
   return `<div class="agent" data-agent-config="${config}">
     <button class="agent-launcher" type="button" aria-label="Chat with ${escapeHtml(avatar.name)}" aria-expanded="false" aria-controls="agent-panel"><img src="${avatarImage}" alt=""><span>Ask ${escapeHtml(avatar.name)}</span></button>
@@ -459,7 +461,7 @@ async function build() {
     if (!Array.isArray(knowledge) || knowledge.some((category) => !Array.isArray(category.documents))) {
       throw new Error(`Avatar ${avatar.slug} has invalid knowledge.json content`);
     }
-    const audioFiles = ["looking.wav", "no_results.wav", "sorry.wav", ...Array.from({ length: 7 }, (_, index) => `response_${index + 1}.wav`)];
+    const audioFiles = ["looking.wav", "no_results.wav", "search_results.wav", "sorry.wav", ...Array.from({ length: 7 }, (_, index) => `response_${index + 1}.wav`)];
     for (const file of audioFiles) {
       if (!(await exists(path.join(avatar.directory, "audio", file)))) throw new Error(`Avatar ${avatar.slug} is missing audio/${file}`);
     }
@@ -507,6 +509,7 @@ async function build() {
   await Promise.all([
     copyFile(path.join(root, "site", "styles.css"), path.join(outputRoot, "assets", "styles.css")),
     copyFile(path.join(root, "site", "app.js"), path.join(outputRoot, "assets", "app.js")),
+    copyFile(path.join(root, "site", "moderation.txt"), path.join(outputRoot, "assets", "moderation.txt")),
     writeFile(path.join(outputRoot, ".nojekyll"), "", "utf8"),
   ]);
   console.log(`Built ${modules.length} modules and ${playlists.length} playlists in dist/`);

@@ -175,10 +175,15 @@ if (agent) {
   const submitButton = form.querySelector('button[type="submit"]');
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const stopWords = new Set(["a", "an", "and", "are", "can", "do", "for", "how", "i", "in", "is", "it", "me", "of", "on", "or", "the", "to", "what", "with", "you"]);
+  const bingStopWords = new Set([...stopWords, "about", "ask", "could", "describe", "documentation", "explain", "find", "give", "help", "know", "learn", "microsoft", "need", "please", "search", "show", "tell", "want", "would"]);
   let keywordMap = new Map();
+  let vocabulary = [];
   let knowledgePromise;
+  let moderationPromise;
+  let prohibitedPatterns = [];
   let activeAudio;
   let recognition;
+  const mcp = { endpoint: "https://learn.microsoft.com/api/mcp", protocolVersion: "2025-06-18", sessionId: null, nextId: 1, tool: null, initPromise: null };
 
   const normalize = (value) => value.toLocaleLowerCase().replace(/[^a-z0-9+#.-]+/g, " ").trim().replace(/\s+/g, " ");
 
@@ -186,6 +191,86 @@ if (agent) {
     activeAudio?.pause();
     activeAudio = new Audio(`${config.audioRoot}/${file}`);
     activeAudio.play().catch(() => {});
+  };
+
+  const jaroWinkler = (left, right) => {
+    if (left === right) return 1;
+    if (!left.length || !right.length) return 0;
+    const range = Math.max(0, Math.floor(Math.max(left.length, right.length) / 2) - 1);
+    const leftMatches = Array(left.length).fill(false);
+    const rightMatches = Array(right.length).fill(false);
+    let matches = 0;
+    let transpositions = 0;
+    for (let leftIndex = 0; leftIndex < left.length; leftIndex++) {
+      const start = Math.max(0, leftIndex - range);
+      const end = Math.min(leftIndex + range + 1, right.length);
+      for (let rightIndex = start; rightIndex < end; rightIndex++) {
+        if (rightMatches[rightIndex] || left[leftIndex] !== right[rightIndex]) continue;
+        leftMatches[leftIndex] = true;
+        rightMatches[rightIndex] = true;
+        matches++;
+        break;
+      }
+    }
+    if (!matches) return 0;
+    let rightIndex = 0;
+    for (let leftIndex = 0; leftIndex < left.length; leftIndex++) {
+      if (!leftMatches[leftIndex]) continue;
+      while (!rightMatches[rightIndex]) rightIndex++;
+      if (left[leftIndex] !== right[rightIndex]) transpositions++;
+      rightIndex++;
+    }
+    const jaro = (matches / left.length + matches / right.length + (matches - transpositions / 2) / matches) / 3;
+    let prefix = 0;
+    while (prefix < 4 && prefix < left.length && prefix < right.length && left[prefix] === right[prefix]) prefix++;
+    return jaro + prefix * 0.1 * (1 - jaro);
+  };
+
+  const correctToken = (token) => {
+    if (token.length < 2 || vocabulary.includes(token)) return token;
+    const threshold = token.length <= 3 ? 0.9 : token.length <= 5 ? 0.88 : 0.85;
+    let bestMatch = token;
+    let bestScore = 0;
+    vocabulary.forEach((candidate) => {
+      if (token.length > 3 && candidate.length <= 3) return;
+      if (Math.abs(candidate.length - token.length) > 3) return;
+      const score = jaroWinkler(token, candidate);
+      if (score > bestScore) {
+        bestMatch = candidate;
+        bestScore = score;
+      }
+    });
+    return bestScore >= threshold ? bestMatch : token;
+  };
+
+  const loadModeration = async () => {
+    if (!moderationPromise) {
+      moderationPromise = fetch(config.moderationUrl, { cache: "no-store" }).then(async (response) => {
+        if (!response.ok) throw new Error(`Moderation request failed: ${response.status}`);
+        const encodedWords = await response.text();
+        prohibitedPatterns = encodedWords.split(/\r?\n/).map((word) => word.trim()).filter(Boolean).map((encoded) => {
+          const word = [...encoded.toLocaleLowerCase()].reverse().map((character) => String.fromCharCode(character.charCodeAt(0) + 1)).join("");
+          return new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
+        });
+      });
+    }
+    return moderationPromise;
+  };
+
+  const containsProhibitedWords = (text) => prohibitedPatterns.some((pattern) => pattern.test(text));
+
+  const getSearchIntentQuery = (text) => {
+    const trimmed = text.trim();
+    const lower = trimmed.toLocaleLowerCase();
+    if (lower.startsWith("search ")) return trimmed.slice(7).trim();
+    if (lower.startsWith("find ")) return trimmed.slice(5).trim();
+    if (["documentation", " docs ", "microsoft learn ", "how to ", "how do i ", "how can i", " me how ", "sample code", "example code", "code sample", "code example"].some((pattern) => lower.includes(pattern))) return trimmed;
+    return null;
+  };
+
+  const extractSearchKeywords = (text) => {
+    const seen = new Set();
+    return normalize(text).split(" ").filter((word) => word.length >= 2 && !bingStopWords.has(word) && !seen.has(word) && seen.add(word)).join(" ");
   };
 
   const addMessage = (role, text, links = []) => {
@@ -232,6 +317,7 @@ if (agent) {
             });
           });
         });
+        vocabulary = [...new Set([...keywordMap.keys()].flatMap((keyword) => keyword.split(" ")).filter((word) => word.length >= 2))];
       });
     }
     return knowledgePromise;
@@ -239,7 +325,8 @@ if (agent) {
 
   const searchKnowledge = (question) => {
     const normalizedQuestion = normalize(question);
-    const words = normalizedQuestion.split(" ").filter(Boolean);
+    const originalWords = normalizedQuestion.split(" ").filter(Boolean);
+    const words = originalWords.map(correctToken);
     const phrases = new Set();
     const maximumPhraseLength = Math.min(3, words.length);
     for (let length = maximumPhraseLength; length >= 2; length--) {
@@ -263,21 +350,110 @@ if (agent) {
       .slice(0, 3);
   };
 
+  const mcpRpc = async (method, params, isNotification = false) => {
+    const id = isNotification ? undefined : mcp.nextId++;
+    const body = { jsonrpc: "2.0", method, ...(params === undefined ? {} : { params }), ...(isNotification ? {} : { id }) };
+    const headers = { "Content-Type": "application/json", Accept: "application/json, text/event-stream", "MCP-Protocol-Version": mcp.protocolVersion };
+    if (mcp.sessionId) headers["Mcp-Session-Id"] = mcp.sessionId;
+    const response = await fetch(mcp.endpoint, { method: "POST", headers, body: JSON.stringify(body) });
+    mcp.sessionId = response.headers.get("Mcp-Session-Id") || response.headers.get("mcp-session-id") || mcp.sessionId;
+    if (isNotification) {
+      if (!response.ok && response.status !== 202) throw new Error(`MCP notification failed: ${response.status}`);
+      return null;
+    }
+    if (!response.ok) throw new Error(`MCP request failed: ${response.status}`);
+    if ((response.headers.get("Content-Type") || "").toLocaleLowerCase().includes("text/event-stream")) {
+      const text = await response.text();
+      for (const event of text.split(/\r?\n\r?\n/)) {
+        const data = event.split(/\r?\n/).filter((line) => line.startsWith("data:")).map((line) => line.slice(5).trimStart()).join("\n");
+        if (!data) continue;
+        const message = JSON.parse(data);
+        if (message.id === id) {
+          if (message.error) throw new Error(message.error.message);
+          return message.result;
+        }
+      }
+      throw new Error("MCP response ended without a result");
+    }
+    const message = await response.json();
+    if (message.error) throw new Error(message.error.message);
+    return message.result;
+  };
+
+  const ensureLearnMcp = async () => {
+    if (mcp.tool) return mcp.tool;
+    if (!mcp.initPromise) {
+      mcp.initPromise = (async () => {
+        await mcpRpc("initialize", { protocolVersion: mcp.protocolVersion, capabilities: {}, clientInfo: { name: "ai-skills-nav", version: "1.0.0" } });
+        await mcpRpc("notifications/initialized", undefined, true);
+        const result = await mcpRpc("tools/list", {});
+        mcp.tool = (result.tools || []).find((tool) => /search/i.test(tool.name)) || (result.tools || [])[0] || null;
+        return mcp.tool;
+      })().catch((error) => {
+        mcp.initPromise = null;
+        throw error;
+      });
+    }
+    return mcp.initPromise;
+  };
+
+  const queryLearnMcp = async (query) => {
+    const tool = await ensureLearnMcp();
+    if (!tool) return [];
+    const properties = tool.inputSchema?.properties || {};
+    const argumentName = ["query", "question", "q", "search", "searchQuery", "text", "prompt"].find((name) => name in properties) || Object.keys(properties)[0];
+    const result = await mcpRpc("tools/call", { name: tool.name, arguments: argumentName ? { [argumentName]: query } : {} });
+    const items = [];
+    (result.content || []).forEach((part) => {
+      if (part.type !== "text" || typeof part.text !== "string") return;
+      try {
+        let parsed = JSON.parse(part.text);
+        if (!Array.isArray(parsed)) parsed = ["results", "items", "data", "value", "hits", "documents"].map((key) => parsed[key]).find(Array.isArray) || [parsed];
+        items.push(...parsed);
+      } catch { /* Ignore non-JSON MCP content. */ }
+    });
+    const seen = new Set();
+    return items.map((item) => ({ href: item.contentUrl || item.url || item.uri || item.link, label: item.title || item.name || item.heading || "Microsoft Learn article" }))
+      .filter((item) => item.href && !seen.has(item.href.split("#")[0]) && seen.add(item.href.split("#")[0]))
+      .slice(0, 5);
+  };
+
   const submitPrompt = async (prompt, usedSpeechInput = false) => {
     const question = prompt.trim();
     if (!question) return;
+    if (question.length > 1000) {
+      addMessage("assistant", "Please keep your message under 1,000 characters.");
+      return;
+    }
     addMessage("user", question);
     input.value = "";
     input.disabled = true;
     submitButton.disabled = true;
     microphoneButton.disabled = true;
-    if (usedSpeechInput) playAudio("looking.wav");
-    else activeAudio?.pause();
     try {
+      await loadModeration();
+      if (containsProhibitedWords(question)) {
+        addMessage("assistant", "I'm sorry, I can't help with that because it triggered a content-safety filtering policy.");
+        if (usedSpeechInput) playAudio("sorry.wav");
+        return;
+      }
+      if (usedSpeechInput) playAudio("looking.wav");
+      else activeAudio?.pause();
+      const searchQuery = getSearchIntentQuery(question);
+      if (searchQuery) {
+        const keywords = extractSearchKeywords(searchQuery) || normalize(searchQuery);
+        let links = [];
+        try { links = await queryLearnMcp(searchQuery); } catch { /* Fall back to Microsoft Learn search. */ }
+        if (!links.length) links = [{ href: `https://learn.microsoft.com/en-us/search/?terms=${encodeURIComponent(keywords)}&category=Documentation`, label: "Search Microsoft Learn" }];
+        addMessage("assistant", `I searched Microsoft Learn documentation for "${keywords}".`, links);
+        if (usedSpeechInput) playAudio("search_results.wav");
+        return;
+      }
       await loadKnowledge();
       const results = searchKnowledge(question);
       if (!results.length) {
-        addMessage("assistant", "Sorry, I couldn't find any specific information on that topic. Please try rephrasing your question.");
+        const keywords = extractSearchKeywords(question) || normalize(question);
+        addMessage("assistant", "I don't have specific information about that topic, but you can search the web for it.", [{ href: `https://www.bing.com/search?q=${encodeURIComponent(keywords)}`, label: "Search with Bing" }]);
         if (usedSpeechInput) playAudio("no_results.wav");
       } else {
         addMessage(
