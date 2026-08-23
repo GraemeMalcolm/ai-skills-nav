@@ -394,7 +394,7 @@ async function buildModuleRoute(module, pages, routeRoot, sidebarFactory = null)
   }
 
   const startTarget = pageTargets[0];
-  const action = `<a class="primary-button" href="${relativeUrl(indexFile, startTarget)}">Start module ${icon("arrow")}</a>`;
+  const action = `<a class="primary-button" href="${relativeUrl(indexFile, startTarget)}">Start ${icon("arrow")}</a>`;
   await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, sidebar, bodyClass: "learning-page", content: overview(indexFile, module, "modules", action) }));
 
   for (const [pageIndex, page] of pages.entries()) {
