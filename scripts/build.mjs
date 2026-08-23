@@ -26,7 +26,7 @@ marked.use({
       return source.indexOf("[");
     },
     tokenizer(source) {
-      const match = source.match(/^\[([^\]\r\n]+)\]\(([^\s)]+)(?:\s+["']([^"']*)["'])?\)\{\s*:?\s*target\s*=\s*["']_blank["']\s*\}/i);
+      const match = source.match(/^\[((?:!\[[^\]\r\n]*\]\([^\r\n)]+\)|[^\]\r\n]+))\]\(([^\s)]+)(?:\s+["']([^"']*)["'])?\)\{\s*:?\s*target\s*=\s*["']_blank["']\s*\}/i);
       if (!match) return undefined;
       return {
         type: "targetBlankLink",
