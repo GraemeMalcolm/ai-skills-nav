@@ -11,7 +11,7 @@ const outputRoot = path.join(root, "dist");
 const contentRoots = [
   { name: "modules", directory: path.join(sourceRoot, "modules") },
   { name: "playlists", directory: path.join(sourceRoot, "playlists") },
-  { name: "labs", directory: path.join(sourceRoot, "labs") },
+  { name: "exercises", directory: path.join(sourceRoot, "exercises") },
   { name: "avatars", directory: path.join(root, "avatars") },
 ];
 

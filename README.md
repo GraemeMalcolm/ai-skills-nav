@@ -17,7 +17,7 @@ The build recreates the `dist` directory. Open `dist/index.html` to inspect the 
 
 - Add modules under `source/modules/<module-name>` with `module.yml`, `thumbnail.png`, and the page files listed by `pages`.
 - Add playlists under `source/playlists/<playlist-name>` with `playlist.yml`, `thumbnail.png`, and module folder names listed by `modules`.
-- Add reusable exercises under `source/labs`; include them in module pages with `[!INCLUDE[](path)]`.
+- Add reusable exercises under `source/exercises`; include them in module pages with `[!INCLUDE[](path)]`.
 - Use `[!VIDEO URL]` or `[!VIDEO: URL]` for embedded video.
 - Use consecutive `::: zone pivot="Name"` and `::: zone-end` blocks to create tabbed content.
 
