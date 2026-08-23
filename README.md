@@ -1,29 +1,40 @@
 # AI Skills Nav
 
-This repository contains Markdown and YAML source for a GitHub Pages learning site. The generated site provides catalogs of courses, playlists, and modules; course and playlist navigation; ordered module pages; zone pivots; embedded videos; and Markdown includes.
+(or if you prefer, *Page against the machine - Skilling in the name of...*)
 
-## Local build
+This repo contains a hypothetical design for an online skilling platform.
 
-Node.js 20 or newer is required.
+> **IMPORTANT**: This site is a *personal* project, <u>not</u> an indication of any future direction for the official Microsoft AI Skills Navigator platform.
 
-```powershell
-npm install
-npm run build
-```
+## Content architecture
 
-The build recreates the `dist` directory. Open `dist/index.html` to inspect the generated site; all generated links are relative, so the same output works locally and under a GitHub project Pages URL.
+The content architecture consists of:
+- **Courses**: Curated curricula that can be consumed online as self-paced learning or as instructor-led training. Courses can consist of one or more...
+    - **Playlists**: Curated or self-defined learning paths (self-craeted playlists are not currently supported in this proof-of-concept). Each playlist contains one or more...
+        - **Modules**: The core learning asset in the platform. Modules have a *type* based on the kind of content thet predominantly contain - for example, "Lab" or "Video". In most cases of core curriculum, the module type is "Multimodal". Modules contain one or more...
+            - **Pages**: A unit of content encapsulated in a web page (think of each page as covering a discrete *topic*). Pages can contain a mix of content assets, inclusing video, text, images, lab exercises, and others.
 
-## Content
+The source definitions for the content assets in the catalog are in the [./source](/source/) folder of the repo. They consist of a combination of:
+- Markdown files to define page content.
+- YAML files to define course, playlist, and module metadata.
+- Thumbnail images.
 
-- Add modules under `source/modules/<module-name>` with `module.yml`, `thumbnail.png`, and the page files listed by `pages`.
-- Add playlists under `source/playlists/<playlist-name>` with `playlist.yml`, `thumbnail.png`, and module folder names listed by `modules`.
-- Add courses under `source/courses/<course-name>` with `course.yml`, `thumbnail.png`, and playlist folder names listed by `playlists`.
-- Add reusable exercises under `MicrosoftLearning`; include them in module pages with `[!INCLUDE[](/MicrosoftLearning/path)]`.
-- Use `[!VIDEO URL]` or `[!VIDEO: URL]` for embedded video.
-- Use consecutive `::: zone pivot="Name"` and `::: zone-end` blocks to create tabbed content.
+## Site navigation
 
-The build fails when metadata references a missing module, page, or include.
+You can navigate the site using the <a href = "https://graememalcolm.github.io/ai-skills-nav/" target = "_blank">GitHub pages for this repo</a>.
 
-## GitHub Pages
+- The main online experience for most users is to either complete a curated *playlist* or find the specific *modules* they're most interested in. - *Courses* are presented in a separate page due to their status as official curricula. Courses often align to Microsoft certfications.
+- Users can *search* for playlists and modules using keywords (for example "Copilot" or "Microsoft Foundry"), and they can *filter* modules based on *audience* (target role), *level* (100-500), and *type* (modality). They can search and filter courses in a similar way, including the ability to search by course number (e.g. "AI-1026").
+- Playlists provide a navigation pane so users can progress through the modules in the playlist.
+- Multi-page modules start with s standard "Overview" page, while 1-page modules skip this and open the main content page directly. 
+- Multi-page modules provide page navigation using a "Previous" and "Next" navigation control at the bottom of each page.
+- Some pages include *zone pivots* that enable the user to choose between alternative presentations of content (for example, choosing between a video and the equivalent statuc text/graphics, or choosing between a hosted lab envitonment and using their own).
 
-The `Build and deploy GitHub Pages` workflow runs on pushes to `main` and can also be started manually. In the repository settings, set **Pages > Build and deployment > Source** to **GitHub Actions**. The workflow installs dependencies, generates `dist`, uploads it as the Pages artifact, and deploys it to the `github-pages` environment.
+## AI Interactivity
+
+An additional feature of the site is the *personification* of AI assistence. The site supports multiple possible *avatars*, each with a specific curricular specialty. For example *Alex* is the AI persona associated with Azure Databricks training, while *Anton* is the AI persona for AI development. The intention is for users to to build trusted affinity with a familar "face" of their chosen area of study.
+
+Avatars are associated at the *module* level, and any module associated with an avatar presents an "Ask *avatar*" chat interface while the user is on the module.
+
+> **NOTE**: In this proof-of-concept implementation of the site, the chat interface is constrained to *basic* mode in which no AI model is used. The avatar responds to questions based on simple keyword matching. To see an example of an agent using a real model, check out the <a href="https://aka.ms/choose-anton" target = "_blank">Ask Anton</a> app.
+
