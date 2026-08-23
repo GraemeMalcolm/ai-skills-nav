@@ -14,7 +14,7 @@ Hosted labs are provided by our hosting partner *Skillable*, and include a virtu
 
 ::: zone pivot="Use your own environment"
 
-<!-- Would be imported from existing external GitHub source -->
+<!-- Import lab exercise from existing MicrosoftLearning GitHub source -->
 [!INCLUDE[](/MicrosoftLearning/ai-concepts/07-explore-rag.md)]
 
 ::: zone-end
