@@ -121,18 +121,30 @@ function videoEmbed(url) {
   return `<div class="video-frame"><iframe src="${escapeHtml(source)}" title="Embedded video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>`;
 }
 
+function parseMarkdown(markdown) {
+  const targetMarker = "<!--ai-skills-target-blank-->";
+  const markedLinks = markdown.replace(
+    /(\[[^\]\r\n]+\]\([^\r\n)]+\))\{\s*:?\s*target\s*=\s*["']_blank["']\s*\}/gi,
+    `$1${targetMarker}`,
+  );
+  return marked.parse(markedLinks).replace(
+    /<a\b([^>]*)>([\s\S]*?)<\/a><!--ai-skills-target-blank-->/gi,
+    '<a$1 target="_blank" rel="noopener noreferrer">$2</a>',
+  );
+}
+
 function renderMarkdown(markdown) {
   const videoPattern = /^\s*\[!VIDEO\s*:?\s*(https?:\/\/[^\]\s]+)\]\s*$/gim;
   const chunks = [];
   let cursor = 0;
   for (const match of markdown.matchAll(videoPattern)) {
     const beforeVideo = markdown.slice(cursor, match.index).trim();
-    if (beforeVideo) chunks.push(marked.parse(beforeVideo));
+    if (beforeVideo) chunks.push(parseMarkdown(beforeVideo));
     chunks.push(videoEmbed(match[1]));
     cursor = match.index + match[0].length;
   }
   const afterVideo = markdown.slice(cursor).trim();
-  if (afterVideo) chunks.push(marked.parse(afterVideo));
+  if (afterVideo) chunks.push(parseMarkdown(afterVideo));
   return chunks.join("\n");
 }
 
