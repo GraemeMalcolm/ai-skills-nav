@@ -18,6 +18,31 @@ const escapeHtml = (value = "") => String(value)
   .replaceAll('"', "&quot;")
   .replaceAll("'", "&#039;");
 
+marked.use({
+  extensions: [{
+    name: "targetBlankLink",
+    level: "inline",
+    start(source) {
+      return source.indexOf("[");
+    },
+    tokenizer(source) {
+      const match = source.match(/^\[([^\]\r\n]+)\]\(([^\s)]+)(?:\s+["']([^"']*)["'])?\)\{\s*:?\s*target\s*=\s*["']_blank["']\s*\}/i);
+      if (!match) return undefined;
+      return {
+        type: "targetBlankLink",
+        raw: match[0],
+        href: match[2],
+        title: match[3],
+        tokens: this.lexer.inlineTokens(match[1]),
+      };
+    },
+    renderer(token) {
+      const title = token.title ? ` title="${escapeHtml(token.title)}"` : "";
+      return `<a href="${escapeHtml(token.href)}"${title} target="_blank" rel="noopener noreferrer">${this.parser.parseInline(token.tokens)}</a>`;
+    },
+  }],
+});
+
 const toPosix = (value) => value.split(path.sep).join("/");
 const pageSlug = (file) => path.basename(file, path.extname(file));
 
@@ -122,15 +147,7 @@ function videoEmbed(url) {
 }
 
 function parseMarkdown(markdown) {
-  const targetMarker = "<!--ai-skills-target-blank-->";
-  const markedLinks = markdown.replace(
-    /(\[[^\]\r\n]+\]\([^\r\n)]+\))\{\s*:?\s*target\s*=\s*["']_blank["']\s*\}/gi,
-    `$1${targetMarker}`,
-  );
-  return marked.parse(markedLinks).replace(
-    /<a\b([^>]*)>([\s\S]*?)<\/a><!--ai-skills-target-blank-->/gi,
-    '<a$1 target="_blank" rel="noopener noreferrer">$2</a>',
-  );
+  return marked.parse(markdown);
 }
 
 function renderMarkdown(markdown) {
