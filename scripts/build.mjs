@@ -11,7 +11,7 @@ const outputRoot = path.join(root, "dist");
 const contentRoots = [
   { name: "modules", directory: path.join(sourceRoot, "modules") },
   { name: "playlists", directory: path.join(sourceRoot, "playlists") },
-  { name: "exercises", directory: path.join(root, "exercises") },
+  { name: "MicrosoftLearning", directory: path.join(root, "MicrosoftLearning") },
   { name: "avatars", directory: path.join(root, "avatars") },
 ];
 
@@ -131,8 +131,11 @@ async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
   for (const match of markdown.matchAll(includePattern)) {
     result += rewriteMarkdownAssets(markdown.slice(cursor, match.index), sourceFile, outputFile);
     const includeReference = (match[1] || match[2]).trim();
-    const includePath = path.resolve(path.dirname(sourceFile), includeReference);
-    if (!includePath.startsWith(root) || stack.includes(includePath)) {
+    const includePath = /^[\\/]/.test(includeReference)
+      ? path.resolve(root, includeReference.replace(/^[\\/]+/, ""))
+      : path.resolve(path.dirname(sourceFile), includeReference);
+    const includeRelative = path.relative(root, includePath);
+    if (includeRelative.startsWith("..") || path.isAbsolute(includeRelative) || stack.includes(includePath)) {
       throw new Error(`Invalid or recursive include ${includeReference} in ${path.relative(root, sourceFile)}`);
     }
     if (!(await exists(includePath))) {

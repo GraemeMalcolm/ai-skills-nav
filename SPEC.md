@@ -28,7 +28,7 @@ Each playlist consists of:
 
 ### labs
 
-A lab is a collection of practical exercises that enable the learner to engage in a hands-on learning experience. Labs are defined in the /labs folder, in which there is a folder for each lab. Each lab consists of:
+A lab is a collection of practical exercises that enable the learner to engage in a hands-on learning experience. Labs are defined in the `/MicrosoftLearning` folder, in which there is a folder for each lab. Each lab consists of:
 
 - One or more markdown files, each including a lab metadata section (in YAML format) and markdown instructions.
 - A media subfolder containing images that are included in the exercises.
