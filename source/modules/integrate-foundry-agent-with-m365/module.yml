@@ -1,0 +1,22 @@
+title: Integrate your agent with Microsoft 365
+description: In this lesson, you'll learn how to integrate your agent with Microsoft 365.
+modality: Multimodal
+level: 200
+duration: 60 minutes
+topics:
+  - Microsoft 365
+  - Microsoft Foundry
+  - Work IQ
+  - AI agents
+audience:
+  - Developer
+avatar: anton
+pages:
+  - 1-introduction.md
+  - 2-understand-publishing-options.md
+  - 3-publish-agent-foundry-portal.md
+  - 4-agents-toolkit-advanced.md
+  - 5-access-m365-data-workiq.md
+  - 6-test-iterate-agent.md
+  - 7-exercise.md
+  - 9-summary.md

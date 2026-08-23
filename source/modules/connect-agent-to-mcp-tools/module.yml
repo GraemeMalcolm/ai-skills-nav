@@ -1,0 +1,19 @@
+title: Integrate MCP Tools with Azure AI Agents
+description: In this lesson, you'll learn how to integrate MCP Tools with Azure AI agents.
+modality: Multimodal
+level: 200
+duration: 60 minutes
+topics:
+  - Model Control Protocol (MCP)
+  - Microsoft Foundry
+  - AI agents
+audience:
+  - Developer
+avatar: anton
+pages:
+  - 1-introduction.md
+  - 2-understand-mcp-tool-discovery.md
+  - 3-mcp-client-server-setup.md
+  - 4-use-azure-ai-agents-with-mcp.md
+  - 5-exercise.md
+  - 7-summary.md

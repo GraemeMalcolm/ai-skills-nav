@@ -1,0 +1,12 @@
+title: Extend agent knowledge with Microsoft IQ
+description: In this playlist, you'll learn how to extend agent knowledge with Microsoft IQ.
+level: 200
+duration: 120 minutes
+topics:
+  - Microsoft Foundry
+  - AI agents
+audience:
+  - Developer
+modules:
+  - get-started-foundry-iq
+  - integrate-foundry-agent-with-m365

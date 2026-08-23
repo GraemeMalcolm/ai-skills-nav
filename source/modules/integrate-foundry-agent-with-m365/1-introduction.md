@@ -1,0 +1,21 @@
+---
+title: Introduction
+---
+
+::: zone pivot="Video"
+
+[!VIDEO https://learn-video.azurefd.net/vod/player?id=33aa54b2-4121-4cc3-b588-05b9006024d3]
+
+::: zone-end
+
+::: zone pivot="Text"
+
+Imagine you've built an AI agent in Microsoft Foundry that helps your team answer questions about company policies and procedures. The agent works great in the Foundry playground, but your users spend most of their day in Microsoft Teams. They want to interact with the agent directly in Teams chat, or even through Microsoft 365 Copilot, without switching to a separate application. How do you bridge this gap?
+
+Microsoft Foundry provides built-in capabilities to publish your agents directly to Microsoft Teams and Microsoft 365 Copilot. This integration allows users to interact with your custom AI agents in the same tools they already use for collaboration and productivity. Whether you need a support agent that answers IT questions, a knowledge assistant that helps onboard new employees, or a specialized advisor for your business domain, you can make these agents available where your users work.
+
+In this module, you learn how to publish Microsoft Foundry agents to Microsoft 365. You explore the publishing workflow from the Foundry portal, understand when you might need advanced integration options, and discover how to use Work IQ to give your agents access to Microsoft 365 data like emails, meetings, and documents.
+
+::: zone-end
+
+> **TIP**: We recognize that different people like to learn in different ways. You can choose to complete this module in video-based format or you can read the content as text and images. The text contains greater detail than the videos, so in some cases you might want to refer to it as supplemental material to the video presentation.
