@@ -14,6 +14,6 @@ Hosted labs are provided by our hosting partner *Skillable*, and include a virtu
 
 ::: zone pivot="Use your own environment"
 
-[!INCLUDE[](../../exercises/ai-concepts/03-language.md)]
+[!INCLUDE[](../../../exercises/ai-concepts/03-language.md)]
 
 ::: zone-end

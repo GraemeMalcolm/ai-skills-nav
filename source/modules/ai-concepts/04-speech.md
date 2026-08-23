@@ -14,6 +14,6 @@ Hosted labs are provided by our hosting partner *Skillable*, and include a virtu
 
 ::: zone pivot="Use your own environment"
 
-[!INCLUDE[](../../exercises/ai-concepts/04-speech.md)]
+[!INCLUDE[](../../../exercises/ai-concepts/04-speech.md)]
 
 ::: zone-end
