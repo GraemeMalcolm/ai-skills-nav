@@ -175,7 +175,7 @@ if (agent) {
   const submitButton = form.querySelector('button[type="submit"]');
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const stopWords = new Set(["a", "an", "and", "are", "can", "do", "for", "how", "i", "in", "is", "it", "me", "of", "on", "or", "the", "to", "what", "with", "you"]);
-  const bingStopWords = new Set([...stopWords, "about", "ask", "could", "describe", "documentation", "explain", "find", "give", "help", "know", "learn", "microsoft", "need", "please", "search", "show", "tell", "want", "would"]);
+  const bingStopWords = new Set([...stopWords, "about", "ask", "could", "describe", "explain", "find", "give", "help", "know", "learn", "need", "please", "search", "show", "tell", "want", "would"]);
   let keywordMap = new Map();
   let vocabulary = [];
   let knowledgePromise;
