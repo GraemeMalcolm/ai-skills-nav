@@ -52,12 +52,55 @@ document.querySelectorAll("[data-page-select]").forEach((select) => {
 
 const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
+const catalogCards = [...document.querySelectorAll("[data-catalog-card]")];
 const moduleCards = [...document.querySelectorAll("[data-module-card]")];
+const searchForm = document.querySelector("[data-site-search]");
+const searchInput = searchForm?.querySelector('input[type="search"]');
+const searchClear = searchForm?.querySelector("[data-search-clear]");
+const moduleEmptyState = document.querySelector("[data-module-empty]");
+const playlistEmptyState = document.querySelector("[data-playlist-empty]");
+let appliedFilters = { modality: [], level: [], audience: [] };
+let searchTerms = [];
+
+const matchesSearch = (card) => searchTerms.every((term) => card.dataset.searchText.includes(term));
+
+const applyCatalogVisibility = () => {
+  let visibleModules = 0;
+  let visiblePlaylists = 0;
+  catalogCards.forEach((card) => {
+    let matches = matchesSearch(card);
+    if (matches && card.matches("[data-module-card]")) {
+      const audiences = JSON.parse(card.dataset.audiences || "[]");
+      matches = (!appliedFilters.modality.length || appliedFilters.modality.includes(card.dataset.modality))
+        && (!appliedFilters.level.length || appliedFilters.level.includes(card.dataset.level))
+        && (!appliedFilters.audience.length || appliedFilters.audience.some((audience) => audiences.includes(audience)));
+    }
+    card.hidden = !matches;
+    if (matches && card.dataset.catalogType === "modules") visibleModules++;
+    if (matches && card.dataset.catalogType === "playlists") visiblePlaylists++;
+  });
+  if (moduleEmptyState) moduleEmptyState.hidden = visibleModules !== 0;
+  if (playlistEmptyState) playlistEmptyState.hidden = visiblePlaylists !== 0;
+};
+
+if (searchForm && searchInput && searchClear && catalogCards.length) {
+  searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    searchTerms = searchInput.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+    searchClear.hidden = searchTerms.length === 0;
+    applyCatalogVisibility();
+  });
+  searchClear.addEventListener("click", () => {
+    searchInput.value = "";
+    searchTerms = [];
+    searchClear.hidden = true;
+    applyCatalogVisibility();
+    searchInput.focus();
+  });
+}
 
 if (filterDialog && filterForm && moduleCards.length) {
   const filterCount = document.querySelector("[data-filter-count]");
-  const emptyState = document.querySelector("[data-filter-empty]");
-  let appliedFilters = { modality: [], level: [], audience: [] };
 
   const readFilters = () => Object.fromEntries(["modality", "level", "audience"].map((name) => [
     name,
@@ -72,19 +115,10 @@ if (filterDialog && filterForm && moduleCards.length) {
 
   const applyFilters = () => {
     appliedFilters = readFilters();
-    let visibleCount = 0;
-    moduleCards.forEach((card) => {
-      const audiences = JSON.parse(card.dataset.audiences || "[]");
-      const matches = (!appliedFilters.modality.length || appliedFilters.modality.includes(card.dataset.modality))
-        && (!appliedFilters.level.length || appliedFilters.level.includes(card.dataset.level))
-        && (!appliedFilters.audience.length || appliedFilters.audience.some((audience) => audiences.includes(audience)));
-      card.hidden = !matches;
-      if (matches) visibleCount++;
-    });
     const selectedCount = Object.values(appliedFilters).reduce((total, values) => total + values.length, 0);
     filterCount.textContent = String(selectedCount);
     filterCount.hidden = selectedCount === 0;
-    emptyState.hidden = visibleCount !== 0;
+    applyCatalogVisibility();
   };
 
   document.querySelector("[data-filter-open]")?.addEventListener("click", () => filterDialog.showModal());

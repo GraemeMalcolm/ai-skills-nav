@@ -235,7 +235,7 @@ function icon(name) {
   return icons[name];
 }
 
-function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills Nav", bodyClass = "" }) {
+function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", bodyClass = "" }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
@@ -253,7 +253,7 @@ function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills 
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a>
-    ${sidebar ? `<button class="icon-button menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button>` : ""}
+    ${headerExtra}${sidebar ? `<button class="icon-button menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button>` : ""}
   </header>
   <div class="site-frame${sidebar ? " has-sidebar" : ""}">
     ${sidebar}
@@ -280,10 +280,12 @@ function thumbnail(outputFile, item, type) {
 
 function card(outputFile, item, type, filterable = false) {
   const target = path.join(outputRoot, type, item.slug, "index.html");
+  const searchText = [item.title, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
+  const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}"`;
   const filterData = filterable
     ? ` data-module-card data-modality="${escapeHtml(item.modality || "")}" data-level="${escapeHtml(item.level || "")}" data-audiences="${escapeHtml(JSON.stringify(item.audience || []))}"`
     : "";
-  return `<a class="content-card" href="${relativeUrl(outputFile, target)}"${filterData}>
+  return `<a class="content-card" href="${relativeUrl(outputFile, target)}"${searchData}${filterData}>
     <span class="card-image">${thumbnail(outputFile, item, type)}</span>
     <span class="card-body"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(metadataLine(item))}</span></span>
   </a>`;
@@ -421,11 +423,12 @@ async function build() {
   }
 
   const homeFile = path.join(outputRoot, "index.html");
+  const homeSearch = `<form class="site-search" role="search" data-site-search><label class="sr-only" for="site-search-input">Search playlists and modules</label><input id="site-search-input" type="search" name="query" placeholder="Search" autocomplete="off"><button type="submit">Search</button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></form>`;
   const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p>Choose a curated path or jump straight into a module.</p></section>
-    <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Playlists</h2></div><div class="card-grid">${playlists.map((item) => card(homeFile, item, "playlists")).join("")}</div></section>
-    <section class="catalog-section alt" data-module-catalog><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore by topic</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Modules</h2></div><div class="card-grid" data-module-grid>${modules.map((item) => card(homeFile, item, "modules", true)).join("")}</div><p class="filter-empty" data-filter-empty role="status" aria-live="polite" hidden>No modules match the selected filters.</p></section>
+    <section class="catalog-section" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning</p><h2>Playlists</h2></div><div class="card-grid">${playlists.map((item) => card(homeFile, item, "playlists")).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search.</p></section>
+    <section class="catalog-section alt" data-module-catalog><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore by topic</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Modules</h2></div><div class="card-grid" data-module-grid>${modules.map((item) => card(homeFile, item, "modules", true)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No modules match your search and filters.</p></section>
     ${moduleFilterDialog(modules)}`;
-  await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", content: homeContent, bodyClass: "home-page" }));
+  await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", headerExtra: homeSearch, content: homeContent, bodyClass: "home-page" }));
 
   for (const module of modules) {
     await buildModuleRoute(module, await getModulePages(module), path.join(outputRoot, "modules", module.slug));
