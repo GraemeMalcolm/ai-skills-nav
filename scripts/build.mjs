@@ -271,7 +271,7 @@ function agentFlyout(outputFile, avatar) {
   </div>`;
 }
 
-function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, bodyClass = "" }) {
+function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, bodyClass = "", moduleSlug = "" }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
@@ -285,7 +285,7 @@ function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills 
   <link rel="stylesheet" href="${styles}">
   <script src="${script}" defer></script>
 </head>
-<body class="${escapeHtml(bodyClass)}">
+<body class="${escapeHtml(bodyClass)}"${moduleSlug ? ` data-module-slug="${escapeHtml(moduleSlug)}"` : ""}>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a>
@@ -430,20 +430,20 @@ async function buildModuleRoute(module, pages, routeRoot, sidebarFactory = null)
 
   if (pages.length === 1) {
     const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`);
-    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", content: articleContent(module, pages[0], rendered.html, "") }));
+    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", moduleSlug: module.slug, content: articleContent(module, pages[0], rendered.html, "") }));
     return;
   }
 
   const startTarget = pageTargets[0];
   const action = `<a class="primary-button" href="${relativeUrl(indexFile, startTarget)}">Start ${icon("arrow")}</a>`;
-  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", content: overview(indexFile, module, "modules", action) }));
+  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", moduleSlug: module.slug, content: overview(indexFile, module, "modules", action) }));
 
   for (const [pageIndex, page] of pages.entries()) {
     const outputFile = pageTargets[pageIndex];
     const rendered = await renderMarkdownPage(page.sourceFile, outputFile, `${module.slug}-${page.slug}`);
     const pageSidebar = sidebarFactory ? sidebarFactory(outputFile) : "";
     const navigation = pageNavigation(outputFile, pages, pageIndex, pageTargets);
-    await writePage(outputFile, shell({ outputFile, title: rendered.title, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", content: articleContent(module, page, rendered.html, navigation) }));
+    await writePage(outputFile, shell({ outputFile, title: rendered.title, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", moduleSlug: module.slug, content: articleContent(module, page, rendered.html, navigation) }));
   }
 }
 

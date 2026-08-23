@@ -38,25 +38,52 @@ menuReveal?.addEventListener("click", () => {
 
 document.querySelectorAll("[data-menu-close]").forEach((button) => button.addEventListener("click", () => setMenu(false)));
 
+const moduleSlug = document.body.dataset.moduleSlug;
+
 document.querySelectorAll("[data-pivot]").forEach((pivot) => {
   const tabs = [...pivot.querySelectorAll('[role="tab"]')];
   const panels = [...pivot.querySelectorAll('[role="tabpanel"]')];
-  const activate = (selected) => {
+  const normalizePivot = (value) => value.trim().toLocaleLowerCase();
+  const pivotSignature = tabs.map((tab) => normalizePivot(tab.textContent)).sort().join("|");
+  const storageKey = moduleSlug ? `ai-skills-nav:pivots:${moduleSlug}` : "";
+  const readPreferences = () => {
+    if (!storageKey) return {};
+    try {
+      const preferences = JSON.parse(localStorage.getItem(storageKey) || "{}");
+      return preferences && typeof preferences === "object" && !Array.isArray(preferences) ? preferences : {};
+    } catch {
+      return {};
+    }
+  };
+  const activate = (selected, persist = false) => {
     tabs.forEach((tab, index) => {
       const active = tab === selected;
       tab.setAttribute("aria-selected", String(active));
       tab.tabIndex = active ? 0 : -1;
       panels[index].hidden = !active;
     });
+    if (persist && storageKey) {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({
+          ...readPreferences(),
+          [pivotSignature]: normalizePivot(selected.textContent),
+        }));
+      } catch {
+        // Pivots remain usable when storage is unavailable.
+      }
+    }
   };
+  const savedPivot = readPreferences()[pivotSignature];
+  const savedTab = tabs.find((tab) => normalizePivot(tab.textContent) === savedPivot);
+  if (savedTab) activate(savedTab);
   tabs.forEach((tab, index) => {
-    tab.addEventListener("click", () => activate(tab));
+    tab.addEventListener("click", () => activate(tab, true));
     tab.addEventListener("keydown", (event) => {
       if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
       event.preventDefault();
       let next = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : index + (event.key === "ArrowRight" ? 1 : -1);
       next = (next + tabs.length) % tabs.length;
-      activate(tabs[next]);
+      activate(tabs[next], true);
       tabs[next].focus();
     });
   });
