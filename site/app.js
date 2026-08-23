@@ -273,6 +273,22 @@ if (agent) {
     return normalize(text).split(" ").filter((word) => word.length >= 2 && !bingStopWords.has(word) && !seen.has(word) && seen.add(word)).join(" ");
   };
 
+  const openVideoPopup = (url) => {
+    const maximumWidth = Math.max(320, window.screen.availWidth - 40);
+    const maximumHeight = Math.max(180, window.screen.availHeight - 80);
+    const width = Math.min(800, maximumWidth, maximumHeight * 16 / 9);
+    const height = width * 9 / 16;
+    const left = window.screen.availLeft + (window.screen.availWidth - width) / 2;
+    const top = window.screen.availTop + (window.screen.availHeight - height) / 2;
+    const features = `popup=yes,width=${Math.round(width)},height=${Math.round(height)},left=${Math.round(left)},top=${Math.round(top)},resizable=yes,scrollbars=yes`;
+    const popup = window.open(url, "ask-anton-video", features);
+    if (popup) {
+      popup.opener = null;
+      popup.focus();
+    }
+    return popup;
+  };
+
   const addMessage = (role, text, links = []) => {
     const message = document.createElement("div");
     message.className = `agent-message ${role}`;
@@ -291,6 +307,11 @@ if (agent) {
         anchor.target = "_blank";
         anchor.rel = "noopener noreferrer";
         anchor.textContent = link.label;
+        if (link.popup === "video") {
+          anchor.addEventListener("click", (event) => {
+            if (openVideoPopup(link.href)) event.preventDefault();
+          });
+        }
         item.append(anchor);
         linkList.append(item);
       });
@@ -459,7 +480,10 @@ if (agent) {
         addMessage(
           "assistant",
           results.map((result) => result.document.content).join("\n\n"),
-          results.filter((result) => result.link).map((result) => ({ href: result.link, label: `Learn more: ${result.category}` })),
+          results.flatMap((result) => [
+            ...(result.document.video_url ? [{ href: result.document.video_url, label: `Watch: ${result.document.title}`, popup: "video" }] : []),
+            ...(result.link ? [{ href: result.link, label: `Learn more: ${result.category}` }] : []),
+          ]),
         );
         if (usedSpeechInput) playAudio(`response_${Math.floor(Math.random() * 7) + 1}.wav`);
       }
