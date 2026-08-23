@@ -11,7 +11,10 @@ audience:
 avatar: anton
 pages:
   - 01-introduction.md
-  - 02-foundry.md
+  - 02-generative-ai-agents.md
   - 03-create-agent.md
-  - 04-exercise-create-an-agent.md
-  - 05-summary.md
+  - 03-foundry.md
+  - 04-developer-tools.md
+  - 05-agent-client.md
+  - 06-exercise-create-an-agent.md
+  - 07-summary.md

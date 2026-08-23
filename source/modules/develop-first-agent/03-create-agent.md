@@ -1,5 +1,5 @@
 ---
-title: How to create an agent
+title: Create an AI agent in the Microsoft Foundry portal
 ---
 
 ::: zone pivot="Video"
