@@ -96,13 +96,15 @@ document.querySelectorAll("[data-page-select]").forEach((select) => {
 const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
 const catalogCards = [...document.querySelectorAll("[data-catalog-card]")];
-const moduleCards = [...document.querySelectorAll("[data-module-card]")];
+const filterCards = [...document.querySelectorAll("[data-filter-card]")];
+const filterFields = filterDialog?.dataset.filterFields.split(",").filter(Boolean) || [];
 const searchForm = document.querySelector("[data-site-search]");
 const searchInput = searchForm?.querySelector('input[type="search"]');
 const searchClear = searchForm?.querySelector("[data-search-clear]");
 const moduleEmptyState = document.querySelector("[data-module-empty]");
 const playlistEmptyState = document.querySelector("[data-playlist-empty]");
-let appliedFilters = { modality: [], level: [], audience: [] };
+const catalogEmptyState = document.querySelector("[data-catalog-empty]");
+let appliedFilters = Object.fromEntries(filterFields.map((field) => [field, []]));
 let searchTerms = [];
 
 const matchesSearch = (card) => searchTerms.every((term) => card.dataset.searchText.includes(term));
@@ -110,20 +112,24 @@ const matchesSearch = (card) => searchTerms.every((term) => card.dataset.searchT
 const applyCatalogVisibility = () => {
   let visibleModules = 0;
   let visiblePlaylists = 0;
+  let visibleCatalogItems = 0;
   catalogCards.forEach((card) => {
     let matches = matchesSearch(card);
-    if (matches && card.matches("[data-module-card]")) {
-      const audiences = JSON.parse(card.dataset.audiences || "[]");
-      matches = (!appliedFilters.modality.length || appliedFilters.modality.includes(card.dataset.modality))
-        && (!appliedFilters.level.length || appliedFilters.level.includes(card.dataset.level))
-        && (!appliedFilters.audience.length || appliedFilters.audience.some((audience) => audiences.includes(audience)));
+    if (matches && card.matches("[data-filter-card]")) {
+      matches = filterFields.every((field) => {
+        if (!appliedFilters[field].length) return true;
+        const value = field === "audience" ? JSON.parse(card.dataset[field] || "[]") : [card.dataset[field]];
+        return appliedFilters[field].some((selected) => value.includes(selected));
+      });
     }
     card.hidden = !matches;
     if (matches && card.dataset.catalogType === "modules") visibleModules++;
     if (matches && card.dataset.catalogType === "playlists") visiblePlaylists++;
+    if (matches) visibleCatalogItems++;
   });
   if (moduleEmptyState) moduleEmptyState.hidden = visibleModules !== 0;
   if (playlistEmptyState) playlistEmptyState.hidden = visiblePlaylists !== 0;
+  if (catalogEmptyState) catalogEmptyState.hidden = visibleCatalogItems !== 0;
 };
 
 if (searchForm && searchInput && searchClear && catalogCards.length) {
@@ -142,10 +148,10 @@ if (searchForm && searchInput && searchClear && catalogCards.length) {
   });
 }
 
-if (filterDialog && filterForm && moduleCards.length) {
+if (filterDialog && filterForm && filterCards.length) {
   const filterCount = document.querySelector("[data-filter-count]");
 
-  const readFilters = () => Object.fromEntries(["modality", "level", "audience"].map((name) => [
+  const readFilters = () => Object.fromEntries(filterFields.map((name) => [
     name,
     [...filterForm.querySelectorAll(`input[name="${name}"]:checked`)].map((input) => input.value),
   ]));

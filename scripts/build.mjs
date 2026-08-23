@@ -11,6 +11,7 @@ const outputRoot = path.join(root, "dist");
 const contentRoots = [
   { name: "modules", directory: path.join(sourceRoot, "modules") },
   { name: "playlists", directory: path.join(sourceRoot, "playlists") },
+  { name: "courses", directory: path.join(sourceRoot, "courses") },
   { name: "MicrosoftLearning", directory: path.join(root, "MicrosoftLearning") },
   { name: "avatars", directory: path.join(root, "avatars") },
 ];
@@ -310,7 +311,7 @@ async function writePage(outputFile, html) {
 }
 
 function metadataLine(item) {
-  return [item.modality, item.level ? `Level ${item.level}` : "", item.duration].filter(Boolean).map(escapeHtml).join(" · ");
+  return [item.course_number, item.modality, item.level ? `Level ${item.level}` : "", item.duration].filter(Boolean).map(escapeHtml).join(" · ");
 }
 
 function thumbnail(outputFile, item, type) {
@@ -322,10 +323,10 @@ function thumbnail(outputFile, item, type) {
 function card(outputFile, item, type, filterable = false) {
   const target = path.join(outputRoot, type, item.slug, "index.html");
   const tooltipId = `${type}-${item.slug}-description`;
-  const searchText = [item.title, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
+  const searchText = [item.title, item.course_number, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
   const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}"`;
   const filterData = filterable
-    ? ` data-module-card data-modality="${escapeHtml(item.modality || "")}" data-level="${escapeHtml(item.level || "")}" data-audiences="${escapeHtml(JSON.stringify(item.audience || []))}"`
+    ? ` data-filter-card data-modality="${escapeHtml(item.modality || "")}" data-level="${escapeHtml(item.level || "")}" data-duration="${escapeHtml(item.duration || "")}" data-audience="${escapeHtml(JSON.stringify(item.audience || []))}"`
     : "";
   const tooltip = item.description ? `<span class="card-tooltip" id="${escapeHtml(tooltipId)}" role="tooltip">${escapeHtml(item.description)}</span>` : "";
   const describedBy = item.description ? ` aria-describedby="${escapeHtml(tooltipId)}"` : "";
@@ -340,19 +341,21 @@ function filterOptions(name, values, label) {
   return `<fieldset class="filter-group"><legend>${escapeHtml(label)}</legend><div class="filter-options">${values.map((value) => `<label><input type="checkbox" name="${escapeHtml(name)}" value="${escapeHtml(value)}"><span>${escapeHtml(value)}</span></label>`).join("")}</div></fieldset>`;
 }
 
-function moduleFilterDialog(modules) {
-  const uniqueValues = (selector) => [...new Set(modules.flatMap(selector).filter((value) => value !== undefined && value !== null && value !== ""))]
+function catalogFilterDialog(items, fields, subject) {
+  const uniqueValues = (selector) => [...new Set(items.flatMap(selector).filter((value) => value !== undefined && value !== null && value !== ""))]
     .sort((left, right) => String(left).localeCompare(String(right), undefined, { numeric: true }));
-  const modalities = uniqueValues((module) => [module.modality]);
-  const levels = uniqueValues((module) => [module.level]).map(String);
-  const audiences = uniqueValues((module) => Array.isArray(module.audience) ? module.audience : [module.audience]);
-  return `<dialog class="filter-dialog" data-filter-dialog aria-labelledby="filter-title">
+  const selectors = {
+    modality: (item) => [item.modality],
+    level: (item) => [item.level],
+    audience: (item) => Array.isArray(item.audience) ? item.audience : [item.audience],
+    duration: (item) => [item.duration],
+  };
+  const labels = { modality: "Module type", level: "Level", audience: "Audience", duration: "Duration" };
+  return `<dialog class="filter-dialog" data-filter-dialog data-filter-fields="${escapeHtml(fields.join(","))}" aria-labelledby="filter-title">
     <form method="dialog" data-filter-form>
-      <header class="filter-dialog-header"><div><p class="kicker">Refine modules</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
+      <header class="filter-dialog-header"><div><p class="kicker">Refine ${escapeHtml(subject)}</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
       <div class="filter-dialog-body">
-        ${filterOptions("modality", modalities, "Module type")}
-        ${filterOptions("level", levels, "Level")}
-        ${filterOptions("audience", audiences, "Audience")}
+        ${fields.map((field) => filterOptions(field, uniqueValues(selectors[field]).map(String), labels[field])).join("")}
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-filter-clear>Clear all</button><button class="primary-button" type="submit" value="apply">Apply filters</button></footer>
     </form>
@@ -363,13 +366,22 @@ function overview(outputFile, item, type, action = "", imageDetails = "") {
   return `<article class="overview">
     <div class="overview-media"><div class="overview-image">${thumbnail(outputFile, item, type)}</div>${imageDetails}</div>
     <div class="overview-copy">
-      <p class="kicker">${escapeHtml(type === "playlists" ? "Learning playlist" : "Learning module")}</p>
+      <p class="kicker">${escapeHtml(type === "playlists" ? "Learning playlist" : type === "courses" ? "Microsoft Official Course" : "Learning module")}</p>
       <h1>${escapeHtml(item.title)}</h1>
       <p class="lede">${escapeHtml(item.description || "")}</p>
       ${metadataLine(item) ? `<p class="metadata">${metadataLine(item)}</p>` : ""}
       ${action}
     </div>
   </article>`;
+}
+
+function courseOverview(outputFile, course, playlists) {
+  const playlistList = `<section class="module-page-list" aria-labelledby="course-playlists-title"><h2 id="course-playlists-title">Self-paced learning</h2><ol>${playlists.map((playlist) => {
+    const target = path.join(outputRoot, "playlists", playlist.slug, "index.html");
+    return `<li><a href="${relativeUrl(outputFile, target)}">${escapeHtml(playlist.title)}</a></li>`;
+  }).join("")}</ol></section>`;
+  const credential = `<section class="credential"><h2>Credential preparation</h2><p>${escapeHtml(course.credential || "No associated credential is specified.")}</p></section>`;
+  return overview(outputFile, course, "courses", credential, playlistList);
 }
 
 function pageNavigation(outputFile, pages, currentIndex, pageTargets) {
@@ -455,9 +467,10 @@ async function build() {
   await rm(outputRoot, { recursive: true, force: true });
   await mkdir(outputRoot, { recursive: true });
 
-  const [modules, playlists] = await Promise.all([
+  const [modules, playlists, courses] = await Promise.all([
     loadCollection("modules", "module.yml"),
     loadCollection("playlists", "playlist.yml"),
+    loadCollection("courses", "course.yml"),
   ]);
   const avatars = new Map((await loadCollection("avatars", "avatar.yml", root)).map((avatar) => [avatar.slug, avatar]));
   for (const module of modules) {
@@ -482,7 +495,9 @@ async function build() {
   }
   modules.sort((a, b) => a.title.localeCompare(b.title));
   playlists.sort((a, b) => a.title.localeCompare(b.title));
+  courses.sort((a, b) => a.title.localeCompare(b.title));
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));
+  const playlistMap = new Map(playlists.map((playlist) => [playlist.slug, playlist]));
 
   for (const contentRoot of contentRoots) {
     if (await exists(contentRoot.directory)) {
@@ -491,12 +506,19 @@ async function build() {
   }
 
   const homeFile = path.join(outputRoot, "index.html");
-  const homeSearch = `<form class="site-search" role="search" data-site-search><label class="sr-only" for="site-search-input">Search playlists and modules</label><input id="site-search-input" type="search" name="query" placeholder="Search" autocomplete="off"><button type="submit">Search</button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></form>`;
+  const homeSearch = `<div class="header-tools"><a class="header-link" href="${relativeUrl(homeFile, path.join(outputRoot, "courses", "index.html"))}">Courses</a><form class="site-search" role="search" data-site-search><label class="sr-only" for="site-search-input">Search playlists and modules</label><input id="site-search-input" type="search" name="query" placeholder="Search" autocomplete="off"><button type="submit">Search</button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></form></div>`;
   const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p>Choose a curated path or jump straight into a module.</p></section>
     <section class="catalog-section" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning</p><h2>Playlists</h2></div><div class="card-grid">${playlists.map((item) => card(homeFile, item, "playlists")).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search.</p></section>
     <section class="catalog-section alt" data-module-catalog><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore by topic</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Modules</h2></div><div class="card-grid" data-module-grid>${modules.map((item) => card(homeFile, item, "modules", true)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No modules match your search and filters.</p></section>
-    ${moduleFilterDialog(modules)}`;
+    ${catalogFilterDialog(modules, ["modality", "level", "audience"], "modules")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", headerExtra: homeSearch, content: homeContent, bodyClass: "home-page" }));
+
+  const coursesFile = path.join(outputRoot, "courses", "index.html");
+  const courseSearch = `<form class="site-search" role="search" data-site-search><label class="sr-only" for="course-search-input">Search courses</label><input id="course-search-input" type="search" name="query" placeholder="Search courses" autocomplete="off"><button type="submit">Search</button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></form>`;
+  const coursesContent = `<section class="catalog-intro"><p class="kicker">Microsoft Official Curricula</p><h1>Courses</h1><p>Microsoft Official Courses can be completed online as self-paced learning experiences, or delivered as instructor-led experiences by Microsoft and Microsoft Learning Partners.</p></section>
+    <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore the catalog</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Available courses</h2></div><div class="card-grid">${courses.map((item) => card(coursesFile, item, "courses", true)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p></section>
+    ${catalogFilterDialog(courses, ["audience", "level", "duration"], "courses")}`;
+  await writePage(coursesFile, shell({ outputFile: coursesFile, title: "Courses", headerExtra: courseSearch, content: coursesContent, bodyClass: "catalog-page" }));
 
   for (const module of modules) {
     await buildModuleRoute(module, await getModulePages(module), path.join(outputRoot, "modules", module.slug));
@@ -519,6 +541,18 @@ async function build() {
     }
   }
 
+  for (const course of courses) {
+    if (!course.course_number) throw new Error(`Course ${course.slug} must define course_number`);
+    if (!Array.isArray(course.playlists) || course.playlists.length === 0) throw new Error(`Course ${course.slug} must define at least one playlist`);
+    const coursePlaylists = course.playlists.map((slug) => {
+      const playlist = playlistMap.get(slug);
+      if (!playlist) throw new Error(`Course ${course.slug} references missing playlist ${slug}`);
+      return playlist;
+    });
+    const courseFile = path.join(outputRoot, "courses", course.slug, "index.html");
+    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, bodyClass: "learning-page", content: courseOverview(courseFile, course, coursePlaylists) }));
+  }
+
   await mkdir(path.join(outputRoot, "assets"), { recursive: true });
   await Promise.all([
     copyFile(path.join(root, "site", "styles.css"), path.join(outputRoot, "assets", "styles.css")),
@@ -526,7 +560,7 @@ async function build() {
     copyFile(path.join(root, "site", "moderation.txt"), path.join(outputRoot, "assets", "moderation.txt")),
     writeFile(path.join(outputRoot, ".nojekyll"), "", "utf8"),
   ]);
-  console.log(`Built ${modules.length} modules and ${playlists.length} playlists in dist/`);
+  console.log(`Built ${modules.length} modules, ${playlists.length} playlists, and ${courses.length} courses in dist/`);
 }
 
 await build();

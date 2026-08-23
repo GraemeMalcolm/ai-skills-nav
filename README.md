@@ -1,6 +1,6 @@
 # AI Skills Nav
 
-This repository contains Markdown and YAML source for a GitHub Pages learning site. The generated site provides a catalog of playlists and modules, playlist navigation, ordered module pages, zone pivots, embedded videos, and Markdown includes.
+This repository contains Markdown and YAML source for a GitHub Pages learning site. The generated site provides catalogs of courses, playlists, and modules; course and playlist navigation; ordered module pages; zone pivots; embedded videos; and Markdown includes.
 
 ## Local build
 
@@ -17,6 +17,7 @@ The build recreates the `dist` directory. Open `dist/index.html` to inspect the 
 
 - Add modules under `source/modules/<module-name>` with `module.yml`, `thumbnail.png`, and the page files listed by `pages`.
 - Add playlists under `source/playlists/<playlist-name>` with `playlist.yml`, `thumbnail.png`, and module folder names listed by `modules`.
+- Add courses under `source/courses/<course-name>` with `course.yml`, `thumbnail.png`, and playlist folder names listed by `playlists`.
 - Add reusable exercises under `MicrosoftLearning`; include them in module pages with `[!INCLUDE[](/MicrosoftLearning/path)]`.
 - Use `[!VIDEO URL]` or `[!VIDEO: URL]` for embedded video.
 - Use consecutive `::: zone pivot="Name"` and `::: zone-end` blocks to create tabbed content.
