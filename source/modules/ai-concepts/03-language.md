@@ -8,7 +8,7 @@ title: Exercise - Explore text analytics
 
 Hosted labs are provided by our hosting partner *Skillable*, and include a virtual machine that runs in your browser and temporary access to the cloud services you need to complete the lab exercise.
 
-[![Button to launch exercise.](./media/launch-exercise.png)](https://www.skillable.com/courseware/moc/){:target="_blank"}
+[![Button to launch exercise.](./media/launch-exercise.png)](https://www.skillable.com/login/){:target="_blank"}
 
 ::: zone-end
 
