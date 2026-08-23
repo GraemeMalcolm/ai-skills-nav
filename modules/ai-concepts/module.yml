@@ -1,0 +1,17 @@
+title: Explore AI Concepts
+description: In this lab, you'll explore various AI concepts.
+modality: Lab
+level: 100
+duration: 120 minutes
+topics:
+  - Artificial Intelligence
+audience:
+  - Developer
+pages:
+  - 01-ai-workloads.md
+  - 02-generative-ai.md
+  - 03-language.md
+  - 04-speech.md
+  - 05-vision.md
+  - 06-info-extraction.md
+  - 07-explore-rag.md
