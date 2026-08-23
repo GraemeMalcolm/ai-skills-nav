@@ -49,3 +49,63 @@ document.querySelectorAll("[data-pivot]").forEach((pivot) => {
 document.querySelectorAll("[data-page-select]").forEach((select) => {
   select.addEventListener("change", () => window.location.assign(select.value));
 });
+
+const filterDialog = document.querySelector("[data-filter-dialog]");
+const filterForm = filterDialog?.querySelector("[data-filter-form]");
+const moduleCards = [...document.querySelectorAll("[data-module-card]")];
+
+if (filterDialog && filterForm && moduleCards.length) {
+  const filterCount = document.querySelector("[data-filter-count]");
+  const emptyState = document.querySelector("[data-filter-empty]");
+  let appliedFilters = { modality: [], level: [], audience: [] };
+
+  const readFilters = () => Object.fromEntries(["modality", "level", "audience"].map((name) => [
+    name,
+    [...filterForm.querySelectorAll(`input[name="${name}"]:checked`)].map((input) => input.value),
+  ]));
+
+  const restoreAppliedFilters = () => {
+    filterForm.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+      input.checked = appliedFilters[input.name].includes(input.value);
+    });
+  };
+
+  const applyFilters = () => {
+    appliedFilters = readFilters();
+    let visibleCount = 0;
+    moduleCards.forEach((card) => {
+      const audiences = JSON.parse(card.dataset.audiences || "[]");
+      const matches = (!appliedFilters.modality.length || appliedFilters.modality.includes(card.dataset.modality))
+        && (!appliedFilters.level.length || appliedFilters.level.includes(card.dataset.level))
+        && (!appliedFilters.audience.length || appliedFilters.audience.some((audience) => audiences.includes(audience)));
+      card.hidden = !matches;
+      if (matches) visibleCount++;
+    });
+    const selectedCount = Object.values(appliedFilters).reduce((total, values) => total + values.length, 0);
+    filterCount.textContent = String(selectedCount);
+    filterCount.hidden = selectedCount === 0;
+    emptyState.hidden = visibleCount !== 0;
+  };
+
+  document.querySelector("[data-filter-open]")?.addEventListener("click", () => filterDialog.showModal());
+  filterDialog.querySelector("[data-filter-close]")?.addEventListener("click", () => {
+    restoreAppliedFilters();
+    filterDialog.close();
+  });
+  filterDialog.addEventListener("cancel", restoreAppliedFilters);
+  filterDialog.addEventListener("click", (event) => {
+    if (event.target !== filterDialog) return;
+    restoreAppliedFilters();
+    filterDialog.close();
+  });
+  filterForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    applyFilters();
+    filterDialog.close();
+  });
+  filterDialog.querySelector("[data-filter-clear]")?.addEventListener("click", () => {
+    filterForm.reset();
+    applyFilters();
+    filterDialog.close();
+  });
+}

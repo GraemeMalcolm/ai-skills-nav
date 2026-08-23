@@ -278,12 +278,38 @@ function thumbnail(outputFile, item, type) {
   return `<img src="${relativeUrl(outputFile, target)}" alt="" loading="lazy">`;
 }
 
-function card(outputFile, item, type) {
+function card(outputFile, item, type, filterable = false) {
   const target = path.join(outputRoot, type, item.slug, "index.html");
-  return `<a class="content-card" href="${relativeUrl(outputFile, target)}">
+  const filterData = filterable
+    ? ` data-module-card data-modality="${escapeHtml(item.modality || "")}" data-level="${escapeHtml(item.level || "")}" data-audiences="${escapeHtml(JSON.stringify(item.audience || []))}"`
+    : "";
+  return `<a class="content-card" href="${relativeUrl(outputFile, target)}"${filterData}>
     <span class="card-image">${thumbnail(outputFile, item, type)}</span>
     <span class="card-body"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(metadataLine(item))}</span></span>
   </a>`;
+}
+
+function filterOptions(name, values, label) {
+  return `<fieldset class="filter-group"><legend>${escapeHtml(label)}</legend><div class="filter-options">${values.map((value) => `<label><input type="checkbox" name="${escapeHtml(name)}" value="${escapeHtml(value)}"><span>${escapeHtml(value)}</span></label>`).join("")}</div></fieldset>`;
+}
+
+function moduleFilterDialog(modules) {
+  const uniqueValues = (selector) => [...new Set(modules.flatMap(selector).filter((value) => value !== undefined && value !== null && value !== ""))]
+    .sort((left, right) => String(left).localeCompare(String(right), undefined, { numeric: true }));
+  const modalities = uniqueValues((module) => [module.modality]);
+  const levels = uniqueValues((module) => [module.level]).map(String);
+  const audiences = uniqueValues((module) => Array.isArray(module.audience) ? module.audience : [module.audience]);
+  return `<dialog class="filter-dialog" data-filter-dialog aria-labelledby="filter-title">
+    <form method="dialog" data-filter-form>
+      <header class="filter-dialog-header"><div><p class="kicker">Refine modules</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
+      <div class="filter-dialog-body">
+        ${filterOptions("modality", modalities, "Module type")}
+        ${filterOptions("level", levels, "Level")}
+        ${filterOptions("audience", audiences, "Audience")}
+      </div>
+      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-filter-clear>Clear all</button><button class="primary-button" type="submit" value="apply">Apply filters</button></footer>
+    </form>
+  </dialog>`;
 }
 
 function overview(outputFile, item, type, action = "") {
@@ -397,7 +423,8 @@ async function build() {
   const homeFile = path.join(outputRoot, "index.html");
   const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p>Choose a curated path or jump straight into a module.</p></section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Playlists</h2></div><div class="card-grid">${playlists.map((item) => card(homeFile, item, "playlists")).join("")}</div></section>
-    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Explore by topic</p><h2>Modules</h2></div><div class="card-grid">${modules.map((item) => card(homeFile, item, "modules")).join("")}</div></section>`;
+    <section class="catalog-section alt" data-module-catalog><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore by topic</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Modules</h2></div><div class="card-grid" data-module-grid>${modules.map((item) => card(homeFile, item, "modules", true)).join("")}</div><p class="filter-empty" data-filter-empty role="status" aria-live="polite" hidden>No modules match the selected filters.</p></section>
+    ${moduleFilterDialog(modules)}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", content: homeContent, bodyClass: "home-page" }));
 
   for (const module of modules) {

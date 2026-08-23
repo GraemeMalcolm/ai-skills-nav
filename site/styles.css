@@ -67,9 +67,14 @@ img { max-width: 100%; }
 .catalog-section { padding: 72px max(6vw, 28px) 84px; }
 .catalog-section.alt { background: var(--surface-soft); }
 .section-heading { margin-bottom: 28px; }
+.section-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .section-heading h2 { margin: 7px 0 0; font: 700 2rem "Manrope", sans-serif; }
+.filter-trigger { display: inline-flex; align-items: center; gap: 7px; padding: 4px 0; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: var(--violet); text-transform: uppercase; font-weight: 700; font-size: .76rem; cursor: pointer; }
+.filter-count { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; display: inline-grid; place-items: center; background: var(--violet); color: white; font-size: .7rem; }
+.filter-count[hidden] { display: none; }
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 24px; }
 .content-card { display: block; overflow: hidden; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--ink); text-decoration: none; transition: transform .2s ease, box-shadow .2s ease; }
+.content-card[hidden] { display: none; }
 .content-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
 .card-image { display: block; aspect-ratio: 16 / 9; overflow: hidden; background: #e8e4dd; }
 .card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
@@ -77,6 +82,23 @@ img { max-width: 100%; }
 .card-body { min-height: 108px; padding: 18px; display: flex; flex-direction: column; gap: 8px; }
 .card-body strong { font: 700 1.05rem/1.35 "Manrope", sans-serif; }
 .card-body span { color: var(--muted); font-size: .86rem; }
+.filter-empty { margin: 28px 0 0; padding: 28px; border: 1px dashed #aaa49c; color: var(--muted); text-align: center; }
+.filter-empty[hidden] { display: none; }
+.filter-dialog { width: min(620px, calc(100% - 32px)); max-height: min(760px, calc(100vh - 32px)); padding: 0; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--ink); box-shadow: 0 24px 70px rgba(30, 27, 24, .24); }
+.filter-dialog::backdrop { background: rgba(35, 31, 28, .48); backdrop-filter: blur(2px); }
+.filter-dialog form { display: flex; max-height: inherit; flex-direction: column; }
+.filter-dialog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 26px 28px 22px; border-bottom: 1px solid var(--line); }
+.filter-dialog-header h2 { margin: 5px 0 0; font: 700 1.65rem "Manrope", sans-serif; }
+.filter-dialog-body { padding: 8px 28px; overflow-y: auto; }
+.filter-group { margin: 0; padding: 22px 0; border: 0; }
+.filter-group + .filter-group { border-top: 1px solid var(--line); }
+.filter-group legend { margin-bottom: 14px; padding: 0; font: 700 1rem "Manrope", sans-serif; }
+.filter-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
+.filter-options label { display: flex; align-items: center; gap: 9px; min-height: 34px; cursor: pointer; }
+.filter-options input { width: 18px; height: 18px; margin: 0; accent-color: var(--violet); }
+.filter-dialog-actions { display: flex; align-items: center; justify-content: flex-end; gap: 18px; padding: 20px 28px; border-top: 1px solid var(--line); background: #fbfaf7; }
+.filter-dialog-actions .primary-button { margin-top: 0; }
+.text-button { padding: 8px 2px; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: var(--violet); font-weight: 600; cursor: pointer; }
 
 .overview { min-height: calc(100vh - 68px); display: grid; grid-template-columns: minmax(280px, .9fr) minmax(360px, 1.1fr); align-items: center; gap: clamp(36px, 6vw, 90px); padding: clamp(44px, 8vw, 110px); }
 .overview-image img { width: 100%; display: block; border-radius: 7px; box-shadow: var(--shadow); }
@@ -136,6 +158,9 @@ img { max-width: 100%; }
   .brand { font-size: .92rem; }
   .home-hero { padding: 54px 22px; }
   .catalog-section { padding: 50px 22px 60px; }
+  .filter-dialog-header, .filter-dialog-actions { padding-inline: 20px; }
+  .filter-dialog-body { padding-inline: 20px; }
+  .filter-options { grid-template-columns: 1fr; }
   .lesson { width: min(100% - 36px, 920px); padding-top: 42px; }
   .page-nav { grid-template-columns: 1fr 1fr; }
   .page-nav label { grid-column: 1 / -1; grid-row: 1; }
