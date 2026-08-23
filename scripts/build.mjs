@@ -281,14 +281,18 @@ function thumbnail(outputFile, item, type) {
 
 function card(outputFile, item, type, filterable = false) {
   const target = path.join(outputRoot, type, item.slug, "index.html");
+  const tooltipId = `${type}-${item.slug}-description`;
   const searchText = [item.title, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
   const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}"`;
   const filterData = filterable
     ? ` data-module-card data-modality="${escapeHtml(item.modality || "")}" data-level="${escapeHtml(item.level || "")}" data-audiences="${escapeHtml(JSON.stringify(item.audience || []))}"`
     : "";
-  return `<a class="content-card" href="${relativeUrl(outputFile, target)}"${searchData}${filterData}>
+  const tooltip = item.description ? `<span class="card-tooltip" id="${escapeHtml(tooltipId)}" role="tooltip">${escapeHtml(item.description)}</span>` : "";
+  const describedBy = item.description ? ` aria-describedby="${escapeHtml(tooltipId)}"` : "";
+  return `<a class="content-card" href="${relativeUrl(outputFile, target)}"${describedBy}${searchData}${filterData}>
     <span class="card-image">${thumbnail(outputFile, item, type)}</span>
     <span class="card-body"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(metadataLine(item))}</span></span>
+    ${tooltip}
   </a>`;
 }
 
