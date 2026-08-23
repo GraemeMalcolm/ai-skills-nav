@@ -6,8 +6,14 @@ import yaml from "js-yaml";
 import { marked } from "marked";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const sourceRoot = path.join(root, "source");
 const outputRoot = path.join(root, "dist");
-const contentRoots = ["modules", "playlists", "labs", "avatars"];
+const contentRoots = [
+  { name: "modules", directory: path.join(sourceRoot, "modules") },
+  { name: "playlists", directory: path.join(sourceRoot, "playlists") },
+  { name: "labs", directory: path.join(sourceRoot, "labs") },
+  { name: "avatars", directory: path.join(root, "avatars") },
+];
 
 marked.setOptions({ gfm: true });
 
@@ -73,8 +79,8 @@ function parseFrontMatter(source, filePath) {
   return { data, body: source.slice(match[0].length) };
 }
 
-async function loadCollection(folder, metadataFile) {
-  const collectionRoot = path.join(root, folder);
+async function loadCollection(folder, metadataFile, baseDirectory = sourceRoot) {
+  const collectionRoot = path.join(baseDirectory, folder);
   if (!(await exists(collectionRoot))) return [];
   const entries = await readdir(collectionRoot, { withFileTypes: true });
   return Promise.all(entries.filter((entry) => entry.isDirectory()).map(async (entry) => {
@@ -102,8 +108,11 @@ function rewriteAssetUrl(value, sourceFile, outputFile) {
   let sourceTarget = path.resolve(path.dirname(sourceFile), pathname);
   const nestedMediaTarget = path.resolve(path.dirname(sourceFile), "media", pathname);
   if (!existsSync(sourceTarget) && existsSync(nestedMediaTarget)) sourceTarget = nestedMediaTarget;
-  const repoRelative = path.relative(root, sourceTarget);
+  let repoRelative = path.relative(root, sourceTarget);
   if (repoRelative.startsWith("..")) return value;
+  if (repoRelative === "source" || repoRelative.startsWith(`source${path.sep}`)) {
+    repoRelative = path.relative(sourceRoot, sourceTarget);
+  }
   return `${relativeUrl(outputFile, path.join(outputRoot, "content", repoRelative))}${suffix}`;
 }
 
@@ -446,7 +455,7 @@ async function build() {
     loadCollection("modules", "module.yml"),
     loadCollection("playlists", "playlist.yml"),
   ]);
-  const avatars = new Map((await loadCollection("avatars", "avatar.yml")).map((avatar) => [avatar.slug, avatar]));
+  const avatars = new Map((await loadCollection("avatars", "avatar.yml", root)).map((avatar) => [avatar.slug, avatar]));
   for (const module of modules) {
     if (!module.avatar) continue;
     const avatar = avatars.get(module.avatar);
@@ -472,8 +481,9 @@ async function build() {
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));
 
   for (const contentRoot of contentRoots) {
-    const source = path.join(root, contentRoot);
-    if (await exists(source)) await cp(source, path.join(outputRoot, "content", contentRoot), { recursive: true });
+    if (await exists(contentRoot.directory)) {
+      await cp(contentRoot.directory, path.join(outputRoot, "content", contentRoot.name), { recursive: true });
+    }
   }
 
   const homeFile = path.join(outputRoot, "index.html");
