@@ -14,6 +14,7 @@ Hosted labs are provided by our hosting partner *Skillable*, and include a virtu
 
 ::: zone pivot="Use your own environment"
 
+<!-- Would be imported from existing external GitHub source -->
 [!INCLUDE[](../../../exercises/ai-concepts/06-info-extraction.md)]
 
 ::: zone-end
