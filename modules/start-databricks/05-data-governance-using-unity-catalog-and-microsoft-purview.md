@@ -1,3 +1,7 @@
+---
+title: Data governance with Unity Catalog and Microsoft Purview
+---
+
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=ae2e4976-0a38-4e28-a6bc-0622b7d00079]
 
 Data governance is critical for ensuring that data within an organization is managed securely, efficiently, and in compliance with regulations. 

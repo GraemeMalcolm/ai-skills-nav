@@ -1,0 +1,12 @@
+title: Explore Microsoft Copilot
+description: In this lab, you'll explore Microsoft Copilot.
+modality: Lab
+level: 100
+duration: 30 minutes
+topics:
+  - Artificial Intelligence
+  - Microsoft Copilot
+audience:
+  - Business user
+pages:
+  - 01-copilot-lab.md

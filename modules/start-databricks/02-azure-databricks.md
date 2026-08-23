@@ -1,3 +1,7 @@
+---
+title: Get started with Azure Databricks
+---
+
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=d4fcf5c1-5d99-439c-8bba-157f93385e15]
 
 To use Azure Databricks, you must create an Azure Databricks workspace in your Azure subscription. A workspace is an Azure Databricks deployment in a cloud service account. It provides a unified environment for working with Azure Databricks assets for a specified set of users.

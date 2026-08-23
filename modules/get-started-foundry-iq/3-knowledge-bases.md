@@ -1,3 +1,7 @@
+---
+title: Knowledge bases
+---
+
 ::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=4fb4041d-9b96-47fa-908b-b526e4ea55d2]

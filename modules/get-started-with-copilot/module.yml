@@ -1,0 +1,17 @@
+title: Get started with Microsoft Copilot
+description: In this lesson, you'll learn how to get started with Microsoft Copilot.
+modality: Lesson
+level: 100
+duration: 30 minutes
+topics:
+  - Microsoft Copilot
+audience:
+  - Business user
+pages:
+  - 1-introduction.md
+  - 2-what-is-microsoft-copilot.md
+  - 3-navigating-copilot-setup-account-types.md
+  - 4-language-accessibility-support-copilot.md
+  - 5-tips-for-engaging-conversation-with-copilot.md
+  - 6-explore-gpt-technology.md
+  - 7-summary.md

@@ -1,3 +1,7 @@
+---
+title: Understand key concepts
+---
+
 Azure Databricks is a single service platform with multiple technologies that enable working with data at scale. When using Azure Databricks, there are some key concepts to understand.
 
 ## Workspaces

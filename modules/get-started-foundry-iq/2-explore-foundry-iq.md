@@ -1,3 +1,7 @@
+---
+title: What is Foundry IQ?
+---
+
 ::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=1d5ae2e4-27dd-4693-91db-db711ec1e355]

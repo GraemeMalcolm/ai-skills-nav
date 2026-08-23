@@ -1,3 +1,7 @@
+---
+title: Connect an agent to Foundry IQ
+---
+
 ::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=1afdbe0c-4c35-4ee4-8ca3-72f3b50698c3]
