@@ -28,7 +28,7 @@ You can navigate the site using the <a href = "https://graememalcolm.github.io/a
 - Playlists provide a navigation pane so users can progress through the modules in the playlist.
 - Multi-page modules start with s standard "Overview" page, while 1-page modules skip this and open the main content page directly. 
 - Multi-page modules provide page navigation using a "Previous" and "Next" navigation control at the bottom of each page.
-- Some pages include *zone pivots* that enable the user to choose between alternative presentations of content (for example, choosing between a video and the equivalent statuc text/graphics, or choosing between a hosted lab envitonment and using their own).
+- Some pages include *zone pivots* that enable the user to choose between alternative presentations of content (for example, choosing between a video and the equivalent static text/graphics, or choosing between a hosted lab environment and using their own).
 
 ## AI Interactivity
 
