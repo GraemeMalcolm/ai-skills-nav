@@ -231,6 +231,7 @@ function icon(name) {
     close: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>',
     home: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>',
     arrow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>',
+    mic: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg>',
   };
   return icons[name];
 }
@@ -254,7 +255,7 @@ function agentFlyout(outputFile, avatar) {
       <header class="agent-header"><img src="${avatarImage}" alt=""><div><p class="kicker">Learning assistant</p><h2 id="agent-title">${escapeHtml(avatar.name)}</h2></div><button class="icon-button" type="button" aria-label="Close chat" data-agent-close>${icon("close")}</button></header>
       <div class="agent-messages" data-agent-messages role="log" aria-live="polite" aria-relevant="additions"></div>
       <div class="agent-suggestions" data-agent-suggestions aria-label="Suggested prompts"></div>
-      <form class="agent-form" data-agent-form><label class="sr-only" for="agent-input">Message ${escapeHtml(avatar.name)}</label><input id="agent-input" type="text" placeholder="Ask a question" autocomplete="off" required><button type="submit">Send</button></form>
+      <form class="agent-form" data-agent-form><label class="sr-only" for="agent-input">Message ${escapeHtml(avatar.name)}</label><input id="agent-input" type="text" placeholder="Ask a question" autocomplete="off" required><button class="agent-mic" type="button" aria-label="Use speech input" aria-pressed="false" data-agent-mic>${icon("mic")}</button><button type="submit">Send</button></form>
     </aside>
   </div>`;
 }

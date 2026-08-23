@@ -171,11 +171,14 @@ if (agent) {
   const suggestions = agent.querySelector("[data-agent-suggestions]");
   const form = agent.querySelector("[data-agent-form]");
   const input = form.querySelector("input");
+  const microphoneButton = form.querySelector("[data-agent-mic]");
   const submitButton = form.querySelector('button[type="submit"]');
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const stopWords = new Set(["a", "an", "and", "are", "can", "do", "for", "how", "i", "in", "is", "it", "me", "of", "on", "or", "the", "to", "what", "with", "you"]);
   let keywordMap = new Map();
   let knowledgePromise;
   let activeAudio;
+  let recognition;
 
   const normalize = (value) => value.toLocaleLowerCase().replace(/[^a-z0-9+#.-]+/g, " ").trim().replace(/\s+/g, " ");
 
@@ -260,39 +263,82 @@ if (agent) {
       .slice(0, 3);
   };
 
-  const submitPrompt = async (prompt) => {
+  const submitPrompt = async (prompt, usedSpeechInput = false) => {
     const question = prompt.trim();
     if (!question) return;
     addMessage("user", question);
     input.value = "";
     input.disabled = true;
     submitButton.disabled = true;
-    playAudio("looking.wav");
+    microphoneButton.disabled = true;
+    if (usedSpeechInput) playAudio("looking.wav");
+    else activeAudio?.pause();
     try {
       await loadKnowledge();
       const results = searchKnowledge(question);
       if (!results.length) {
         addMessage("assistant", "Sorry, I couldn't find any specific information on that topic. Please try rephrasing your question.");
-        playAudio("no_results.wav");
+        if (usedSpeechInput) playAudio("no_results.wav");
       } else {
         addMessage(
           "assistant",
           results.map((result) => result.document.content).join("\n\n"),
           results.filter((result) => result.link).map((result) => ({ href: result.link, label: `Learn more: ${result.category}` })),
         );
-        playAudio(`response_${Math.floor(Math.random() * 7) + 1}.wav`);
+        if (usedSpeechInput) playAudio(`response_${Math.floor(Math.random() * 7) + 1}.wav`);
       }
     } catch {
       addMessage("assistant", "Sorry, I couldn't load my knowledge right now. Please try again.");
-      playAudio("sorry.wav");
+      if (usedSpeechInput) playAudio("sorry.wav");
     } finally {
       input.disabled = false;
       submitButton.disabled = false;
+      microphoneButton.disabled = !SpeechRecognition;
       input.focus();
     }
   };
 
+  if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = navigator.language || "en-US";
+    recognition.addEventListener("start", () => {
+      microphoneButton.classList.add("listening");
+      microphoneButton.setAttribute("aria-pressed", "true");
+      input.placeholder = "Listening...";
+    });
+    recognition.addEventListener("result", (event) => {
+      const transcript = event.results[event.resultIndex][0].transcript;
+      input.value = transcript;
+      submitPrompt(transcript, true);
+    });
+    recognition.addEventListener("error", (event) => {
+      if (event.error !== "aborted") addMessage("assistant", "I couldn't hear that. Please try the microphone again or type your question.");
+    });
+    recognition.addEventListener("end", () => {
+      microphoneButton.classList.remove("listening");
+      microphoneButton.setAttribute("aria-pressed", "false");
+      input.placeholder = "Ask a question";
+    });
+    microphoneButton.addEventListener("click", () => {
+      if (microphoneButton.classList.contains("listening")) {
+        recognition.stop();
+        return;
+      }
+      try {
+        recognition.start();
+      } catch {
+        recognition.stop();
+      }
+    });
+  } else {
+    microphoneButton.disabled = true;
+    microphoneButton.title = "Speech input is not supported by this browser";
+  }
+
   const setAgentOpen = (open) => {
+    if (!open && recognition && microphoneButton.classList.contains("listening")) recognition.abort();
     agent.classList.toggle("open", open);
     launcher.setAttribute("aria-expanded", String(open));
     panel.setAttribute("aria-hidden", String(!open));

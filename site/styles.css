@@ -48,7 +48,7 @@ img { max-width: 100%; }
 .site-search .search-clear:hover { background: var(--violet-soft); }
 .site-search .search-clear[hidden] { display: none; }
 .icon-button { width: 40px; height: 40px; border: 0; background: transparent; display: inline-grid; place-items: center; cursor: pointer; color: var(--ink); }
-.icon-button svg, .primary-button svg, .nav-button svg { width: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.icon-button svg, .primary-button svg, .nav-button svg, .agent-mic svg { width: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .nav-reveal { display: none; position: fixed; z-index: 35; top: 82px; left: 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); box-shadow: 0 5px 18px rgba(45, 39, 33, .12); }
 
 .site-frame { min-height: calc(100vh - 68px); }
@@ -172,10 +172,13 @@ img { max-width: 100%; }
 .agent-suggestions { padding: 10px 14px; display: flex; gap: 7px; overflow-x: auto; border-top: 1px solid var(--line); background: var(--surface); }
 .agent-suggestions button { flex: 0 0 auto; max-width: 250px; padding: 7px 10px; border: 1px solid var(--violet); border-radius: 4px; background: transparent; color: var(--violet); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .agent-suggestions button:hover { background: var(--violet-soft); }
-.agent-form { min-height: 58px; padding: 9px 10px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; border-top: 1px solid var(--line); background: var(--surface); }
+.agent-form { min-height: 58px; padding: 9px 10px; display: grid; grid-template-columns: minmax(0, 1fr) 40px auto; gap: 8px; border-top: 1px solid var(--line); background: var(--surface); }
 .agent-form input { min-width: 0; padding: 0 11px; border: 1px solid #8f8a84; border-radius: 4px; color: var(--ink); }
 .agent-form button { padding: 0 16px; border: 1px solid var(--violet); border-radius: 4px; background: var(--violet); color: white; font-weight: 600; cursor: pointer; }
 .agent-form button:hover { background: #523b8c; }
+.agent-form .agent-mic { width: 40px; padding: 0; display: inline-grid; place-items: center; background: transparent; color: var(--violet); }
+.agent-form .agent-mic:hover { background: var(--violet-soft); }
+.agent-form .agent-mic.listening { border-color: var(--orange); background: #fff0eb; color: #bd3f20; }
 .agent-form :disabled { cursor: wait; opacity: .65; }
 
 @media (max-width: 860px) {
