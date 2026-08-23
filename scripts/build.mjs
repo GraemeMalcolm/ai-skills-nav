@@ -7,7 +7,7 @@ import { marked } from "marked";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputRoot = path.join(root, "dist");
-const contentRoots = ["modules", "playlists", "labs"];
+const contentRoots = ["modules", "playlists", "labs", "avatars"];
 
 marked.setOptions({ gfm: true });
 
@@ -235,7 +235,31 @@ function icon(name) {
   return icons[name];
 }
 
-function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", bodyClass = "" }) {
+function agentFlyout(outputFile, avatar) {
+  if (!avatar) return "";
+  const avatarRoot = path.join(outputRoot, "content", "avatars", avatar.slug);
+  const avatarImage = relativeUrl(outputFile, path.join(avatarRoot, "avatar.png"));
+  const knowledgeUrl = relativeUrl(outputFile, path.join(avatarRoot, "knowledge.json"));
+  const audioRoot = relativeUrl(outputFile, path.join(avatarRoot, "audio"));
+  const config = escapeHtml(JSON.stringify({
+    name: avatar.name,
+    welcomeMessage: avatar["welcome-message"],
+    suggestedPrompts: avatar["suggested-prompts"],
+    knowledgeUrl,
+    audioRoot,
+  }));
+  return `<div class="agent" data-agent-config="${config}">
+    <button class="agent-launcher" type="button" aria-label="Chat with ${escapeHtml(avatar.name)}" aria-expanded="false" aria-controls="agent-panel"><img src="${avatarImage}" alt=""><span>Ask ${escapeHtml(avatar.name)}</span></button>
+    <aside class="agent-panel" id="agent-panel" aria-labelledby="agent-title" aria-hidden="true">
+      <header class="agent-header"><img src="${avatarImage}" alt=""><div><p class="kicker">Learning assistant</p><h2 id="agent-title">${escapeHtml(avatar.name)}</h2></div><button class="icon-button" type="button" aria-label="Close chat" data-agent-close>${icon("close")}</button></header>
+      <div class="agent-messages" data-agent-messages role="log" aria-live="polite" aria-relevant="additions"></div>
+      <div class="agent-suggestions" data-agent-suggestions aria-label="Suggested prompts"></div>
+      <form class="agent-form" data-agent-form><label class="sr-only" for="agent-input">Message ${escapeHtml(avatar.name)}</label><input id="agent-input" type="text" placeholder="Ask a question" autocomplete="off" required><button type="submit">Send</button></form>
+    </aside>
+  </div>`;
+}
+
+function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, bodyClass = "" }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
@@ -260,6 +284,7 @@ function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills 
     ${sidebar ? `<button class="icon-button nav-reveal" type="button" aria-label="Show navigation" aria-expanded="false" data-menu-reveal>${icon("menu")}</button>` : ""}
     <main id="main-content" class="main-content">${content}</main>
   </div>
+  ${agentFlyout(outputFile, avatar)}
 </body>
 </html>`;
 }
@@ -393,20 +418,20 @@ async function buildModuleRoute(module, pages, routeRoot, sidebarFactory = null)
 
   if (pages.length === 1) {
     const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`);
-    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, sidebar, bodyClass: "learning-page", content: articleContent(module, pages[0], rendered.html, "") }));
+    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", content: articleContent(module, pages[0], rendered.html, "") }));
     return;
   }
 
   const startTarget = pageTargets[0];
   const action = `<a class="primary-button" href="${relativeUrl(indexFile, startTarget)}">Start ${icon("arrow")}</a>`;
-  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, sidebar, bodyClass: "learning-page", content: overview(indexFile, module, "modules", action) }));
+  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", content: overview(indexFile, module, "modules", action) }));
 
   for (const [pageIndex, page] of pages.entries()) {
     const outputFile = pageTargets[pageIndex];
     const rendered = await renderMarkdownPage(page.sourceFile, outputFile, `${module.slug}-${page.slug}`);
     const pageSidebar = sidebarFactory ? sidebarFactory(outputFile) : "";
     const navigation = pageNavigation(outputFile, pages, pageIndex, pageTargets);
-    await writePage(outputFile, shell({ outputFile, title: rendered.title, sidebar: pageSidebar, bodyClass: "learning-page", content: articleContent(module, page, rendered.html, navigation) }));
+    await writePage(outputFile, shell({ outputFile, title: rendered.title, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", content: articleContent(module, page, rendered.html, navigation) }));
   }
 }
 
@@ -418,6 +443,27 @@ async function build() {
     loadCollection("modules", "module.yml"),
     loadCollection("playlists", "playlist.yml"),
   ]);
+  const avatars = new Map((await loadCollection("avatars", "avatar.yml")).map((avatar) => [avatar.slug, avatar]));
+  for (const module of modules) {
+    if (!module.avatar) continue;
+    const avatar = avatars.get(module.avatar);
+    if (!avatar) throw new Error(`Module ${module.slug} references unknown avatar ${module.avatar}`);
+    const requiredValues = ["name", "welcome-message", "suggested-prompts"];
+    const missingValue = requiredValues.find((value) => !avatar[value] || (Array.isArray(avatar[value]) && avatar[value].length === 0));
+    if (missingValue) throw new Error(`Avatar ${avatar.slug} is missing ${missingValue} in avatar.yml`);
+    for (const file of ["avatar.png", "knowledge.json"]) {
+      if (!(await exists(path.join(avatar.directory, file)))) throw new Error(`Avatar ${avatar.slug} is missing ${file}`);
+    }
+    const knowledge = JSON.parse(await readFile(path.join(avatar.directory, "knowledge.json"), "utf8"));
+    if (!Array.isArray(knowledge) || knowledge.some((category) => !Array.isArray(category.documents))) {
+      throw new Error(`Avatar ${avatar.slug} has invalid knowledge.json content`);
+    }
+    const audioFiles = ["looking.wav", "no_results.wav", "sorry.wav", ...Array.from({ length: 7 }, (_, index) => `response_${index + 1}.wav`)];
+    for (const file of audioFiles) {
+      if (!(await exists(path.join(avatar.directory, "audio", file)))) throw new Error(`Avatar ${avatar.slug} is missing audio/${file}`);
+    }
+    module.avatarData = avatar;
+  }
   modules.sort((a, b) => a.title.localeCompare(b.title));
   playlists.sort((a, b) => a.title.localeCompare(b.title));
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));

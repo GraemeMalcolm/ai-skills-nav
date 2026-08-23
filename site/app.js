@@ -159,3 +159,162 @@ if (filterDialog && filterForm && moduleCards.length) {
     filterDialog.close();
   });
 }
+
+const agent = document.querySelector("[data-agent-config]");
+
+if (agent) {
+  const config = JSON.parse(agent.dataset.agentConfig);
+  const launcher = agent.querySelector(".agent-launcher");
+  const panel = agent.querySelector(".agent-panel");
+  const closeButton = agent.querySelector("[data-agent-close]");
+  const messages = agent.querySelector("[data-agent-messages]");
+  const suggestions = agent.querySelector("[data-agent-suggestions]");
+  const form = agent.querySelector("[data-agent-form]");
+  const input = form.querySelector("input");
+  const submitButton = form.querySelector('button[type="submit"]');
+  const stopWords = new Set(["a", "an", "and", "are", "can", "do", "for", "how", "i", "in", "is", "it", "me", "of", "on", "or", "the", "to", "what", "with", "you"]);
+  let keywordMap = new Map();
+  let knowledgePromise;
+  let activeAudio;
+
+  const normalize = (value) => value.toLocaleLowerCase().replace(/[^a-z0-9+#.-]+/g, " ").trim().replace(/\s+/g, " ");
+
+  const playAudio = (file) => {
+    activeAudio?.pause();
+    activeAudio = new Audio(`${config.audioRoot}/${file}`);
+    activeAudio.play().catch(() => {});
+  };
+
+  const addMessage = (role, text, links = []) => {
+    const message = document.createElement("div");
+    message.className = `agent-message ${role}`;
+    const label = document.createElement("span");
+    label.className = "agent-message-label";
+    label.textContent = role === "assistant" ? config.name : "You";
+    const content = document.createElement("p");
+    content.textContent = text;
+    message.append(label, content);
+    if (links.length) {
+      const linkList = document.createElement("ul");
+      [...new Map(links.map((link) => [link.href, link])).values()].forEach((link) => {
+        const item = document.createElement("li");
+        const anchor = document.createElement("a");
+        anchor.href = link.href;
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+        anchor.textContent = link.label;
+        item.append(anchor);
+        linkList.append(item);
+      });
+      message.append(linkList);
+    }
+    messages.append(message);
+    messages.scrollTop = messages.scrollHeight;
+  };
+
+  const loadKnowledge = async () => {
+    if (!knowledgePromise) {
+      knowledgePromise = fetch(config.knowledgeUrl, { cache: "no-store" }).then(async (response) => {
+        if (!response.ok) throw new Error(`Knowledge request failed: ${response.status}`);
+        const categories = await response.json();
+        keywordMap = new Map();
+        categories.forEach((category) => {
+          (category.documents || []).forEach((document) => {
+            (document.keywords || []).forEach((keyword) => {
+              const normalizedKeyword = normalize(keyword);
+              if (!normalizedKeyword) return;
+              const entries = keywordMap.get(normalizedKeyword) || [];
+              entries.push({ document, category: category.category, link: category.link });
+              keywordMap.set(normalizedKeyword, entries);
+            });
+          });
+        });
+      });
+    }
+    return knowledgePromise;
+  };
+
+  const searchKnowledge = (question) => {
+    const normalizedQuestion = normalize(question);
+    const words = normalizedQuestion.split(" ").filter(Boolean);
+    const phrases = new Set();
+    const maximumPhraseLength = Math.min(3, words.length);
+    for (let length = maximumPhraseLength; length >= 2; length--) {
+      for (let index = 0; index <= words.length - length; index++) phrases.add(words.slice(index, index + length).join(" "));
+    }
+    words.filter((word) => word.length >= 2 && !stopWords.has(word)).forEach((word) => phrases.add(word));
+
+    const matches = new Map();
+    phrases.forEach((phrase) => {
+      (keywordMap.get(phrase) || []).forEach((entry) => {
+        const key = `${entry.category}:${entry.document.id}`;
+        const current = matches.get(key) || { ...entry, keywords: [] };
+        current.keywords.push(phrase);
+        matches.set(key, current);
+      });
+    });
+
+    return [...matches.values()]
+      .map((match) => ({ ...match, score: match.keywords.reduce((score, keyword) => score + keyword.split(" ").length, 0) }))
+      .sort((left, right) => right.score - left.score)
+      .slice(0, 3);
+  };
+
+  const submitPrompt = async (prompt) => {
+    const question = prompt.trim();
+    if (!question) return;
+    addMessage("user", question);
+    input.value = "";
+    input.disabled = true;
+    submitButton.disabled = true;
+    playAudio("looking.wav");
+    try {
+      await loadKnowledge();
+      const results = searchKnowledge(question);
+      if (!results.length) {
+        addMessage("assistant", "Sorry, I couldn't find any specific information on that topic. Please try rephrasing your question.");
+        playAudio("no_results.wav");
+      } else {
+        addMessage(
+          "assistant",
+          results.map((result) => result.document.content).join("\n\n"),
+          results.filter((result) => result.link).map((result) => ({ href: result.link, label: `Learn more: ${result.category}` })),
+        );
+        playAudio(`response_${Math.floor(Math.random() * 7) + 1}.wav`);
+      }
+    } catch {
+      addMessage("assistant", "Sorry, I couldn't load my knowledge right now. Please try again.");
+      playAudio("sorry.wav");
+    } finally {
+      input.disabled = false;
+      submitButton.disabled = false;
+      input.focus();
+    }
+  };
+
+  const setAgentOpen = (open) => {
+    agent.classList.toggle("open", open);
+    launcher.setAttribute("aria-expanded", String(open));
+    panel.setAttribute("aria-hidden", String(!open));
+    if (open) input.focus();
+    else launcher.focus();
+  };
+
+  addMessage("assistant", config.welcomeMessage);
+  config.suggestedPrompts.forEach((prompt) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = prompt;
+    button.addEventListener("click", () => submitPrompt(prompt));
+    suggestions.append(button);
+  });
+  launcher.addEventListener("click", () => setAgentOpen(true));
+  closeButton.addEventListener("click", () => setAgentOpen(false));
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    submitPrompt(input.value);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && agent.classList.contains("open")) setAgentOpen(false);
+  });
+}

@@ -9,6 +9,7 @@ audience:
   - Developer
   - Data Scientist
   - Data Engineer
+avatar: alex
 pages:
   - 01-introduction.md
   - 02-azure-databricks.md

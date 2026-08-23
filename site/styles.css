@@ -150,6 +150,34 @@ img { max-width: 100%; }
 .page-nav select { width: 100%; min-height: 44px; padding: 0 38px 0 12px; border: 1px solid #88847f; border-radius: 4px; background: white; color: var(--ink); }
 .nav-button.is-disabled { border-color: var(--line); background: transparent; color: #98938d; pointer-events: none; }
 
+.agent { position: fixed; z-index: 60; right: 22px; bottom: 22px; }
+.agent-launcher { min-height: 50px; display: flex; align-items: center; gap: 10px; padding: 6px 16px 6px 7px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--ink); font-weight: 700; cursor: pointer; box-shadow: 0 10px 30px rgba(35, 31, 28, .18); }
+.agent-launcher:hover { border-color: var(--violet); }
+.agent-launcher img { width: 38px; height: 38px; border-radius: 4px; object-fit: cover; }
+.agent-panel { position: absolute; right: 0; bottom: 0; width: min(390px, calc(100vw - 32px)); height: min(620px, calc(100vh - 96px)); display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; background: var(--surface); box-shadow: 0 22px 65px rgba(28, 25, 22, .28); opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity .18s ease, transform .18s ease, visibility .18s; }
+.agent.open .agent-panel { opacity: 1; visibility: visible; transform: none; }
+.agent.open .agent-launcher { visibility: hidden; }
+.agent-header { min-height: 76px; display: grid; grid-template-columns: 48px 1fr 40px; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--line); background: #fbfaf7; }
+.agent-header > img { width: 48px; height: 48px; border-radius: 5px; object-fit: cover; }
+.agent-header h2 { margin: 3px 0 0; font: 700 1.15rem "Manrope", sans-serif; }
+.agent-messages { flex: 1; min-height: 0; overflow-y: auto; padding: 18px 14px; display: flex; flex-direction: column; gap: 14px; background: var(--paper); }
+.agent-message { max-width: 88%; }
+.agent-message.user { align-self: flex-end; }
+.agent-message-label { display: block; margin: 0 5px 4px; color: var(--muted); font-size: .72rem; font-weight: 700; }
+.agent-message.user .agent-message-label { text-align: right; }
+.agent-message p { margin: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); line-height: 1.48; white-space: pre-line; }
+.agent-message.user p { border-color: var(--violet); background: var(--violet); color: white; }
+.agent-message ul { margin: 7px 0 0; padding: 0 0 0 22px; }
+.agent-message a { font-size: .86rem; }
+.agent-suggestions { padding: 10px 14px; display: flex; gap: 7px; overflow-x: auto; border-top: 1px solid var(--line); background: var(--surface); }
+.agent-suggestions button { flex: 0 0 auto; max-width: 250px; padding: 7px 10px; border: 1px solid var(--violet); border-radius: 4px; background: transparent; color: var(--violet); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.agent-suggestions button:hover { background: var(--violet-soft); }
+.agent-form { min-height: 58px; padding: 9px 10px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; border-top: 1px solid var(--line); background: var(--surface); }
+.agent-form input { min-width: 0; padding: 0 11px; border: 1px solid #8f8a84; border-radius: 4px; color: var(--ink); }
+.agent-form button { padding: 0 16px; border: 1px solid var(--violet); border-radius: 4px; background: var(--violet); color: white; font-weight: 600; cursor: pointer; }
+.agent-form button:hover { background: #523b8c; }
+.agent-form :disabled { cursor: wait; opacity: .65; }
+
 @media (max-width: 860px) {
   .site-header { padding: 0 18px; }
   .site-frame.has-sidebar { display: block; }
@@ -181,6 +209,8 @@ img { max-width: 100%; }
   .page-nav { grid-template-columns: 1fr 1fr; }
   .page-nav label { grid-column: 1 / -1; grid-row: 1; }
   .nav-button { width: 100%; }
+  .agent { right: 12px; bottom: 12px; }
+  .agent-panel { width: calc(100vw - 24px); height: min(680px, calc(100vh - 24px)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
