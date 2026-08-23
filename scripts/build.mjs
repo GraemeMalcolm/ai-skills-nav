@@ -356,9 +356,9 @@ function moduleFilterDialog(modules) {
   </dialog>`;
 }
 
-function overview(outputFile, item, type, action = "") {
+function overview(outputFile, item, type, action = "", imageDetails = "") {
   return `<article class="overview">
-    <div class="overview-image">${thumbnail(outputFile, item, type)}</div>
+    <div class="overview-media"><div class="overview-image">${thumbnail(outputFile, item, type)}</div>${imageDetails}</div>
     <div class="overview-copy">
       <p class="kicker">${escapeHtml(type === "playlists" ? "Learning playlist" : "Learning module")}</p>
       <h1>${escapeHtml(item.title)}</h1>
@@ -436,7 +436,8 @@ async function buildModuleRoute(module, pages, routeRoot, sidebarFactory = null)
 
   const startTarget = pageTargets[0];
   const action = `<a class="primary-button" href="${relativeUrl(indexFile, startTarget)}">Start ${icon("arrow")}</a>`;
-  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", moduleSlug: module.slug, content: overview(indexFile, module, "modules", action) }));
+  const pageList = `<section class="module-page-list" aria-labelledby="module-pages-title"><h2 id="module-pages-title">In this module</h2><ol>${pages.map((page, index) => `<li><a href="${relativeUrl(indexFile, pageTargets[index])}">${escapeHtml(page.title)}</a></li>`).join("")}</ol></section>`;
+  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", moduleSlug: module.slug, content: overview(indexFile, module, "modules", action, pageList) }));
 
   for (const [pageIndex, page] of pages.entries()) {
     const outputFile = pageTargets[pageIndex];
