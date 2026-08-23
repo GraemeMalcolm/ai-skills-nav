@@ -1,4 +1,5 @@
 const menuToggle = document.querySelector("[data-menu-toggle]");
+const menuReveal = document.querySelector("[data-menu-reveal]");
 const sidebar = document.querySelector("[data-sidebar]");
 
 if (menuToggle && window.matchMedia("(max-width: 860px)").matches) {
@@ -8,16 +9,31 @@ if (menuToggle && window.matchMedia("(max-width: 860px)").matches) {
 function setMenu(open) {
   document.body.classList.toggle("menu-open", open);
   menuToggle?.setAttribute("aria-expanded", String(open));
+  menuReveal?.setAttribute("aria-expanded", String(open));
   if (open) sidebar?.querySelector("a")?.focus();
+  else menuReveal?.focus();
 }
 
 menuToggle?.addEventListener("click", () => {
   if (window.matchMedia("(max-width: 860px)").matches) {
+    setMenu(false);
+    return;
+  }
+  document.body.classList.add("nav-collapsed");
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuReveal?.setAttribute("aria-expanded", "false");
+  menuReveal?.focus();
+});
+
+menuReveal?.addEventListener("click", () => {
+  if (window.matchMedia("(max-width: 860px)").matches) {
     setMenu(true);
     return;
   }
-  const collapsed = document.body.classList.toggle("nav-collapsed");
-  menuToggle.setAttribute("aria-expanded", String(!collapsed));
+  document.body.classList.remove("nav-collapsed");
+  menuToggle?.setAttribute("aria-expanded", "true");
+  menuReveal.setAttribute("aria-expanded", "true");
+  menuToggle?.focus();
 });
 
 document.querySelectorAll("[data-menu-close]").forEach((button) => button.addEventListener("click", () => setMenu(false)));

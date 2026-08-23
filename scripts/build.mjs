@@ -253,10 +253,11 @@ function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills 
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a>
-    ${headerExtra}${sidebar ? `<button class="icon-button menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button>` : ""}
+    ${headerExtra}
   </header>
   <div class="site-frame${sidebar ? " has-sidebar" : ""}">
     ${sidebar}
+    ${sidebar ? `<button class="icon-button nav-reveal" type="button" aria-label="Show navigation" aria-expanded="false" data-menu-reveal>${icon("menu")}</button>` : ""}
     <main id="main-content" class="main-content">${content}</main>
   </div>
 </body>
@@ -348,7 +349,7 @@ function articleContent(module, page, pageHtml, navigation) {
 function playlistSidebar(outputFile, playlist, modules, activeModule = "") {
   const playlistTarget = path.join(outputRoot, "playlists", playlist.slug, "index.html");
   return `<aside class="sidebar" data-sidebar>
-    <div class="sidebar-heading"><span>Navigation</span><button class="icon-button" type="button" aria-label="Close navigation" data-menu-close>${icon("close")}</button></div>
+    <div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div>
     <nav aria-label="Playlist">
       <a class="playlist-link${activeModule ? "" : " active"}" href="${relativeUrl(outputFile, playlistTarget)}">${escapeHtml(playlist.title)}</a>
       <ul>${modules.map((module) => {
