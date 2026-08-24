@@ -322,17 +322,44 @@ if (agent) {
     return popup;
   };
 
+  const typeMessage = (message, content, text, linkList) => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      content.textContent = text;
+      if (linkList) linkList.hidden = false;
+      message.removeAttribute("aria-busy");
+      messages.scrollTop = messages.scrollHeight;
+      return;
+    }
+    const charactersPerSecond = 250;
+    const startedAt = performance.now();
+    const reveal = (timestamp) => {
+      const characterCount = Math.min(text.length, Math.floor((timestamp - startedAt) * charactersPerSecond / 1000));
+      content.textContent = text.slice(0, characterCount);
+      messages.scrollTop = messages.scrollHeight;
+      if (characterCount < text.length) {
+        requestAnimationFrame(reveal);
+        return;
+      }
+      if (linkList) linkList.hidden = false;
+      message.removeAttribute("aria-busy");
+      messages.scrollTop = messages.scrollHeight;
+    };
+    requestAnimationFrame(reveal);
+  };
+
   const addMessage = (role, text, links = []) => {
     const message = document.createElement("div");
     message.className = `agent-message ${role}`;
+    if (role === "assistant") message.setAttribute("aria-busy", "true");
     const label = document.createElement("span");
     label.className = "agent-message-label";
     label.textContent = role === "assistant" ? config.name : "You";
     const content = document.createElement("p");
-    content.textContent = text;
     message.append(label, content);
+    let linkList;
     if (links.length) {
-      const linkList = document.createElement("ul");
+      linkList = document.createElement("ul");
+      linkList.hidden = role === "assistant";
       [...new Map(links.map((link) => [link.href, link])).values()].forEach((link) => {
         const item = document.createElement("li");
         const anchor = document.createElement("a");
@@ -352,6 +379,8 @@ if (agent) {
     }
     messages.append(message);
     messages.scrollTop = messages.scrollHeight;
+    if (role === "assistant") typeMessage(message, content, text, linkList);
+    else content.textContent = text;
   };
 
   const loadKnowledge = async () => {
