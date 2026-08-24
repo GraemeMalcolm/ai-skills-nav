@@ -36,6 +36,6 @@ You can navigate the site using the <a href = "https://graememalcolm.github.io/a
 
 An additional feature of the site is the *personification* of AI assistance. The site supports multiple possible *avatars*, each with a specific curricular specialty. For example *Alex* is the AI persona associated with Azure Databricks training, while *Anton* is the AI persona for AI development. The intention is for users to to build trusted affinity with a familiar "face" of their chosen area of study.
 
-Avatars are associated at the *module* level, and any module associated with an avatar presents an "Ask *avatar*" chat interface while the user is on the module.
+Avatars are associated at the *module* level, and any module associated with an avatar presents an "Ask *avatar*" chat interface while the user is in the module.
 
 > **NOTE**: In this proof-of-concept implementation of the site, the chat interface is constrained to *basic* mode in which no AI model is used. The avatar responds to questions based on simple keyword matching. To see an example of an agent using a real model, check out the <a href="https://aka.ms/choose-anton" target = "_blank">Ask Anton</a> app.
