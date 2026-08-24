@@ -1,13 +1,13 @@
-title: Aggregated Copilot Module
+title: Copilot Quickstart
 description: This module consists of content aggregated from other modules.
 modality: Multimodal
 level: 100
 duration: 30 minutes
 topics:
-  - Azure
+  - Artificial Intelligence
   - Microsoft Copilot
 audience:
-  - Business User
+  - Business user
 pages:
   - 01-copilot.md
   - 02-exercise.md
