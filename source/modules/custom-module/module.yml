@@ -1,0 +1,13 @@
+title: Aggregated Copilot Module
+description: This module consists of content aggregated from other modules.
+modality: Multimodal
+level: 100
+duration: 30 minutes
+topics:
+  - Azure
+  - Microsoft Copilot
+audience:
+  - Administrator
+pages:
+  - 01-copilot.md
+  - 02-exercise.md
