@@ -28,7 +28,7 @@ You can navigate the site using the <a href = "https://graememalcolm.github.io/a
 - The main online experience for most users is to either complete a curated *playlist* or find the specific *modules* they're most interested in. *Courses* are presented in a separate page due to their status as official curricula. Courses often align to Microsoft certifications.
 - Users can *search* for playlists and modules using keywords (for example "Copilot" or "Microsoft Foundry"), and they can *filter* modules based on *audience* (target role), *level* (100-500), and *type* (modality). They can search and filter courses in a similar way, including the ability to search by course number (e.g. "AI-3026").
 - Playlists provide a navigation pane so users can progress through the modules in the playlist.
-- Multi-page modules start with s standard "Overview" page, while 1-page modules skip this and open the main content page directly.
+- Multi-page modules start with a standard "Overview" page, while 1-page modules skip this and open the main content page directly.
 - Multi-page modules provide page navigation using a "Previous" and "Next" navigation control at the bottom of each page.
 - Some pages include *zone pivots* that enable the user to choose between alternative presentations of content (for example, choosing between a video and the equivalent static text/graphics, or choosing between a hosted lab environment and using their own).
 
