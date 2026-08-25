@@ -93,6 +93,286 @@ document.querySelectorAll("[data-page-select]").forEach((select) => {
   select.addEventListener("change", () => window.location.assign(select.value));
 });
 
+const personalPlaylistsStorageKey = "ai-skills-nav:personal-playlists";
+
+const readPersonalPlaylists = () => {
+  try {
+    const playlists = JSON.parse(localStorage.getItem(personalPlaylistsStorageKey) || "[]");
+    if (!Array.isArray(playlists)) return [];
+    return playlists.filter((playlist) => playlist && typeof playlist.id === "string" && typeof playlist.name === "string").map((playlist) => ({
+      id: playlist.id,
+      name: playlist.name,
+      description: typeof playlist.description === "string" ? playlist.description : "",
+      modules: Array.isArray(playlist.modules) ? playlist.modules.filter((module) => module && typeof module.name === "string" && typeof module.path === "string") : [],
+    }));
+  } catch {
+    return [];
+  }
+};
+
+const writePersonalPlaylists = (playlists) => {
+  try {
+    localStorage.setItem(personalPlaylistsStorageKey, JSON.stringify(playlists));
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const personalPlaylistDialog = document.querySelector("[data-personal-playlist-dialog]");
+
+if (personalPlaylistDialog) {
+  const form = personalPlaylistDialog.querySelector("[data-personal-playlist-form]");
+  const select = form.querySelector("[data-personal-playlist-select]");
+  const newFields = form.querySelector("[data-personal-playlist-new]");
+  const nameInput = form.querySelector("[data-personal-playlist-name]");
+  const descriptionInput = form.querySelector("[data-personal-playlist-description]");
+  const status = form.querySelector("[data-personal-playlist-status]");
+  const submitButton = form.querySelector("[data-personal-playlist-submit]");
+  const goLink = form.querySelector("[data-personal-playlist-go]");
+
+  const showStatus = (message, error = false) => {
+    status.textContent = message;
+    status.classList.toggle("is-error", error);
+    status.hidden = false;
+  };
+
+  const showNewPlaylistFields = () => {
+    newFields.hidden = select.value !== "new";
+    if (!newFields.hidden) nameInput.focus();
+  };
+
+  const populatePlaylists = () => {
+    const playlists = readPersonalPlaylists();
+    select.replaceChildren();
+    playlists.forEach((playlist) => select.add(new Option(playlist.name, playlist.id)));
+    select.add(new Option("Create a new playlist", "new"));
+    select.value = playlists.length ? playlists[0].id : "new";
+    showNewPlaylistFields();
+  };
+
+  const resetDialog = () => {
+    form.reset();
+    status.hidden = true;
+    status.classList.remove("is-error");
+    submitButton.hidden = false;
+    goLink.hidden = true;
+  };
+
+  document.querySelector("[data-personal-playlist-open]")?.addEventListener("click", () => {
+    resetDialog();
+    populatePlaylists();
+    personalPlaylistDialog.showModal();
+  });
+  select.addEventListener("change", showNewPlaylistFields);
+  personalPlaylistDialog.querySelectorAll("[data-personal-playlist-close]").forEach((button) => button.addEventListener("click", () => personalPlaylistDialog.close()));
+  personalPlaylistDialog.addEventListener("click", (event) => {
+    if (event.target === personalPlaylistDialog) personalPlaylistDialog.close();
+  });
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const playlists = readPersonalPlaylists();
+    let playlist;
+    if (select.value === "new") {
+      const name = nameInput.value.trim();
+      if (!name) {
+        showStatus("Enter a name for the new playlist.", true);
+        nameInput.focus();
+        return;
+      }
+      if (playlists.some((item) => item.name.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+        showStatus("A playlist with that name already exists.", true);
+        nameInput.focus();
+        return;
+      }
+      playlist = {
+        id: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        name,
+        description: descriptionInput.value.trim(),
+        modules: [],
+      };
+      playlists.push(playlist);
+    } else {
+      playlist = playlists.find((item) => item.id === select.value);
+    }
+    if (!playlist) {
+      showStatus("The selected playlist is no longer available.", true);
+      return;
+    }
+    const alreadyAdded = playlist.modules.some((module) => module.path === personalPlaylistDialog.dataset.modulePath);
+    if (!alreadyAdded) {
+      playlist.modules.push({ name: personalPlaylistDialog.dataset.moduleName, path: personalPlaylistDialog.dataset.modulePath });
+    }
+    if (!writePersonalPlaylists(playlists)) {
+      showStatus("Your browser could not save the playlist.", true);
+      return;
+    }
+    showStatus(alreadyAdded ? `This module is already in ${playlist.name}.` : `Added this module to ${playlist.name}.`);
+    submitButton.hidden = true;
+    goLink.href = `${personalPlaylistDialog.dataset.playlistsUrl}?playlist=${encodeURIComponent(playlist.id)}`;
+    goLink.hidden = false;
+  });
+}
+
+const personalPlaylistsPage = document.querySelector("[data-personal-playlists]");
+
+if (personalPlaylistsPage) {
+  const moduleCatalog = new Map(JSON.parse(personalPlaylistsPage.dataset.moduleCatalog).map((module) => [module.path, module]));
+  const moduleUrl = (modulePath) => new URL(`../${modulePath}`, window.location.href).href;
+  const playlistId = new URLSearchParams(window.location.search).get("playlist");
+
+  const createCard = (playlist) => {
+    const card = document.createElement("a");
+    card.className = "content-card";
+    card.href = `?playlist=${encodeURIComponent(playlist.id)}`;
+    const imageContainer = document.createElement("span");
+    imageContainer.className = "card-image";
+    const image = document.createElement("img");
+    image.src = personalPlaylistsPage.dataset.playlistThumbnail;
+    image.alt = "";
+    image.loading = "lazy";
+    imageContainer.append(image);
+    const body = document.createElement("span");
+    body.className = "card-body";
+    const title = document.createElement("strong");
+    title.textContent = playlist.name;
+    const description = document.createElement("span");
+    description.textContent = playlist.description;
+    body.append(title, description);
+    card.append(imageContainer, body);
+    return card;
+  };
+
+  const renderCollection = () => {
+    const playlists = readPersonalPlaylists();
+    personalPlaylistsPage.closest(".site-frame").classList.remove("has-sidebar");
+    document.querySelector("[data-sidebar]")?.remove();
+    document.querySelector("[data-menu-reveal]")?.remove();
+    document.querySelector("[data-menu-close]")?.remove();
+    const grid = personalPlaylistsPage.querySelector("[data-personal-playlist-grid]");
+    grid.replaceChildren(...playlists.map(createCard));
+    personalPlaylistsPage.querySelector("[data-personal-playlist-empty]").hidden = playlists.length !== 0;
+  };
+
+  const newPlaylistDialog = document.querySelector("[data-new-personal-playlist-dialog]");
+  const newPlaylistForm = newPlaylistDialog.querySelector("[data-new-personal-playlist-form]");
+  const newPlaylistName = newPlaylistForm.querySelector("[data-new-personal-playlist-name]");
+  const newPlaylistDescription = newPlaylistForm.querySelector("[data-new-personal-playlist-description]");
+  const newPlaylistStatus = newPlaylistForm.querySelector("[data-new-personal-playlist-status]");
+
+  document.querySelector("[data-new-personal-playlist-open]")?.addEventListener("click", () => {
+    newPlaylistForm.reset();
+    newPlaylistStatus.hidden = true;
+    newPlaylistStatus.classList.remove("is-error");
+    newPlaylistDialog.showModal();
+    newPlaylistName.focus();
+  });
+  newPlaylistDialog.querySelectorAll("[data-new-personal-playlist-close]").forEach((button) => button.addEventListener("click", () => newPlaylistDialog.close()));
+  newPlaylistDialog.addEventListener("click", (event) => {
+    if (event.target === newPlaylistDialog) newPlaylistDialog.close();
+  });
+  newPlaylistForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const name = newPlaylistName.value.trim();
+    const playlists = readPersonalPlaylists();
+    if (!name) {
+      newPlaylistStatus.textContent = "Enter a name for the new playlist.";
+      newPlaylistStatus.classList.add("is-error");
+      newPlaylistStatus.hidden = false;
+      newPlaylistName.focus();
+      return;
+    }
+    if (playlists.some((playlist) => playlist.name.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+      newPlaylistStatus.textContent = "A playlist with that name already exists.";
+      newPlaylistStatus.classList.add("is-error");
+      newPlaylistStatus.hidden = false;
+      newPlaylistName.focus();
+      return;
+    }
+    playlists.push({
+      id: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      name,
+      description: newPlaylistDescription.value.trim(),
+      modules: [],
+    });
+    if (!writePersonalPlaylists(playlists)) {
+      newPlaylistStatus.textContent = "Your browser could not save the playlist.";
+      newPlaylistStatus.classList.add("is-error");
+      newPlaylistStatus.hidden = false;
+      return;
+    }
+    newPlaylistDialog.close();
+    renderCollection();
+  });
+
+  const renderPlaylist = (playlist, playlists) => {
+    const before = JSON.stringify(playlist.modules);
+    playlist.modules = playlist.modules.filter((module) => moduleCatalog.has(module.path)).map((module) => ({
+      name: moduleCatalog.get(module.path).name,
+      path: module.path,
+    }));
+    if (JSON.stringify(playlist.modules) !== before) writePersonalPlaylists(playlists);
+
+    document.title = `${playlist.name} | AI Skills Nav`;
+    const frame = personalPlaylistsPage.closest(".site-frame");
+    const navigation = frame.querySelector("[data-personal-playlist-navigation]");
+    const playlistLink = document.createElement("a");
+    playlistLink.className = "playlist-link active";
+    playlistLink.href = window.location.href;
+    playlistLink.textContent = playlist.name;
+    const moduleList = document.createElement("ul");
+    playlist.modules.forEach((module) => {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = moduleUrl(module.path);
+      link.textContent = module.name;
+      item.append(link);
+      moduleList.append(item);
+    });
+    navigation.append(playlistLink, moduleList);
+
+    personalPlaylistsPage.replaceChildren();
+    const overview = document.createElement("article");
+    overview.className = "overview";
+    const media = document.createElement("div");
+    media.className = "overview-media";
+    const overviewImage = document.createElement("div");
+    overviewImage.className = "overview-image";
+    const image = document.createElement("img");
+    image.src = personalPlaylistsPage.dataset.playlistThumbnail;
+    image.alt = "";
+    overviewImage.append(image);
+    media.append(overviewImage);
+    const copy = document.createElement("div");
+    copy.className = "overview-copy";
+    const kicker = document.createElement("p");
+    kicker.className = "kicker";
+    kicker.textContent = "Personal playlist";
+    const title = document.createElement("h1");
+    title.textContent = playlist.name;
+    const description = document.createElement("p");
+    description.className = "lede";
+    description.textContent = playlist.description;
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "text-button personal-playlist-delete";
+    deleteButton.type = "button";
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", () => {
+      if (!window.confirm(`Delete ${playlist.name}?`)) return;
+      writePersonalPlaylists(playlists.filter((item) => item.id !== playlist.id));
+      window.location.assign(window.location.pathname);
+    });
+    copy.append(kicker, title, description, deleteButton);
+    overview.append(media, copy);
+    personalPlaylistsPage.append(overview);
+  };
+
+  const playlists = readPersonalPlaylists();
+  const selectedPlaylist = playlists.find((playlist) => playlist.id === playlistId);
+  if (playlistId && selectedPlaylist) renderPlaylist(selectedPlaylist, playlists);
+  else renderCollection();
+}
+
 const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
 const catalogCards = [...document.querySelectorAll("[data-catalog-card]")];
@@ -223,7 +503,7 @@ if (agent) {
   const playAudio = (file) => {
     activeAudio?.pause();
     activeAudio = new Audio(`${config.audioRoot}/${file}`);
-    activeAudio.play().catch(() => {});
+    activeAudio.play().catch(() => { });
   };
 
   const jaroWinkler = (left, right) => {

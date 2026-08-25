@@ -275,7 +275,27 @@ function agentFlyout(outputFile, avatar) {
   </div>`;
 }
 
-function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, bodyClass = "", moduleSlug = "" }) {
+function personalPlaylistDialog(outputFile, module) {
+  if (!module) return "";
+  const playlistsUrl = relativeUrl(outputFile, path.join(outputRoot, "my-playlists", "index.html"));
+  return `<button class="personal-playlist-add" type="button" title="Add to personal playlist" aria-label="Add to personal playlist" data-personal-playlist-open>&#10866;</button>
+  <dialog class="filter-dialog personal-playlist-dialog" data-personal-playlist-dialog data-module-name="${escapeHtml(module.title)}" data-module-path="modules/${escapeHtml(module.slug)}/index.html" data-playlists-url="${escapeHtml(playlistsUrl)}" aria-labelledby="personal-playlist-title">
+    <form data-personal-playlist-form>
+      <header class="filter-dialog-header"><div><p class="kicker">Save module</p><h2 id="personal-playlist-title">Add to personal playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-personal-playlist-close>${icon("close")}</button></header>
+      <div class="filter-dialog-body personal-playlist-fields">
+        <label><span>Playlist</span><select data-personal-playlist-select></select></label>
+        <div class="personal-playlist-new" data-personal-playlist-new>
+          <label><span>New playlist name</span><input type="text" maxlength="80" data-personal-playlist-name></label>
+          <label><span>Description</span><textarea rows="3" maxlength="300" data-personal-playlist-description></textarea></label>
+        </div>
+        <p class="personal-playlist-status" data-personal-playlist-status role="status" aria-live="polite" hidden></p>
+      </div>
+      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-personal-playlist-close>Close</button><button class="primary-button" type="submit" data-personal-playlist-submit>Add module</button><a class="primary-button" href="${escapeHtml(playlistsUrl)}" data-personal-playlist-go hidden>Go to playlist</a></footer>
+    </form>
+  </dialog>`;
+}
+
+function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, bodyClass = "", module = null }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
@@ -289,7 +309,7 @@ function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills 
   <link rel="stylesheet" href="${styles}">
   <script src="${script}" defer></script>
 </head>
-<body class="${escapeHtml(bodyClass)}"${moduleSlug ? ` data-module-slug="${escapeHtml(moduleSlug)}"` : ""}>
+<body class="${escapeHtml(bodyClass)}"${module ? ` data-module-slug="${escapeHtml(module.slug)}"` : ""}>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a>
@@ -298,7 +318,7 @@ function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills 
   <div class="site-frame${sidebar ? " has-sidebar" : ""}">
     ${sidebar}
     ${sidebar ? `<button class="icon-button nav-reveal" type="button" aria-label="Show navigation" aria-expanded="false" data-menu-reveal>${icon("menu")}</button>` : ""}
-    <main id="main-content" class="main-content">${content}</main>
+    <main id="main-content" class="main-content">${personalPlaylistDialog(outputFile, module)}${content}</main>
   </div>
   ${agentFlyout(outputFile, avatar)}
 </body>
@@ -409,9 +429,9 @@ function playlistSidebar(outputFile, playlist, modules, activeModule = "") {
     <nav aria-label="Playlist">
       <a class="playlist-link${activeModule ? "" : " active"}" href="${relativeUrl(outputFile, playlistTarget)}">${escapeHtml(playlist.title)}</a>
       <ul>${modules.map((module) => {
-        const target = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug, "index.html");
-        return `<li><a class="${activeModule === module.slug ? "active" : ""}" href="${relativeUrl(outputFile, target)}">${escapeHtml(module.title)}</a></li>`;
-      }).join("")}</ul>
+    const target = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug, "index.html");
+    return `<li><a class="${activeModule === module.slug ? "active" : ""}" href="${relativeUrl(outputFile, target)}">${escapeHtml(module.title)}</a></li>`;
+  }).join("")}</ul>
     </nav>
   </aside><div class="sidebar-scrim" data-menu-close></div>`;
 }
@@ -445,21 +465,21 @@ async function buildModuleRoute(module, pages, routeRoot, sidebarFactory = null)
 
   if (pages.length === 1) {
     const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`);
-    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", moduleSlug: module.slug, content: articleContent(module, pages[0], rendered.html, "") }));
+    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, pages[0], rendered.html, "") }));
     return;
   }
 
   const startTarget = pageTargets[0];
   const action = `<a class="primary-button" href="${relativeUrl(indexFile, startTarget)}">Start ${icon("arrow")}</a>`;
   const pageList = `<section class="module-page-list" aria-labelledby="module-pages-title"><h2 id="module-pages-title">In this module</h2><ol>${pages.map((page, index) => `<li><a href="${relativeUrl(indexFile, pageTargets[index])}">${escapeHtml(page.title)}</a></li>`).join("")}</ol></section>`;
-  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", moduleSlug: module.slug, content: overview(indexFile, module, "modules", action, pageList) }));
+  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: overview(indexFile, module, "modules", action, pageList) }));
 
   for (const [pageIndex, page] of pages.entries()) {
     const outputFile = pageTargets[pageIndex];
     const rendered = await renderMarkdownPage(page.sourceFile, outputFile, `${module.slug}-${page.slug}`);
     const pageSidebar = sidebarFactory ? sidebarFactory(outputFile) : "";
     const navigation = pageNavigation(outputFile, pages, pageIndex, pageTargets);
-    await writePage(outputFile, shell({ outputFile, title: rendered.title, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", moduleSlug: module.slug, content: articleContent(module, page, rendered.html, navigation) }));
+    await writePage(outputFile, shell({ outputFile, title: rendered.title, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, page, rendered.html, navigation) }));
   }
 }
 
@@ -508,7 +528,7 @@ async function build() {
   const homeFile = path.join(outputRoot, "index.html");
   const homeSearch = `<div class="header-tools"><a class="header-link" href="${relativeUrl(homeFile, path.join(outputRoot, "courses", "index.html"))}">Courses</a><form class="site-search" role="search" data-site-search><label class="sr-only" for="site-search-input">Search playlists and modules</label><input id="site-search-input" type="search" name="query" placeholder="Search" autocomplete="off"><button type="submit">Search</button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></form></div>`;
   const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p>Choose a curated path or jump straight into a module.</p></section>
-    <section class="catalog-section" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning</p><h2>Playlists</h2></div><div class="card-grid">${playlists.map((item) => card(homeFile, item, "playlists")).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search.</p></section>
+    <section class="catalog-section" data-playlist-catalog><div class="section-heading"><div class="section-heading-row"><p class="kicker">Curated learning</p><a class="filter-trigger" href="${relativeUrl(homeFile, path.join(outputRoot, "my-playlists", "index.html"))}">My Playlists</a></div><h2>Playlists</h2></div><div class="card-grid">${playlists.map((item) => card(homeFile, item, "playlists")).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search.</p></section>
     <section class="catalog-section alt" data-module-catalog><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore by topic</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Modules</h2></div><div class="card-grid" data-module-grid>${modules.map((item) => card(homeFile, item, "modules", true)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No modules match your search and filters.</p></section>
     ${catalogFilterDialog(modules, ["modality", "level", "audience"], "modules")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", headerExtra: homeSearch, content: homeContent, bodyClass: "home-page" }));
@@ -519,6 +539,26 @@ async function build() {
     <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore the catalog</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Available courses</h2></div><div class="card-grid">${courses.map((item) => card(coursesFile, item, "courses", true)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p></section>
     ${catalogFilterDialog(courses, ["audience", "level", "duration"], "courses")}`;
   await writePage(coursesFile, shell({ outputFile: coursesFile, title: "Courses", headerExtra: courseSearch, content: coursesContent, bodyClass: "catalog-page" }));
+
+  const personalPlaylistsFile = path.join(outputRoot, "my-playlists", "index.html");
+  const moduleCatalog = modules.map((module) => ({ name: module.title, path: `modules/${module.slug}/index.html` }));
+  const personalPlaylistsContent = `<div data-personal-playlists data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalPlaylistsFile, path.join(outputRoot, "assets", "playlist.png"))}">
+    <section class="catalog-intro"><p class="kicker">Personal collection</p><h1>My Playlists</h1><p>Create playlists from any module page and return here to continue learning.</p></section>
+    <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Your collections</p><button class="filter-trigger" type="button" data-new-personal-playlist-open>New personal playlist</button></div><h2>Personal playlists</h2></div><div class="card-grid" data-personal-playlist-grid></div><p class="filter-empty" data-personal-playlist-empty hidden>You have not created any personal playlists yet.</p></section>
+  </div>
+  <dialog class="filter-dialog personal-playlist-dialog" data-new-personal-playlist-dialog aria-labelledby="new-personal-playlist-title">
+    <form data-new-personal-playlist-form>
+      <header class="filter-dialog-header"><div><p class="kicker">Personal collection</p><h2 id="new-personal-playlist-title">New personal playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-new-personal-playlist-close>${icon("close")}</button></header>
+      <div class="filter-dialog-body personal-playlist-fields">
+        <label><span>Name</span><input type="text" maxlength="80" data-new-personal-playlist-name></label>
+        <label><span>Description</span><textarea rows="3" maxlength="300" data-new-personal-playlist-description></textarea></label>
+        <p class="personal-playlist-status" data-new-personal-playlist-status role="status" aria-live="polite" hidden></p>
+      </div>
+      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-new-personal-playlist-close>Cancel</button><button class="primary-button" type="submit">Create playlist</button></footer>
+    </form>
+  </dialog>`;
+  const personalPlaylistSidebar = `<aside class="sidebar" data-sidebar><div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div><nav aria-label="Playlist" data-personal-playlist-navigation></nav></aside><div class="sidebar-scrim" data-menu-close></div>`;
+  await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", sidebar: personalPlaylistSidebar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
 
   for (const module of modules) {
     await buildModuleRoute(module, await getModulePages(module), path.join(outputRoot, "modules", module.slug));
@@ -558,6 +598,7 @@ async function build() {
     copyFile(path.join(root, "site", "styles.css"), path.join(outputRoot, "assets", "styles.css")),
     copyFile(path.join(root, "site", "app.js"), path.join(outputRoot, "assets", "app.js")),
     copyFile(path.join(root, "site", "moderation.txt"), path.join(outputRoot, "assets", "moderation.txt")),
+    copyFile(path.join(root, "site", "media", "playlist.png"), path.join(outputRoot, "assets", "playlist.png")),
     writeFile(path.join(outputRoot, ".nojekyll"), "", "utf8"),
   ]);
   console.log(`Built ${modules.length} modules, ${playlists.length} playlists, and ${courses.length} courses in dist/`);

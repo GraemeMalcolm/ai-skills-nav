@@ -245,6 +245,7 @@ img {
 }
 
 .main-content {
+  position: relative;
   min-width: 0;
 }
 
@@ -429,6 +430,7 @@ img {
   font-weight: 700;
   font-size: .76rem;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .filter-count {
@@ -650,6 +652,81 @@ img {
   color: var(--violet);
   font-weight: 600;
   cursor: pointer;
+}
+
+.personal-playlist-add {
+  position: absolute;
+  z-index: 5;
+  top: 24px;
+  right: 28px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--violet);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--violet);
+  font-size: 1.55rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 5px 18px rgba(45, 39, 33, .1);
+}
+
+.personal-playlist-add:hover {
+  background: var(--violet-soft);
+}
+
+.personal-playlist-fields {
+  display: grid;
+  gap: 20px;
+  padding-block: 24px;
+}
+
+.personal-playlist-fields label,
+.personal-playlist-new {
+  display: grid;
+  gap: 8px;
+}
+
+.personal-playlist-fields label>span {
+  font-weight: 700;
+}
+
+.personal-playlist-fields select,
+.personal-playlist-fields input,
+.personal-playlist-fields textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #88847f;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.personal-playlist-fields textarea {
+  resize: vertical;
+}
+
+.personal-playlist-status {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 4px solid var(--cyan);
+  background: #edf8f8;
+}
+
+.personal-playlist-status.is-error {
+  border-color: var(--orange);
+  background: #fff0eb;
+}
+
+.personal-playlist-dialog [hidden] {
+  display: none;
+}
+
+.personal-playlist-delete {
+  margin-top: 24px;
+  color: #a4262c;
 }
 
 .overview {
