@@ -1,3 +1,111 @@
+const personalPlaylistsStorageKey = "ai-skills-nav:personal-playlists";
+
+const readPersonalPlaylists = () => {
+  try {
+    const playlists = JSON.parse(localStorage.getItem(personalPlaylistsStorageKey) || "[]");
+    if (!Array.isArray(playlists)) return [];
+    return playlists.filter((playlist) => playlist && typeof playlist.id === "string" && typeof playlist.name === "string").map((playlist) => ({
+      id: playlist.id,
+      name: playlist.name,
+      description: typeof playlist.description === "string" ? playlist.description : "",
+      modules: Array.isArray(playlist.modules) ? playlist.modules.filter((module) => module && typeof module.name === "string" && typeof module.path === "string") : [],
+    }));
+  } catch {
+    return [];
+  }
+};
+
+const writePersonalPlaylists = (playlists) => {
+  try {
+    localStorage.setItem(personalPlaylistsStorageKey, JSON.stringify(playlists));
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const menuIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+
+const hydratePersonalPlaylistSidebar = () => {
+  const moduleSlug = document.body.dataset.moduleSlug;
+  const playlistId = new URLSearchParams(window.location.search).get("playlist");
+  const playlist = playlistId && readPersonalPlaylists().find((item) => item.id === playlistId);
+  const playlistDialog = document.querySelector("[data-personal-playlist-dialog]");
+  if (!moduleSlug || !playlist || !playlistDialog) return;
+
+  const frame = document.querySelector(".site-frame");
+  const main = frame?.querySelector("main");
+  if (!frame || !main || frame.querySelector("[data-sidebar]")) return;
+  const playlistsUrl = new URL(playlistDialog.dataset.playlistsUrl, window.location.href);
+  const withPlaylistContext = (url) => {
+    url.searchParams.set("playlist", playlist.id);
+    return url.href;
+  };
+
+  const sidebar = document.createElement("aside");
+  sidebar.className = "sidebar";
+  sidebar.dataset.sidebar = "";
+  const heading = document.createElement("div");
+  heading.className = "sidebar-heading";
+  const hideButton = document.createElement("button");
+  hideButton.className = "icon-button menu-toggle";
+  hideButton.type = "button";
+  hideButton.setAttribute("aria-label", "Hide navigation");
+  hideButton.setAttribute("aria-expanded", "true");
+  hideButton.dataset.menuToggle = "";
+  hideButton.innerHTML = menuIcon;
+  const headingText = document.createElement("span");
+  headingText.textContent = "Navigation";
+  heading.append(hideButton, headingText);
+
+  const navigation = document.createElement("nav");
+  navigation.setAttribute("aria-label", "Playlist");
+  const playlistLink = document.createElement("a");
+  playlistLink.className = "playlist-link";
+  playlistLink.href = withPlaylistContext(playlistsUrl);
+  playlistLink.textContent = playlist.name;
+  const moduleList = document.createElement("ul");
+  const activePath = `modules/${moduleSlug}/index.html`;
+  playlist.modules.forEach((module) => {
+    const item = document.createElement("li");
+    const link = document.createElement("a");
+    link.classList.toggle("active", module.path === activePath);
+    link.href = withPlaylistContext(new URL(`../${module.path}`, playlistsUrl));
+    link.textContent = module.name;
+    item.append(link);
+    moduleList.append(item);
+  });
+  navigation.append(playlistLink, moduleList);
+  sidebar.append(heading, navigation);
+
+  const scrim = document.createElement("div");
+  scrim.className = "sidebar-scrim";
+  scrim.dataset.menuClose = "";
+  const revealButton = document.createElement("button");
+  revealButton.className = "icon-button nav-reveal";
+  revealButton.type = "button";
+  revealButton.setAttribute("aria-label", "Show navigation");
+  revealButton.setAttribute("aria-expanded", "false");
+  revealButton.dataset.menuReveal = "";
+  revealButton.innerHTML = menuIcon;
+  frame.classList.add("has-sidebar");
+  frame.insertBefore(sidebar, main);
+  frame.insertBefore(scrim, main);
+  frame.insertBefore(revealButton, main);
+
+  const moduleRoot = new URL(`../modules/${moduleSlug}/`, playlistsUrl).pathname;
+  main.querySelectorAll("a[href]").forEach((link) => {
+    const target = new URL(link.href, window.location.href);
+    if (target.origin === window.location.origin && target.pathname.startsWith(moduleRoot)) link.href = withPlaylistContext(target);
+  });
+  main.querySelectorAll("[data-page-select] option").forEach((option) => {
+    const target = new URL(option.value, window.location.href);
+    if (target.origin === window.location.origin && target.pathname.startsWith(moduleRoot)) option.value = withPlaylistContext(target);
+  });
+};
+
+hydratePersonalPlaylistSidebar();
+
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const menuReveal = document.querySelector("[data-menu-reveal]");
 const sidebar = document.querySelector("[data-sidebar]");
@@ -92,32 +200,6 @@ document.querySelectorAll("[data-pivot]").forEach((pivot) => {
 document.querySelectorAll("[data-page-select]").forEach((select) => {
   select.addEventListener("change", () => window.location.assign(select.value));
 });
-
-const personalPlaylistsStorageKey = "ai-skills-nav:personal-playlists";
-
-const readPersonalPlaylists = () => {
-  try {
-    const playlists = JSON.parse(localStorage.getItem(personalPlaylistsStorageKey) || "[]");
-    if (!Array.isArray(playlists)) return [];
-    return playlists.filter((playlist) => playlist && typeof playlist.id === "string" && typeof playlist.name === "string").map((playlist) => ({
-      id: playlist.id,
-      name: playlist.name,
-      description: typeof playlist.description === "string" ? playlist.description : "",
-      modules: Array.isArray(playlist.modules) ? playlist.modules.filter((module) => module && typeof module.name === "string" && typeof module.path === "string") : [],
-    }));
-  } catch {
-    return [];
-  }
-};
-
-const writePersonalPlaylists = (playlists) => {
-  try {
-    localStorage.setItem(personalPlaylistsStorageKey, JSON.stringify(playlists));
-    return true;
-  } catch {
-    return false;
-  }
-};
 
 const personalPlaylistDialog = document.querySelector("[data-personal-playlist-dialog]");
 
@@ -218,8 +300,12 @@ const personalPlaylistsPage = document.querySelector("[data-personal-playlists]"
 
 if (personalPlaylistsPage) {
   const moduleCatalog = new Map(JSON.parse(personalPlaylistsPage.dataset.moduleCatalog).map((module) => [module.path, module]));
-  const moduleUrl = (modulePath) => new URL(`../${modulePath}`, window.location.href).href;
   const playlistId = new URLSearchParams(window.location.search).get("playlist");
+  const moduleUrl = (modulePath) => {
+    const url = new URL(`../${modulePath}`, window.location.href);
+    if (playlistId) url.searchParams.set("playlist", playlistId);
+    return url.href;
+  };
 
   const createCard = (playlist) => {
     const card = document.createElement("a");
