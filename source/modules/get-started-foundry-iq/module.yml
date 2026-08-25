@@ -1,5 +1,5 @@
 title: Get started with Foundry IQ
-description: In this lesson, you'll learn how to use Foundry IQ to provide an agent with knowledge.
+description: Learn how to build Foundry IQ knowledge bases that ground AI agents with enterprise data using Azure AI Search, agentic retrieval, ranking, and citations.
 modality: Multimodal
 level: 200
 duration: 30 minutes

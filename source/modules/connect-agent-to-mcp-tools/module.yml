@@ -1,5 +1,5 @@
 title: Integrate MCP Tools with Azure AI Agents
-description: In this lesson, you'll learn how to integrate MCP Tools with Azure AI agents.
+description: Learn how to connect Azure AI agents to Model Context Protocol (MCP) servers for dynamic tool discovery and execution.
 modality: Multimodal
 level: 200
 duration: 60 minutes
