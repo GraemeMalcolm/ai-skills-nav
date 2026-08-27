@@ -2,16 +2,16 @@
 title: Summary
 ---
 
-::: zone pivot="video"
+::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=c999d04a-23a7-4349-a1a1-1dd4b4588f6b]
 
 > [!TIP]
-> See the **Text and images** tab for more details!
+> See the *Text* tab for more details!
 
 ::: zone-end
 
-::: zone pivot="text"
+::: zone pivot="Text"
 
 In this module, you learned how Microsoft Foundry IQ provides a managed, reusable knowledge layer for AI agents and applications. Foundry IQ uses Azure AI Search as its underlying indexing and retrieval infrastructure.
 
