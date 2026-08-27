@@ -4,7 +4,7 @@ title: Summary
 
 ::: zone pivot="video"
 
-> [!VIDEO https://learn-video.azurefd.net/vod/player?id=c999d04a-23a7-4349-a1a1-1dd4b4588f6b]
+[!VIDEO https://learn-video.azurefd.net/vod/player?id=c999d04a-23a7-4349-a1a1-1dd4b4588f6b]
 
 > [!TIP]
 > See the **Text and images** tab for more details!
