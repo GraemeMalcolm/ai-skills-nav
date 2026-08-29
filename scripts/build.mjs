@@ -278,8 +278,8 @@ function agentFlyout(outputFile, avatar) {
 function personalPlaylistDialog(outputFile, module) {
   if (!module) return "";
   const playlistsUrl = relativeUrl(outputFile, path.join(outputRoot, "my-playlists", "index.html"));
-  return `<button class="personal-playlist-add" type="button" title="Add to personal playlist" aria-label="Add to personal playlist" data-personal-playlist-open>&#10866;</button>
-  <dialog class="filter-dialog personal-playlist-dialog" data-personal-playlist-dialog data-module-name="${escapeHtml(module.title)}" data-module-path="modules/${escapeHtml(module.slug)}/index.html" data-playlists-url="${escapeHtml(playlistsUrl)}" aria-labelledby="personal-playlist-title">
+  return `<a class="filter-trigger personal-playlist-add" href="#personal-playlist-dialog" data-personal-playlist-open>Add to personal playlist</a>
+  <dialog class="filter-dialog personal-playlist-dialog" id="personal-playlist-dialog" data-personal-playlist-dialog data-module-name="${escapeHtml(module.title)}" data-module-path="modules/${escapeHtml(module.slug)}/index.html" data-playlists-url="${escapeHtml(playlistsUrl)}" aria-labelledby="personal-playlist-title">
     <form data-personal-playlist-form>
       <header class="filter-dialog-header"><div><p class="kicker">Save module</p><h2 id="personal-playlist-title">Add to personal playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-personal-playlist-close>${icon("close")}</button></header>
       <div class="filter-dialog-body personal-playlist-fields">

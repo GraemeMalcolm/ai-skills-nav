@@ -659,22 +659,6 @@ img {
   z-index: 5;
   top: 24px;
   right: 28px;
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--violet);
-  border-radius: 5px;
-  background: var(--surface);
-  color: var(--violet);
-  font-size: 1.55rem;
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: 0 5px 18px rgba(45, 39, 33, .1);
-}
-
-.personal-playlist-add:hover {
-  background: var(--violet-soft);
 }
 
 .personal-playlist-fields {

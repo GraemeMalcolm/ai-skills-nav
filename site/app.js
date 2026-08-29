@@ -241,7 +241,8 @@ if (personalPlaylistDialog) {
     goLink.hidden = true;
   };
 
-  document.querySelector("[data-personal-playlist-open]")?.addEventListener("click", () => {
+  document.querySelector("[data-personal-playlist-open]")?.addEventListener("click", (event) => {
+    event.preventDefault();
     resetDialog();
     populatePlaylists();
     personalPlaylistDialog.showModal();
