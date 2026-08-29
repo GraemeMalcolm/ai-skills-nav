@@ -13,7 +13,7 @@ title: Summary
 
 ::: zone pivot="Text"
 
-In this module, you learned how Microsoft Foundry IQ provides a managed, reusable knowledge layer for AI agents and applications. Foundry IQ uses Azure AI Search as its underlying indexing and retrieval infrastructure.
+In this learning experience, you learned how Microsoft Foundry IQ provides a managed, reusable knowledge layer for AI agents and applications. Foundry IQ uses Azure AI Search as its underlying indexing and retrieval infrastructure.
 
 You explored how a knowledge base organizes one or more indexed or remote knowledge sources. These sources can connect enterprise content in systems such as Azure Blob Storage, SharePoint, OneLake, and Azure AI Search, as well as public web data. You also learned why content quality, freshness, metadata, identities, and source permissions are important to reliable retrieval.
 

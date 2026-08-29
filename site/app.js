@@ -290,7 +290,7 @@ if (personalPlaylistDialog) {
       showStatus("Your browser could not save the playlist.", true);
       return;
     }
-    showStatus(alreadyAdded ? `This module is already in ${playlist.name}.` : `Added this module to ${playlist.name}.`);
+    showStatus(alreadyAdded ? `This learning experience is already in ${playlist.name}.` : `Added this learning experience to ${playlist.name}.`);
     submitButton.hidden = true;
     goLink.href = `${personalPlaylistDialog.dataset.playlistsUrl}?playlist=${encodeURIComponent(playlist.id)}`;
     goLink.hidden = false;
@@ -468,6 +468,7 @@ const filterFields = filterDialog?.dataset.filterFields.split(",").filter(Boolea
 const searchForm = document.querySelector("[data-site-search]");
 const searchInput = searchForm?.querySelector('input[type="search"]');
 const searchClear = searchForm?.querySelector("[data-search-clear]");
+const courseEmptyState = document.querySelector("[data-course-empty]");
 const moduleEmptyState = document.querySelector("[data-module-empty]");
 const playlistEmptyState = document.querySelector("[data-playlist-empty]");
 const catalogEmptyState = document.querySelector("[data-catalog-empty]");
@@ -479,6 +480,7 @@ const matchesSearch = (card) => searchTerms.every((term) => card.dataset.searchT
 const applyCatalogVisibility = () => {
   let visibleModules = 0;
   let visiblePlaylists = 0;
+  let visibleCourses = 0;
   let visibleCatalogItems = 0;
   catalogCards.forEach((card) => {
     let matches = matchesSearch(card);
@@ -492,10 +494,12 @@ const applyCatalogVisibility = () => {
     card.hidden = !matches;
     if (matches && card.dataset.catalogType === "modules") visibleModules++;
     if (matches && card.dataset.catalogType === "playlists") visiblePlaylists++;
+    if (matches && card.dataset.catalogType === "courses") visibleCourses++;
     if (matches) visibleCatalogItems++;
   });
   if (moduleEmptyState) moduleEmptyState.hidden = visibleModules !== 0;
   if (playlistEmptyState) playlistEmptyState.hidden = visiblePlaylists !== 0;
+  if (courseEmptyState) courseEmptyState.hidden = visibleCourses !== 0;
   if (catalogEmptyState) catalogEmptyState.hidden = visibleCatalogItems !== 0;
 };
 

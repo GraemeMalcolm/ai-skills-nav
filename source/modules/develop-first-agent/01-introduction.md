@@ -14,4 +14,4 @@ Ready to dive in and start building AI agents? This fast-start, hands-on trainin
 
 ::: zone-end
 
-> **TIP**: We recognize that different people like to learn in different ways. You can choose to complete this module in video-based format or you can read the content as text and images. The text contains greater detail than the videos, so in some cases you might want to refer to it as supplemental material to the video presentation.
+> **TIP**: We recognize that different people like to learn in different ways. You can choose to complete this learning experience in video-based format or you can read the content as text and images. The text contains greater detail than the videos, so in some cases you might want to refer to it as supplemental material to the video presentation.

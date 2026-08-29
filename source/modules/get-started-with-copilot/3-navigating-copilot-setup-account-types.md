@@ -58,4 +58,4 @@ Scroll through the ‘Recent Conversations' section to refer to previous interac
 
 Select on a specific conversation to continue where you left off.
 
-You navigated to Copilot and set up your account. The final step is to confirm your language and accessibility settings. Continue this module to explore and utilize Copilot's features.
+You navigated to Copilot and set up your account. The final step is to confirm your language and accessibility settings. Continue this learning experience to explore and utilize Copilot's features.

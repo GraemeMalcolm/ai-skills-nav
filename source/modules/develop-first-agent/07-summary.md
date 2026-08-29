@@ -12,7 +12,7 @@ title: Summary
 
 ::: zone pivot="Text"
 
-In this module, we explored how to get started creating agents with Microsoft Foundry. Along the way, you learned:
+In this learning experience, we explored how to get started creating agents with Microsoft Foundry. Along the way, you learned:
 
 - Agents use a *large language model* to understand and reason over natural language, *instructions* to govern what they can do and how they do it, and *tools* to access knowledge or perform tasks.
 - Microsoft Foundry is a platform for developing, deploying, and operating agents on the Microsoft Azure cloud.

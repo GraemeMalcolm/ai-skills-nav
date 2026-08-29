@@ -238,6 +238,44 @@ img {
   min-height: calc(100vh - 68px);
 }
 
+.breadcrumbs {
+  padding: 12px max(6vw, 28px);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: .86rem;
+}
+
+.breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.breadcrumbs li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.breadcrumbs li+li::before {
+  content: "/";
+  color: #99938d;
+}
+
+.breadcrumbs a {
+  color: var(--violet);
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+
+.breadcrumbs [aria-current="page"] {
+  color: var(--ink);
+}
+
 .site-frame.has-sidebar {
   display: grid;
   grid-template-columns: 330px minmax(0, 1fr);
@@ -415,6 +453,13 @@ img {
 .section-heading h2 {
   margin: 7px 0 0;
   font: 700 1.75rem "Manrope", sans-serif;
+}
+
+.section-links {
+  display: flex;
+  justify-content: flex-end;
+  gap: 24px;
+  margin-top: 28px;
 }
 
 .filter-trigger {
@@ -1344,6 +1389,10 @@ img {
 
   .catalog-section {
     padding: 50px 22px 60px;
+  }
+
+  .breadcrumbs {
+    padding-inline: 22px;
   }
 
   .filter-dialog-header,

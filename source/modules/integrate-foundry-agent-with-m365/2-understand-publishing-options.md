@@ -25,7 +25,7 @@ The Agent Application acts as a routing layer. When you publish a new agent vers
 
 ## Publishing to Microsoft 365
 
-The primary focus of this module is Microsoft 365 integration, which enables your agent to appear within Teams and Copilot. Publishing to Microsoft 365:
+The primary focus of this learning experience is Microsoft 365 integration, which enables your agent to appear within Teams and Copilot. Publishing to Microsoft 365:
 
 - Creates an Azure Bot Service resource that routes messages between Microsoft 365 and your agent
 - Generates a Microsoft 365 publishing package for distribution
@@ -45,7 +45,7 @@ This approach is ideal when you want to deploy quickly or keep your agent logic 
 
 ### Microsoft 365 Agents Toolkit
 
-For complex scenarios, you can use the Microsoft 365 Agents Toolkit to create a proxy application that connects to your Foundry agent. Consider this approach when you need custom single sign-on (SSO), advanced middleware logic, or multi-environment deployment pipelines. The Agents Toolkit is covered later in this module as an optional advanced topic.
+For complex scenarios, you can use the Microsoft 365 Agents Toolkit to create a proxy application that connects to your Foundry agent. Consider this approach when you need custom single sign-on (SSO), advanced middleware logic, or multi-environment deployment pipelines. The Agents Toolkit is covered later in this learning experience as an optional advanced topic.
 
 ### Publish scopes
 
@@ -58,7 +58,7 @@ When publishing to Microsoft 365, you choose between two distribution scopes:
 
 ## Other publishing channels
 
-While this module focuses on Microsoft 365, Foundry agents can also publish to:
+While this learning experience focuses on Microsoft 365, Foundry agents can also publish to:
 
 - **Web application preview**: Browser-based interface for demos and stakeholder testing
 - **Stable API endpoint**: REST API for embedding in custom applications

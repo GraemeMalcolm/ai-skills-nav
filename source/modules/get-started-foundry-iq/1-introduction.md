@@ -18,8 +18,8 @@ Retrieval-augmented generation (RAG) addresses this need by retrieving relevant 
 
 **Microsoft Foundry IQ** provides a managed knowledge layer for agents and AI applications. It organizes enterprise and web data into reusable knowledge bases and uses agentic retrieval to return relevant, permission-aware information with citations.
 
-In this module, you'll explore the main components of Foundry IQ and learn how an agent uses a knowledge base to produce grounded responses.
+In this learning experience, you'll explore the main components of Foundry IQ and learn how an agent uses a knowledge base to produce grounded responses.
 
 ::: zone-end
 
-> **TIP**: We recognize that different people like to learn in different ways. You can choose to complete this module in video-based format or you can read the content as text and images. The text contains greater detail than the videos, so in some cases you might want to refer to it as supplemental material to the video presentation.
+> **TIP**: We recognize that different people like to learn in different ways. You can choose to complete this learning experience in video-based format or you can read the content as text and images. The text contains greater detail than the videos, so in some cases you might want to refer to it as supplemental material to the video presentation.

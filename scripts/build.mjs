@@ -281,7 +281,7 @@ function personalPlaylistDialog(outputFile, module) {
   return `<a class="filter-trigger personal-playlist-add" href="#personal-playlist-dialog" data-personal-playlist-open>Add to personal playlist</a>
   <dialog class="filter-dialog personal-playlist-dialog" id="personal-playlist-dialog" data-personal-playlist-dialog data-module-name="${escapeHtml(module.title)}" data-module-path="modules/${escapeHtml(module.slug)}/index.html" data-playlists-url="${escapeHtml(playlistsUrl)}" aria-labelledby="personal-playlist-title">
     <form data-personal-playlist-form>
-      <header class="filter-dialog-header"><div><p class="kicker">Save module</p><h2 id="personal-playlist-title">Add to personal playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-personal-playlist-close>${icon("close")}</button></header>
+      <header class="filter-dialog-header"><div><p class="kicker">Save learning experience</p><h2 id="personal-playlist-title">Add to personal playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-personal-playlist-close>${icon("close")}</button></header>
       <div class="filter-dialog-body personal-playlist-fields">
         <label><span>Playlist</span><select data-personal-playlist-select></select></label>
         <div class="personal-playlist-new" data-personal-playlist-new>
@@ -290,12 +290,24 @@ function personalPlaylistDialog(outputFile, module) {
         </div>
         <p class="personal-playlist-status" data-personal-playlist-status role="status" aria-live="polite" hidden></p>
       </div>
-      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-personal-playlist-close>Close</button><button class="primary-button" type="submit" data-personal-playlist-submit>Add module</button><a class="primary-button" href="${escapeHtml(playlistsUrl)}" data-personal-playlist-go hidden>Go to playlist</a></footer>
+      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-personal-playlist-close>Close</button><button class="primary-button" type="submit" data-personal-playlist-submit>Add learning experience</button><a class="primary-button" href="${escapeHtml(playlistsUrl)}" data-personal-playlist-go hidden>Go to playlist</a></footer>
     </form>
   </dialog>`;
 }
 
-function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, bodyClass = "", module = null }) {
+function breadcrumbs(outputFile, items = []) {
+  const home = path.join(outputRoot, "index.html");
+  const trail = [{ label: "Home", target: items.length ? home : null }, ...items];
+  return `<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>${trail.map((item, index) => {
+    const isCurrent = index === trail.length - 1;
+    const content = isCurrent
+      ? `<span aria-current="page">${escapeHtml(item.label)}</span>`
+      : `<a href="${relativeUrl(outputFile, item.target)}">${escapeHtml(item.label)}</a>`;
+    return `<li>${content}</li>`;
+  }).join("")}</ol></nav>`;
+}
+
+function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, bodyClass = "", module = null }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
@@ -315,6 +327,7 @@ function shell({ outputFile, title, content, sidebar = "", eyebrow = "AI Skills 
     <a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a>
     ${headerExtra}
   </header>
+  ${breadcrumbs(outputFile, breadcrumbItems)}
   <div class="site-frame${sidebar ? " has-sidebar" : ""}">
     ${sidebar}
     ${sidebar ? `<button class="icon-button nav-reveal" type="button" aria-label="Show navigation" aria-expanded="false" data-menu-reveal>${icon("menu")}</button>` : ""}
@@ -357,6 +370,10 @@ function card(outputFile, item, type, filterable = false) {
   </a>`;
 }
 
+function catalogSearch(inputId, label, placeholder) {
+  return `<form class="site-search" role="search" data-site-search><label class="sr-only" for="${escapeHtml(inputId)}">${escapeHtml(label)}</label><input id="${escapeHtml(inputId)}" type="search" name="query" placeholder="${escapeHtml(placeholder)}" autocomplete="off"><button type="submit">Search</button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></form>`;
+}
+
 function filterOptions(name, values, label) {
   return `<fieldset class="filter-group"><legend>${escapeHtml(label)}</legend><div class="filter-options">${values.map((value) => `<label><input type="checkbox" name="${escapeHtml(name)}" value="${escapeHtml(value)}"><span>${escapeHtml(value)}</span></label>`).join("")}</div></fieldset>`;
 }
@@ -386,7 +403,7 @@ function overview(outputFile, item, type, action = "", imageDetails = "") {
   return `<article class="overview">
     <div class="overview-media"><div class="overview-image">${thumbnail(outputFile, item, type)}</div>${imageDetails}</div>
     <div class="overview-copy">
-      <p class="kicker">${escapeHtml(type === "playlists" ? "Learning playlist" : type === "courses" ? "Microsoft Official Course" : "Learning module")}</p>
+      <p class="kicker">${escapeHtml(type === "playlists" ? "Learning playlist" : type === "courses" ? "Microsoft Official Course" : "Learning experience")}</p>
       <h1>${escapeHtml(item.title)}</h1>
       <p class="lede">${escapeHtml(item.description || "")}</p>
       ${metadataLine(item) ? `<p class="metadata">${metadataLine(item)}</p>` : ""}
@@ -407,7 +424,7 @@ function courseOverview(outputFile, course, playlists) {
 function pageNavigation(outputFile, pages, currentIndex, pageTargets) {
   const previous = currentIndex > 0 ? relativeUrl(outputFile, pageTargets[currentIndex - 1]) : "";
   const next = currentIndex < pages.length - 1 ? relativeUrl(outputFile, pageTargets[currentIndex + 1]) : "";
-  return `<nav class="page-nav" aria-label="Module pages">
+  return `<nav class="page-nav" aria-label="Learning experience pages">
     <a class="nav-button${previous ? "" : " is-disabled"}" ${previous ? `href="${previous}"` : 'aria-disabled="true"'}>Previous</a>
     <label><span>Page</span><select data-page-select>${pages.map((page, index) => `<option value="${relativeUrl(outputFile, pageTargets[index])}"${index === currentIndex ? " selected" : ""}>${index + 1}. ${escapeHtml(page.title)}</option>`).join("")}</select></label>
     <a class="nav-button${next ? "" : " is-disabled"}" ${next ? `href="${next}"` : 'aria-disabled="true"'}>Next ${icon("arrow")}</a>
@@ -458,28 +475,31 @@ async function getModulePages(module) {
   }));
 }
 
-async function buildModuleRoute(module, pages, routeRoot, sidebarFactory = null) {
+async function buildModuleRoute(module, pages, routeRoot, sidebarFactory = null, breadcrumbParents = null) {
   const indexFile = path.join(routeRoot, "index.html");
   const pageTargets = pages.map((page) => path.join(routeRoot, "pages", page.slug, "index.html"));
   const sidebar = sidebarFactory ? sidebarFactory(indexFile) : "";
+  const parents = breadcrumbParents || [{ label: "Skilling content", target: path.join(outputRoot, "skilling-content", "index.html") }];
+  const moduleBreadcrumbs = [...parents, { label: module.title }];
 
   if (pages.length === 1) {
     const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`);
-    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, pages[0], rendered.html, "") }));
+    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, pages[0], rendered.html, "") }));
     return;
   }
 
   const startTarget = pageTargets[0];
   const action = `<a class="primary-button" href="${relativeUrl(indexFile, startTarget)}">Start ${icon("arrow")}</a>`;
-  const pageList = `<section class="module-page-list" aria-labelledby="module-pages-title"><h2 id="module-pages-title">In this module</h2><ol>${pages.map((page, index) => `<li><a href="${relativeUrl(indexFile, pageTargets[index])}">${escapeHtml(page.title)}</a></li>`).join("")}</ol></section>`;
-  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: overview(indexFile, module, "modules", action, pageList) }));
+  const pageList = `<section class="module-page-list" aria-labelledby="module-pages-title"><h2 id="module-pages-title">In this learning experience</h2><ol>${pages.map((page, index) => `<li><a href="${relativeUrl(indexFile, pageTargets[index])}">${escapeHtml(page.title)}</a></li>`).join("")}</ol></section>`;
+  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: overview(indexFile, module, "modules", action, pageList) }));
 
   for (const [pageIndex, page] of pages.entries()) {
     const outputFile = pageTargets[pageIndex];
     const rendered = await renderMarkdownPage(page.sourceFile, outputFile, `${module.slug}-${page.slug}`);
     const pageSidebar = sidebarFactory ? sidebarFactory(outputFile) : "";
     const navigation = pageNavigation(outputFile, pages, pageIndex, pageTargets);
-    await writePage(outputFile, shell({ outputFile, title: rendered.title, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, page, rendered.html, navigation) }));
+    const pageBreadcrumbs = [...parents, { label: module.title, target: indexFile }, { label: rendered.title }];
+    await writePage(outputFile, shell({ outputFile, title: rendered.title, breadcrumbs: pageBreadcrumbs, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, page, rendered.html, navigation) }));
   }
 }
 
@@ -526,24 +546,38 @@ async function build() {
   }
 
   const homeFile = path.join(outputRoot, "index.html");
-  const homeSearch = `<div class="header-tools"><a class="header-link" href="${relativeUrl(homeFile, path.join(outputRoot, "courses", "index.html"))}">Courses</a><form class="site-search" role="search" data-site-search><label class="sr-only" for="site-search-input">Search playlists and modules</label><input id="site-search-input" type="search" name="query" placeholder="Search" autocomplete="off"><button type="submit">Search</button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></form></div>`;
-  const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p>Choose a curated path or jump straight into a module.</p></section>
-    <section class="catalog-section" data-playlist-catalog><div class="section-heading"><div class="section-heading-row"><p class="kicker">Curated learning</p><a class="filter-trigger" href="${relativeUrl(homeFile, path.join(outputRoot, "my-playlists", "index.html"))}">My Playlists</a></div><h2>Playlists</h2></div><div class="card-grid">${playlists.map((item) => card(homeFile, item, "playlists")).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search.</p></section>
-    <section class="catalog-section alt" data-module-catalog><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore by topic</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${modules.map((item) => card(homeFile, item, "modules", true)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No modules match your search and filters.</p></section>
-    ${catalogFilterDialog(modules, ["modality", "level", "audience"], "modules")}`;
+  const coursesFile = path.join(outputRoot, "courses", "index.html");
+  const playlistsFile = path.join(outputRoot, "playlists", "index.html");
+  const skillingContentFile = path.join(outputRoot, "skilling-content", "index.html");
+  const personalPlaylistsFile = path.join(outputRoot, "my-playlists", "index.html");
+  const homeSearch = `<div class="header-tools">${catalogSearch("site-search-input", "Search courses, playlists, and skilling content", "Search all content")}</div>`;
+  const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p>Choose a curated path or jump straight into a learning experience.</p></section>
+    <section class="catalog-section" data-course-catalog><div class="section-heading"><p class="kicker">Microsoft Official Curriculum</p><h2>Courses</h2></div><div class="card-grid">${courses.slice(0, 4).map((item) => card(homeFile, item, "courses")).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, coursesFile)}">See all courses</a></div></section>
+    <section class="catalog-section alt" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning we think you'll like</p><h2>Skilling playlists</h2></div><div class="card-grid">${playlists.slice(0, 4).map((item) => card(homeFile, item, "playlists")).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, personalPlaylistsFile)}">Personal playlists</a><a class="filter-trigger" href="${relativeUrl(homeFile, playlistsFile)}">See all playlists</a></div></section>
+    <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${modules.slice(0, 8).map((item) => card(homeFile, item, "modules")).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", headerExtra: homeSearch, content: homeContent, bodyClass: "home-page" }));
 
-  const coursesFile = path.join(outputRoot, "courses", "index.html");
-  const courseSearch = `<form class="site-search" role="search" data-site-search><label class="sr-only" for="course-search-input">Search courses</label><input id="course-search-input" type="search" name="query" placeholder="Search courses" autocomplete="off"><button type="submit">Search</button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></form>`;
+  const courseSearch = catalogSearch("course-search-input", "Search courses", "Search courses");
   const coursesContent = `<section class="catalog-intro"><p class="kicker">Microsoft Official Curricula</p><h1>Courses</h1><p>Microsoft Official Courses can be completed online as self-paced learning experiences, or delivered as instructor-led experiences by Microsoft and Microsoft Learning Partners.</p></section>
     <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore the catalog</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Available courses</h2></div><div class="card-grid">${courses.map((item) => card(coursesFile, item, "courses", true)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p></section>
     ${catalogFilterDialog(courses, ["audience", "level", "duration"], "courses")}`;
-  await writePage(coursesFile, shell({ outputFile: coursesFile, title: "Courses", headerExtra: courseSearch, content: coursesContent, bodyClass: "catalog-page" }));
+  await writePage(coursesFile, shell({ outputFile: coursesFile, title: "Courses", breadcrumbs: [{ label: "Courses" }], headerExtra: courseSearch, content: coursesContent, bodyClass: "catalog-page" }));
 
-  const personalPlaylistsFile = path.join(outputRoot, "my-playlists", "index.html");
+  const playlistSearch = catalogSearch("playlist-search-input", "Search playlists", "Search playlists");
+  const playlistsContent = `<section class="catalog-intro"><p class="kicker">Curated learning</p><h1>Skilling playlists</h1><p>Explore curated collections of related learning experiences that help you build skills in a focused sequence.</p></section>
+    <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore the catalog</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Available playlists</h2></div><div class="card-grid">${playlists.map((item) => card(playlistsFile, item, "playlists", true)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No playlists match your search and filters.</p></section>
+    ${catalogFilterDialog(playlists, ["level", "audience"], "playlists")}`;
+  await writePage(playlistsFile, shell({ outputFile: playlistsFile, title: "Skilling playlists", breadcrumbs: [{ label: "Skilling playlists" }], headerExtra: playlistSearch, content: playlistsContent, bodyClass: "catalog-page" }));
+
+  const moduleSearch = catalogSearch("module-search-input", "Search skilling content", "Search skilling content");
+  const skillingContent = `<section class="catalog-intro"><p class="kicker">Build your skills</p><h1>Skilling content</h1><p>Explore all learning experiences and find content by topic, modality, level, or audience.</p></section>
+    <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore the catalog</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Available learning experiences</h2></div><div class="card-grid" data-module-grid>${modules.map((item) => card(skillingContentFile, item, "modules", true)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p></section>
+    ${catalogFilterDialog(modules, ["modality", "level", "audience"], "skilling content")}`;
+  await writePage(skillingContentFile, shell({ outputFile: skillingContentFile, title: "Skilling content", breadcrumbs: [{ label: "Skilling content" }], headerExtra: moduleSearch, content: skillingContent, bodyClass: "catalog-page" }));
+
   const moduleCatalog = modules.map((module) => ({ name: module.title, path: `modules/${module.slug}/index.html` }));
   const personalPlaylistsContent = `<div data-personal-playlists data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalPlaylistsFile, path.join(outputRoot, "assets", "playlist.png"))}">
-    <section class="catalog-intro"><p class="kicker">Personal collection</p><h1>My Playlists</h1><p>Create playlists from any module page and return here to continue learning.</p></section>
+    <section class="catalog-intro"><p class="kicker">Personal collection</p><h1>My Playlists</h1><p>Create playlists from any learning experience and return here to continue learning.</p></section>
     <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Your collections</p><button class="filter-trigger" type="button" data-new-personal-playlist-open>New personal playlist</button></div><h2>Personal playlists</h2></div><div class="card-grid" data-personal-playlist-grid></div><p class="filter-empty" data-personal-playlist-empty hidden>You have not created any personal playlists yet.</p></section>
   </div>
   <dialog class="filter-dialog personal-playlist-dialog" data-new-personal-playlist-dialog aria-labelledby="new-personal-playlist-title">
@@ -558,7 +592,7 @@ async function build() {
     </form>
   </dialog>`;
   const personalPlaylistSidebar = `<aside class="sidebar" data-sidebar><div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div><nav aria-label="Playlist" data-personal-playlist-navigation></nav></aside><div class="sidebar-scrim" data-menu-close></div>`;
-  await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", sidebar: personalPlaylistSidebar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
+  await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
 
   for (const module of modules) {
     await buildModuleRoute(module, await getModulePages(module), path.join(outputRoot, "modules", module.slug));
@@ -573,11 +607,16 @@ async function build() {
     });
     const playlistFile = path.join(outputRoot, "playlists", playlist.slug, "index.html");
     const sidebar = playlistSidebar(playlistFile, playlist, playlistModules);
-    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, sidebar, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists") }));
+    const playlistBreadcrumbs = [{ label: "Skilling playlists", target: playlistsFile }, { label: playlist.title }];
+    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists") }));
     for (const module of playlistModules) {
       const routeRoot = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug);
       const sidebarFactory = (outputFile) => playlistSidebar(outputFile, playlist, playlistModules, module.slug);
-      await buildModuleRoute(module, await getModulePages(module), routeRoot, sidebarFactory);
+      const breadcrumbParents = [
+        { label: "Skilling playlists", target: playlistsFile },
+        { label: playlist.title, target: playlistFile },
+      ];
+      await buildModuleRoute(module, await getModulePages(module), routeRoot, sidebarFactory, breadcrumbParents);
     }
   }
 
@@ -590,7 +629,8 @@ async function build() {
       return playlist;
     });
     const courseFile = path.join(outputRoot, "courses", course.slug, "index.html");
-    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, bodyClass: "learning-page", content: courseOverview(courseFile, course, coursePlaylists) }));
+    const courseBreadcrumbs = [{ label: "Courses", target: coursesFile }, { label: course.title }];
+    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, bodyClass: "learning-page", content: courseOverview(courseFile, course, coursePlaylists) }));
   }
 
   await mkdir(path.join(outputRoot, "assets"), { recursive: true });
