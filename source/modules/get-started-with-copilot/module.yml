@@ -1,5 +1,5 @@
-title: Get started with Microsoft Copilot
-description: Learn how to set up and use Microsoft Copilot, explore accessibility and language support, understand GPT technology, and write effective prompts.
+title: Get ready to work with Microsoft Copilot
+description: Explore how Microsoft Copilot grounds responses in your organizational data and the web across Microsoft 365 apps, discover how agents handle complex multi-step tasks, understand how enterprise data protection and sensitivity labels keep your data secure, and apply a four-element prompting framework to get accurate, useful results.
 modality: Multimodal
 level: 100
 duration: 30 minutes
@@ -9,9 +9,7 @@ audience:
   - Business user
 pages:
   - 1-introduction.md
-  - 2-what-is-microsoft-copilot.md
-  - 3-navigating-copilot-setup-account-types.md
-  - 4-language-accessibility-support-copilot.md
-  - 5-tips-for-engaging-conversation-with-copilot.md
-  - 6-explore-gpt-technology.md
-  - 7-summary.md
+  - 2-how-copilot-works.md
+  - 3-copilot-security.md
+  - 4-prompts.md
+  - 5-summary.md

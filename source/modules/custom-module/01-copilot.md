@@ -2,4 +2,4 @@
 title: What is Copilot
 ---
 
-[!INCLUDE[](../get-started-with-copilot/2-what-is-microsoft-copilot.md)]
+[!INCLUDE[](../get-started-with-copilot/2-how-copilot-works.md)]
