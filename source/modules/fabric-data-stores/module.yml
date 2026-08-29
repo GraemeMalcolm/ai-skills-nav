@@ -1,0 +1,18 @@
+title: Choose data stores in Microsoft Fabric
+description: Evaluate lakehouse, warehouse, and eventhouse options to select the appropriate analytical data store for business scenarios in Microsoft Fabric.
+modality: Multimodal
+level: 300
+duration: 60 minutes
+topics:
+  - Microsoft Fabric
+audience:
+  - Data Analyst
+  - Data Engineer
+avatar: inna
+pages:
+  - 01-introduction.md
+  - 02-data-stores.md
+  - 03-lakehouse.md
+  - 04-warehouse.md
+  - 05-eventhouse.md
+  - 06-summary.md

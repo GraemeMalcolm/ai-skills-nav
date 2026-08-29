@@ -1,0 +1,17 @@
+title: Introduction to end-to-end analytics using Microsoft Fabric
+description: Discover how Microsoft Fabric can meet your enterprise's analytics needs in one platform. Learn about Microsoft Fabric, how it works, and identify how you can use it for your analytics needs.
+modality: Multimodal
+level: 200
+duration: 60 minutes
+topics:
+  - Microsoft Fabric
+audience:
+  - Data Analyst
+  - Data Engineer
+avatar: inna
+pages:
+  - 01-introduction.md
+  - 02-analytics.md
+  - 03-data-teams.md
+  - 04-use-fabric.md
+  - 05-summary.md

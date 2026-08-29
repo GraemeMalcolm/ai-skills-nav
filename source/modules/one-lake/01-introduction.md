@@ -1,0 +1,7 @@
+---
+title: Introduction
+---
+
+When you need to build a report, create a semantic model, or transform data, the first step is finding the right data. In many organizations, data lives across multiple workspaces with different teams maintain their own lakehouses, warehouses, and streaming feeds. Without a way to discover what exists and where it lives, you waste time searching or create unnecessary copies.
+
+Imagine your organization recently adopted Microsoft Fabric. Data is stored in OneLake, but you don't know what's available or how to connect to it. This module shows you how to discover data across your organization, connect to it without duplicating it, and find streaming sources so you can start building instead of searching.

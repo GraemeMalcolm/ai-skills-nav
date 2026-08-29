@@ -1,0 +1,593 @@
+[
+    {
+        "category": "Set up and configure Microsoft Fabric",
+        "link": "https://learn.microsoft.com/en-us/training/paths/get-started-fabric/",
+        "documents": [
+            {
+                "id": 1,
+                "title": "Choose a Fabric capacity",
+                "keywords": [
+                    "Fabric capacity",
+                    "capacity SKU",
+                    "trial capacity",
+                    "Power BI Premium"
+                ],
+                "content": "A Fabric capacity supplies shared compute for Fabric workloads. Choose a trial, Fabric F SKU, or supported Power BI capacity according to workload size, concurrency, scaling, region, and cost requirements."
+            },
+            {
+                "id": 2,
+                "title": "Configure capacity performance",
+                "keywords": [
+                    "capacity sizing",
+                    "capacity units",
+                    "autoscale",
+                    "capacity metrics"
+                ],
+                "content": "Capacity configuration affects performance and cost. Size capacity units for expected demand, monitor throttling and utilization, and use scaling or autoscale options to respond to changing workloads."
+            },
+            {
+                "id": 3,
+                "title": "Create and manage workspaces",
+                "keywords": [
+                    "Fabric workspace",
+                    "workspace creation",
+                    "workspace settings",
+                    "workspace roles"
+                ],
+                "content": "Fabric workspaces organize related analytics items. Create a workspace, assign it to a capacity, configure its settings, and grant roles according to each user's responsibilities."
+            },
+            {
+                "id": 4,
+                "title": "Choose a Fabric workload",
+                "keywords": [
+                    "Fabric workloads",
+                    "Data Engineering",
+                    "Data Factory",
+                    "Real-Time Intelligence"
+                ],
+                "content": "Choose Data Factory for integration, Data Engineering for lakehouse processing, Data Warehouse for relational analytics, Real-Time Intelligence for event data, and Power BI for semantic modeling and reporting."
+            },
+            {
+                "id": 5,
+                "title": "Organize data in OneLake",
+                "keywords": [
+                    "OneLake",
+                    "data organization",
+                    "domains",
+                    "data mesh"
+                ],
+                "content": "OneLake is the unified storage foundation for Fabric. Organize workspaces and items around business domains, ownership, environments, and governance boundaries so data is discoverable and reusable."
+            },
+            {
+                "id": 6,
+                "title": "Create lakehouses and warehouses",
+                "keywords": [
+                    "lakehouse",
+                    "warehouse",
+                    "SQL analytics endpoint",
+                    "Delta tables"
+                ],
+                "content": "Lakehouses combine files, Delta tables, Spark, and SQL access. Warehouses provide a relational SQL experience. Choose the item that best matches engineering, modeling, and BI needs."
+            },
+            {
+                "id": 7,
+                "title": "Create OneLake shortcuts",
+                "keywords": [
+                    "OneLake shortcuts",
+                    "external data",
+                    "data virtualization",
+                    "shortcut cache"
+                ],
+                "content": "OneLake shortcuts reference data without requiring another copy. Use shortcuts to connect Fabric items or supported external storage while considering permissions, caching, and source availability."
+            },
+            {
+                "id": 8,
+                "title": "Configure Power BI settings",
+                "keywords": [
+                    "Power BI settings",
+                    "tenant settings",
+                    "workspace settings",
+                    "Fabric administrator"
+                ],
+                "content": "Fabric administrators configure tenant, capacity, workspace, sharing, export, and developer settings to balance collaboration with organizational security policies."
+            }
+        ]
+    },
+    {
+        "category": "Secure and govern Fabric data",
+        "link": "https://learn.microsoft.com/en-us/training/paths/secure-data-access-microsoft-fabric/",
+        "documents": [
+            {
+                "id": 9,
+                "title": "Assign workspace roles",
+                "keywords": [
+                    "workspace roles",
+                    "least privilege",
+                    "workspace access",
+                    "role assignment"
+                ],
+                "content": "Workspace roles control broad access to Fabric items. Assign the least privileged Admin, Member, Contributor, or Viewer role and use item-level controls for narrower access."
+            },
+            {
+                "id": 10,
+                "title": "Secure lakehouse and warehouse data",
+                "keywords": [
+                    "SQL permissions",
+                    "object security",
+                    "lakehouse security",
+                    "warehouse security"
+                ],
+                "content": "Use SQL permissions, item sharing, and OneLake data access roles where supported so users can reach only the schemas, tables, folders, or rows they require."
+            },
+            {
+                "id": 11,
+                "title": "Implement semantic model security",
+                "keywords": [
+                    "row-level security",
+                    "object-level security",
+                    "RLS",
+                    "OLS"
+                ],
+                "content": "Power BI semantic models support row-level security to filter records and object-level security to hide tables or columns. Define roles carefully and test them before publication."
+            },
+            {
+                "id": 12,
+                "title": "Use managed identities and connections",
+                "keywords": [
+                    "managed identity",
+                    "cloud connection",
+                    "gateway connection",
+                    "credentials"
+                ],
+                "content": "Prefer managed identities or organizational accounts where supported, control connection sharing, and avoid embedding credentials in notebooks, pipelines, or reports."
+            },
+            {
+                "id": 13,
+                "title": "Apply sensitivity labels",
+                "keywords": [
+                    "sensitivity labels",
+                    "Microsoft Purview",
+                    "information protection",
+                    "data classification"
+                ],
+                "content": "Sensitivity labels classify and protect Fabric and Power BI content. Apply labels consistently so handling expectations follow supported data when it is shared or exported."
+            },
+            {
+                "id": 14,
+                "title": "Endorse and certify trusted content",
+                "keywords": [
+                    "endorsement",
+                    "certified content",
+                    "promoted content",
+                    "trusted data"
+                ],
+                "content": "Endorsement helps consumers identify trusted analytics assets. Promote useful content and certify authoritative items through a review process with clear ownership and quality standards."
+            },
+            {
+                "id": 15,
+                "title": "Track lineage and impact",
+                "keywords": [
+                    "data lineage",
+                    "lineage view",
+                    "impact analysis",
+                    "dependencies"
+                ],
+                "content": "Lineage shows how sources, pipelines, lakehouses, semantic models, and reports are connected. Use impact analysis before changes to identify downstream consumers."
+            },
+            {
+                "id": 16,
+                "title": "Monitor activity and audit usage",
+                "keywords": [
+                    "audit log",
+                    "activity events",
+                    "usage monitoring",
+                    "governance monitoring"
+                ],
+                "content": "Monitor sharing, viewing, creation, refresh, and administrative events to understand adoption, verify policy, and investigate unusual behavior."
+            }
+        ]
+    },
+    {
+        "category": "Prepare and process data in Fabric",
+        "link": "https://learn.microsoft.com/en-us/training/paths/ingest-data-with-microsoft-fabric/",
+        "documents": [
+            {
+                "id": 17,
+                "title": "Design data ingestion",
+                "keywords": [
+                    "ingestion design",
+                    "batch ingestion",
+                    "incremental load",
+                    "source analysis"
+                ],
+                "content": "Consider data volume, latency, schema, full or incremental loading, security, and the needs of downstream lakehouse, warehouse, and Power BI consumers."
+            },
+            {
+                "id": 18,
+                "title": "Choose an ingestion tool",
+                "keywords": [
+                    "Dataflow Gen2",
+                    "data pipeline",
+                    "notebook",
+                    "copy job"
+                ],
+                "content": "Choose Dataflow Gen2 for low-code transformations, pipelines or copy jobs for repeatable movement, notebooks for code-driven processing, and eventstreams for real-time events."
+            },
+            {
+                "id": 19,
+                "title": "Load data into a lakehouse",
+                "keywords": [
+                    "lakehouse ingestion",
+                    "Files area",
+                    "Tables area",
+                    "Delta format"
+                ],
+                "content": "Load raw files for flexible processing or write curated Delta tables for reliable SQL, Spark, Direct Lake, and downstream analytics access."
+            },
+            {
+                "id": 20,
+                "title": "Load data into a warehouse",
+                "keywords": [
+                    "warehouse loading",
+                    "COPY statement",
+                    "T-SQL",
+                    "data warehouse"
+                ],
+                "content": "Fabric warehouses support relational ingestion with pipelines, dataflows, cross-database queries, and T-SQL. Preserve keys, data types, and transaction behavior."
+            },
+            {
+                "id": 21,
+                "title": "Build Dataflow Gen2 transformations",
+                "keywords": [
+                    "Dataflow Gen2",
+                    "Power Query",
+                    "query folding",
+                    "data transformation"
+                ],
+                "content": "Dataflow Gen2 uses Power Query for visual data preparation. Connect to sources, set types, filter and combine data, preserve query folding, and write to Fabric destinations."
+            },
+            {
+                "id": 22,
+                "title": "Transform data with notebooks",
+                "keywords": [
+                    "Fabric notebook",
+                    "Spark",
+                    "PySpark",
+                    "Spark SQL"
+                ],
+                "content": "Fabric notebooks support interactive Spark development with Python, SQL, Scala, and R for exploration, cleansing, transformation, machine learning, and Delta table operations."
+            },
+            {
+                "id": 23,
+                "title": "Transform data with T-SQL",
+                "keywords": [
+                    "T-SQL",
+                    "stored procedure",
+                    "views",
+                    "warehouse transformation"
+                ],
+                "content": "Use T-SQL queries, views, stored procedures, and table operations in warehouses and SQL analytics endpoints to create repeatable business-ready structures."
+            },
+            {
+                "id": 24,
+                "title": "Build data pipelines",
+                "keywords": [
+                    "data pipeline",
+                    "pipeline activity",
+                    "parameters",
+                    "orchestration"
+                ],
+                "content": "Combine copy, notebook, dataflow, script, and control-flow activities with parameters and dependencies to build reusable Fabric workflows."
+            },
+            {
+                "id": 25,
+                "title": "Process incremental changes",
+                "keywords": [
+                    "incremental load",
+                    "change data capture",
+                    "watermark",
+                    "upsert"
+                ],
+                "content": "Track a watermark or change feed, identify inserted, updated, and deleted records, and apply idempotent upserts to process changes efficiently."
+            },
+            {
+                "id": 26,
+                "title": "Process real-time events",
+                "keywords": [
+                    "eventstream",
+                    "eventhouse",
+                    "KQL database",
+                    "Real-Time Intelligence"
+                ],
+                "content": "Use eventstreams to route events, eventhouses and KQL databases to store them, and KQL querysets or dashboards to investigate live and historical patterns."
+            },
+            {
+                "id": 27,
+                "title": "Profile and clean data",
+                "keywords": [
+                    "data profiling",
+                    "null values",
+                    "duplicates",
+                    "data types"
+                ],
+                "content": "Profiling reveals distributions, missing values, invalid types, and duplicates. Define explicit rules for rejected, corrected, or quarantined data."
+            },
+            {
+                "id": 28,
+                "title": "Design a medallion architecture",
+                "keywords": [
+                    "medallion architecture",
+                    "bronze layer",
+                    "silver layer",
+                    "gold layer"
+                ],
+                "content": "Bronze preserves source data, silver validates and standardizes it, and gold presents modeled business data for reporting and analysis."
+            },
+            {
+                "id": 29,
+                "title": "Validate data quality",
+                "keywords": [
+                    "data quality",
+                    "validation rules",
+                    "schema validation",
+                    "quality checks"
+                ],
+                "content": "Validate schemas, nullability, uniqueness, ranges, relationships, and business rules, then log and handle failures consistently."
+            }
+        ]
+    },
+    {
+        "category": "Model and visualize data with Power BI",
+        "link": "https://learn.microsoft.com/en-us/training/paths/model-data-power-bi/",
+        "documents": [
+            {
+                "id": 30,
+                "title": "Design a star schema",
+                "keywords": [
+                    "star schema",
+                    "fact table",
+                    "dimension table",
+                    "table grain"
+                ],
+                "content": "Separate measurable facts from descriptive dimensions. Define a clear grain, stable keys, and appropriate relationships to make semantic models understandable and efficient."
+            },
+            {
+                "id": 31,
+                "title": "Create model relationships",
+                "keywords": [
+                    "model relationships",
+                    "cardinality",
+                    "filter direction",
+                    "active relationship"
+                ],
+                "content": "Configure cardinality, cross-filter direction, and active relationships carefully, favoring simple one-to-many paths that avoid ambiguity."
+            },
+            {
+                "id": 32,
+                "title": "Choose a semantic model storage mode",
+                "keywords": [
+                    "Import mode",
+                    "DirectQuery",
+                    "Direct Lake",
+                    "composite model"
+                ],
+                "content": "Choose Import for in-memory speed, DirectQuery for source-based queries, Direct Lake for OneLake data, or a composite design when requirements differ by table."
+            },
+            {
+                "id": 33,
+                "title": "Create DAX measures",
+                "keywords": [
+                    "DAX",
+                    "measure",
+                    "filter context",
+                    "CALCULATE"
+                ],
+                "content": "DAX measures calculate results in the current filter context. Build explicit reusable measures and use CALCULATE when you need to modify context."
+            },
+            {
+                "id": 34,
+                "title": "Implement time intelligence",
+                "keywords": [
+                    "time intelligence",
+                    "date table",
+                    "year to date",
+                    "period comparison"
+                ],
+                "content": "Use a complete date table with suitable relationships and DAX calculations for year-to-date, prior-period, and rolling-window analysis."
+            },
+            {
+                "id": 35,
+                "title": "Optimize semantic model performance",
+                "keywords": [
+                    "model optimization",
+                    "VertiPaq",
+                    "Performance Analyzer",
+                    "DAX optimization"
+                ],
+                "content": "Remove unnecessary columns, choose compact data types, simplify relationships and DAX, and use diagnostic tools to locate bottlenecks."
+            },
+            {
+                "id": 36,
+                "title": "Configure incremental refresh",
+                "keywords": [
+                    "incremental refresh",
+                    "partitions",
+                    "RangeStart",
+                    "RangeEnd"
+                ],
+                "content": "Incremental refresh partitions large tables by time so only recent data is refreshed routinely. Configure date parameters and preserve query folding."
+            },
+            {
+                "id": 37,
+                "title": "Design effective Power BI reports",
+                "keywords": [
+                    "report design",
+                    "visual selection",
+                    "page layout",
+                    "data storytelling"
+                ],
+                "content": "Select visuals that match analytical tasks, maintain a consistent layout and hierarchy, and reduce decoration that competes with the data."
+            },
+            {
+                "id": 38,
+                "title": "Add interactive report navigation",
+                "keywords": [
+                    "drillthrough",
+                    "bookmarks",
+                    "tooltips",
+                    "slicers"
+                ],
+                "content": "Use slicers, drillthrough, report page tooltips, bookmarks, and buttons to help users move predictably from overview to detail."
+            },
+            {
+                "id": 39,
+                "title": "Build accessible reports",
+                "keywords": [
+                    "accessibility",
+                    "alt text",
+                    "tab order",
+                    "color contrast"
+                ],
+                "content": "Provide meaningful titles and alt text, logical tab order, sufficient contrast, keyboard-friendly navigation, and cues that do not rely on color alone."
+            },
+            {
+                "id": 40,
+                "title": "Publish and share Power BI content",
+                "keywords": [
+                    "Power BI app",
+                    "publish report",
+                    "share content",
+                    "audience"
+                ],
+                "content": "Publish reports and semantic models to a managed workspace, then distribute curated content through a Power BI app with suitable audiences and permissions."
+            }
+        ]
+    },
+    {
+        "category": "Deploy, monitor, and understand Fabric",
+        "link": "https://learn.microsoft.com/en-us/training/modules/introduction-end-to-end-analytics-using-microsoft-fabric/",
+        "documents": [
+            {
+                "id": 41,
+                "title": "Use Git integration",
+                "keywords": [
+                    "Git integration",
+                    "branch strategy",
+                    "source control",
+                    "workspace sync"
+                ],
+                "content": "Connect development workspaces to branches, review changes through pull requests, and synchronize supported Fabric items carefully to avoid overwriting work."
+            },
+            {
+                "id": 42,
+                "title": "Use deployment pipelines",
+                "keywords": [
+                    "deployment pipeline",
+                    "development stage",
+                    "test stage",
+                    "production stage"
+                ],
+                "content": "Promote supported Fabric and Power BI content through development, test, and production stages. Compare stages and validate dependencies after each promotion."
+            },
+            {
+                "id": 43,
+                "title": "Test Fabric analytics solutions",
+                "keywords": [
+                    "unit testing",
+                    "integration testing",
+                    "data validation",
+                    "acceptance testing"
+                ],
+                "content": "Test transformation logic, data quality, pipeline integration, semantic model calculations, security roles, report behavior, and business acceptance."
+            },
+            {
+                "id": 44,
+                "title": "Monitor Fabric capacity",
+                "keywords": [
+                    "Capacity Metrics app",
+                    "throttling",
+                    "capacity utilization",
+                    "background operations"
+                ],
+                "content": "Use the Fabric Capacity Metrics app to identify overloaded periods, expensive items, throttling, and opportunities to reschedule, optimize, or resize."
+            },
+            {
+                "id": 45,
+                "title": "Monitor pipelines and refreshes",
+                "keywords": [
+                    "Monitoring hub",
+                    "pipeline monitoring",
+                    "refresh history",
+                    "failure diagnosis"
+                ],
+                "content": "Use the Monitoring hub and item histories to investigate failed pipelines, notebooks, dataflows, and semantic model refreshes before retrying them."
+            },
+            {
+                "id": 46,
+                "title": "What is Microsoft Fabric?",
+                "keywords": [
+                    "Microsoft Fabric",
+                    "analytics platform",
+                    "software as a service",
+                    "Fabric overview"
+                ],
+                "content": "Microsoft Fabric is a unified analytics platform for data integration, engineering, warehousing, real-time analytics, data science, governance, and business intelligence."
+            },
+            {
+                "id": 47,
+                "title": "What is OneLake?",
+                "keywords": [
+                    "OneLake",
+                    "single data lake",
+                    "OneLake storage",
+                    "unified storage"
+                ],
+                "content": "OneLake is the organization-wide logical data lake built into Fabric. It provides common storage for Fabric items and reduces copies through shared open-format data and shortcuts."
+            },
+            {
+                "id": 48,
+                "title": "What is Power BI?",
+                "keywords": [
+                    "Power BI",
+                    "business intelligence",
+                    "data visualization",
+                    "self-service analytics"
+                ],
+                "content": "Power BI is the business intelligence experience in Fabric. It supports data preparation, semantic modeling, interactive visualization, sharing, and governed consumption."
+            },
+            {
+                "id": 49,
+                "title": "What is a semantic model?",
+                "keywords": [
+                    "semantic model",
+                    "Power BI dataset",
+                    "measures",
+                    "relationships"
+                ],
+                "content": "A semantic model presents data through tables, relationships, measures, hierarchies, and business-friendly metadata so reports use consistent definitions."
+            },
+            {
+                "id": 50,
+                "title": "What is Direct Lake?",
+                "keywords": [
+                    "Direct Lake",
+                    "OneLake data",
+                    "storage mode",
+                    "semantic model performance"
+                ],
+                "content": "Direct Lake is a semantic model storage mode that queries supported OneLake data with minimal duplication and interactive performance."
+            },
+            {
+                "id": 51,
+                "title": "How Fabric and Power BI work together",
+                "keywords": [
+                    "Fabric and Power BI",
+                    "end-to-end analytics",
+                    "OneLake integration",
+                    "business intelligence"
+                ],
+                "content": "Fabric prepares, stores, processes, and governs data while Power BI models and presents it. Shared workspaces, security, lineage, and OneLake connect the experiences."
+            }
+        ]
+    }
+]
