@@ -1,7 +1,7 @@
 [
     {
         "category": "Set up and configure Microsoft Fabric",
-        "link": "https://learn.microsoft.com/en-us/training/paths/get-started-fabric/",
+        "link": "https://aiskillsnavigator.microsoft.com/explore/search/module-2f6679d9f79cf00472fe7eeb4f425d8b0b72f644baa239ef72d1061eefec1648",
         "documents": [
             {
                 "id": 1,
@@ -95,7 +95,7 @@
     },
     {
         "category": "Secure and govern Fabric data",
-        "link": "https://learn.microsoft.com/en-us/training/paths/secure-data-access-microsoft-fabric/",
+        "link": "https://aiskillsnavigator.microsoft.com/explore/search/learningpath-2dccf80fd097d3d0e3555cbcf5e53b6fa7f631fe4383d9b5869e583de9222a10",
         "documents": [
             {
                 "id": 9,
@@ -189,7 +189,7 @@
     },
     {
         "category": "Prepare and process data in Fabric",
-        "link": "https://learn.microsoft.com/en-us/training/paths/ingest-data-with-microsoft-fabric/",
+        "link": "https://aiskillsnavigator.microsoft.com/explore/search/learningpath-32869cbecab1e8bb145bf6084dae9cf797457446909632aea9fed4ce9fec2617",
         "documents": [
             {
                 "id": 17,
@@ -338,7 +338,7 @@
     },
     {
         "category": "Model and visualize data with Power BI",
-        "link": "https://learn.microsoft.com/en-us/training/paths/model-data-power-bi/",
+        "link": "https://aiskillsnavigator.microsoft.com/explore/search/learningpath-bd8ea18edb17daca44d1f86d83fde8827bed6f5846dcd5cac22bbeb53265e5d2",
         "documents": [
             {
                 "id": 30,
@@ -465,7 +465,7 @@
     },
     {
         "category": "Deploy, monitor, and understand Fabric",
-        "link": "https://learn.microsoft.com/en-us/training/modules/introduction-end-to-end-analytics-using-microsoft-fabric/",
+        "link": "https://aiskillsnavigator.microsoft.com/explore/search/learningpath-df764196863c730427b95f2775059cc9d409e29d13dd680326eb4f5836e4beee",
         "documents": [
             {
                 "id": 41,
