@@ -1,6 +1,6 @@
-title: Explore AI Concepts
-description: Learn how AI supports generative AI, language, speech, computer vision, information extraction, and retrieval-augmented generation (RAG) workloads.
-modality: Lab
+title: Introduction to AI Concepts
+description: Curious about artificial intelligence? Want to understand what the buzz is about? This module introduces you to the world of AI.
+modality: Multimodal
 level: 100
 duration: 120 minutes
 topics:
@@ -9,10 +9,12 @@ audience:
   - Developer
 avatar: anton
 pages:
-  - 01-ai-workloads.md
+  - 01-introduction.md
   - 02-generative-ai.md
   - 03-language.md
   - 04-speech.md
   - 05-vision.md
   - 06-info-extraction.md
-  - 07-explore-rag.md
+  - 07-responsible-ai.md
+  - 08-exercise.md
+  - 09-summary.md

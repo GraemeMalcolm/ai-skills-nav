@@ -1,0 +1,20 @@
+title: Get started with AI in Azure
+description: This module introduces Azure and its capabilities for building AI solutions. Explore the key features and benefits of using Microsoft Foundry for AI development.
+modality: Multimodal
+level: 200
+duration: 120 minutes
+topics:
+  - Artificial Intelligence
+  - Microsoft Foundry
+audience:
+  - Developer
+  - AI Engineer
+avatar: anton
+pages:
+  - 01-introduction.md
+  - 02-azure.md
+  - 03-develop.md
+  - 04-foundry.md
+  - 05-endpoints.md
+  - 06-exercise.md
+  - 07-summary.md

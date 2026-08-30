@@ -1,0 +1,46 @@
+---
+title: Responsible AI
+---
+
+::: zone pivot="Video"
+
+[!VIDEO https://learn-video.azurefd.net/vod/player?id=873e40b0-178e-408e-961e-c9e3cd849cf4]
+
+> **TIP**: See the *Text* tab for more details!
+
+::: zone-end
+
+::: zone pivot="Text"
+
+*Responsible AI* is a term used to describe considerations for building AI systems that include guardrails to mitigate the risk of harmful, illegal, or offensive content generation or automated actions.
+
+For example, our computing history solution should avoid providing information to users that would help or encourage illegal or harmful activity.
+
+![Screenshot of a computing history site applying content filters to mitigate risk of harmful content generation.](./media/computing-history-content-safety.png)
+
+*Content filters* are one way that AI systems mitigate the risk of harmful content generation; but a responsible AI solution requires consideration of key principles from its conception, through its design and implementation, and into its operation.
+
+## Principles of responsible AI
+
+Principles for responsible AI include:
+
+|Principle|Description|
+|--|--|
+|![Diagram representing fairness.](./media/fairness.png)<br>**Fairness**|AI models are trained using data, which is generally sourced and selected by humans. There's substantial risk that the data selection criteria, or the data itself reflects unconscious *bias* that may cause a model to produce discriminatory outputs. AI developers need to take care to minimize bias in training data and test AI systems for fairness.|
+|![Diagram representing reliability and safety.](./media/reliability-safety.png)<br>**Reliability and safety**|AI is based on probabilistic models, it is not infallible. AI-powered applications need to take this into account and mitigate risks accordingly.|
+|![Diagram representing privacy and security.](./media/privacy-security.png)<br>**Privacy and security**|Models are trained using data, which may include personal information. AI developers have a responsibility to ensure that the training data is kept secure, and that the trained models themselves can't be used to reveal private personal or organizational details.|
+|![Diagram representing inclusiveness.](./media/inclusiveness.png)<br>**Inclusiveness**|The potential of AI to improve lives and drive success should be open to everyone. AI developers should strive to ensure that their solutions don't exclude some users.|
+|![Diagram representing transparency.](./media/transparency.png)<br>**Transparency**|AI can sometimes seem like "magic", but it's important to make users aware of how the system works and any potential limitations it may have.|
+|![Diagram representing accountability.](./media/accountability.png)<br>**Accountability**|Ultimately, the people and organizations that develop and distribute AI solutions are accountable for their actions. It's important for organizations developing AI models and applications to define and apply a framework of governance to help ensure that they apply responsible AI principles to their work.|
+
+## Responsible AI examples
+
+Some example of scenarios where responsible AI practices should be applied include:
+
+- An AI-powered college admissions system should be tested to ensure it evaluates all applications fairly, taking into account relevant academic criteria but avoiding unfounded discrimination based on irrelevant demographic factors.
+- An AI-powered robotic solution that uses computer vision to detect objects should avoid unintentional harm or damage. One way to accomplish this goal is to use probability values to determine "confidence" in object identification before interacting with physical objects, and avoid any action if the confidence level is below a specific threshold.
+- A facial identification system used in an airport or other secure area should delete personal images that are used for temporary access as soon as they're no longer required. Additionally, safeguards should prevent the images being made accessible to operators or users who have no need to view them.
+- An AI agent that offers speech-based interaction should also generate text captions to avoid making the system unusable for users with a hearing impairment.
+- A bank that uses an AI-based loan-approval application should disclose the use of AI, and describe features of the data on which it was trained (without revealing confidential information).
+
+::: zone-end

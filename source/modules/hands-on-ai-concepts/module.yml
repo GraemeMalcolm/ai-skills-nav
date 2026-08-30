@@ -1,0 +1,18 @@
+title: Hands-On - Explore AI Concepts
+description: Learn how AI supports generative AI, language, speech, computer vision, information extraction, and retrieval-augmented generation (RAG) workloads.
+modality: Lab
+level: 100
+duration: 120 minutes
+topics:
+  - Artificial Intelligence
+audience:
+  - Developer
+avatar: anton
+pages:
+  - 01-ai-workloads.md
+  - 02-generative-ai.md
+  - 03-language.md
+  - 04-speech.md
+  - 05-vision.md
+  - 06-info-extraction.md
+  - 07-explore-rag.md
