@@ -3,6 +3,18 @@
 // progressively enhance only the features whose marker attributes are present.
 // Keeping every feature guarded lets one shared script run on all page types.
 
+// Use one definition of common conversational words for both catalog search and
+// avatar knowledge retrieval. Removing these words lets natural questions such
+// as "How do I develop AI agents?" match the meaningful terms "develop ai
+// agents". Product-name punctuation such as C++, C#, and .NET is preserved.
+const searchStopWords = new Set(["a", "an", "and", "are", "can", "do", "for", "how", "i", "in", "is", "it", "me", "of", "on", "or", "the", "to", "what", "with", "you"]);
+const normalizeSearchTerms = (value) => value
+  .toLocaleLowerCase()
+  .replace(/[^a-z0-9+#.-]+/g, " ")
+  .trim()
+  .split(/\s+/)
+  .filter((term) => term && !searchStopWords.has(term));
+
 // Personal playlists deliberately live in browser storage: the proof of
 // concept has no account system or backend. Module paths are stored relative to
 // the site root so the same record works when GitHub Pages uses a repo subpath.
@@ -586,8 +598,10 @@ const applyCatalogVisibility = () => {
 if (searchForm && searchInput && searchClear && catalogCards.length) {
   searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    searchTerms = searchInput.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-    searchClear.hidden = searchTerms.length === 0;
+    searchTerms = normalizeSearchTerms(searchInput.value);
+    // Keep Clear available for a non-empty expression even when it consists
+    // entirely of ignored words and therefore intentionally matches all cards.
+    searchClear.hidden = searchInput.value.trim().length === 0;
     applyCatalogVisibility();
   });
   searchClear.addEventListener("click", () => {
@@ -669,10 +683,9 @@ if (agent) {
   const microphoneButton = form.querySelector("[data-agent-mic]");
   const submitButton = form.querySelector('button[type="submit"]');
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const stopWords = new Set(["a", "an", "and", "are", "can", "do", "for", "how", "i", "in", "is", "it", "me", "of", "on", "or", "the", "to", "what", "with", "you"]);
   // Search queries remove a broader set of conversational words so fallback
   // URLs emphasize the subject rather than phrases such as "please show me".
-  const bingStopWords = new Set([...stopWords, "about", "ask", "could", "describe", "explain", "find", "give", "help", "know", "learn", "need", "please", "search", "show", "tell", "want", "would"]);
+  const bingStopWords = new Set([...searchStopWords, "about", "ask", "could", "describe", "explain", "find", "give", "help", "know", "learn", "need", "please", "search", "show", "tell", "want", "would"]);
   // Knowledge and moderation are loaded lazily on the first prompt, then cached
   // for this page lifetime. The underlying fetches use no-store so deployment
   // updates are not hidden by the HTTP cache across page loads.
@@ -910,7 +923,7 @@ if (agent) {
     for (let length = maximumPhraseLength; length >= 2; length--) {
       for (let index = 0; index <= words.length - length; index++) phrases.add(words.slice(index, index + length).join(" "));
     }
-    words.filter((word) => word.length >= 2 && !stopWords.has(word)).forEach((word) => phrases.add(word));
+    words.filter((word) => word.length >= 2 && !searchStopWords.has(word)).forEach((word) => phrases.add(word));
 
     const matches = new Map();
     phrases.forEach((phrase) => {

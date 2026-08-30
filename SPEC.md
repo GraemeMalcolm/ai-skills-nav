@@ -333,10 +333,12 @@ Search text MUST concatenate title, course number when present, description, and
 
 1. Run on form submission.
 2. Trim and lowercase input.
-3. Split input on whitespace.
-4. Require every term to occur as a substring of the card's search text.
-5. Compose with currently applied filters.
-6. Provide a clear action that resets results and focuses the input.
+3. Replace punctuation other than `+`, `#`, `.`, and `-` with spaces so technology names retain meaningful punctuation.
+4. Split input on whitespace and remove the shared conversational stop words `a`, `an`, `and`, `are`, `can`, `do`, `for`, `how`, `i`, `in`, `is`, `it`, `me`, `of`, `on`, `or`, `the`, `to`, `what`, `with`, and `you`.
+5. Require every remaining term to occur as a substring of the card's search text.
+6. Treat an expression containing only stop words as having no search constraint while retaining the clear action for the non-empty input.
+7. Compose with currently applied filters.
+8. Provide a clear action that resets results and focuses the input.
 
 Filters MUST be generated from unique values in current metadata and sorted with locale-aware numeric ordering.
 
@@ -645,7 +647,7 @@ A conforming implementation MUST satisfy the following checks.
 
 ### Catalog and navigation
 
-- Search performs case-insensitive all-term substring matching over the specified fields.
+- Search normalizes punctuation, removes shared conversational stop words, and performs case-insensitive all-meaningful-term substring matching over the specified fields.
 - Filter choices come from current metadata.
 - OR-within-field and AND-between-fields behavior is correct.
 - Search and filters compose correctly and update accessible empty states.
