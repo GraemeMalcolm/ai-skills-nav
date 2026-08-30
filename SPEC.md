@@ -1,90 +1,690 @@
-# Specification for a GitHub Pages-based learning site
+# AI Skills Nav implementation specification
 
-This is a spec for a GitHub-based site that learners can use to find and consume training materials. The source for the training materials is provided in the GitHub repo as markdown and YAML files. On merging to main, the GitHub build process creates a GitHub pages site that presents the content as HTML.
+## 1. Purpose
 
-## Content architecture
+AI Skills Nav is a content-driven learning site for discovering and consuming Microsoft skilling content. This specification describes the implemented product closely enough for a coding agent to recreate it from the repository's Markdown, YAML, JSON, image, and audio assets.
 
-Thos section describes how the content source is organized in the repo.
+The application MUST:
 
-### Modules
+- Generate a complete static site at build time.
+- Run on GitHub Pages without an application server, database, authentication system, or client-side framework.
+- Present courses, curated playlists, modules, and module pages.
+- Support search, metadata filters, responsive navigation, personal playlists, custom Markdown extensions, and module-specific learning assistants.
+- Use relative internal URLs so deployment beneath a repository subpath works.
+- Remain usable without a generative AI model.
 
-The core unit of learning asset in the site is a "module". Modules are defined in the /modules folder in which a subfolder exists for each available skillng module. Each module consists of:
+The current content set produces 5 courses, 9 curated playlists, 24 modules, 4 avatars, and 225 HTML files.
 
-- A module.yml file that defines the metadata for the module.
-- A thumbnail.png file that is used to represent the module visually in the site interface.
-- One or more markdown files to represent the pages of content in the module. Each page file inclides a metadata section in YAML format to define page-level metadata (such as the title), and markdown content for the page.
-- A media subfolder containing images that are included in the pages.
+## 2. Technology and repository layout
 
-A module can contain one or more pages, designed to be consumed in the order defined in the module metadata. There is a markdown file for each page.
+The reference implementation uses:
 
-### Playlists
+- Node.js 22 for generation.
+- ECMAScript modules.
+- `js-yaml` for YAML parsing.
+- `marked` with GitHub Flavored Markdown enabled.
+- Plain generated HTML, one global CSS file, and one global browser JavaScript file.
+- Browser `localStorage`, Fetch, HTML audio playback, Web Speech, and native `<dialog>` APIs where required.
 
-A playlist is an ordered collection of related modules that provides a curated learning path. Playlists are defined in the /playlists folder, where there is a folder for each playlist.
+Required source locations:
 
-Each playlist consists of:
-
-- A playlist.yml file that defines the metadata for the playlist - including which modules it includes.
-- A thumbnail.png file that is used to represent the playlist visually in the site interface.
-
-### labs
-
-A lab is a collection of practical exercises that enable the learner to engage in a hands-on learning experience. Labs are defined in the `/MicrosoftLearning` folder, in which there is a folder for each lab. Each lab consists of:
-
-- One or more markdown files, each including a lab metadata section (in YAML format) and markdown instructions.
-- A media subfolder containing images that are included in the exercises.
-
-## GitHub Pages site structure
-
-The GitHub pages site for the repo should consist of a "Home" page with the title "Skilling in the Name of...", on which the availableaylists and modules are shown as a grid of thumbnails, each with the playlist or module title under it. The page should be slit into two vettical sections, the first listing playlists, the second listing modules.
-
-### Navigation
-
-When the user selects a *playlist*, it should open as a page with a collabsible navigation pane on the left in which the playlist title is displayed at the top in bold text, with the modules in the playlist listed vertically beneath it (using the title metada value for each module) in regular text format. The list should be in the order defined in the playlist metada. By default, the playlist title should be selected in the navigation pane.
-
-When the playlist title is selected in the navigation pane, the main content pane should show the playlist thumbnail and title, and its description (from the metadata).
-
-When the user selects a module in the navigation pane, if the module contains multiple pages, the content pane should show the module thumbnail and description and a "Start" button to allow the user to start viewing the module. If the module contans only one page, selecting it in the navigation pane should display the module's only page in the content pane (skipping the module "start" page).
-
-Modules with multiple pages should include a navigation control at the bottom of each page (other than the "start" page) with a "< Previous" button, a drop-down list of the page titles, and a " Next >" button. This enables users to navigate to specific pages in the module using the order defined in the module metata. On the first page, the "< Previous" button should be disabled; and on the last page, the "Next >" button should be disabled.
-
-When the user selects a *module* on the home page, the module's "start" page (or its only page if it only containes one page) should be displayed. In this scenario, there should be no navigation pane.
-
-### Module content
-
-Module pages should be rendered as HTML based on the markdown they contain. In most cases, a typical markdown rendering engine will be sufficient; however, there are some custom markdown elements that require special handling.
-
-#### Module page titles
-
-The title of each module page is oncluded in its YAML metadata section (at the beginning of the page). This should be rendered as an H1 heading at the top of the module page.
-
-#### Zone Pivots
-
-Module pages can include sections marked as follows:
-
+```text
+source/
+  courses/<course-slug>/
+    course.yml
+    thumbnail.png
+  playlists/<playlist-slug>/
+    playlist.yml
+    thumbnail.png
+  modules/<module-slug>/
+    module.yml
+    thumbnail.png
+    <page>.md
+    media/...
+MicrosoftLearning/
+  <reusable Markdown and media>
+avatars/<avatar-slug>/
+  avatar.yml
+  avatar.png
+  knowledge.json
+  audio/...
+site/
+  app.js
+  styles.css
+  moderation.txt
+  media/playlist.png
+scripts/
+  build.mjs
 ```
-::: zone pivot="<zone-1-name>"
 
-<zone-1-content>
+A content folder's name is its canonical slug. Slugs are not declared separately in metadata.
+
+## 3. Content model
+
+The content hierarchy is:
+
+```text
+Course -> ordered curated playlists -> ordered modules -> ordered pages
+```
+
+Modules are independently addressable and MAY appear in multiple playlists. A module associated with a playlist MUST be rendered within that playlist's route as well as at its standalone route.
+
+### 3.1 Course schema
+
+Each course folder MUST contain `course.yml` and `thumbnail.png`.
+
+```yaml
+title: Course title
+course_number: XX-0000
+credential: Optional credential name
+description: Course description
+level: 200
+duration: 1 day
+topics:
+  - Topic
+audience:
+  - Audience
+playlists:
+  - playlist-slug
+```
+
+Rules:
+
+- `title`, `course_number`, `description`, `level`, `duration`, `topics`, `audience`, and `playlists` SHOULD be present.
+- `course_number` MUST be present.
+- `playlists` MUST be a non-empty array of existing playlist slugs.
+- `credential` is optional. The detail page MUST show “No associated credential is specified.” when omitted.
+- Playlist order MUST follow the YAML array.
+
+### 3.2 Curated playlist schema
+
+Each playlist folder MUST contain `playlist.yml` and `thumbnail.png`.
+
+```yaml
+title: Playlist title
+description: Playlist description
+level: 200
+duration: 120 minutes
+topics:
+  - Topic
+audience:
+  - Audience
+modules:
+  - module-slug
+```
+
+Rules:
+
+- `title`, `description`, `level`, `duration`, `topics`, `audience`, and `modules` SHOULD be present.
+- `modules` MUST be an array of existing module slugs.
+- Module order MUST follow the YAML array.
+
+### 3.3 Module schema
+
+Each module folder MUST contain `module.yml`, `thumbnail.png`, and at least one Markdown page.
+
+```yaml
+title: Module title
+description: Module description
+modality: Multimodal
+level: 200
+duration: 40 minutes
+topics:
+  - Topic
+audience:
+  - Audience
+avatar: optional-avatar-slug
+pages:
+  - 01-introduction.md
+  - file: 02-topic.md
+    title: Optional navigation-title override
+    description: Optional description
+```
+
+Rules:
+
+- `title`, `description`, `modality`, `level`, `duration`, `topics`, `audience`, and `pages` SHOULD be present.
+- `pages` MUST be a non-empty array.
+- A page entry MAY be a relative filename or an object containing `file`, optional `title`, and optional `description`.
+- Every page file MUST exist inside the module folder.
+- Page order MUST follow the YAML array.
+- `avatar` is optional. When supplied, it MUST identify an existing avatar.
+- Modality and audience values are content-defined, not hard-coded enums. Current modalities are `Lab`, `Multimodal`, and `Video`.
+
+### 3.4 Page front matter
+
+A Markdown page MAY begin at its first character with YAML front matter:
+
+```markdown
+---
+title: Page title
+---
+```
+
+The rendered page title MUST use the first available value from:
+
+1. Front-matter `title`.
+2. Front-matter `lab.title`.
+3. The page filename without its extension.
+
+For a page-navigation label, an object entry's `title` override takes precedence over front matter. Other front-matter properties MAY be retained for future use but do not affect current rendering.
+
+### 3.5 Avatar schema
+
+Each referenced avatar folder MUST contain:
+
+```yaml
+name: Avatar name
+instructions: Reserved text; not used by the current assistant
+welcome-message: Initial assistant message
+suggested-prompts:
+  - Suggested question
+```
+
+The following assets are mandatory for every referenced avatar:
+
+```text
+avatar.png
+knowledge.json
+audio/looking.wav
+audio/no_results.wav
+audio/search_results.wav
+audio/sorry.wav
+audio/response_1.wav ... audio/response_7.wav
+```
+
+`name`, `welcome-message`, and at least one suggested prompt MUST be present. `instructions` is reserved metadata and MUST NOT imply that an AI model is used.
+
+### 3.6 Avatar knowledge schema
+
+`knowledge.json` MUST have an array root:
+
+```json
+[
+  {
+    "category": "Category name",
+    "link": "https://example.com/learn-more",
+    "documents": [
+      {
+        "id": 1,
+        "title": "Document title",
+        "keywords": ["keyword", "two word phrase"],
+        "content": "Deterministic answer text.",
+        "video_url": "https://example.com/optional-video"
+      }
+    ]
+  }
+]
+```
+
+`video_url` is optional. Category links and document video links are returned with matching answers.
+
+## 4. Build process
+
+Running `npm run build` MUST perform these steps:
+
+1. Delete and recreate `dist`.
+2. Discover immediate child directories in the course, playlist, module, and avatar roots.
+3. Parse collection metadata.
+4. Resolve and validate module/avatar, playlist/module, and course/playlist relationships.
+5. Sort courses, playlists, and modules alphabetically by title for catalog display.
+6. Copy source collections, `MicrosoftLearning`, and avatars to `dist/content`.
+7. Generate all HTML routes.
+8. Copy global CSS, JavaScript, moderation data, and the personal-playlist image to `dist/assets`.
+9. Write an empty `dist/.nojekyll` file.
+10. Exit non-zero with an actionable error when required content is invalid.
+
+The build MUST fail for:
+
+- A discovered content folder with no expected metadata file.
+- Metadata or front matter that cannot be parsed as structured YAML.
+- A module with no pages, a page entry with no file, or a missing page.
+- An include that is missing, recursive, or outside the repository.
+- An unclosed zone pivot.
+- An unknown avatar, module, or playlist reference.
+- Missing required avatar values, image, knowledge file, or audio file.
+- Avatar knowledge with a non-array root or a category without a document array.
+- A course with no course number or no playlists.
+
+The implementation SHOULD also validate thumbnail existence, field types, array item types, unique page route slugs, and duplicate references, even though the original implementation does not fully validate those cases.
+
+## 5. Generated routes
+
+The output route contract is:
+
+| Experience | Output route |
+|---|---|
+| Home | `/index.html` |
+| Course catalog | `/courses/index.html` |
+| Course detail | `/courses/<course-slug>/index.html` |
+| Curated playlist catalog | `/playlists/index.html` |
+| Curated playlist detail | `/playlists/<playlist-slug>/index.html` |
+| Module catalog | `/skilling-content/index.html` |
+| Personal playlists | `/my-playlists/index.html` |
+| Standalone module | `/modules/<module-slug>/index.html` |
+| Standalone module page | `/modules/<module-slug>/pages/<page-slug>/index.html` |
+| Playlist module | `/playlists/<playlist-slug>/modules/<module-slug>/index.html` |
+| Playlist module page | `/playlists/<playlist-slug>/modules/<module-slug>/pages/<page-slug>/index.html` |
+| Global assets | `/assets/...` |
+| Published source/assets | `/content/...` |
+
+`page-slug` is the page filename without its extension.
+
+Every route MUST use relative links to global assets, content assets, and other generated routes. Every document MUST include UTF-8 metadata, a responsive viewport, English language declaration, page title in the form `<title> | AI Skills Nav`, global CSS, deferred global JavaScript, a skip link, site header, breadcrumbs, and a main landmark.
+
+### 5.1 Module route behavior
+
+A module with one page MUST render that page directly at the module index and MUST NOT require an intermediate overview or `/pages/...` route.
+
+A module with multiple pages MUST generate:
+
+- An index overview with thumbnail, description, metadata, ordered page list, and **Start** link.
+- One route per page.
+- **Previous** and **Next** links.
+- A page-selection list containing numbered page titles.
+- Disabled previous navigation on the first page and disabled next navigation on the last page.
+
+The same rules apply to standalone and playlist-contained module routes.
+
+## 6. Shared visual shell
+
+The UI SHOULD reproduce the reference design intent:
+
+- Warm paper-colored background and white content surfaces.
+- Dark neutral text, violet primary actions, and cyan/orange accents.
+- DM Sans body text and Manrope headings, with sans-serif fallbacks.
+- Sticky header, restrained borders, compact radii, soft shadows, and generous section spacing.
+- Image-led 16:9 catalog cards.
+- Large asymmetric home hero.
+- Two-column detail overviews on wide screens.
+- Sticky playlist navigation on wide screens.
+- Fixed lower-right assistant launcher and flyout.
+
+Exact pixel values, icon paths, shadows, and gradients are non-normative unless visual parity is required.
+
+## 7. Page experiences
+
+### 7.1 Home
+
+The home page MUST include:
+
+- A branded hero with the heading “Skilling in the Name of...”.
+- A course section containing the first four alphabetically sorted courses.
+- A curated playlist section containing the first four alphabetically sorted playlists.
+- A skilling-content section containing the first eight alphabetically sorted modules.
+- Links to all three catalogs and personal playlists.
+- A search form applying to cards rendered on the home page.
+
+The current “Search all content” label is broader than its actual scope: home search only searches featured cards. The “New and popular” module label does not indicate ranking; selection is alphabetical.
+
+### 7.2 Catalogs
+
+Each catalog MUST show an introduction, search form, filter trigger, card grid, and accessible empty state.
+
+Cards MUST include:
+
+- Thumbnail.
+- Title.
+- Available metadata summary.
+- Description tooltip when a description exists.
+- Link to the item's detail route.
+
+Search text MUST concatenate title, course number when present, description, and topics. Search MUST:
+
+1. Run on form submission.
+2. Trim and lowercase input.
+3. Split input on whitespace.
+4. Require every term to occur as a substring of the card's search text.
+5. Compose with currently applied filters.
+6. Provide a clear action that resets results and focuses the input.
+
+Filters MUST be generated from unique values in current metadata and sorted with locale-aware numeric ordering.
+
+Required filter fields:
+
+- Courses: audience, level, duration.
+- Curated playlists: level, audience.
+- Modules: modality, level, audience.
+
+Multiple selections in one field use OR semantics. Different fields, and search plus filters, use AND semantics. Filters are applied when the filter dialog is submitted. Cancelling or closing MUST discard unsubmitted checkbox changes. **Clear all** MUST clear and immediately apply filters. Search and filter state are not persisted.
+
+### 7.3 Course detail
+
+A course detail MUST show its thumbnail, title, description, course number, level, duration, credential information, and ordered links to its self-paced playlists.
+
+### 7.4 Curated playlist detail
+
+A curated playlist detail MUST show its thumbnail, title, description, metadata, and a navigation sidebar. The sidebar MUST link to the playlist overview and list modules in metadata order. The current item MUST be visibly identified.
+
+### 7.5 Breadcrumbs and responsive navigation
+
+Breadcrumbs MUST represent the generated hierarchy and identify the current page with `aria-current="page"`.
+
+Above 860 px, a playlist sidebar MUST be sticky and collapsible. At or below 860 px, it MUST become an off-canvas drawer with a reveal control, close control, scrim, and body-scroll lock. At or below 600 px, search, catalog headers, filters, page controls, and assistant layout MUST reflow for narrow screens. All experiences MUST remain usable at 320 px viewport width.
+
+## 8. Personal playlists
+
+Personal playlists are browser-local collections and do not require authentication or a backend.
+
+### 8.1 Persistence
+
+Use the local-storage key:
+
+```text
+ai-skills-nav:personal-playlists
+```
+
+Store an array with this shape:
+
+```json
+[
+  {
+    "id": "string",
+    "name": "string",
+    "description": "string",
+    "modules": [
+      {
+        "name": "Module title",
+        "path": "modules/<module-slug>/index.html"
+      }
+    ]
+  }
+]
+```
+
+On read, invalid JSON or a non-array root MUST become an empty collection. Records without string `id` and `name` MUST be discarded. Invalid descriptions MUST become empty strings. Invalid module entries MUST be discarded. Storage failures MUST display an inline error without crashing the page.
+
+### 8.2 Operations
+
+Users MUST be able to:
+
+- Create a playlist with a required name and optional description.
+- Add a module from any standalone module overview or page.
+- Add to an existing playlist or create one within the add dialog.
+- Open a personal playlist overview.
+- Navigate its modules with playlist context preserved.
+- Delete an entire playlist after confirmation.
+
+Names MUST be trimmed, non-empty, and unique case-insensitively. Adding an existing module path MUST not create a duplicate. IDs SHOULD use `crypto.randomUUID()` with a timestamp/random fallback.
+
+The actual app does not support renaming playlists, editing descriptions, removing individual modules, reordering modules, reordering playlists, synchronization, or account storage.
+
+### 8.3 URL and navigation context
+
+A selected personal playlist MUST use:
+
+```text
+?playlist=<playlist-id>
+```
+
+When a valid personal-playlist module is opened, browser JavaScript MUST dynamically add a sidebar using the stored module order and propagate the query parameter through that module's internal page links and page selector. A missing, stale, or invalid playlist ID MUST fall back to ordinary standalone module browsing.
+
+When a personal playlist opens, module names MUST be refreshed from the generated module catalog and stale module paths MUST be removed from storage.
+
+## 9. Markdown rendering
+
+The renderer MUST support GitHub Flavored Markdown and the extensions below.
+
+### 9.1 Asset rewriting
+
+Relative URLs in Markdown images and raw HTML `<img src>` attributes MUST be rewritten for the generated page. Resolution MUST first test the path relative to the source Markdown file, then a `media` child folder when the first path does not exist.
+
+Assets beneath `source` MUST map beneath `dist/content` without the `source` path segment. Other repository content roots MUST retain their repository-relative root beneath `dist/content`.
+
+External URLs, anchors, and protocol-relative URLs MUST not be rewritten. Ordinary Markdown links and CSS URLs are not rewritten by the current implementation.
+
+### 9.2 Includes
+
+Support both forms:
+
+```markdown
+[!INCLUDE relative/path.md]
+[!INCLUDE[](relative/path.md)]
+```
+
+A leading slash denotes a repository-root-relative include. Includes MUST:
+
+- Resolve relative to the containing source file.
+- Expand recursively.
+- Remove included front matter.
+- Rewrite included images relative to the included file.
+- Reject missing files, paths outside the repository, and recursive inclusion.
+
+### 9.3 Videos
+
+A directive occupying its own line MUST render as a responsive, lazy-loaded iframe with fullscreen enabled:
+
+```markdown
+[!VIDEO: https://example.com/video]
+```
+
+The colon is optional. `youtu.be` and YouTube watch URLs MUST be converted to `https://www.youtube-nocookie.com/embed/<video-id>`. Other HTTP(S) URLs MUST be embedded unchanged.
+
+### 9.4 Zone pivots
+
+Consecutive strict blocks MUST render as one accessible tab interface:
+
+```markdown
+::: zone pivot="Option one"
+
+Content one
 
 ::: zone-end
 
-::: zone pivot="<zone-2-name>"
+::: zone pivot="Option two"
 
-<zone-2-content>
+Content two
 
 ::: zone-end
-
-<and so on>
 ```
 
-Each zone pivot should be rendered as a "tabbed" section with the zone name displayed as a tab and its content displayed underneath. When there are multiple consecutive zone pivots immediately following one another, each zone should have a tab at the top of the section so the user can switch between them and display the zone content dynamically.
+Unzoned content ends a pivot group. Indented and nested zones are not required. An unclosed zone MUST fail the build.
 
-If there is "unzoned" content between a zone-end marker and a new zone pivot marker, a new tabbed section should be created.
+Tabs MUST support click, Left Arrow, Right Arrow, Home, and End. They MUST update `aria-selected`, `tabindex`, and panel visibility.
 
-#### Videos
+Store preferences under:
 
-When a page contains a [!VIDEO <url>] tag, it should be rendered as an embedded video using an iframe for the URL (which should provide the video player interface). The default size should be 800x600, with the option to expand to full screen.
+```text
+ai-skills-nav:pivots:<module-slug>
+```
 
-#### Includes
+The value is an object mapping a sorted, normalized tab-label signature to the normalized selected label. Matching pivot groups in the same module MUST reuse the selection. Storage unavailability MUST not prevent pivot use.
 
-When a page contains an [!INCLUDE <path>] tag, the referenced markdown file should be rendered in-place within the page. This is most commonly used to embed markdown files from the /lab folder hierarchy into module pages. Note that the referenced markdown may itself contain images with relative paths, which must be rendered properly in the module page.
+### 9.5 New-window links
+
+A Markdown link followed by either `{target="_blank"}` or `{:target="_blank"}` MUST render with `target="_blank"` and `rel="noopener noreferrer"`. Linked images MUST also be supported.
+
+### 9.6 HTML and unsupported syntax
+
+Raw HTML is passed through by the current Markdown renderer and is not sanitized; content MUST therefore be trusted. Microsoft Learn `:::image` directives are not implemented in the current app and render as literal content. A new implementation SHOULD either preserve this behavior for exact parity or implement/reject the directive explicitly.
+
+## 10. Learning assistant
+
+A module declaring `avatar` MUST display a fixed **Ask <name>** launcher and chat flyout on its overview and content pages. The flyout MUST contain the avatar image, assistant name, welcome message, suggested-prompt buttons, message log, text field, optional microphone control, send action, and close action.
+
+The assistant MUST be deterministic retrieval logic. It MUST NOT call a generative model, claim multi-turn understanding, or use the reserved avatar `instructions` as a model prompt.
+
+### 10.1 Message behavior
+
+- Add the welcome message when the page initializes.
+- Label messages with the avatar's name or “You”.
+- Enforce a 1,000-character prompt maximum before processing.
+- Disable input controls during asynchronous processing and always restore them afterward.
+- Type assistant text progressively at approximately 250 characters per second unless reduced motion is requested.
+- Deduplicate returned links by exact URL.
+- Open video result links in a centered, resizable 16:9 popup when popups are allowed; otherwise use normal link navigation.
+- Do not persist chat history or carry context between prompts.
+
+### 10.2 Moderation
+
+Before search or retrieval, fetch `assets/moderation.txt` without cache. It contains one obfuscated term per line. Decode each line by reversing it and adding one to each character code, then create a case-insensitive whole-word regular expression.
+
+If a prompt matches, return a content-safety message and do not search. A moderation fetch failure currently produces the generic assistant-load error and prevents processing. This mechanism is only a basic word-list screen, not semantic content safety.
+
+### 10.3 Local knowledge retrieval
+
+Fetch the avatar's knowledge JSON without cache and build an exact normalized keyword index.
+
+Normalization MUST:
+
+- Convert to lowercase.
+- Preserve ASCII letters, digits, `+`, `#`, `.`, and `-`.
+- Replace other characters with spaces.
+- Collapse and trim whitespace.
+
+Build a spelling vocabulary from words in all normalized keywords. For each unknown question token, choose the best eligible candidate by Jaro-Winkler similarity. Use thresholds of 0.90 for tokens up to 3 characters, 0.88 up to 5, and 0.85 for longer tokens. Ignore candidates whose length differs by more than 3; for question tokens longer than 3, ignore candidates of 3 or fewer characters.
+
+Generate all 2- and 3-word phrases plus non-stop-word single tokens. Match those phrases exactly against normalized knowledge keywords. Deduplicate documents by category and document ID. Score each result by the total word count of all matched keywords, sort descending, and return the top 3.
+
+A successful response MUST concatenate matching document content and include available document video links and category “Learn more” links. A local no-match response MUST offer a Bing search using normalized, de-duplicated keywords after common stop words are removed.
+
+### 10.4 Microsoft Learn search
+
+Treat a prompt as documentation-search intent when it begins with `search ` or `find `, or contains indicators such as `documentation`, `docs`, `Microsoft Learn`, `how to`, `how do I`, `sample code`, or `code example`.
+
+For documentation intent, attempt an MCP request to:
+
+```text
+https://learn.microsoft.com/api/mcp
+```
+
+Use MCP protocol version `2025-06-18` and client identity `ai-skills-nav` version `1.0.0`:
+
+1. Send `initialize`.
+2. Send `notifications/initialized`.
+3. Call `tools/list`.
+4. Select the first tool whose name contains `search`, otherwise the first tool.
+5. Infer the query argument from `query`, `question`, `q`, `search`, `searchQuery`, `text`, or `prompt`, otherwise use the first declared property.
+6. Call the tool.
+7. Accept JSON or server-sent-event responses.
+8. Extract and deduplicate up to 5 result URLs from JSON text content.
+
+If MCP fails or returns no usable link, provide a Microsoft Learn documentation-search URL. MCP failures MUST not leave controls disabled.
+
+### 10.5 Speech and audio
+
+Feature-detect `SpeechRecognition` or `webkitSpeechRecognition`. When unsupported, disable the microphone and expose an explanatory title.
+
+When supported:
+
+- Use one-shot, final-result recognition.
+- Use the browser language with `en-US` fallback.
+- Reflect listening state in the placeholder, CSS state, and `aria-pressed`.
+- Submit the recognized transcript automatically.
+- Let the user stop active recognition.
+
+Audio feedback applies only to speech-originated prompts:
+
+- Play `looking.wav` while processing.
+- Play `sorry.wav` after moderation or an error.
+- Play `search_results.wav` after documentation search.
+- Play `no_results.wav` after no local match.
+- Play a random `response_1.wav` through `response_7.wav` after a local match.
+
+Starting new audio MUST pause current audio. Playback rejection MUST be ignored safely.
+
+## 11. Accessibility
+
+The implementation MUST include:
+
+- A keyboard-visible skip link.
+- Semantic header, navigation, main, article, aside, and dialog elements.
+- A visible 3-pixel focus indicator.
+- Accessible names for forms, dialogs, close buttons, navigation, page controls, and assistant controls.
+- `aria-current` for current breadcrumb and navigation items where appropriate.
+- Live regions for result-empty states, personal-playlist status, and chat messages.
+- Correct `aria-expanded`, `aria-hidden`, `aria-selected`, `aria-controls`, `aria-disabled`, and `aria-pressed` state.
+- Empty alternative text for decorative thumbnails/avatar images.
+- Full keyboard pivot behavior.
+- A reduced-motion mode that disables smooth scrolling/transitions and displays chat responses immediately.
+
+The chat flyout is non-modal and does not require a focus trap. Escape MUST close an open chat. Native dialogs SHOULD close through their explicit close actions, outside click where implemented, and native cancellation.
+
+## 12. Runtime failure handling
+
+The browser application MUST degrade safely when:
+
+- Local storage is unavailable or malformed.
+- Stored playlists refer to removed modules.
+- Speech recognition is unsupported or fails.
+- Audio playback is rejected.
+- Learn MCP is unavailable.
+- No catalog item or knowledge document matches.
+- Knowledge or moderation files cannot be fetched.
+
+Network requests do not require cancellation or timeouts for parity. Since assistant assets are fetched, the generated site MUST be served over HTTP(S); direct `file:` preview is unsupported.
+
+## 13. Deployment
+
+The repository MUST include a GitHub Pages workflow that:
+
+- Runs on pushes to `main` and manual dispatch.
+- Uses Node.js 22.
+- Installs dependencies with `npm install --ignore-scripts`.
+- Runs `npm run build`.
+- Uploads `dist` with the official Pages artifact action.
+- Deploys with the official Pages deployment action.
+- Grants `contents: read`, `pages: write`, and `id-token: write`.
+- Uses a Pages concurrency group and cancels superseded in-progress runs.
+
+No Docker image or runtime service is required.
+
+## 14. Acceptance criteria
+
+A conforming implementation MUST satisfy the following checks.
+
+### Build and routing
+
+- A clean dependency install and build succeeds on Node.js 22.
+- The current repository content generates 5 courses, 9 playlists, 24 modules, and 225 HTML files.
+- All required routes and `.nojekyll` exist.
+- Every local image, script, stylesheet, and generated navigation target resolves under the GitHub Pages subpath.
+- Broken content relationships, includes, and required avatar assets fail the build with useful errors.
+- One-page and multi-page module routing follows this specification.
+- Playlist and course relationship order matches source metadata.
+
+### Catalog and navigation
+
+- Search performs case-insensitive all-term substring matching over the specified fields.
+- Filter choices come from current metadata.
+- OR-within-field and AND-between-fields behavior is correct.
+- Search and filters compose correctly and update accessible empty states.
+- Cancelling a filter dialog preserves the last applied filters.
+- Curated and personal playlist context remains intact through module-page navigation.
+- Desktop and mobile sidebar interactions work at the specified breakpoints.
+
+### Personal playlists
+
+- Stored data uses the documented key and shape.
+- Invalid data is normalized safely.
+- Blank and case-insensitive duplicate names are rejected.
+- Duplicate module paths are not inserted.
+- A valid `playlist` query parameter restores navigation.
+- Stale modules and storage failures are handled without page failure.
+
+### Content rendering
+
+- Front-matter titles and ordered page navigation render correctly.
+- Relative and root-relative includes expand recursively.
+- Include traversal and recursion fail the build.
+- Included image paths are rewritten from the included source.
+- Video directives and privacy-enhanced YouTube embeds work.
+- Zone tabs are accessible, keyboard operable, and restore module preferences.
+- New-window links include `noopener noreferrer`.
+
+### Learning assistant
+
+- No LLM is invoked.
+- Local retrieval follows the documented normalization, spelling correction, phrase matching, scoring, and top-3 selection.
+- Moderation occurs before retrieval.
+- Documentation intent attempts Learn MCP and falls back to Learn search.
+- Local no-match offers Bing search.
+- Speech is feature-detected and spoken interactions use the correct audio states.
+- Errors never leave assistant controls permanently disabled.
+
+### Accessibility and responsiveness
+
+- All controls are keyboard reachable and visibly focused.
+- ARIA state remains synchronized with visible state.
+- Reduced-motion preferences are honored.
+- Catalog, module navigation, dialogs, page controls, and chat remain usable at 320 px width.

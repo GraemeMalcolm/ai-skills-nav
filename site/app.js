@@ -1,5 +1,21 @@
+// This file is the only client-side runtime for the generated static site. The
+// build script emits data-* attributes into each page, and the sections below
+// progressively enhance only the features whose marker attributes are present.
+// Keeping every feature guarded lets one shared script run on all page types.
+
+// Personal playlists deliberately live in browser storage: the proof of
+// concept has no account system or backend. Module paths are stored relative to
+// the site root so the same record works when GitHub Pages uses a repo subpath.
 const personalPlaylistsStorageKey = "ai-skills-nav:personal-playlists";
 
+/**
+ * Read and defensively normalize personal playlists from localStorage.
+ *
+ * Storage is user-controlled and can be stale, manually edited, or unavailable
+ * in privacy modes. Returning an empty array on failure keeps the rest of the
+ * site usable, while filtering malformed records prevents later DOM code from
+ * having to repeat type checks.
+ */
 const readPersonalPlaylists = () => {
   try {
     const playlists = JSON.parse(localStorage.getItem(personalPlaylistsStorageKey) || "[]");
@@ -15,6 +31,7 @@ const readPersonalPlaylists = () => {
   }
 };
 
+/** Persist the complete playlist collection and report quota/security errors. */
 const writePersonalPlaylists = (playlists) => {
   try {
     localStorage.setItem(personalPlaylistsStorageKey, JSON.stringify(playlists));
@@ -26,17 +43,27 @@ const writePersonalPlaylists = (playlists) => {
 
 const menuIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
 
+/**
+ * Recreate playlist navigation when a standalone module was opened from a
+ * personal playlist. Curated playlist pages get their sidebar at build time,
+ * but personal playlists exist only in localStorage, so their sidebar must be
+ * generated in the browser from the `?playlist=<id>` context.
+ */
 const hydratePersonalPlaylistSidebar = () => {
   const moduleSlug = document.body.dataset.moduleSlug;
   const playlistId = new URLSearchParams(window.location.search).get("playlist");
   const playlist = playlistId && readPersonalPlaylists().find((item) => item.id === playlistId);
   const playlistDialog = document.querySelector("[data-personal-playlist-dialog]");
+  // The dialog supplies the correctly depth-adjusted URL to My Playlists. It is
+  // also a reliable marker that this is a generated standalone module page.
   if (!moduleSlug || !playlist || !playlistDialog) return;
 
   const frame = document.querySelector(".site-frame");
   const main = frame?.querySelector("main");
   if (!frame || !main || frame.querySelector("[data-sidebar]")) return;
   const playlistsUrl = new URL(playlistDialog.dataset.playlistsUrl, window.location.href);
+  // URL objects avoid assumptions about whether the site is hosted at `/` or
+  // under a GitHub Pages repository prefix.
   const withPlaylistContext = (url) => {
     url.searchParams.set("playlist", playlist.id);
     return url.href;
@@ -93,6 +120,8 @@ const hydratePersonalPlaylistSidebar = () => {
   frame.insertBefore(scrim, main);
   frame.insertBefore(revealButton, main);
 
+  // Preserve personal-playlist context only for links that remain within this
+  // module. Other site links should continue to behave as ordinary navigation.
   const moduleRoot = new URL(`../modules/${moduleSlug}/`, playlistsUrl).pathname;
   main.querySelectorAll("a[href]").forEach((link) => {
     const target = new URL(link.href, window.location.href);
@@ -104,8 +133,13 @@ const hydratePersonalPlaylistSidebar = () => {
   });
 };
 
+// Run hydration before querying sidebar controls so any dynamically inserted
+// controls participate in the shared menu behavior below.
 hydratePersonalPlaylistSidebar();
 
+// ---------------------------------------------------------------------------
+// Responsive sidebar navigation
+// ---------------------------------------------------------------------------
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const menuReveal = document.querySelector("[data-menu-reveal]");
 const sidebar = document.querySelector("[data-sidebar]");
@@ -115,6 +149,8 @@ if (menuToggle && window.matchMedia("(max-width: 860px)").matches) {
 }
 
 function setMenu(open) {
+  // `menu-open` controls the mobile drawer and scrim. aria-expanded is mirrored
+  // on both controls because either one may currently be visible.
   document.body.classList.toggle("menu-open", open);
   menuToggle?.setAttribute("aria-expanded", String(open));
   menuReveal?.setAttribute("aria-expanded", String(open));
@@ -124,6 +160,8 @@ function setMenu(open) {
 
 menuToggle?.addEventListener("click", () => {
   if (window.matchMedia("(max-width: 860px)").matches) {
+    // On small screens the toggle is inside the drawer, so it closes the
+    // temporary overlay instead of collapsing a permanent layout column.
     setMenu(false);
     return;
   }
@@ -146,12 +184,18 @@ menuReveal?.addEventListener("click", () => {
 
 document.querySelectorAll("[data-menu-close]").forEach((button) => button.addEventListener("click", () => setMenu(false)));
 
+// ---------------------------------------------------------------------------
+// Module zone pivots and page selection
+// ---------------------------------------------------------------------------
 const moduleSlug = document.body.dataset.moduleSlug;
 
 document.querySelectorAll("[data-pivot]").forEach((pivot) => {
   const tabs = [...pivot.querySelectorAll('[role="tab"]')];
   const panels = [...pivot.querySelectorAll('[role="tabpanel"]')];
   const normalizePivot = (value) => value.trim().toLocaleLowerCase();
+  // A sorted label signature groups equivalent pivots even if authors place
+  // their tabs in a different order. This lets a learner's choice (for example,
+  // "Text") carry to another equivalent pivot in the same module.
   const pivotSignature = tabs.map((tab) => normalizePivot(tab.textContent)).sort().join("|");
   const storageKey = moduleSlug ? `ai-skills-nav:pivots:${moduleSlug}` : "";
   const readPreferences = () => {
@@ -164,6 +208,8 @@ document.querySelectorAll("[data-pivot]").forEach((pivot) => {
     }
   };
   const activate = (selected, persist = false) => {
+    // Follow the ARIA tabs pattern: exactly one tab is selected and tabbable,
+    // and exactly its corresponding panel is visible.
     tabs.forEach((tab, index) => {
       const active = tab === selected;
       tab.setAttribute("aria-selected", String(active));
@@ -197,10 +243,14 @@ document.querySelectorAll("[data-pivot]").forEach((pivot) => {
   });
 });
 
+// The option values are already relative URLs generated for the current route.
 document.querySelectorAll("[data-page-select]").forEach((select) => {
   select.addEventListener("change", () => window.location.assign(select.value));
 });
 
+// ---------------------------------------------------------------------------
+// "Add to personal playlist" dialog on module pages
+// ---------------------------------------------------------------------------
 const personalPlaylistDialog = document.querySelector("[data-personal-playlist-dialog]");
 
 if (personalPlaylistDialog) {
@@ -220,6 +270,8 @@ if (personalPlaylistDialog) {
   };
 
   const showNewPlaylistFields = () => {
+    // One dialog handles both selecting an existing collection and creating a
+    // new one, keeping module metadata available in a single interaction.
     newFields.hidden = select.value !== "new";
     if (!newFields.hidden) nameInput.focus();
   };
@@ -229,6 +281,7 @@ if (personalPlaylistDialog) {
     select.replaceChildren();
     playlists.forEach((playlist) => select.add(new Option(playlist.name, playlist.id)));
     select.add(new Option("Create a new playlist", "new"));
+    // Prefer the first existing playlist; otherwise reveal creation fields.
     select.value = playlists.length ? playlists[0].id : "new";
     showNewPlaylistFields();
   };
@@ -282,6 +335,8 @@ if (personalPlaylistDialog) {
       showStatus("The selected playlist is no longer available.", true);
       return;
     }
+    // The canonical module path, rather than its display name, is the identity.
+    // Titles can change between builds without allowing accidental duplicates.
     const alreadyAdded = playlist.modules.some((module) => module.path === personalPlaylistDialog.dataset.modulePath);
     if (!alreadyAdded) {
       playlist.modules.push({ name: personalPlaylistDialog.dataset.moduleName, path: personalPlaylistDialog.dataset.modulePath });
@@ -297,18 +352,27 @@ if (personalPlaylistDialog) {
   });
 }
 
+// ---------------------------------------------------------------------------
+// My Playlists collection and detail views
+// ---------------------------------------------------------------------------
 const personalPlaylistsPage = document.querySelector("[data-personal-playlists]");
 
 if (personalPlaylistsPage) {
+  // The build embeds the current module catalog. It is the source of truth for
+  // display names and is also used to remove references to deleted modules.
   const moduleCatalog = new Map(JSON.parse(personalPlaylistsPage.dataset.moduleCatalog).map((module) => [module.path, module]));
   const playlistId = new URLSearchParams(window.location.search).get("playlist");
   const moduleUrl = (modulePath) => {
+    // Resolve from My Playlists and retain the selected collection so the
+    // destination module can hydrate the browser-generated sidebar.
     const url = new URL(`../${modulePath}`, window.location.href);
     if (playlistId) url.searchParams.set("playlist", playlistId);
     return url.href;
   };
 
   const createCard = (playlist) => {
+    // Use DOM APIs and textContent for user-authored names/descriptions rather
+    // than interpolating strings into HTML, avoiding markup injection.
     const card = document.createElement("a");
     card.className = "content-card";
     card.href = `?playlist=${encodeURIComponent(playlist.id)}`;
@@ -331,6 +395,8 @@ if (personalPlaylistsPage) {
   };
 
   const renderCollection = () => {
+    // The generated page includes a dormant sidebar for detail mode. Collection
+    // mode removes it and returns to the normal full-width catalog layout.
     const playlists = readPersonalPlaylists();
     personalPlaylistsPage.closest(".site-frame").classList.remove("has-sidebar");
     document.querySelector("[data-sidebar]")?.remove();
@@ -393,6 +459,9 @@ if (personalPlaylistsPage) {
   });
 
   const renderPlaylist = (playlist, playlists) => {
+    // Reconcile persisted data with the latest static catalog. This keeps names
+    // current after a content update and silently prunes modules that no longer
+    // exist in the deployment.
     const before = JSON.stringify(playlist.modules);
     playlist.modules = playlist.modules.filter((module) => moduleCatalog.has(module.path)).map((module) => ({
       name: moduleCatalog.get(module.path).name,
@@ -456,10 +525,17 @@ if (personalPlaylistsPage) {
 
   const playlists = readPersonalPlaylists();
   const selectedPlaylist = playlists.find((playlist) => playlist.id === playlistId);
+  // An absent or stale query-string ID intentionally falls back to the list.
   if (playlistId && selectedPlaylist) renderPlaylist(selectedPlaylist, playlists);
   else renderCollection();
 }
 
+// ---------------------------------------------------------------------------
+// Catalog search and metadata filters
+// ---------------------------------------------------------------------------
+// Catalog pages declare their supported filter fields in data-filter-fields.
+// Home has search cards but no filter dialog, allowing the same logic to serve
+// all page types without route-specific code.
 const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
 const catalogCards = [...document.querySelectorAll("[data-catalog-card]")];
@@ -475,6 +551,8 @@ const catalogEmptyState = document.querySelector("[data-catalog-empty]");
 let appliedFilters = Object.fromEntries(filterFields.map((field) => [field, []]));
 let searchTerms = [];
 
+// Every submitted term is required, giving search case-insensitive AND
+// semantics. Search text is normalized and embedded by the build script.
 const matchesSearch = (card) => searchTerms.every((term) => card.dataset.searchText.includes(term));
 
 const applyCatalogVisibility = () => {
@@ -485,6 +563,8 @@ const applyCatalogVisibility = () => {
   catalogCards.forEach((card) => {
     let matches = matchesSearch(card);
     if (matches && card.matches("[data-filter-card]")) {
+      // Selections are ORed within one field, then fields are ANDed together.
+      // Audience is the only multi-valued filter encoded as JSON on each card.
       matches = filterFields.every((field) => {
         if (!appliedFilters[field].length) return true;
         const value = field === "audience" ? JSON.parse(card.dataset[field] || "[]") : [card.dataset[field]];
@@ -528,6 +608,8 @@ if (filterDialog && filterForm && filterCards.length) {
   ]));
 
   const restoreAppliedFilters = () => {
+    // Closing/cancelling is transactional: discard checkbox edits that were
+    // made after the dialog opened but were never explicitly applied.
     filterForm.querySelectorAll('input[type="checkbox"]').forEach((input) => {
       input.checked = appliedFilters[input.name].includes(input.value);
     });
@@ -564,9 +646,18 @@ if (filterDialog && filterForm && filterCards.length) {
   });
 }
 
+// ---------------------------------------------------------------------------
+// Module learning assistant
+// ---------------------------------------------------------------------------
+// This is intentionally a retrieval assistant, not a generative AI client. Its
+// answers come verbatim from per-avatar knowledge JSON, while explicit
+// documentation requests are delegated to the public Microsoft Learn MCP API.
 const agent = document.querySelector("[data-agent-config]");
 
 if (agent) {
+  // Configuration is serialized by the build into the page. URLs are relative
+  // to this exact route, which matters because modules can be rendered at
+  // several different depths inside standalone and curated-playlist routes.
   const config = JSON.parse(agent.dataset.agentConfig);
   const launcher = agent.querySelector(".agent-launcher");
   const panel = agent.querySelector(".agent-panel");
@@ -579,7 +670,12 @@ if (agent) {
   const submitButton = form.querySelector('button[type="submit"]');
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const stopWords = new Set(["a", "an", "and", "are", "can", "do", "for", "how", "i", "in", "is", "it", "me", "of", "on", "or", "the", "to", "what", "with", "you"]);
+  // Search queries remove a broader set of conversational words so fallback
+  // URLs emphasize the subject rather than phrases such as "please show me".
   const bingStopWords = new Set([...stopWords, "about", "ask", "could", "describe", "explain", "find", "give", "help", "know", "learn", "need", "please", "search", "show", "tell", "want", "would"]);
+  // Knowledge and moderation are loaded lazily on the first prompt, then cached
+  // for this page lifetime. The underlying fetches use no-store so deployment
+  // updates are not hidden by the HTTP cache across page loads.
   let keywordMap = new Map();
   let vocabulary = [];
   let knowledgePromise;
@@ -587,17 +683,25 @@ if (agent) {
   let prohibitedPatterns = [];
   let activeAudio;
   let recognition;
+  // Keep one MCP session per page. Request IDs must increase so JSON-RPC/SSE
+  // responses can be paired with the initiating call.
   const mcp = { endpoint: "https://learn.microsoft.com/api/mcp", protocolVersion: "2025-06-18", sessionId: null, nextId: 1, tool: null, initPromise: null };
 
+  // Keep punctuation that commonly belongs to technology names such as C++,
+  // C#, .NET, and semantic version/product identifiers.
   const normalize = (value) => value.toLocaleLowerCase().replace(/[^a-z0-9+#.-]+/g, " ").trim().replace(/\s+/g, " ");
 
   const playAudio = (file) => {
+    // A new state cue supersedes the old one; rejected autoplay promises are
+    // non-fatal because audio is supplementary feedback.
     activeAudio?.pause();
     activeAudio = new Audio(`${config.audioRoot}/${file}`);
     activeAudio.play().catch(() => { });
   };
 
   const jaroWinkler = (left, right) => {
+    // Small, dependency-free fuzzy matching corrects likely misspellings only
+    // against words that actually occur in this avatar's curated vocabulary.
     if (left === right) return 1;
     if (!left.length || !right.length) return 0;
     const range = Math.max(0, Math.floor(Math.max(left.length, right.length) / 2) - 1);
@@ -631,6 +735,8 @@ if (agent) {
   };
 
   const correctToken = (token) => {
+    // Short strings require higher confidence because accidental matches are
+    // much more common. Candidate length guards also limit noisy comparisons.
     if (token.length < 2 || vocabulary.includes(token)) return token;
     const threshold = token.length <= 3 ? 0.9 : token.length <= 5 ? 0.88 : 0.85;
     let bestMatch = token;
@@ -653,6 +759,8 @@ if (agent) {
         if (!response.ok) throw new Error(`Moderation request failed: ${response.status}`);
         const encodedWords = await response.text();
         prohibitedPatterns = encodedWords.split(/\r?\n/).map((word) => word.trim()).filter(Boolean).map((encoded) => {
+          // moderation.txt avoids storing prohibited terms in plain sight. This
+          // reversible transform is obfuscation, not cryptographic protection.
           const word = [...encoded.toLocaleLowerCase()].reverse().map((character) => String.fromCharCode(character.charCodeAt(0) + 1)).join("");
           return new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
         });
@@ -664,6 +772,8 @@ if (agent) {
   const containsProhibitedWords = (text) => prohibitedPatterns.some((pattern) => pattern.test(text));
 
   const getSearchIntentQuery = (text) => {
+    // Route explicit search verbs and common documentation/code phrasing to
+    // Learn instead of trying to answer from the small local knowledge set.
     const trimmed = text.trim();
     const lower = trimmed.toLocaleLowerCase();
     if (lower.startsWith("search ")) return trimmed.slice(7).trim();
@@ -678,6 +788,9 @@ if (agent) {
   };
 
   const openVideoPopup = (url) => {
+    // Size a centered 16:9 window without exceeding available screen bounds.
+    // Returning the popup lets the click handler retain ordinary navigation
+    // when the browser blocks popups.
     const maximumWidth = Math.max(320, window.screen.availWidth - 40);
     const maximumHeight = Math.max(180, window.screen.availHeight - 80);
     const width = Math.min(800, maximumWidth, maximumHeight * 16 / 9);
@@ -694,6 +807,8 @@ if (agent) {
   };
 
   const typeMessage = (message, content, text, linkList) => {
+    // Typing is decorative. Reduced-motion users get the complete response and
+    // result links immediately, with aria-busy cleared at the same time.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       content.textContent = text;
       if (linkList) linkList.hidden = false;
@@ -719,6 +834,9 @@ if (agent) {
   };
 
   const addMessage = (role, text, links = []) => {
+    // Build messages with DOM nodes and textContent because knowledge data and
+    // user prompts are data, never trusted HTML. The role-specific label keeps
+    // the live transcript understandable to assistive technology.
     const message = document.createElement("div");
     message.className = `agent-message ${role}`;
     if (role === "assistant") message.setAttribute("aria-busy", "true");
@@ -732,6 +850,7 @@ if (agent) {
       linkList = document.createElement("ul");
       linkList.hidden = role === "assistant";
       [...new Map(links.map((link) => [link.href, link])).values()].forEach((link) => {
+        // A Map preserves first-result ordering while removing duplicate URLs.
         const item = document.createElement("li");
         const anchor = document.createElement("a");
         anchor.href = link.href;
@@ -760,6 +879,8 @@ if (agent) {
         if (!response.ok) throw new Error(`Knowledge request failed: ${response.status}`);
         const categories = await response.json();
         keywordMap = new Map();
+        // One normalized keyword can intentionally point to several documents;
+        // scoring and category/document IDs resolve the final ranked set later.
         categories.forEach((category) => {
           (category.documents || []).forEach((document) => {
             (document.keywords || []).forEach((keyword) => {
@@ -778,6 +899,9 @@ if (agent) {
   };
 
   const searchKnowledge = (question) => {
+    // Correct individual tokens before constructing n-grams. Exact lookup of
+    // the resulting one-, two-, and three-word phrases keeps output predictable
+    // while still handling common misspellings and multi-word product names.
     const normalizedQuestion = normalize(question);
     const originalWords = normalizedQuestion.split(" ").filter(Boolean);
     const words = originalWords.map(correctToken);
@@ -799,12 +923,16 @@ if (agent) {
     });
 
     return [...matches.values()]
+      // Multi-word keyword matches carry more weight than single words. Return
+      // only three answers so the chat remains concise.
       .map((match) => ({ ...match, score: match.keywords.reduce((score, keyword) => score + keyword.split(" ").length, 0) }))
       .sort((left, right) => right.score - left.score)
       .slice(0, 3);
   };
 
   const mcpRpc = async (method, params, isNotification = false) => {
+    // The Learn endpoint may return ordinary JSON-RPC or an SSE stream. Session
+    // IDs are echoed on subsequent requests when the server supplies one.
     const id = isNotification ? undefined : mcp.nextId++;
     const body = { jsonrpc: "2.0", method, ...(params === undefined ? {} : { params }), ...(isNotification ? {} : { id }) };
     const headers = { "Content-Type": "application/json", Accept: "application/json, text/event-stream", "MCP-Protocol-Version": mcp.protocolVersion };
@@ -818,6 +946,8 @@ if (agent) {
     if (!response.ok) throw new Error(`MCP request failed: ${response.status}`);
     if ((response.headers.get("Content-Type") || "").toLocaleLowerCase().includes("text/event-stream")) {
       const text = await response.text();
+      // The endpoint returns small, complete event payloads, so a minimal
+      // line-based SSE parser is sufficient here; this is not a streaming UI.
       for (const event of text.split(/\r?\n\r?\n/)) {
         const data = event.split(/\r?\n/).filter((line) => line.startsWith("data:")).map((line) => line.slice(5).trimStart()).join("\n");
         if (!data) continue;
@@ -835,12 +965,16 @@ if (agent) {
   };
 
   const ensureLearnMcp = async () => {
+    // Initialization is memoized so simultaneous/repeated documentation queries
+    // do not create multiple sessions. A failed attempt is cleared for retry.
     if (mcp.tool) return mcp.tool;
     if (!mcp.initPromise) {
       mcp.initPromise = (async () => {
         await mcpRpc("initialize", { protocolVersion: mcp.protocolVersion, capabilities: {}, clientInfo: { name: "ai-skills-nav", version: "1.0.0" } });
         await mcpRpc("notifications/initialized", undefined, true);
         const result = await mcpRpc("tools/list", {});
+        // Prefer a search-named tool but remain compatible if Learn exposes a
+        // single differently named discovery tool.
         mcp.tool = (result.tools || []).find((tool) => /search/i.test(tool.name)) || (result.tools || [])[0] || null;
         return mcp.tool;
       })().catch((error) => {
@@ -855,12 +989,16 @@ if (agent) {
     const tool = await ensureLearnMcp();
     if (!tool) return [];
     const properties = tool.inputSchema?.properties || {};
+    // MCP tools are discovered dynamically. Accommodate conventional query
+    // parameter names instead of coupling the site to one schema revision.
     const argumentName = ["query", "question", "q", "search", "searchQuery", "text", "prompt"].find((name) => name in properties) || Object.keys(properties)[0];
     const result = await mcpRpc("tools/call", { name: tool.name, arguments: argumentName ? { [argumentName]: query } : {} });
     const items = [];
     (result.content || []).forEach((part) => {
       if (part.type !== "text" || typeof part.text !== "string") return;
       try {
+        // Learn has returned both arrays and objects containing common result
+        // arrays over time; normalize either form into one list.
         let parsed = JSON.parse(part.text);
         if (!Array.isArray(parsed)) parsed = ["results", "items", "data", "value", "hits", "documents"].map((key) => parsed[key]).find(Array.isArray) || [parsed];
         items.push(...parsed);
@@ -873,6 +1011,8 @@ if (agent) {
   };
 
   const submitPrompt = async (prompt, usedSpeechInput = false) => {
+    // This function owns the complete request lifecycle so every early return
+    // still passes through `finally` and re-enables the form controls.
     const question = prompt.trim();
     if (!question) return;
     if (question.length > 1000) {
@@ -886,6 +1026,7 @@ if (agent) {
     microphoneButton.disabled = true;
     try {
       await loadModeration();
+      // Moderation precedes both local retrieval and remote search.
       if (containsProhibitedWords(question)) {
         addMessage("assistant", "I'm sorry, I can't help with that because it triggered a content-safety filtering policy.");
         if (usedSpeechInput) playAudio("sorry.wav");
@@ -897,6 +1038,8 @@ if (agent) {
       if (searchQuery) {
         const keywords = extractSearchKeywords(searchQuery) || normalize(searchQuery);
         let links = [];
+        // MCP is an enhancement: a conventional Learn search URL preserves the
+        // user's task when cross-origin, protocol, or service errors occur.
         try { links = await queryLearnMcp(searchQuery); } catch { /* Fall back to Microsoft Learn search. */ }
         if (!links.length) links = [{ href: `https://learn.microsoft.com/en-us/search/?terms=${encodeURIComponent(keywords)}&category=Documentation`, label: "Search Microsoft Learn" }];
         addMessage("assistant", `I searched Microsoft Learn documentation for "${keywords}".`, links);
@@ -906,6 +1049,8 @@ if (agent) {
       await loadKnowledge();
       const results = searchKnowledge(question);
       if (!results.length) {
+        // Local knowledge is deliberately bounded. Be transparent and offer a
+        // web search instead of fabricating an answer.
         const keywords = extractSearchKeywords(question) || normalize(question);
         addMessage("assistant", "I don't have specific information about that topic, but you can search the web for it.", [{ href: `https://www.bing.com/search?q=${encodeURIComponent(keywords)}`, label: "Search with Bing" }]);
         if (usedSpeechInput) playAudio("no_results.wav");
@@ -932,6 +1077,9 @@ if (agent) {
   };
 
   if (SpeechRecognition) {
+    // Browser speech recognition is optional progressive enhancement. A final
+    // transcript is submitted exactly like typed input, with an extra flag that
+    // enables audible progress/result cues.
     recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
@@ -971,6 +1119,8 @@ if (agent) {
   }
 
   const setAgentOpen = (open) => {
+    // Stop microphone capture when closing, synchronize visible/ARIA state, and
+    // return focus to the launcher for predictable keyboard navigation.
     if (!open && recognition && microphoneButton.classList.contains("listening")) recognition.abort();
     agent.classList.toggle("open", open);
     launcher.setAttribute("aria-expanded", String(open));
@@ -980,6 +1130,8 @@ if (agent) {
   };
 
   addMessage("assistant", config.welcomeMessage);
+  // Suggested prompts use the same submission path as typed and spoken input,
+  // ensuring moderation, loading state, and fallbacks behave consistently.
   config.suggestedPrompts.forEach((prompt) => {
     const button = document.createElement("button");
     button.type = "button";
