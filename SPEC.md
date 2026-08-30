@@ -313,9 +313,9 @@ The home page MUST include:
 - A curated playlist section containing the first four alphabetically sorted playlists.
 - A skilling-content section containing the first eight alphabetically sorted modules.
 - Links to all three catalogs and personal playlists.
-- A search form applying to cards rendered on the home page.
+- A search form covering the complete course, playlist, and module catalogs. Non-featured cards MUST be present but hidden until a search is active, then matching cards MAY be revealed.
 
-The current “Search all content” label is broader than its actual scope: home search only searches featured cards. The “New and popular” module label does not indicate ranking; selection is alphabetical.
+Clearing home search MUST restore the initial featured subsets. The “New and popular” module label does not indicate ranking; initial selection is alphabetical.
 
 ### 7.2 Catalogs
 

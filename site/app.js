@@ -562,6 +562,7 @@ const playlistEmptyState = document.querySelector("[data-playlist-empty]");
 const catalogEmptyState = document.querySelector("[data-catalog-empty]");
 let appliedFilters = Object.fromEntries(filterFields.map((field) => [field, []]));
 let searchTerms = [];
+let searchActive = false;
 
 // Every submitted term is required, giving search case-insensitive AND
 // semantics. Search text is normalized and embedded by the build script.
@@ -574,6 +575,9 @@ const applyCatalogVisibility = () => {
   let visibleCatalogItems = 0;
   catalogCards.forEach((card) => {
     let matches = matchesSearch(card);
+    // Home-only overflow cards participate in an active search but return to
+    // their initial hidden state when the search is cleared.
+    if (!searchActive && card.hasAttribute("data-default-hidden")) matches = false;
     if (matches && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
       // Audience is the only multi-valued filter encoded as JSON on each card.
@@ -598,6 +602,7 @@ const applyCatalogVisibility = () => {
 if (searchForm && searchInput && searchClear && catalogCards.length) {
   searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
+    searchActive = searchInput.value.trim().length > 0;
     searchTerms = normalizeSearchTerms(searchInput.value);
     // Keep Clear available for a non-empty expression even when it consists
     // entirely of ignored words and therefore intentionally matches all cards.
@@ -607,6 +612,7 @@ if (searchForm && searchInput && searchClear && catalogCards.length) {
   searchClear.addEventListener("click", () => {
     searchInput.value = "";
     searchTerms = [];
+    searchActive = false;
     searchClear.hidden = true;
     applyCatalogVisibility();
     searchInput.focus();

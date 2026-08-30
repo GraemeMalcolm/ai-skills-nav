@@ -353,7 +353,7 @@ function thumbnail(outputFile, item, type) {
   return `<img src="${relativeUrl(outputFile, target)}" alt="" loading="lazy">`;
 }
 
-function card(outputFile, item, type, filterable = false) {
+function card(outputFile, item, type, filterable = false, defaultHidden = false) {
   const target = path.join(outputRoot, type, item.slug, "index.html");
   const tooltipId = `${type}-${item.slug}-description`;
   const searchText = [item.title, item.course_number, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
@@ -361,9 +361,12 @@ function card(outputFile, item, type, filterable = false) {
   const filterData = filterable
     ? ` data-filter-card data-modality="${escapeHtml(item.modality || "")}" data-level="${escapeHtml(item.level || "")}" data-duration="${escapeHtml(item.duration || "")}" data-audience="${escapeHtml(JSON.stringify(item.audience || []))}"`
     : "";
+  // Home includes every catalog item so its search can truly search all
+  // content, but only the featured subset is visible before a search begins.
+  const defaultVisibility = defaultHidden ? " data-default-hidden hidden" : "";
   const tooltip = item.description ? `<span class="card-tooltip" id="${escapeHtml(tooltipId)}" role="tooltip">${escapeHtml(item.description)}</span>` : "";
   const describedBy = item.description ? ` aria-describedby="${escapeHtml(tooltipId)}"` : "";
-  return `<a class="content-card" href="${relativeUrl(outputFile, target)}"${describedBy}${searchData}${filterData}>
+  return `<a class="content-card" href="${relativeUrl(outputFile, target)}"${describedBy}${searchData}${filterData}${defaultVisibility}>
     <span class="card-image">${thumbnail(outputFile, item, type)}</span>
     <span class="card-body"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(metadataLine(item))}</span></span>
     ${tooltip}
@@ -552,9 +555,9 @@ async function build() {
   const personalPlaylistsFile = path.join(outputRoot, "my-playlists", "index.html");
   const homeSearch = `<div class="header-tools">${catalogSearch("site-search-input", "Search courses, playlists, and skilling content", "Search all content")}</div>`;
   const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p>Choose a curated path or jump straight into a learning experience.</p></section>
-    <section class="catalog-section" data-course-catalog><div class="section-heading"><p class="kicker">Microsoft Official Curriculum</p><h2>Courses</h2></div><div class="card-grid">${courses.slice(0, 4).map((item) => card(homeFile, item, "courses")).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, coursesFile)}">See all courses</a></div></section>
-    <section class="catalog-section alt" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning we think you'll like</p><h2>Skilling playlists</h2></div><div class="card-grid">${playlists.slice(0, 4).map((item) => card(homeFile, item, "playlists")).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, personalPlaylistsFile)}">Personal playlists</a><a class="filter-trigger" href="${relativeUrl(homeFile, playlistsFile)}">See all playlists</a></div></section>
-    <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${modules.slice(0, 8).map((item) => card(homeFile, item, "modules")).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>`;
+    <section class="catalog-section" data-course-catalog><div class="section-heading"><p class="kicker">Microsoft Official Curriculum</p><h2>Courses</h2></div><div class="card-grid">${courses.map((item, index) => card(homeFile, item, "courses", false, index >= 4)).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, coursesFile)}">See all courses</a></div></section>
+    <section class="catalog-section alt" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning we think you'll like</p><h2>Skilling playlists</h2></div><div class="card-grid">${playlists.map((item, index) => card(homeFile, item, "playlists", false, index >= 4)).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, personalPlaylistsFile)}">Personal playlists</a><a class="filter-trigger" href="${relativeUrl(homeFile, playlistsFile)}">See all playlists</a></div></section>
+    <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${modules.map((item, index) => card(homeFile, item, "modules", false, index >= 8)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", headerExtra: homeSearch, content: homeContent, bodyClass: "home-page" }));
 
   const courseSearch = catalogSearch("course-search-input", "Search courses", "Search courses");
