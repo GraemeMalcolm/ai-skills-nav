@@ -334,7 +334,18 @@ Search text MUST concatenate title, course number when present, description, and
 1. Run on form submission.
 2. Trim and lowercase input.
 3. Replace punctuation other than `+`, `#`, `.`, and `-` with spaces so technology names retain meaningful punctuation.
-4. Split input on whitespace and remove the shared conversational stop words `a`, `an`, `and`, `are`, `can`, `do`, `for`, `how`, `i`, `in`, `is`, `it`, `me`, `of`, `on`, `or`, `the`, `to`, `what`, `with`, and `you`.
+4. Split input on whitespace and remove the shared conversational stop words defined below. The vocabulary covers common English function words, pronouns, auxiliaries, contraction fragments, and generic request words. Domain-bearing actions such as `develop`, `build`, `create`, and `implement` remain searchable.
+
+```text
+a about above after again against all also am an and any are as at be because been before being below
+between both but by can could course courses d describe did do does doing down during each explain few find
+for from further get getting give had has have having he help her here hers herself him himself his how i if
+in information into is it its itself just know learn learning ll look looking m me more most my myself need no
+nor not now of off on once only or other our ours ourselves out over own please re s same search she should show
+so some such t tell than that the their theirs them themselves then there these they this those through to too
+under until up use using ve very want was we were what when where which while who whom why will with would you
+your yours yourself yourselves
+```
 5. Require every remaining term to occur as a substring of the card's search text.
 6. Treat an expression containing only stop words as having no search constraint while retaining the clear action for the non-empty input.
 7. Compose with currently applied filters.

@@ -4,10 +4,34 @@
 // Keeping every feature guarded lets one shared script run on all page types.
 
 // Use one definition of common conversational words for both catalog search and
-// avatar knowledge retrieval. Removing these words lets natural questions such
-// as "How do I develop AI agents?" match the meaningful terms "develop ai
-// agents". Product-name punctuation such as C++, C#, and .NET is preserved.
-const searchStopWords = new Set(["a", "an", "and", "are", "can", "do", "for", "how", "i", "in", "is", "it", "me", "of", "on", "or", "the", "to", "what", "with", "you"]);
+// avatar knowledge retrieval. The list covers English function words and
+// generic request language, but deliberately retains domain-bearing verbs such
+// as "develop", "build", "create", and "implement". Product-name punctuation
+// such as C++, C#, and .NET is preserved by normalizeSearchTerms below.
+const searchStopWords = new Set([
+  // Articles, conjunctions, quantifiers, and common adverbs.
+  "a", "about", "above", "after", "again", "against", "all", "also", "an", "and", "any", "as", "at",
+  "before", "below", "between", "both", "but", "by", "down", "during", "each", "few", "for", "from", "further",
+  "here", "just", "more", "most", "no", "nor", "not", "now", "of", "off", "on", "once", "only",
+  "or", "other", "out", "over", "own", "same", "so", "some", "such", "than", "then", "there", "through",
+  "too", "under", "until", "up", "very", "while",
+
+  // Pronouns, possessives, and demonstratives.
+  "he", "her", "hers", "herself", "him", "himself", "his", "i", "it", "its", "itself", "me", "my",
+  "myself", "our", "ours", "ourselves", "she", "that", "their", "theirs", "them", "themselves", "these",
+  "they", "this", "those", "we", "what", "when", "where", "which", "who", "whom", "why", "you", "your",
+  "yours", "yourself", "yourselves",
+
+  // Auxiliary/modal verbs and fragments produced when contractions are split.
+  "am", "are", "be", "because", "been", "being", "can", "could", "d", "did", "do", "does", "doing",
+  "had", "has", "have", "having", "how", "if", "in", "into", "is", "ll", "m", "re", "s", "should",
+  "t", "the", "to", "ve", "was", "were", "will", "with", "would",
+
+  // Generic words used to frame a search request rather than describe its topic.
+  "course", "courses", "describe", "explain", "find", "get", "getting", "give", "help", "information",
+  "know", "learn", "learning", "look", "looking", "need", "please", "search", "show", "tell", "use", "using",
+  "want",
+]);
 const normalizeSearchTerms = (value) => value
   .toLocaleLowerCase()
   .replace(/[^a-z0-9+#.-]+/g, " ")
