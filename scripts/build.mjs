@@ -245,6 +245,7 @@ function icon(name) {
     home: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>',
     arrow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>',
     mic: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
   };
   return icons[name];
 }
@@ -276,10 +277,12 @@ function agentFlyout(outputFile, avatar) {
 }
 
 function personalPlaylistDialog(outputFile, module) {
-  if (!module) return "";
   const playlistsUrl = relativeUrl(outputFile, path.join(outputRoot, "my-playlists", "index.html"));
-  return `<a class="filter-trigger personal-playlist-add" href="#personal-playlist-dialog" data-personal-playlist-open>Add to personal playlist</a>
-  <dialog class="filter-dialog personal-playlist-dialog" id="personal-playlist-dialog" data-personal-playlist-dialog data-module-name="${escapeHtml(module.title)}" data-module-path="modules/${escapeHtml(module.slug)}/index.html" data-playlists-url="${escapeHtml(playlistsUrl)}" aria-labelledby="personal-playlist-title">
+  const moduleName = module?.title || "";
+  const modulePath = module ? `modules/${module.slug}/index.html` : "";
+  const pageTrigger = module ? `<a class="filter-trigger personal-playlist-add" href="#personal-playlist-dialog" data-personal-playlist-open>Add to personal playlist</a>` : "";
+  return `${pageTrigger}
+  <dialog class="filter-dialog personal-playlist-dialog" id="personal-playlist-dialog" data-personal-playlist-dialog data-module-name="${escapeHtml(moduleName)}" data-module-path="${escapeHtml(modulePath)}" data-playlists-url="${escapeHtml(playlistsUrl)}" aria-labelledby="personal-playlist-title">
     <form data-personal-playlist-form>
       <header class="filter-dialog-header"><div><p class="kicker">Save learning experience</p><h2 id="personal-playlist-title">Add to personal playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-personal-playlist-close>${icon("close")}</button></header>
       <div class="filter-dialog-body personal-playlist-fields">
@@ -307,7 +310,7 @@ function breadcrumbs(outputFile, items = []) {
   }).join("")}</ol></nav>`;
 }
 
-function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, bodyClass = "", module = null }) {
+function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, bodyClass = "", module = null, hasModuleCards = false }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
@@ -331,7 +334,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   <div class="site-frame${sidebar ? " has-sidebar" : ""}">
     ${sidebar}
     ${sidebar ? `<button class="icon-button nav-reveal" type="button" aria-label="Show navigation" aria-expanded="false" data-menu-reveal>${icon("menu")}</button>` : ""}
-    <main id="main-content" class="main-content">${personalPlaylistDialog(outputFile, module)}${content}</main>
+    <main id="main-content" class="main-content">${module || hasModuleCards ? personalPlaylistDialog(outputFile, module) : ""}${content}</main>
   </div>
   ${agentFlyout(outputFile, avatar)}
 </body>
@@ -366,11 +369,16 @@ function card(outputFile, item, type, filterable = false, defaultHidden = false)
   const defaultVisibility = defaultHidden ? " data-default-hidden hidden" : "";
   const tooltip = item.description ? `<span class="card-tooltip" id="${escapeHtml(tooltipId)}" role="tooltip">${escapeHtml(item.description)}</span>` : "";
   const describedBy = item.description ? ` aria-describedby="${escapeHtml(tooltipId)}"` : "";
-  return `<a class="content-card" href="${relativeUrl(outputFile, target)}"${describedBy}${searchData}${filterData}${defaultVisibility}>
+  const cardLink = `<a class="content-card" href="${relativeUrl(outputFile, target)}"${describedBy}>
     <span class="card-image">${thumbnail(outputFile, item, type)}</span>
     <span class="card-body"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(metadataLine(item))}</span></span>
     ${tooltip}
   </a>`;
+  if (type !== "modules") return cardLink.replace('class="content-card"', `class="content-card"${searchData}${filterData}${defaultVisibility}`);
+  return `<div class="content-card-container"${searchData}${filterData}${defaultVisibility}>
+    ${cardLink}
+    <button class="card-playlist-add" type="button" aria-label="Add ${escapeHtml(item.title)} to a personal playlist" title="Add to personal playlist" data-personal-playlist-open data-module-name="${escapeHtml(item.title)}" data-module-path="modules/${escapeHtml(item.slug)}/index.html">${icon("plus")}</button>
+  </div>`;
 }
 
 function catalogSearch(inputId, label, placeholder) {
@@ -558,7 +566,7 @@ async function build() {
     <section class="catalog-section" data-course-catalog><div class="section-heading"><p class="kicker">Microsoft Official Curriculum</p><h2>Courses</h2></div><div class="card-grid">${courses.map((item, index) => card(homeFile, item, "courses", false, index >= 4)).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, coursesFile)}">See all courses</a></div></section>
     <section class="catalog-section alt" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning we think you'll like</p><h2>Skilling playlists</h2></div><div class="card-grid">${playlists.map((item, index) => card(homeFile, item, "playlists", false, index >= 4)).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, personalPlaylistsFile)}">Personal playlists</a><a class="filter-trigger" href="${relativeUrl(homeFile, playlistsFile)}">See all playlists</a></div></section>
     <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${modules.map((item, index) => card(homeFile, item, "modules", false, index >= 8)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>`;
-  await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", headerExtra: homeSearch, content: homeContent, bodyClass: "home-page" }));
+  await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", headerExtra: homeSearch, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
 
   const courseSearch = catalogSearch("course-search-input", "Search courses", "Search courses");
   const coursesContent = `<section class="catalog-intro"><p class="kicker">Microsoft Official Curricula</p><h1>Courses</h1><p>Microsoft Official Courses can be completed online as self-paced learning experiences, or delivered as instructor-led experiences by Microsoft and Microsoft Learning Partners.</p></section>
@@ -576,7 +584,7 @@ async function build() {
   const skillingContent = `<section class="catalog-intro"><p class="kicker">Build your skills</p><h1>Skilling content</h1><p>Explore all learning experiences and find content by topic, modality, level, or audience.</p></section>
     <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore the catalog</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Available learning experiences</h2></div><div class="card-grid" data-module-grid>${modules.map((item) => card(skillingContentFile, item, "modules", true)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p></section>
     ${catalogFilterDialog(modules, ["modality", "level", "audience"], "skilling content")}`;
-  await writePage(skillingContentFile, shell({ outputFile: skillingContentFile, title: "Skilling content", breadcrumbs: [{ label: "Skilling content" }], headerExtra: moduleSearch, content: skillingContent, bodyClass: "catalog-page" }));
+  await writePage(skillingContentFile, shell({ outputFile: skillingContentFile, title: "Skilling content", breadcrumbs: [{ label: "Skilling content" }], headerExtra: moduleSearch, content: skillingContent, bodyClass: "catalog-page", hasModuleCards: true }));
 
   const moduleCatalog = modules.map((module) => ({ name: module.title, path: `modules/${module.slug}/index.html` }));
   const personalPlaylistsContent = `<div data-personal-playlists data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalPlaylistsFile, path.join(outputRoot, "assets", "playlist.png"))}">

@@ -512,11 +512,23 @@ img {
   transition: transform .2s ease, box-shadow .2s ease;
 }
 
-.content-card[hidden] {
+.content-card[hidden],
+.content-card-container[hidden] {
   display: none;
 }
 
-.content-card:hover {
+.content-card-container {
+  position: relative;
+  min-width: 0;
+}
+
+.content-card-container .content-card {
+  height: 100%;
+}
+
+.content-card:hover,
+.content-card-container:hover .content-card,
+.content-card-container:focus-within .content-card {
   transform: translateY(-4px);
   box-shadow: var(--shadow);
 }
@@ -535,8 +547,50 @@ img {
   transition: transform .35s ease;
 }
 
-.content-card:hover .card-image img {
+.content-card:hover .card-image img,
+.content-card-container:hover .card-image img,
+.content-card-container:focus-within .card-image img {
   transform: scale(1.025);
+}
+
+.card-playlist-add {
+  position: absolute;
+  z-index: 4;
+  top: 12px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .75);
+  border-radius: 50%;
+  background: rgba(41, 40, 39, .94);
+  color: white;
+  box-shadow: 0 5px 16px rgba(25, 23, 21, .3);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity .15s ease, transform .15s ease, visibility .15s, background .15s ease;
+}
+
+.card-playlist-add svg {
+  width: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.content-card-container:hover .card-playlist-add,
+.content-card-container:focus-within .card-playlist-add {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.card-playlist-add:hover {
+  background: var(--violet);
 }
 
 .card-body {
@@ -579,7 +633,9 @@ img {
 }
 
 .content-card:hover .card-tooltip,
-.content-card:focus-visible .card-tooltip {
+.content-card:focus-visible .card-tooltip,
+.content-card-container:hover .card-tooltip,
+.content-card-container:focus-within .card-tooltip {
   opacity: 1;
   visibility: visible;
   transform: none;
@@ -1444,5 +1500,13 @@ img {
   *::after {
     scroll-behavior: auto !important;
     transition: none !important;
+  }
+}
+
+@media (hover: none) {
+  .card-playlist-add {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
   }
 }

@@ -285,7 +285,7 @@ document.querySelectorAll("[data-page-select]").forEach((select) => {
 });
 
 // ---------------------------------------------------------------------------
-// "Add to personal playlist" dialog on module pages
+// "Add to personal playlist" dialog on module pages and module catalog cards
 // ---------------------------------------------------------------------------
 const personalPlaylistDialog = document.querySelector("[data-personal-playlist-dialog]");
 
@@ -330,12 +330,18 @@ if (personalPlaylistDialog) {
     goLink.hidden = true;
   };
 
-  document.querySelector("[data-personal-playlist-open]")?.addEventListener("click", (event) => {
+  document.querySelectorAll("[data-personal-playlist-open]").forEach((trigger) => trigger.addEventListener("click", (event) => {
     event.preventDefault();
+    // Card buttons identify their module at runtime. The module-page link uses
+    // the defaults embedded directly on the shared dialog by the build.
+    if (trigger.dataset.moduleName && trigger.dataset.modulePath) {
+      personalPlaylistDialog.dataset.moduleName = trigger.dataset.moduleName;
+      personalPlaylistDialog.dataset.modulePath = trigger.dataset.modulePath;
+    }
     resetDialog();
     populatePlaylists();
     personalPlaylistDialog.showModal();
-  });
+  }));
   select.addEventListener("change", showNewPlaylistFields);
   personalPlaylistDialog.querySelectorAll("[data-personal-playlist-close]").forEach((button) => button.addEventListener("click", () => personalPlaylistDialog.close()));
   personalPlaylistDialog.addEventListener("click", (event) => {

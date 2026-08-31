@@ -328,6 +328,7 @@ Cards MUST include:
 - Available metadata summary.
 - Description tooltip when a description exists.
 - Link to the item's detail route.
+- For module cards, an overlaid add icon that appears on hover or keyboard focus and opens the same personal-playlist dialog available inside a module. The icon MUST remain visible on devices without hover support.
 
 Search text MUST concatenate title, course number when present, description, and topics. Search MUST:
 
