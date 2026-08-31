@@ -924,6 +924,10 @@ img {
   min-width: 0;
 }
 
+.playlist-start {
+  margin-top: 18px;
+}
+
 .overview-image img {
   width: 100%;
   display: block;

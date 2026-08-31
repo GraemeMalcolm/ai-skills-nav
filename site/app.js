@@ -544,6 +544,15 @@ if (personalPlaylistsPage) {
     image.alt = "";
     overviewImage.append(image);
     media.append(overviewImage);
+    if (playlist.modules.length) {
+      // Start uses the same playlist-aware URL as the sidebar so the module can
+      // reconstruct this personal playlist's navigation and learning order.
+      const startLink = document.createElement("a");
+      startLink.className = "primary-button playlist-start";
+      startLink.href = moduleUrl(playlist.modules[0].path);
+      startLink.textContent = "Start";
+      media.append(startLink);
+    }
     const copy = document.createElement("div");
     copy.className = "overview-copy";
     const kicker = document.createElement("p");

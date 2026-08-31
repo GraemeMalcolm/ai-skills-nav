@@ -368,7 +368,7 @@ A course detail MUST show its thumbnail, title, description, course number, leve
 
 ### 7.4 Curated playlist detail
 
-A curated playlist detail MUST show its thumbnail, title, description, metadata, and a navigation sidebar. The sidebar MUST link to the playlist overview and list modules in metadata order. The current item MUST be visibly identified.
+A curated playlist detail MUST show its thumbnail, title, description, metadata, and a navigation sidebar. A **Start** button below the thumbnail MUST open the first module in metadata order. The sidebar MUST link to the playlist overview and list modules in metadata order. The current item MUST be visibly identified. An empty playlist MUST omit the **Start** button.
 
 ### 7.5 Breadcrumbs and responsive navigation
 
@@ -416,6 +416,7 @@ Users MUST be able to:
 - Add a module from any standalone module overview or page.
 - Add to an existing playlist or create one within the add dialog.
 - Open a personal playlist overview.
+- Start a non-empty playlist from a **Start** button below its thumbnail. The button MUST open the first module in the current stored order and preserve personal-playlist context.
 - Navigate its modules with playlist context preserved.
 - Reorder modules with **Move up** and **Move down** controls. Changes MUST be saved immediately and reflected in the overview, sidebar, and subsequent module navigation.
 - Remove individual modules from a playlist without deleting the underlying module. Changes MUST be saved immediately and reflected in playlist navigation.

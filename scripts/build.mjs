@@ -623,7 +623,13 @@ async function build() {
     const playlistFile = path.join(outputRoot, "playlists", playlist.slug, "index.html");
     const sidebar = playlistSidebar(playlistFile, playlist, playlistModules);
     const playlistBreadcrumbs = [{ label: "Skilling playlists", target: playlistsFile }, { label: playlist.title }];
-    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists") }));
+    const firstModuleTarget = playlistModules.length
+      ? path.join(outputRoot, "playlists", playlist.slug, "modules", playlistModules[0].slug, "index.html")
+      : null;
+    const startAction = firstModuleTarget
+      ? `<a class="primary-button playlist-start" href="${relativeUrl(playlistFile, firstModuleTarget)}">Start ${icon("arrow")}</a>`
+      : "";
+    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", startAction) }));
     for (const module of playlistModules) {
       const routeRoot = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug);
       const sidebarFactory = (outputFile) => playlistSidebar(outputFile, playlist, playlistModules, module.slug);
