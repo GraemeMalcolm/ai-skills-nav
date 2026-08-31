@@ -586,7 +586,11 @@ async function build() {
     ${catalogFilterDialog(modules, ["modality", "level", "audience"], "skilling content")}`;
   await writePage(skillingContentFile, shell({ outputFile: skillingContentFile, title: "Skilling content", breadcrumbs: [{ label: "Skilling content" }], headerExtra: moduleSearch, content: skillingContent, bodyClass: "catalog-page", hasModuleCards: true }));
 
-  const moduleCatalog = modules.map((module) => ({ name: module.title, path: `modules/${module.slug}/index.html` }));
+  const moduleCatalog = modules.map((module) => ({
+    name: module.title,
+    path: `modules/${module.slug}/index.html`,
+    thumbnail: relativeUrl(personalPlaylistsFile, path.join(outputRoot, "content", "modules", module.slug, "thumbnail.png")),
+  }));
   const personalPlaylistsContent = `<div data-personal-playlists data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalPlaylistsFile, path.join(outputRoot, "assets", "playlist.png"))}">
     <section class="catalog-intro"><p class="kicker">Personal collection</p><h1>My Playlists</h1><p>Create playlists from any learning experience and return here to continue learning.</p></section>
     <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Your collections</p><button class="filter-trigger" type="button" data-new-personal-playlist-open>New personal playlist</button></div><h2>Personal playlists</h2></div><div class="card-grid" data-personal-playlist-grid></div><p class="filter-empty" data-personal-playlist-empty hidden>You have not created any personal playlists yet.</p></section>

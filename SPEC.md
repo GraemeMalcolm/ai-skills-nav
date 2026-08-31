@@ -417,11 +417,14 @@ Users MUST be able to:
 - Add to an existing playlist or create one within the add dialog.
 - Open a personal playlist overview.
 - Navigate its modules with playlist context preserved.
+- Reorder modules with **Move up** and **Move down** controls. Changes MUST be saved immediately and reflected in the overview, sidebar, and subsequent module navigation.
+- Remove individual modules from a playlist without deleting the underlying module. Changes MUST be saved immediately and reflected in playlist navigation.
+- View a small 16:9 module thumbnail beside each module in the personal-playlist management list.
 - Delete an entire playlist after confirmation.
 
 Names MUST be trimmed, non-empty, and unique case-insensitively. Adding an existing module path MUST not create a duplicate. IDs SHOULD use `crypto.randomUUID()` with a timestamp/random fallback.
 
-The actual app does not support renaming playlists, editing descriptions, removing individual modules, reordering modules, reordering playlists, synchronization, or account storage.
+The app does not support renaming playlists, editing descriptions, reordering playlists, synchronization, or account storage.
 
 ### 8.3 URL and navigation context
 
@@ -673,6 +676,8 @@ A conforming implementation MUST satisfy the following checks.
 - Invalid data is normalized safely.
 - Blank and case-insensitive duplicate names are rejected.
 - Duplicate module paths are not inserted.
+- Module reordering is persisted and updates personal-playlist navigation order.
+- Removing a module is persisted without affecting the module catalog or other playlists.
 - A valid `playlist` query parameter restores navigation.
 - Stale modules and storage failures are handled without page failure.
 

@@ -514,6 +514,9 @@ if (personalPlaylistsPage) {
     document.title = `${playlist.name} | AI Skills Nav`;
     const frame = personalPlaylistsPage.closest(".site-frame");
     const navigation = frame.querySelector("[data-personal-playlist-navigation]");
+    // This function also runs after a reorder/removal, so replace the existing
+    // navigation instead of appending a second copy.
+    navigation.replaceChildren();
     const playlistLink = document.createElement("a");
     playlistLink.className = "playlist-link active";
     playlistLink.href = window.location.href;
@@ -551,16 +554,119 @@ if (personalPlaylistsPage) {
     const description = document.createElement("p");
     description.className = "lede";
     description.textContent = playlist.description;
+
+    const manageSection = document.createElement("section");
+    manageSection.className = "personal-playlist-manage";
+    manageSection.setAttribute("aria-labelledby", "personal-playlist-modules-title");
+    const manageTitle = document.createElement("h2");
+    manageTitle.id = "personal-playlist-modules-title";
+    manageTitle.tabIndex = -1;
+    manageTitle.textContent = "Modules";
+    const manageHelp = document.createElement("p");
+    manageHelp.className = "personal-playlist-manage-help";
+    manageHelp.textContent = "Change the learning order or remove modules from this playlist.";
+    const manageStatus = document.createElement("p");
+    manageStatus.className = "sr-only";
+    manageStatus.setAttribute("role", "status");
+    manageStatus.setAttribute("aria-live", "polite");
+    const managedList = document.createElement("ol");
+    managedList.className = "personal-playlist-module-list";
+
+    // Persist one mutation, redraw both the management list and sidebar, then
+    // restore keyboard focus to the moved module (or the section after removal).
+    const saveModuleChanges = (message, focusPath = "", previousModules = playlist.modules) => {
+      if (!writePersonalPlaylists(playlists)) {
+        playlist.modules = previousModules;
+        manageStatus.className = "personal-playlist-status is-error";
+        manageStatus.textContent = "Your browser could not update the playlist.";
+        return;
+      }
+      renderPlaylist(playlist, playlists);
+      const updatedSection = personalPlaylistsPage.querySelector(".personal-playlist-manage");
+      const updatedStatus = updatedSection.querySelector('[role="status"]');
+      updatedStatus.textContent = message;
+      const focusTarget = focusPath
+        ? updatedSection.querySelector(`[data-module-path="${CSS.escape(focusPath)}"] .personal-playlist-move-up`)
+        : updatedSection.querySelector("h2");
+      focusTarget?.focus();
+    };
+
+    playlist.modules.forEach((module, index) => {
+      const item = document.createElement("li");
+      item.dataset.modulePath = module.path;
+      const moduleDetails = document.createElement("div");
+      moduleDetails.className = "personal-playlist-module-details";
+      const thumbnail = document.createElement("img");
+      thumbnail.className = "personal-playlist-module-thumbnail";
+      thumbnail.src = moduleCatalog.get(module.path).thumbnail;
+      thumbnail.alt = "";
+      thumbnail.loading = "lazy";
+      const moduleLink = document.createElement("a");
+      moduleLink.href = moduleUrl(module.path);
+      moduleLink.textContent = module.name;
+      moduleDetails.append(thumbnail, moduleLink);
+      const actions = document.createElement("div");
+      actions.className = "personal-playlist-module-actions";
+
+      const moveUp = document.createElement("button");
+      moveUp.className = "text-button personal-playlist-move-up";
+      moveUp.type = "button";
+      moveUp.textContent = "Move up";
+      moveUp.disabled = index === 0;
+      moveUp.setAttribute("aria-label", `Move ${module.name} up`);
+      moveUp.addEventListener("click", () => {
+        const previousModules = [...playlist.modules];
+        [playlist.modules[index - 1], playlist.modules[index]] = [playlist.modules[index], playlist.modules[index - 1]];
+        saveModuleChanges(`${module.name} moved up.`, module.path, previousModules);
+      });
+
+      const moveDown = document.createElement("button");
+      moveDown.className = "text-button";
+      moveDown.type = "button";
+      moveDown.textContent = "Move down";
+      moveDown.disabled = index === playlist.modules.length - 1;
+      moveDown.setAttribute("aria-label", `Move ${module.name} down`);
+      moveDown.addEventListener("click", () => {
+        const previousModules = [...playlist.modules];
+        [playlist.modules[index], playlist.modules[index + 1]] = [playlist.modules[index + 1], playlist.modules[index]];
+        saveModuleChanges(`${module.name} moved down.`, module.path, previousModules);
+      });
+
+      const remove = document.createElement("button");
+      remove.className = "text-button personal-playlist-module-remove";
+      remove.type = "button";
+      remove.textContent = "Remove";
+      remove.setAttribute("aria-label", `Remove ${module.name} from this playlist`);
+      remove.addEventListener("click", () => {
+        const previousModules = [...playlist.modules];
+        playlist.modules.splice(index, 1);
+        saveModuleChanges(`${module.name} removed from the playlist.`, "", previousModules);
+      });
+
+      actions.append(moveUp, moveDown, remove);
+      item.append(moduleDetails, actions);
+      managedList.append(item);
+    });
+
+    if (!playlist.modules.length) {
+      const empty = document.createElement("p");
+      empty.className = "personal-playlist-manage-empty";
+      empty.textContent = "This playlist does not contain any modules yet.";
+      manageSection.append(manageTitle, manageHelp, manageStatus, empty);
+    } else {
+      manageSection.append(manageTitle, manageHelp, manageStatus, managedList);
+    }
+
     const deleteButton = document.createElement("button");
     deleteButton.className = "text-button personal-playlist-delete";
     deleteButton.type = "button";
-    deleteButton.textContent = "Delete";
+    deleteButton.textContent = "Delete playlist";
     deleteButton.addEventListener("click", () => {
       if (!window.confirm(`Delete ${playlist.name}?`)) return;
       writePersonalPlaylists(playlists.filter((item) => item.id !== playlist.id));
       window.location.assign(window.location.pathname);
     });
-    copy.append(kicker, title, description, deleteButton);
+    copy.append(kicker, title, description, manageSection, deleteButton);
     overview.append(media, copy);
     personalPlaylistsPage.append(overview);
   };
