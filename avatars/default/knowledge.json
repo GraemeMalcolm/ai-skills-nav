@@ -69,13 +69,16 @@
     },
     {
         "category": "Credentials and certification",
+        "link": "https://aiskillsnavigator.microsoft.com/credentials",
         "documents": [
             {
                 "id": 6,
                 "title": "Credentials",
                 "keywords": [
                     "credential",
-                    "credentials"
+                    "credentials",
+                    "applied skills",
+                    "applied skill"
                 ],
                 "content": "A credential validates skills or expertise. Course pages show credential-preparation information when the course is aligned to a credential. The learning content can help you prepare, but completing content on this website does not itself award the credential."
             },
@@ -85,6 +88,7 @@
                 "keywords": [
                     "certification",
                     "certifications",
+                    "certified",
                     "exam"
                 ],
                 "content": "A Microsoft Certification demonstrates expertise associated with a job role or technology and normally has requirements outside this website, such as passing an assessment or exam. Relevant courses and learning experiences can support certification preparation, but completing them does not automatically make you certified."
