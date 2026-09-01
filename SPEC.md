@@ -318,6 +318,7 @@ The home page MUST include:
 - A skilling-content section containing the first eight alphabetically sorted modules.
 - Links to all three catalogs and personal playlists.
 - A search form covering the complete course, playlist, and module catalogs. Non-featured cards MUST be present but hidden until a search is active, then matching cards MAY be revealed.
+- The default-avatar learning assistant described in section 10.
 
 Clearing home search MUST restore the initial featured subsets. The “New and popular” module label does not indicate ranking; initial selection is alphabetical.
 
@@ -524,6 +525,8 @@ Raw HTML is passed through by the current Markdown renderer and is not sanitized
 
 A course or curated playlist declaring `avatar` MUST display a fixed **Ask <name>** launcher and chat flyout on its detail home page. A module declaring `avatar` MUST display the same launcher and flyout on its overview and content pages. The flyout MUST contain the avatar image, assistant name, welcome message, suggested-prompt buttons, message log, text field, optional microphone control, send action, and close action.
 
+The home page MUST display the avatar with the `default` slug. When local knowledge has no keyword match, this assistant MUST apply the site search normalization and AND matching semantics to the complete set of generated course, curated-playlist, and module cards. It MUST list matching content titles with links without changing tile visibility or the home search form. If no content matches, it MUST respond exactly: “I'm sorry. I can't help with that. Try rewording your question.” The default assistant MUST NOT call Microsoft Learn MCP or offer external search fallbacks.
+
 The assistant MUST be deterministic retrieval logic. It MUST NOT call a generative model, claim multi-turn understanding, or use the reserved avatar `instructions` as a model prompt.
 
 ### 10.1 Message behavior
@@ -558,7 +561,7 @@ Build a spelling vocabulary from words in all normalized keywords. For each unkn
 
 Generate all 2- and 3-word phrases plus non-stop-word single tokens. Match those phrases exactly against normalized knowledge keywords. Deduplicate documents by category and document ID. Score each result by the total word count of all matched keywords, sort descending, and return the top 3.
 
-A successful response MUST concatenate matching document content and include available document video links and category “Learn more” links. A local no-match response MUST offer a Bing search using normalized, de-duplicated keywords after common stop words are removed.
+A successful response MUST concatenate matching document content and include available document video links and category “Learn more” links. Except for the default home assistant's site-search behavior, a local no-match response MUST offer a Bing search using normalized, de-duplicated keywords after common stop words are removed.
 
 ### 10.4 Microsoft Learn search
 
@@ -703,6 +706,7 @@ A conforming implementation MUST satisfy the following checks.
 - Moderation occurs before retrieval.
 - Documentation intent attempts Learn MCP and falls back to Learn search.
 - Local no-match offers Bing search.
+- The default home assistant never invokes Learn MCP, falls back to catalog links without filtering home tiles, and uses the specified final no-match response.
 - Speech is feature-detected and spoken interactions use the correct audio states.
 - Errors never leave assistant controls permanently disabled.
 

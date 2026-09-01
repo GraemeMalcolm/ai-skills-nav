@@ -1,0 +1,79 @@
+[
+    {
+        "category": "Content organization",
+        "documents": [
+            {
+                "id": 1,
+                "title": "Module",
+                "keywords": [
+                    "module",
+                    "modules",
+                    "learning experience",
+                    "skilling content",
+                    "content organization"
+                ],
+                "content": "A module is an individual learning experience made up of one or more ordered pages. Modules can include articles, videos, labs, and other learning activities. You can open a module directly, find it within a curated playlist, or add it to a personal playlist."
+            },
+            {
+                "id": 2,
+                "title": "Playlist",
+                "keywords": [
+                    "playlist",
+                    "playlists"
+                ],
+                "content": "A curated playlist is an ordered collection of related modules selected to help you build skills in a focused sequence. Its navigation pane lists the modules in learning order. You can also create personal playlists, give them names and optional descriptions, and add modules from across the website. Personal playlists are stored only in your current browser and device, so they are not synchronized to an account or backend service."
+            },
+            {
+                "id": 3,
+                "title": "Course",
+                "keywords": [
+                    "course",
+                    "courses",
+                    "Microsoft Official Curriculum",
+                    "Microsoft Official Curricula",
+                    "instructor-led"
+                ],
+                "content": "A course is Microsoft Official Curriculum that groups one or more ordered curated playlists. A course can be completed through the linked self-paced learning experiences or delivered as instructor-led training by Microsoft and Microsoft Learning Partners. A course may also identify a related credential."
+            }
+        ]
+    },
+    {
+        "category": "AI agents",
+        "documents": [
+            {
+                "id": 4,
+                "title": "Curriculum-specialist avatars",
+                "keywords": [
+                    "AI help",
+                    "learning assistant",
+                    "Ask button"
+                ],
+                "content": "Selected courses, curated playlists, and modules include a curriculum-specialist avatar. Use the fixed Ask button to open its learning-assistant chat and ask questions about the relevant subject. These assistants retrieve prepared answers from their curriculum knowledge rather than generating new answers with a language model."
+            }
+        ]
+    },
+    {
+        "category": "Credentials and certification",
+        "documents": [
+            {
+                "id": 5,
+                "title": "Credentials",
+                "keywords": [
+                    "credential",
+                    "credentials"
+                ],
+                "content": "A credential validates skills or expertise. Course pages show credential-preparation information when the course is aligned to a credential. The learning content can help you prepare, but completing content on this website does not itself award the credential."
+            },
+            {
+                "id": 6,
+                "title": "Certifications",
+                "keywords": [
+                    "certification",
+                    "certifications",
+                    "exam"
+                ],
+                "content": "A Microsoft Certification demonstrates expertise associated with a job role or technology and normally has requirements outside this website, such as passing an assessment or exam. Relevant courses and learning experiences can support certification preparation, but completing them does not automatically make you certified."
+            }
+        ]
+    }
+]

@@ -250,12 +250,12 @@ function icon(name) {
   return icons[name];
 }
 
-function agentFlyout(outputFile, avatar) {
+function agentFlyout(outputFile, avatar, options = {}) {
   if (!avatar) return "";
   const avatarRoot = path.join(outputRoot, "content", "avatars", avatar.slug);
   const avatarImage = relativeUrl(outputFile, path.join(avatarRoot, "avatar.png"));
   const knowledgeUrl = relativeUrl(outputFile, path.join(avatarRoot, "knowledge.json"));
-  const audioRoot = relativeUrl(outputFile, path.join(avatarRoot, "audio"));
+  const audioRoot = options.audio === false ? null : relativeUrl(outputFile, path.join(avatarRoot, "audio"));
   const moderationUrl = relativeUrl(outputFile, path.join(outputRoot, "assets", "moderation.txt"));
   const config = escapeHtml(JSON.stringify({
     name: avatar.name,
@@ -264,6 +264,8 @@ function agentFlyout(outputFile, avatar) {
     knowledgeUrl,
     audioRoot,
     moderationUrl,
+    useLearnMcp: options.useLearnMcp !== false,
+    useCatalogSearch: options.useCatalogSearch === true,
   }));
   return `<div class="agent" data-agent-config="${config}">
     <button class="agent-launcher" type="button" aria-label="Chat with ${escapeHtml(avatar.name)}" aria-expanded="false" aria-controls="agent-panel"><img src="${avatarImage}" alt=""><span>Ask ${escapeHtml(avatar.name)}</span></button>
@@ -310,7 +312,7 @@ function breadcrumbs(outputFile, items = []) {
   }).join("")}</ol></nav>`;
 }
 
-function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, bodyClass = "", module = null, hasModuleCards = false }) {
+function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, agentOptions = {}, bodyClass = "", module = null, hasModuleCards = false }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
@@ -336,7 +338,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
     ${sidebar ? `<button class="icon-button nav-reveal" type="button" aria-label="Show navigation" aria-expanded="false" data-menu-reveal>${icon("menu")}</button>` : ""}
     <main id="main-content" class="main-content">${module || hasModuleCards ? personalPlaylistDialog(outputFile, module) : ""}${content}</main>
   </div>
-  ${agentFlyout(outputFile, avatar)}
+  ${agentFlyout(outputFile, avatar, agentOptions)}
 </body>
 </html>`;
 }
@@ -525,31 +527,39 @@ async function build() {
   ]);
   const avatars = new Map((await loadCollection("avatars", "avatar.yml", root)).map((avatar) => [avatar.slug, avatar]));
   const validatedAvatars = new Set();
+  const validateAvatar = async (avatar, requireAudio = true) => {
+    const validationKey = `${avatar.slug}:${requireAudio}`;
+    if (validatedAvatars.has(validationKey)) return;
+    const requiredValues = ["name", "welcome-message", "suggested-prompts"];
+    const missingValue = requiredValues.find((value) => !avatar[value] || (Array.isArray(avatar[value]) && avatar[value].length === 0));
+    if (missingValue) throw new Error(`Avatar ${avatar.slug} is missing ${missingValue} in avatar.yml`);
+    for (const file of ["avatar.png", "knowledge.json"]) {
+      if (!(await exists(path.join(avatar.directory, file)))) throw new Error(`Avatar ${avatar.slug} is missing ${file}`);
+    }
+    const knowledge = JSON.parse(await readFile(path.join(avatar.directory, "knowledge.json"), "utf8"));
+    if (!Array.isArray(knowledge) || knowledge.some((category) => !Array.isArray(category.documents))) {
+      throw new Error(`Avatar ${avatar.slug} has invalid knowledge.json content`);
+    }
+    if (requireAudio) {
+      const audioFiles = ["looking.wav", "no_results.wav", "search_results.wav", "sorry.wav", ...Array.from({ length: 7 }, (_, index) => `response_${index + 1}.wav`)];
+      for (const file of audioFiles) {
+        if (!(await exists(path.join(avatar.directory, "audio", file)))) throw new Error(`Avatar ${avatar.slug} is missing audio/${file}`);
+      }
+    }
+    validatedAvatars.add(validationKey);
+  };
   for (const [type, items] of [["Module", modules], ["Playlist", playlists], ["Course", courses]]) {
     for (const item of items) {
       if (!item.avatar) continue;
       const avatar = avatars.get(item.avatar);
       if (!avatar) throw new Error(`${type} ${item.slug} references unknown avatar ${item.avatar}`);
-      if (!validatedAvatars.has(avatar.slug)) {
-        const requiredValues = ["name", "welcome-message", "suggested-prompts"];
-        const missingValue = requiredValues.find((value) => !avatar[value] || (Array.isArray(avatar[value]) && avatar[value].length === 0));
-        if (missingValue) throw new Error(`Avatar ${avatar.slug} is missing ${missingValue} in avatar.yml`);
-        for (const file of ["avatar.png", "knowledge.json"]) {
-          if (!(await exists(path.join(avatar.directory, file)))) throw new Error(`Avatar ${avatar.slug} is missing ${file}`);
-        }
-        const knowledge = JSON.parse(await readFile(path.join(avatar.directory, "knowledge.json"), "utf8"));
-        if (!Array.isArray(knowledge) || knowledge.some((category) => !Array.isArray(category.documents))) {
-          throw new Error(`Avatar ${avatar.slug} has invalid knowledge.json content`);
-        }
-        const audioFiles = ["looking.wav", "no_results.wav", "search_results.wav", "sorry.wav", ...Array.from({ length: 7 }, (_, index) => `response_${index + 1}.wav`)];
-        for (const file of audioFiles) {
-          if (!(await exists(path.join(avatar.directory, "audio", file)))) throw new Error(`Avatar ${avatar.slug} is missing audio/${file}`);
-        }
-        validatedAvatars.add(avatar.slug);
-      }
+      await validateAvatar(avatar);
       item.avatarData = avatar;
     }
   }
+  const defaultAvatar = avatars.get("default");
+  if (!defaultAvatar) throw new Error("Missing default avatar");
+  await validateAvatar(defaultAvatar, false);
   modules.sort((a, b) => a.title.localeCompare(b.title));
   playlists.sort((a, b) => a.title.localeCompare(b.title));
   courses.sort((a, b) => a.title.localeCompare(b.title));
@@ -572,7 +582,7 @@ async function build() {
     <section class="catalog-section" data-course-catalog><div class="section-heading"><p class="kicker">Microsoft Official Curriculum</p><h2>Courses</h2></div><div class="card-grid">${courses.map((item, index) => card(homeFile, item, "courses", false, index >= 4)).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, coursesFile)}">See all courses</a></div></section>
     <section class="catalog-section alt" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning we think you'll like</p><h2>Skilling playlists</h2></div><div class="card-grid">${playlists.map((item, index) => card(homeFile, item, "playlists", false, index >= 4)).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, personalPlaylistsFile)}">Personal playlists</a><a class="filter-trigger" href="${relativeUrl(homeFile, playlistsFile)}">See all playlists</a></div></section>
     <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${modules.map((item, index) => card(homeFile, item, "modules", false, index >= 8)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>`;
-  await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", headerExtra: homeSearch, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
+  await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", headerExtra: homeSearch, avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
 
   const courseSearch = catalogSearch("course-search-input", "Search courses", "Search courses");
   const coursesContent = `<section class="catalog-intro"><p class="kicker">Microsoft Official Curricula</p><h1>Courses</h1><p>Microsoft Official Courses can be completed online as self-paced learning experiences, or delivered as instructor-led experiences by Microsoft and Microsoft Learning Partners.</p></section>

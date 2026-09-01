@@ -812,11 +812,12 @@ if (filterDialog && filterForm && filterCards.length) {
 }
 
 // ---------------------------------------------------------------------------
-// Module learning assistant
+// Learning assistant
 // ---------------------------------------------------------------------------
 // This is intentionally a retrieval assistant, not a generative AI client. Its
-// answers come verbatim from per-avatar knowledge JSON, while explicit
-// documentation requests are delegated to the public Microsoft Learn MCP API.
+// answers come verbatim from per-avatar knowledge JSON. Curriculum assistants
+// can delegate documentation requests to Microsoft Learn MCP; the home guide
+// instead falls back to the site's generated course, playlist, and module data.
 const agent = document.querySelector("[data-agent-config]");
 
 if (agent) {
@@ -858,6 +859,7 @@ if (agent) {
   const playAudio = (file) => {
     // A new state cue supersedes the old one; rejected autoplay promises are
     // non-fatal because audio is supplementary feedback.
+    if (!config.audioRoot) return;
     activeAudio?.pause();
     activeAudio = new Audio(`${config.audioRoot}/${file}`);
     activeAudio.play().catch(() => { });
@@ -1094,6 +1096,20 @@ if (agent) {
       .slice(0, 3);
   };
 
+  const searchCatalog = (question) => {
+    // Reuse the home search's normalization and AND semantics, but inspect the
+    // cards without changing their hidden state or the search form's state.
+    const terms = normalizeSearchTerms(question);
+    if (!terms.length) return [];
+    return catalogCards.filter((card) => terms.every((term) => card.dataset.searchText.includes(term))).map((card) => {
+      const anchor = card.matches("a.content-card") ? card : card.querySelector("a.content-card");
+      const title = anchor?.querySelector("strong")?.textContent?.trim();
+      const type = card.dataset.catalogType;
+      const typeLabel = type === "modules" ? "Module" : type === "playlists" ? "Playlist" : "Course";
+      return anchor && title ? { href: anchor.href, label: `${typeLabel}: ${title}` } : null;
+    }).filter(Boolean);
+  };
+
   const mcpRpc = async (method, params, isNotification = false) => {
     // The Learn endpoint may return ordinary JSON-RPC or an SSE stream. Session
     // IDs are echoed on subsequent requests when the server supplies one.
@@ -1198,7 +1214,7 @@ if (agent) {
       }
       if (usedSpeechInput) playAudio("looking.wav");
       else activeAudio?.pause();
-      const searchQuery = getSearchIntentQuery(question);
+      const searchQuery = config.useLearnMcp ? getSearchIntentQuery(question) : null;
       if (searchQuery) {
         const keywords = extractSearchKeywords(searchQuery) || normalize(searchQuery);
         let links = [];
@@ -1213,6 +1229,15 @@ if (agent) {
       await loadKnowledge();
       const results = searchKnowledge(question);
       if (!results.length) {
+        if (config.useCatalogSearch) {
+          const links = searchCatalog(question);
+          if (links.length) {
+            addMessage("assistant", "I found these relevant learning experiences:", links);
+            return;
+          }
+          addMessage("assistant", "I'm sorry. I can't help with that. Try rewording your question.");
+          return;
+        }
         // Local knowledge is deliberately bounded. Be transparent and offer a
         // web search instead of fabricating an answer.
         const keywords = extractSearchKeywords(question) || normalize(question);
