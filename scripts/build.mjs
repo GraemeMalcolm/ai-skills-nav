@@ -252,10 +252,11 @@ function icon(name) {
 
 function agentFlyout(outputFile, avatar, options = {}) {
   if (!avatar) return "";
+  const isDefaultAvatar = avatar.slug === "default";
   const avatarRoot = path.join(outputRoot, "content", "avatars", avatar.slug);
   const avatarImage = relativeUrl(outputFile, path.join(avatarRoot, "avatar.png"));
   const knowledgeUrl = relativeUrl(outputFile, path.join(avatarRoot, "knowledge.json"));
-  const audioRoot = options.audio === false ? null : relativeUrl(outputFile, path.join(avatarRoot, "audio"));
+  const audioRoot = options.audio === false || isDefaultAvatar ? null : relativeUrl(outputFile, path.join(avatarRoot, "audio"));
   const moderationUrl = relativeUrl(outputFile, path.join(outputRoot, "assets", "moderation.txt"));
   const config = escapeHtml(JSON.stringify({
     name: avatar.name,
@@ -264,8 +265,8 @@ function agentFlyout(outputFile, avatar, options = {}) {
     knowledgeUrl,
     audioRoot,
     moderationUrl,
-    useLearnMcp: options.useLearnMcp !== false,
-    useCatalogSearch: options.useCatalogSearch === true,
+    useLearnMcp: options.useLearnMcp ?? !isDefaultAvatar,
+    useCatalogSearch: options.useCatalogSearch ?? isDefaultAvatar,
   }));
   return `<div class="agent" data-agent-config="${config}">
     <button class="agent-launcher" type="button" aria-label="Chat with ${escapeHtml(avatar.name)}" aria-expanded="false" aria-controls="agent-panel"><img src="${avatarImage}" alt=""><span>Ask ${escapeHtml(avatar.name)}</span></button>
@@ -548,18 +549,17 @@ async function build() {
     }
     validatedAvatars.add(validationKey);
   };
-  for (const [type, items] of [["Module", modules], ["Playlist", playlists], ["Course", courses]]) {
-    for (const item of items) {
-      if (!item.avatar) continue;
-      const avatar = avatars.get(item.avatar);
-      if (!avatar) throw new Error(`${type} ${item.slug} references unknown avatar ${item.avatar}`);
-      await validateAvatar(avatar);
-      item.avatarData = avatar;
-    }
-  }
   const defaultAvatar = avatars.get("default");
   if (!defaultAvatar) throw new Error("Missing default avatar");
   await validateAvatar(defaultAvatar, false);
+  for (const [type, items] of [["Module", modules], ["Playlist", playlists], ["Course", courses]]) {
+    for (const item of items) {
+      const avatar = item.avatar ? avatars.get(item.avatar) : defaultAvatar;
+      if (!avatar) throw new Error(`${type} ${item.slug} references unknown avatar ${item.avatar}`);
+      await validateAvatar(avatar, avatar.slug !== "default");
+      item.avatarData = avatar;
+    }
+  }
   modules.sort((a, b) => a.title.localeCompare(b.title));
   playlists.sort((a, b) => a.title.localeCompare(b.title));
   courses.sort((a, b) => a.title.localeCompare(b.title));
@@ -588,19 +588,19 @@ async function build() {
   const coursesContent = `<section class="catalog-intro"><p class="kicker">Microsoft Official Curricula</p><h1>Courses</h1><p>Microsoft Official Courses can be completed online as self-paced learning experiences, or delivered as instructor-led experiences by Microsoft and Microsoft Learning Partners.</p></section>
     <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore the catalog</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Available courses</h2></div><div class="card-grid">${courses.map((item) => card(coursesFile, item, "courses", true)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p></section>
     ${catalogFilterDialog(courses, ["audience", "level", "duration"], "courses")}`;
-  await writePage(coursesFile, shell({ outputFile: coursesFile, title: "Courses", breadcrumbs: [{ label: "Courses" }], headerExtra: courseSearch, content: coursesContent, bodyClass: "catalog-page" }));
+  await writePage(coursesFile, shell({ outputFile: coursesFile, title: "Courses", breadcrumbs: [{ label: "Courses" }], headerExtra: courseSearch, avatar: defaultAvatar, content: coursesContent, bodyClass: "catalog-page" }));
 
   const playlistSearch = catalogSearch("playlist-search-input", "Search playlists", "Search playlists");
   const playlistsContent = `<section class="catalog-intro"><p class="kicker">Curated learning</p><h1>Skilling playlists</h1><p>Explore curated collections of related learning experiences that help you build skills in a focused sequence.</p></section>
     <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore the catalog</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Available playlists</h2></div><div class="card-grid">${playlists.map((item) => card(playlistsFile, item, "playlists", true)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No playlists match your search and filters.</p></section>
     ${catalogFilterDialog(playlists, ["level", "audience"], "playlists")}`;
-  await writePage(playlistsFile, shell({ outputFile: playlistsFile, title: "Skilling playlists", breadcrumbs: [{ label: "Skilling playlists" }], headerExtra: playlistSearch, content: playlistsContent, bodyClass: "catalog-page" }));
+  await writePage(playlistsFile, shell({ outputFile: playlistsFile, title: "Skilling playlists", breadcrumbs: [{ label: "Skilling playlists" }], headerExtra: playlistSearch, avatar: defaultAvatar, content: playlistsContent, bodyClass: "catalog-page" }));
 
   const moduleSearch = catalogSearch("module-search-input", "Search skilling content", "Search skilling content");
   const skillingContent = `<section class="catalog-intro"><p class="kicker">Build your skills</p><h1>Skilling content</h1><p>Explore all learning experiences and find content by topic, modality, level, or audience.</p></section>
     <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore the catalog</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Available learning experiences</h2></div><div class="card-grid" data-module-grid>${modules.map((item) => card(skillingContentFile, item, "modules", true)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p></section>
     ${catalogFilterDialog(modules, ["modality", "level", "audience"], "skilling content")}`;
-  await writePage(skillingContentFile, shell({ outputFile: skillingContentFile, title: "Skilling content", breadcrumbs: [{ label: "Skilling content" }], headerExtra: moduleSearch, content: skillingContent, bodyClass: "catalog-page", hasModuleCards: true }));
+  await writePage(skillingContentFile, shell({ outputFile: skillingContentFile, title: "Skilling content", breadcrumbs: [{ label: "Skilling content" }], headerExtra: moduleSearch, avatar: defaultAvatar, content: skillingContent, bodyClass: "catalog-page", hasModuleCards: true }));
 
   const moduleCatalog = modules.map((module) => ({
     name: module.title,
@@ -623,7 +623,7 @@ async function build() {
     </form>
   </dialog>`;
   const personalPlaylistSidebar = `<aside class="sidebar" data-sidebar><div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div><nav aria-label="Playlist" data-personal-playlist-navigation></nav></aside><div class="sidebar-scrim" data-menu-close></div>`;
-  await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
+  await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, avatar: defaultAvatar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
 
   for (const module of modules) {
     await buildModuleRoute(module, await getModulePages(module), path.join(outputRoot, "modules", module.slug));
