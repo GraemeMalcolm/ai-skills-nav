@@ -1078,8 +1078,24 @@ if (agent) {
     }
     words.filter((word) => word.length >= 2 && !searchStopWords.has(word)).forEach((word) => phrases.add(word));
 
+    // Keep only the most specific overlapping matches. For example, a matched
+    // "personal playlist" keyword suppresses "personal" and "playlist", while
+    // unrelated phrases remain eligible. Testing against longer matched
+    // phrases also lets a trigram suppress its contained unigrams directly.
+    const matchedPhrases = [...phrases]
+      .filter((phrase) => keywordMap.has(phrase))
+      .sort((left, right) => right.split(" ").length - left.split(" ").length)
+      .filter((phrase, index, candidates) => {
+        const phraseWords = phrase.split(" ");
+        return !candidates.slice(0, index).some((candidate) => {
+          const candidateWords = candidate.split(" ");
+          if (candidateWords.length <= phraseWords.length) return false;
+          return candidateWords.some((_, offset) => candidateWords.slice(offset, offset + phraseWords.length).join(" ") === phrase);
+        });
+      });
+
     const matches = new Map();
-    phrases.forEach((phrase) => {
+    matchedPhrases.forEach((phrase) => {
       (keywordMap.get(phrase) || []).forEach((entry) => {
         const key = `${entry.category}:${entry.document.id}`;
         const current = matches.get(key) || { ...entry, keywords: [] };

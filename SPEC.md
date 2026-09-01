@@ -559,7 +559,7 @@ Normalization MUST:
 
 Build a spelling vocabulary from words in all normalized keywords. For each unknown question token, choose the best eligible candidate by Jaro-Winkler similarity. Use thresholds of 0.90 for tokens up to 3 characters, 0.88 up to 5, and 0.85 for longer tokens. Ignore candidates whose length differs by more than 3; for question tokens longer than 3, ignore candidates of 3 or fewer characters.
 
-Generate all 2- and 3-word phrases plus non-stop-word single tokens. Match those phrases exactly against normalized knowledge keywords. Deduplicate documents by category and document ID. Score each result by the total word count of all matched keywords, sort descending, and return the top 3.
+Generate all 2- and 3-word phrases plus non-stop-word single tokens. Match those phrases exactly against normalized knowledge keywords. Retain only the most specific overlapping keyword matches: a matched trigram suppresses its contained bigrams and unigrams, and a matched bigram suppresses its contained unigrams. Deduplicate documents by category and document ID. Score each result by the total word count of all retained matched keywords, sort descending, and return the top 3.
 
 A successful response MUST concatenate matching document content and include available document video links and category “Learn more” links. Except for the default home assistant's site-search behavior, a local no-match response MUST offer a Bing search using normalized, de-duplicated keywords after common stop words are removed.
 
