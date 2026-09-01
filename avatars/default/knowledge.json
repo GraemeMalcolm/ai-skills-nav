@@ -28,7 +28,11 @@
                 "title": "Personal Playlist",
                 "keywords": [
                     "personal playlist",
-                    "personal playlists"
+                    "personal playlists",
+                    "add a module",
+                    "create a playlist",
+                    "custom playlist",
+                    "custom playlists"
                 ],
                 "content": "To add a module to a personal playlist, use the \"+\" button on its card or open it and select the option to add it to a playlist. You can create a new personal playlist or add the module to an existing one. Personal playlists are stored only in your current browser and device, so they are not synchronized to an account or backend service."
             },
