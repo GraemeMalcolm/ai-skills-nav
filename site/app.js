@@ -1309,13 +1309,20 @@ if (agent) {
 
   const setAgentOpen = (open) => {
     // Stop microphone capture when closing, synchronize visible/ARIA state, and
-    // return focus to the launcher for predictable keyboard navigation.
+    // move focus predictably for keyboard navigation.
     if (!open && recognition && microphoneButton.classList.contains("listening")) recognition.abort();
     agent.classList.toggle("open", open);
     launcher.setAttribute("aria-expanded", String(open));
     panel.setAttribute("aria-hidden", String(!open));
-    if (open) input.focus();
-    else launcher.focus();
+    if (open) {
+      // Wait until the browser has applied the panel's visible state; focusing
+      // an element while its ancestor is still hidden leaves focus on the page.
+      requestAnimationFrame(() => {
+        if (agent.classList.contains("open")) input.focus();
+      });
+    } else {
+      launcher.focus();
+    }
   };
 
   addMessage("assistant", config.welcomeMessage);

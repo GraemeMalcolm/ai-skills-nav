@@ -1257,13 +1257,14 @@ img {
   opacity: 0;
   visibility: hidden;
   transform: translateY(10px);
-  transition: opacity .18s ease, transform .18s ease, visibility .18s;
+  transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
 }
 
 .agent.open .agent-panel {
   opacity: 1;
   visibility: visible;
   transform: none;
+  transition-delay: 0s;
 }
 
 .agent.open .agent-launcher {
