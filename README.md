@@ -18,7 +18,7 @@ The goal of this proof-of-concept is to validate a design for a standardized con
 Content is organized into the following hierarchy:
 
 - **Courses**: Microsoft Official Curricula that can be completed as self-paced learning or delivered as instructor-led training. A course includes one or more playlists and can be aligned to a credential.
-  - **Playlists**: Ordered, curated collections containing one or more modules (equivalent of *Learning Paths* in Microaoft Learn). Learners can also create *personal* playlists containing modules of their choice.
+  - **Playlists**: Ordered, curated collections containing one or more modules (equivalent of *Learning Paths* in Microsoft Learn). Learners can also create *personal* playlists containing modules of their choice.
     - **Modules**: The core learning assets. Metadata describes each module's modality, level, duration, topics, audience, pages, and optional avatar.
       - **Pages**: Discrete topics that can combine text, images, video, labs, and other content (known as *units* in Microsoft Learn).
 
