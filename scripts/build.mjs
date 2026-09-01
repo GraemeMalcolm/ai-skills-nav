@@ -554,9 +554,10 @@ async function build() {
   await validateAvatar(defaultAvatar, false);
   for (const [type, items] of [["Module", modules], ["Playlist", playlists], ["Course", courses]]) {
     for (const item of items) {
-      const avatar = item.avatar ? avatars.get(item.avatar) : defaultAvatar;
+      if (!item.avatar) continue;
+      const avatar = avatars.get(item.avatar);
       if (!avatar) throw new Error(`${type} ${item.slug} references unknown avatar ${item.avatar}`);
-      await validateAvatar(avatar, avatar.slug !== "default");
+      await validateAvatar(avatar);
       item.avatarData = avatar;
     }
   }
