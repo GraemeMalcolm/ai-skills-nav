@@ -46,7 +46,9 @@
                 "keywords": [
                     "AI help",
                     "learning assistant",
-                    "Ask button"
+                    "Ask button",
+                    "avatar",
+                    "avatars"
                 ],
                 "content": "Selected courses, curated playlists, and modules include a curriculum-specialist avatar. Use the fixed Ask button to open its learning-assistant chat and ask questions about the relevant subject. These assistants retrieve prepared answers from their curriculum knowledge rather than generating new answers with a language model."
             }
