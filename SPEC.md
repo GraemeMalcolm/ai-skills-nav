@@ -9,7 +9,7 @@ The application MUST:
 - Generate a complete static site at build time.
 - Run on GitHub Pages without an application server, database, authentication system, or client-side framework.
 - Present courses, curated playlists, modules, and module pages.
-- Support search, metadata filters, responsive navigation, personal playlists, custom Markdown extensions, and module-specific learning assistants.
+- Support search, metadata filters, responsive navigation, personal playlists, custom Markdown extensions, and content-specific learning assistants.
 - Use relative internal URLs so deployment beneath a repository subpath works.
 - Remain usable without a generative AI model.
 
@@ -84,6 +84,7 @@ topics:
   - Topic
 audience:
   - Audience
+avatar: optional-avatar-slug
 playlists:
   - playlist-slug
 ```
@@ -93,6 +94,7 @@ Rules:
 - `title`, `course_number`, `description`, `level`, `duration`, `topics`, `audience`, and `playlists` SHOULD be present.
 - `course_number` MUST be present.
 - `playlists` MUST be a non-empty array of existing playlist slugs.
+- `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `credential` is optional. The detail page MUST show “No associated credential is specified.” when omitted.
 - Playlist order MUST follow the YAML array.
 
@@ -109,6 +111,7 @@ topics:
   - Topic
 audience:
   - Audience
+avatar: optional-avatar-slug
 modules:
   - module-slug
 ```
@@ -117,6 +120,7 @@ Rules:
 
 - `title`, `description`, `level`, `duration`, `topics`, `audience`, and `modules` SHOULD be present.
 - `modules` MUST be an array of existing module slugs.
+- `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - Module order MUST follow the YAML array.
 
 ### 3.3 Module schema
@@ -226,7 +230,7 @@ Running `npm run build` MUST perform these steps:
 1. Delete and recreate `dist`.
 2. Discover immediate child directories in the course, playlist, module, and avatar roots.
 3. Parse collection metadata.
-4. Resolve and validate module/avatar, playlist/module, and course/playlist relationships.
+4. Resolve and validate content/avatar, playlist/module, and course/playlist relationships.
 5. Sort courses, playlists, and modules alphabetically by title for catalog display.
 6. Copy source collections, `MicrosoftLearning`, and avatars to `dist/content`.
 7. Generate all HTML routes.
@@ -518,7 +522,7 @@ Raw HTML is passed through by the current Markdown renderer and is not sanitized
 
 ## 10. Learning assistant
 
-A module declaring `avatar` MUST display a fixed **Ask <name>** launcher and chat flyout on its overview and content pages. The flyout MUST contain the avatar image, assistant name, welcome message, suggested-prompt buttons, message log, text field, optional microphone control, send action, and close action.
+A course or curated playlist declaring `avatar` MUST display a fixed **Ask <name>** launcher and chat flyout on its detail home page. A module declaring `avatar` MUST display the same launcher and flyout on its overview and content pages. The flyout MUST contain the avatar image, assistant name, welcome message, suggested-prompt buttons, message log, text field, optional microphone control, send action, and close action.
 
 The assistant MUST be deterministic retrieval logic. It MUST NOT call a generative model, claim multi-turn understanding, or use the reserved avatar `instructions` as a model prompt.
 

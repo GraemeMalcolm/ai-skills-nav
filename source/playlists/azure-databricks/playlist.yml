@@ -8,5 +8,6 @@ audience:
   - Developer
   - Data Scientist
   - Data Engineer
+avatar: alex
 modules:
   - start-databricks

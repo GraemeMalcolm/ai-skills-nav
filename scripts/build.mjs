@@ -524,25 +524,31 @@ async function build() {
     loadCollection("courses", "course.yml"),
   ]);
   const avatars = new Map((await loadCollection("avatars", "avatar.yml", root)).map((avatar) => [avatar.slug, avatar]));
-  for (const module of modules) {
-    if (!module.avatar) continue;
-    const avatar = avatars.get(module.avatar);
-    if (!avatar) throw new Error(`Module ${module.slug} references unknown avatar ${module.avatar}`);
-    const requiredValues = ["name", "welcome-message", "suggested-prompts"];
-    const missingValue = requiredValues.find((value) => !avatar[value] || (Array.isArray(avatar[value]) && avatar[value].length === 0));
-    if (missingValue) throw new Error(`Avatar ${avatar.slug} is missing ${missingValue} in avatar.yml`);
-    for (const file of ["avatar.png", "knowledge.json"]) {
-      if (!(await exists(path.join(avatar.directory, file)))) throw new Error(`Avatar ${avatar.slug} is missing ${file}`);
+  const validatedAvatars = new Set();
+  for (const [type, items] of [["Module", modules], ["Playlist", playlists], ["Course", courses]]) {
+    for (const item of items) {
+      if (!item.avatar) continue;
+      const avatar = avatars.get(item.avatar);
+      if (!avatar) throw new Error(`${type} ${item.slug} references unknown avatar ${item.avatar}`);
+      if (!validatedAvatars.has(avatar.slug)) {
+        const requiredValues = ["name", "welcome-message", "suggested-prompts"];
+        const missingValue = requiredValues.find((value) => !avatar[value] || (Array.isArray(avatar[value]) && avatar[value].length === 0));
+        if (missingValue) throw new Error(`Avatar ${avatar.slug} is missing ${missingValue} in avatar.yml`);
+        for (const file of ["avatar.png", "knowledge.json"]) {
+          if (!(await exists(path.join(avatar.directory, file)))) throw new Error(`Avatar ${avatar.slug} is missing ${file}`);
+        }
+        const knowledge = JSON.parse(await readFile(path.join(avatar.directory, "knowledge.json"), "utf8"));
+        if (!Array.isArray(knowledge) || knowledge.some((category) => !Array.isArray(category.documents))) {
+          throw new Error(`Avatar ${avatar.slug} has invalid knowledge.json content`);
+        }
+        const audioFiles = ["looking.wav", "no_results.wav", "search_results.wav", "sorry.wav", ...Array.from({ length: 7 }, (_, index) => `response_${index + 1}.wav`)];
+        for (const file of audioFiles) {
+          if (!(await exists(path.join(avatar.directory, "audio", file)))) throw new Error(`Avatar ${avatar.slug} is missing audio/${file}`);
+        }
+        validatedAvatars.add(avatar.slug);
+      }
+      item.avatarData = avatar;
     }
-    const knowledge = JSON.parse(await readFile(path.join(avatar.directory, "knowledge.json"), "utf8"));
-    if (!Array.isArray(knowledge) || knowledge.some((category) => !Array.isArray(category.documents))) {
-      throw new Error(`Avatar ${avatar.slug} has invalid knowledge.json content`);
-    }
-    const audioFiles = ["looking.wav", "no_results.wav", "search_results.wav", "sorry.wav", ...Array.from({ length: 7 }, (_, index) => `response_${index + 1}.wav`)];
-    for (const file of audioFiles) {
-      if (!(await exists(path.join(avatar.directory, "audio", file)))) throw new Error(`Avatar ${avatar.slug} is missing audio/${file}`);
-    }
-    module.avatarData = avatar;
   }
   modules.sort((a, b) => a.title.localeCompare(b.title));
   playlists.sort((a, b) => a.title.localeCompare(b.title));
@@ -629,7 +635,7 @@ async function build() {
     const startAction = firstModuleTarget
       ? `<a class="primary-button playlist-start" href="${relativeUrl(playlistFile, firstModuleTarget)}">Start ${icon("arrow")}</a>`
       : "";
-    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", startAction) }));
+    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", startAction) }));
     for (const module of playlistModules) {
       const routeRoot = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug);
       const sidebarFactory = (outputFile) => playlistSidebar(outputFile, playlist, playlistModules, module.slug);
@@ -651,7 +657,7 @@ async function build() {
     });
     const courseFile = path.join(outputRoot, "courses", course.slug, "index.html");
     const courseBreadcrumbs = [{ label: "Courses", target: coursesFile }, { label: course.title }];
-    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, bodyClass: "learning-page", content: courseOverview(courseFile, course, coursePlaylists) }));
+    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, avatar: course.avatarData, bodyClass: "learning-page", content: courseOverview(courseFile, course, coursePlaylists) }));
   }
 
   await mkdir(path.join(outputRoot, "assets"), { recursive: true });
