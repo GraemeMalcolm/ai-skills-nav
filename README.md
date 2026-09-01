@@ -77,16 +77,16 @@ The static-site generator supports:
 
 ## Contextual AI Learning assistants
 
-Modules can be associated with one of four specialist avatars:
+Courses, Playlists, and Modules can be associated with one of four specialist avatars:
 
 - **Alex** - Azure Databricks
 - **Anton** - AI development and Microsoft Foundry
 - **Inna** - Microsoft Fabric
 - **Matt** - Microsoft Copilot and Microsoft 365 business workloads
 
-Avatar configuration, knowledge, images, and audio are stored under `avatars`. Modules include an avatar metadata value that is used to associate the relavant avatar for the module's subject matter.
+Avatar configuration, knowledge, images, and audio are stored under `avatars`. An **avatar** metadata value  is used to associate the relavant avatar for the content subject matter of the content.
 
-Associated modules display an **Ask _avatar_** chat panel with a welcome message and suggested prompts.
+Associated content pages display an **Ask _avatar_** chat panel with a welcome message and suggested prompts.
 
 The proof of concept does **not** use a generative AI model. Instead, it:
 
