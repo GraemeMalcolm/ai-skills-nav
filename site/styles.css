@@ -1222,6 +1222,128 @@ img {
   pointer-events: none;
 }
 
+.quiz-chat {
+  min-height: 560px;
+  display: grid;
+  grid-template-rows: auto minmax(300px, 1fr) auto;
+  margin-top: 30px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.quiz-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  background: #fbfaf7;
+}
+
+.quiz-header img {
+  width: 52px;
+  height: 52px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.quiz-header h2 {
+  margin: 3px 0 0;
+  font: 700 1.1rem "Manrope", sans-serif;
+}
+
+.quiz-messages {
+  min-height: 0;
+  max-height: 600px;
+  overflow-y: auto;
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--paper);
+}
+
+.quiz-message {
+  max-width: min(82%, 680px);
+}
+
+.quiz-message.user {
+  align-self: flex-end;
+}
+
+.quiz-message span {
+  display: block;
+  margin: 0 5px 4px;
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.quiz-message.user span {
+  text-align: right;
+}
+
+.quiz-message p {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.quiz-message.user p {
+  border-color: var(--violet);
+  background: var(--violet);
+  color: white;
+}
+
+.quiz-form {
+  padding: 12px 14px;
+  border-top: 1px solid var(--line);
+}
+
+.quiz-form>label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.quiz-form>div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.quiz-form input {
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #8f8a84;
+  border-radius: 4px;
+  color: var(--ink);
+}
+
+.quiz-form button {
+  padding: 0 20px;
+  border: 1px solid var(--violet);
+  border-radius: 4px;
+  background: var(--violet);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.quiz-form button:hover {
+  background: #523b8c;
+}
+
 .agent {
   position: fixed;
   z-index: 60;
@@ -1596,6 +1718,18 @@ img {
 
   .nav-button {
     width: 100%;
+  }
+
+  .quiz-chat {
+    min-height: 500px;
+  }
+
+  .quiz-messages {
+    padding-inline: 12px;
+  }
+
+  .quiz-message {
+    max-width: 92%;
   }
 
   .agent {

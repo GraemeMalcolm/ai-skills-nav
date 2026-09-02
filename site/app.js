@@ -832,6 +832,91 @@ if (filterDialog && filterForm && filterCards.length) {
 }
 
 // ---------------------------------------------------------------------------
+// Knowledge-check quiz
+// ---------------------------------------------------------------------------
+const quiz = document.querySelector("[data-quiz-config]");
+
+if (quiz) {
+  const config = JSON.parse(quiz.dataset.quizConfig);
+  const messages = quiz.querySelector("[data-quiz-messages]");
+  const form = quiz.querySelector("[data-quiz-form]");
+  const input = form.querySelector("input");
+  const opening = "OK, let's check your learning.\nEnter your answer (A, B, or C) to my questions below. After we've finished, I'll let you know how you did.";
+  let questionIndex = 0;
+  let responses = [];
+  let cancelled = false;
+  let completed = false;
+
+  const addQuizMessage = (role, text) => {
+    const message = document.createElement("div");
+    message.className = `quiz-message ${role}`;
+    const label = document.createElement("span");
+    label.textContent = role === "assistant" ? config.name : "You";
+    const content = document.createElement("p");
+    content.textContent = text;
+    message.append(label, content);
+    messages.append(message);
+    messages.scrollTop = messages.scrollHeight;
+  };
+
+  const restartQuiz = () => {
+    messages.replaceChildren();
+    questionIndex = 0;
+    responses = [];
+    cancelled = false;
+    completed = false;
+    input.placeholder = "A, B, or C";
+    addQuizMessage("assistant", `OK, let;s start again\n${config.questions[0].question}`);
+  };
+
+  const showResults = () => {
+    completed = true;
+    input.placeholder = "Enter Restart to try again";
+    const correctCount = responses.filter((response, index) => response === config.questions[index].answer).length;
+    const details = config.questions.map((question, index) => {
+      const response = responses[index];
+      return response === question.answer
+        ? `${index + 1}. ${question.question}\nYour answer: ${response} - Correct`
+        : `${index + 1}. ${question.question}\nYour answer: ${response} - Incorrect. Correct answer: ${question.answer}`;
+    });
+    addQuizMessage("assistant", `You scored ${correctCount} out of ${config.questions.length} (${Math.round(correctCount / config.questions.length * 100)}%).\n\n${details.join("\n\n")}`);
+  };
+
+  addQuizMessage("assistant", `${opening}\n${config.questions[0].question}`);
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const response = input.value.trim();
+    if (!response) return;
+    addQuizMessage("user", response);
+    input.value = "";
+
+    if (response.toLocaleLowerCase() === "restart") {
+      restartQuiz();
+      return;
+    }
+    if (response.toLocaleLowerCase() === "cancel") {
+      cancelled = true;
+      addQuizMessage("assistant", "OK. Enter 'Restart' if you want to restart the test.");
+      return;
+    }
+    if (cancelled || completed) {
+      addQuizMessage("assistant", "Please enter Restart to restart the test.");
+      return;
+    }
+    if (!/^[abc]$/i.test(response)) {
+      addQuizMessage("assistant", "Please enter A, B, or C");
+      return;
+    }
+
+    responses.push(response.toUpperCase());
+    questionIndex++;
+    if (questionIndex === config.questions.length) showResults();
+    else addQuizMessage("assistant", config.questions[questionIndex].question);
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Learning assistant
 // ---------------------------------------------------------------------------
 // This is intentionally a retrieval assistant, not a generative AI client. Its

@@ -235,7 +235,26 @@ async function renderMarkdownPage(sourceFile, outputFile, seed) {
   return {
     title: parsed.data.title || parsed.data.lab?.title || pageSlug(sourceFile),
     html: renderZones(expanded, seed),
+    quiz: parsed.data.quiz,
   };
+}
+
+function quizInterface(outputFile, quiz, avatar) {
+  if (quiz === undefined) return "";
+  const questions = Array.isArray(quiz) ? quiz.flatMap((entry) => entry?.item || []) : [];
+  if (!questions.length || questions.some((entry) => typeof entry?.question !== "string" || !/^[abc]$/i.test(entry?.answer || ""))) {
+    throw new Error("Quiz metadata must contain questions with an A, B, or C answer");
+  }
+  const avatarImage = relativeUrl(outputFile, path.join(outputRoot, "content", "avatars", avatar.slug, "avatar.png"));
+  const config = escapeHtml(JSON.stringify({
+    name: avatar.name,
+    questions: questions.map((entry) => ({ question: entry.question.replaceAll("\\n", "\n"), answer: entry.answer.toUpperCase() })),
+  }));
+  return `<section class="quiz-chat" data-quiz-config="${config}" aria-labelledby="quiz-title">
+    <header class="quiz-header"><img src="${avatarImage}" alt=""><div><p class="kicker">Knowledge check</p><h2 id="quiz-title">Chat with ${escapeHtml(avatar.name)}</h2></div></header>
+    <div class="quiz-messages" data-quiz-messages role="log" aria-live="polite" aria-relevant="additions"></div>
+    <form class="quiz-form" data-quiz-form><label for="quiz-answer">Your answer</label><div><input id="quiz-answer" type="text" placeholder="A, B, or C" autocomplete="off" required><button type="submit">Send</button></div></form>
+  </section>`;
 }
 
 function icon(name) {
@@ -453,10 +472,11 @@ function pageNavigation(outputFile, pages, currentIndex, pageTargets) {
   </nav>`;
 }
 
-function articleContent(module, page, pageHtml, navigation) {
+function articleContent(module, page, pageHtml, navigation, quiz = "") {
   return `<article class="lesson">
     <header class="lesson-header"><p class="kicker">${escapeHtml(module.title)}</p><h1>${escapeHtml(page.title)}</h1></header>
-    <div class="prose">${pageHtml}</div>
+    ${pageHtml ? `<div class="prose">${pageHtml}</div>` : ""}
+    ${quiz}
     ${navigation}
   </article>`;
 }
@@ -497,7 +517,7 @@ async function getModulePages(module) {
   }));
 }
 
-async function buildModuleRoute(module, pages, routeRoot, sidebarFactory = null, breadcrumbParents = null) {
+async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebarFactory = null, breadcrumbParents = null) {
   const indexFile = path.join(routeRoot, "index.html");
   const pageTargets = pages.map((page) => path.join(routeRoot, "pages", page.slug, "index.html"));
   const sidebar = sidebarFactory ? sidebarFactory(indexFile) : "";
@@ -506,7 +526,8 @@ async function buildModuleRoute(module, pages, routeRoot, sidebarFactory = null,
 
   if (pages.length === 1) {
     const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`);
-    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, pages[0], rendered.html, "") }));
+    const quiz = quizInterface(indexFile, rendered.quiz, module.avatarData || defaultAvatar);
+    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, pages[0], rendered.html, "", quiz) }));
     return;
   }
 
@@ -521,7 +542,8 @@ async function buildModuleRoute(module, pages, routeRoot, sidebarFactory = null,
     const pageSidebar = sidebarFactory ? sidebarFactory(outputFile) : "";
     const navigation = pageNavigation(outputFile, pages, pageIndex, pageTargets);
     const pageBreadcrumbs = [...parents, { label: module.title, target: indexFile }, { label: rendered.title }];
-    await writePage(outputFile, shell({ outputFile, title: rendered.title, breadcrumbs: pageBreadcrumbs, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, page, rendered.html, navigation) }));
+    const quiz = quizInterface(outputFile, rendered.quiz, module.avatarData || defaultAvatar);
+    await writePage(outputFile, shell({ outputFile, title: rendered.title, breadcrumbs: pageBreadcrumbs, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, page, rendered.html, navigation, quiz) }));
   }
 }
 
@@ -635,7 +657,7 @@ async function build() {
   await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, avatar: defaultAvatar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
 
   for (const module of modules) {
-    await buildModuleRoute(module, await getModulePages(module), path.join(outputRoot, "modules", module.slug));
+    await buildModuleRoute(module, await getModulePages(module), path.join(outputRoot, "modules", module.slug), defaultAvatar);
   }
 
   for (const playlist of playlists) {
@@ -662,7 +684,7 @@ async function build() {
         { label: "Skilling playlists", target: playlistsFile },
         { label: playlist.title, target: playlistFile },
       ];
-      await buildModuleRoute(module, await getModulePages(module), routeRoot, sidebarFactory, breadcrumbParents);
+      await buildModuleRoute(module, await getModulePages(module), routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents);
     }
   }
 
