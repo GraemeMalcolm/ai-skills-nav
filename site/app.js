@@ -60,7 +60,11 @@ const readPersonalPlaylists = () => {
       id: playlist.id,
       name: playlist.name,
       description: typeof playlist.description === "string" ? playlist.description : "",
-      modules: Array.isArray(playlist.modules) ? playlist.modules.filter((module) => module && typeof module.name === "string" && typeof module.path === "string") : [],
+      modules: Array.isArray(playlist.modules) ? playlist.modules.filter((module) => module && typeof module.name === "string" && typeof module.path === "string").map((module) => ({
+        name: module.name,
+        path: module.path,
+        pages: Array.isArray(module.pages) ? module.pages.filter((page) => page && typeof page.name === "string" && typeof page.path === "string") : [],
+      })) : [],
     }));
   } catch {
     return [];
@@ -96,7 +100,10 @@ const hydratePersonalPlaylistSidebar = () => {
 
   const frame = document.querySelector(".site-frame");
   const main = frame?.querySelector("main");
-  if (!frame || !main || frame.querySelector("[data-sidebar]")) return;
+  if (!frame || !main) return;
+  frame.querySelector("[data-sidebar]")?.remove();
+  frame.querySelector("[data-menu-close]")?.remove();
+  frame.querySelector("[data-menu-reveal]")?.remove();
   const playlistsUrl = new URL(playlistDialog.dataset.playlistsUrl, window.location.href);
   // URL objects avoid assumptions about whether the site is hosted at `/` or
   // under a GitHub Pages repository prefix.
@@ -128,14 +135,28 @@ const hydratePersonalPlaylistSidebar = () => {
   playlistLink.href = withPlaylistContext(playlistsUrl);
   playlistLink.textContent = playlist.name;
   const moduleList = document.createElement("ul");
-  const activePath = `modules/${moduleSlug}/index.html`;
+  moduleList.className = "sidebar-modules";
   playlist.modules.forEach((module) => {
     const item = document.createElement("li");
     const link = document.createElement("a");
-    link.classList.toggle("active", module.path === activePath);
-    link.href = withPlaylistContext(new URL(`../${module.path}`, playlistsUrl));
+    const moduleUrl = new URL(`../${module.path}`, playlistsUrl);
+    link.classList.toggle("active", moduleUrl.pathname === window.location.pathname);
+    link.href = withPlaylistContext(moduleUrl);
     link.textContent = module.name;
     item.append(link);
+    const pageList = document.createElement("ul");
+    pageList.className = "sidebar-pages";
+    module.pages.forEach((page) => {
+      const pageItem = document.createElement("li");
+      const pageLink = document.createElement("a");
+      const pageUrl = new URL(`../${page.path}`, playlistsUrl);
+      pageLink.classList.toggle("active", pageUrl.pathname === window.location.pathname);
+      pageLink.href = withPlaylistContext(pageUrl);
+      pageLink.textContent = page.name;
+      pageItem.append(pageLink);
+      pageList.append(pageItem);
+    });
+    item.append(pageList);
     moduleList.append(item);
   });
   navigation.append(playlistLink, moduleList);
@@ -508,6 +529,7 @@ if (personalPlaylistsPage) {
     playlist.modules = playlist.modules.filter((module) => moduleCatalog.has(module.path)).map((module) => ({
       name: moduleCatalog.get(module.path).name,
       path: module.path,
+      pages: moduleCatalog.get(module.path).pages,
     }));
     if (JSON.stringify(playlist.modules) !== before) writePersonalPlaylists(playlists);
 
@@ -522,12 +544,24 @@ if (personalPlaylistsPage) {
     playlistLink.href = window.location.href;
     playlistLink.textContent = playlist.name;
     const moduleList = document.createElement("ul");
+    moduleList.className = "sidebar-modules";
     playlist.modules.forEach((module) => {
       const item = document.createElement("li");
       const link = document.createElement("a");
       link.href = moduleUrl(module.path);
       link.textContent = module.name;
       item.append(link);
+      const pageList = document.createElement("ul");
+      pageList.className = "sidebar-pages";
+      module.pages.forEach((page) => {
+        const pageItem = document.createElement("li");
+        const pageLink = document.createElement("a");
+        pageLink.href = moduleUrl(page.path);
+        pageLink.textContent = page.name;
+        pageItem.append(pageLink);
+        pageList.append(pageItem);
+      });
+      item.append(pageList);
       moduleList.append(item);
     });
     navigation.append(playlistLink, moduleList);

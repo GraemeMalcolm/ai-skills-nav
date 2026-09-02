@@ -455,7 +455,7 @@ function overview(outputFile, item, type, action = "", imageDetails = "") {
 
 function courseOverview(outputFile, course, playlists) {
   const playlistList = `<section class="module-page-list" aria-labelledby="course-playlists-title"><h2 id="course-playlists-title">Self-paced learning</h2><ol>${playlists.map((playlist) => {
-    const target = path.join(outputRoot, "playlists", playlist.slug, "index.html");
+    const target = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "index.html");
     return `<li><a href="${relativeUrl(outputFile, target)}">${escapeHtml(playlist.title)}</a></li>`;
   }).join("")}</ol></section>`;
   const credential = `<section class="credential"><h2>Credential preparation</h2><p>${escapeHtml(course.credential || "No associated credential is specified.")}</p></section>`;
@@ -481,15 +481,52 @@ function articleContent(module, page, pageHtml, navigation, quiz = "") {
   </article>`;
 }
 
-function playlistSidebar(outputFile, playlist, modules, activeModule = "") {
+function moduleSidebar(outputFile, module, pages, activePage = "") {
+  const moduleTarget = path.join(outputRoot, "modules", module.slug, "index.html");
+  return `<aside class="sidebar" data-sidebar>
+    <div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div>
+    <nav aria-label="Learning experience">
+      <a class="playlist-link${activePage ? "" : " active"}" href="${relativeUrl(outputFile, moduleTarget)}">${escapeHtml(module.title)}</a>
+      <ul class="sidebar-pages">${pages.map((page) => {
+    const target = path.join(outputRoot, "modules", module.slug, "pages", page.slug, "index.html");
+    return `<li><a class="${activePage === page.slug ? "active" : ""}" href="${relativeUrl(outputFile, target)}">${escapeHtml(page.title)}</a></li>`;
+  }).join("")}</ul>
+    </nav>
+  </aside><div class="sidebar-scrim" data-menu-close></div>`;
+}
+
+function playlistSidebar(outputFile, playlist, modules, activeModule = "", activePage = "") {
   const playlistTarget = path.join(outputRoot, "playlists", playlist.slug, "index.html");
   return `<aside class="sidebar" data-sidebar>
     <div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div>
     <nav aria-label="Playlist">
       <a class="playlist-link${activeModule ? "" : " active"}" href="${relativeUrl(outputFile, playlistTarget)}">${escapeHtml(playlist.title)}</a>
-      <ul>${modules.map((module) => {
+      <ul class="sidebar-modules">${modules.map((module) => {
     const target = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug, "index.html");
-    return `<li><a class="${activeModule === module.slug ? "active" : ""}" href="${relativeUrl(outputFile, target)}">${escapeHtml(module.title)}</a></li>`;
+    return `<li><a class="${activeModule === module.slug && !activePage ? "active" : ""}" href="${relativeUrl(outputFile, target)}">${escapeHtml(module.title)}</a><ul class="sidebar-pages">${module.pages.map((page) => {
+      const pageTarget = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug, "pages", page.slug, "index.html");
+      return `<li><a class="${activeModule === module.slug && activePage === page.slug ? "active" : ""}" href="${relativeUrl(outputFile, pageTarget)}">${escapeHtml(page.title)}</a></li>`;
+    }).join("")}</ul></li>`;
+  }).join("")}</ul>
+    </nav>
+  </aside><div class="sidebar-scrim" data-menu-close></div>`;
+}
+
+function courseSidebar(outputFile, course, playlists, activePlaylist = "", activeModule = "", activePage = "") {
+  const courseTarget = path.join(outputRoot, "courses", course.slug, "index.html");
+  return `<aside class="sidebar" data-sidebar>
+    <div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div>
+    <nav aria-label="Course">
+      <a class="playlist-link${activePlaylist ? "" : " active"}" href="${relativeUrl(outputFile, courseTarget)}">${escapeHtml(course.title)}</a>
+      <ul class="sidebar-playlists">${playlists.map((playlist) => {
+    const playlistTarget = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "index.html");
+    return `<li><a class="${activePlaylist === playlist.slug && !activeModule ? "active" : ""}" href="${relativeUrl(outputFile, playlistTarget)}">${escapeHtml(playlist.title)}</a><ul class="sidebar-modules">${playlist.modules.map((module) => {
+      const moduleTarget = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug, "index.html");
+      return `<li><a class="${activePlaylist === playlist.slug && activeModule === module.slug && !activePage ? "active" : ""}" href="${relativeUrl(outputFile, moduleTarget)}">${escapeHtml(module.title)}</a><ul class="sidebar-pages">${module.pages.map((page) => {
+        const pageTarget = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug, "pages", page.slug, "index.html");
+        return `<li><a class="${activePlaylist === playlist.slug && activeModule === module.slug && activePage === page.slug ? "active" : ""}" href="${relativeUrl(outputFile, pageTarget)}">${escapeHtml(page.title)}</a></li>`;
+      }).join("")}</ul></li>`;
+    }).join("")}</ul></li>`;
   }).join("")}</ul>
     </nav>
   </aside><div class="sidebar-scrim" data-menu-close></div>`;
@@ -539,7 +576,7 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
   for (const [pageIndex, page] of pages.entries()) {
     const outputFile = pageTargets[pageIndex];
     const rendered = await renderMarkdownPage(page.sourceFile, outputFile, `${module.slug}-${page.slug}`);
-    const pageSidebar = sidebarFactory ? sidebarFactory(outputFile) : "";
+    const pageSidebar = sidebarFactory ? sidebarFactory(outputFile, page.slug) : "";
     const navigation = pageNavigation(outputFile, pages, pageIndex, pageTargets);
     const pageBreadcrumbs = [...parents, { label: module.title, target: indexFile }, { label: rendered.title }];
     const quiz = quizInterface(outputFile, rendered.quiz, module.avatarData || defaultAvatar);
@@ -636,6 +673,10 @@ async function build() {
   const moduleCatalog = modules.map((module) => ({
     name: module.title,
     path: `modules/${module.slug}/index.html`,
+    pages: module.pages.map((page) => ({
+      name: page.title,
+      path: `modules/${module.slug}/pages/${page.slug}/index.html`,
+    })),
     thumbnail: relativeUrl(personalPlaylistsFile, path.join(outputRoot, "content", "modules", module.slug, "thumbnail.png")),
   }));
   const personalPlaylistsContent = `<div data-personal-playlists data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalPlaylistsFile, path.join(outputRoot, "assets", "playlist.png"))}">
@@ -657,7 +698,10 @@ async function build() {
   await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, avatar: defaultAvatar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
 
   for (const module of modules) {
-    await buildModuleRoute(module, await getModulePages(module), path.join(outputRoot, "modules", module.slug), defaultAvatar);
+    const pages = await getModulePages(module);
+    module.pages = pages;
+    const sidebarFactory = pages.length > 1 ? (outputFile, activePage) => moduleSidebar(outputFile, module, pages, activePage) : null;
+    await buildModuleRoute(module, pages, path.join(outputRoot, "modules", module.slug), defaultAvatar, sidebarFactory);
   }
 
   for (const playlist of playlists) {
@@ -679,12 +723,12 @@ async function build() {
     await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", startAction) }));
     for (const module of playlistModules) {
       const routeRoot = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug);
-      const sidebarFactory = (outputFile) => playlistSidebar(outputFile, playlist, playlistModules, module.slug);
+      const sidebarFactory = (outputFile, activePage) => playlistSidebar(outputFile, playlist, playlistModules, module.slug, activePage);
       const breadcrumbParents = [
         { label: "Skilling playlists", target: playlistsFile },
         { label: playlist.title, target: playlistFile },
       ];
-      await buildModuleRoute(module, await getModulePages(module), routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents);
+      await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents);
     }
   }
 
@@ -694,11 +738,45 @@ async function build() {
     const coursePlaylists = course.playlists.map((slug) => {
       const playlist = playlistMap.get(slug);
       if (!playlist) throw new Error(`Course ${course.slug} references missing playlist ${slug}`);
-      return playlist;
+      return {
+        ...playlist,
+        modules: playlist.modules.map((moduleSlug) => {
+          const module = moduleMap.get(moduleSlug);
+          if (!module) throw new Error(`Playlist ${playlist.slug} references missing module ${moduleSlug}`);
+          return module;
+        }),
+      };
     });
     const courseFile = path.join(outputRoot, "courses", course.slug, "index.html");
     const courseBreadcrumbs = [{ label: "Courses", target: coursesFile }, { label: course.title }];
-    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, avatar: course.avatarData, bodyClass: "learning-page", content: courseOverview(courseFile, course, coursePlaylists) }));
+    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, sidebar: courseSidebar(courseFile, course, coursePlaylists), avatar: course.avatarData, bodyClass: "learning-page", content: courseOverview(courseFile, course, coursePlaylists) }));
+
+    for (const playlist of coursePlaylists) {
+      const playlistFile = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "index.html");
+      const playlistBreadcrumbs = [
+        { label: "Courses", target: coursesFile },
+        { label: course.title, target: courseFile },
+        { label: playlist.title },
+      ];
+      const firstModuleTarget = playlist.modules.length
+        ? path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", playlist.modules[0].slug, "index.html")
+        : null;
+      const startAction = firstModuleTarget
+        ? `<a class="primary-button playlist-start" href="${relativeUrl(playlistFile, firstModuleTarget)}">Start ${icon("arrow")}</a>`
+        : "";
+      await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar: courseSidebar(playlistFile, course, coursePlaylists, playlist.slug), avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", startAction) }));
+
+      for (const module of playlist.modules) {
+        const routeRoot = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug);
+        const sidebarFactory = (outputFile, activePage) => courseSidebar(outputFile, course, coursePlaylists, playlist.slug, module.slug, activePage);
+        const breadcrumbParents = [
+          { label: "Courses", target: coursesFile },
+          { label: course.title, target: courseFile },
+          { label: playlist.title, target: playlistFile },
+        ];
+        await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents);
+      }
+    }
   }
 
   await mkdir(path.join(outputRoot, "assets"), { recursive: true });

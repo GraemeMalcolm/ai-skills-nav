@@ -349,11 +349,32 @@ img {
   margin-bottom: 14px;
 }
 
-.sidebar ul {
+.sidebar .sidebar-playlists,
+.sidebar .sidebar-modules,
+.sidebar .sidebar-pages {
   list-style: none;
-  padding: 14px 0 0 20px;
   margin: 0;
+}
+
+.sidebar .sidebar-playlists,
+.sidebar .sidebar-modules {
+  padding: 14px 0 0 20px;
   border-top: 1px solid var(--line);
+}
+
+.sidebar .sidebar-playlists .sidebar-modules {
+  padding: 4px 0 8px 14px;
+  border-top: 0;
+}
+
+.sidebar .sidebar-pages {
+  padding: 4px 0 8px 18px;
+}
+
+.sidebar .sidebar-pages a {
+  padding-block: 8px;
+  color: var(--muted);
+  font-size: .9rem;
 }
 
 .sidebar li+li {
