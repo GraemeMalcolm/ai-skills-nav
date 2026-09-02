@@ -84,9 +84,9 @@ Courses, Playlists, and Modules can be associated with one of four specialist av
 - **Inna** - Microsoft Fabric
 - **Matt** - Microsoft Copilot and Microsoft 365 business workloads
 
-Avatar configuration, knowledge, images, and audio are stored under `avatars`. An **avatar** metadata value  is used to associate the relavant avatar for the content subject matter of the content.
+Avatar configuration, knowledge, images, and audio are stored under `avatars`. An **avatar** metadata value  is used to associate the relevant avatar for the content subject matter of the content.
 
-Associated content pages display an **Ask _avatar_** chat panel with a welcome message and suggested prompts.
+Associated content pages display an **Ask *avatar*** chat panel with a welcome message and suggested prompts.
 
 The proof of concept does **not** use a generative AI model. Instead, it:
 
@@ -117,4 +117,3 @@ npm run build
 ```
 
 The build validates references and required avatar assets, then writes the complete static site to `dist`. Because generated pages use relative URLs, serve that folder with any local static HTTP server when previewing it; opening pages directly from the file system is not recommended.
-
