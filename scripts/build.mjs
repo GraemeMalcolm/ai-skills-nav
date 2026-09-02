@@ -503,10 +503,11 @@ function playlistSidebar(outputFile, playlist, modules, activeModule = "", activ
       <a class="playlist-link${activeModule ? "" : " active"}" href="${relativeUrl(outputFile, playlistTarget)}">${escapeHtml(playlist.title)}</a>
       <ul class="sidebar-modules">${modules.map((module) => {
     const target = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug, "index.html");
-    return `<li><a class="${activeModule === module.slug && !activePage ? "active" : ""}" href="${relativeUrl(outputFile, target)}">${escapeHtml(module.title)}</a><ul class="sidebar-pages">${module.pages.map((page) => {
+    const pageLinks = module.pages.length > 1 ? `<ul class="sidebar-pages">${module.pages.map((page) => {
       const pageTarget = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug, "pages", page.slug, "index.html");
       return `<li><a class="${activeModule === module.slug && activePage === page.slug ? "active" : ""}" href="${relativeUrl(outputFile, pageTarget)}">${escapeHtml(page.title)}</a></li>`;
-    }).join("")}</ul></li>`;
+    }).join("")}</ul>` : "";
+    return `<li><a class="${activeModule === module.slug && !activePage ? "active" : ""}" href="${relativeUrl(outputFile, target)}">${escapeHtml(module.title)}</a>${pageLinks}</li>`;
   }).join("")}</ul>
     </nav>
   </aside><div class="sidebar-scrim" data-menu-close></div>`;
@@ -522,10 +523,11 @@ function courseSidebar(outputFile, course, playlists, activePlaylist = "", activ
     const playlistTarget = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "index.html");
     return `<li><a class="${activePlaylist === playlist.slug && !activeModule ? "active" : ""}" href="${relativeUrl(outputFile, playlistTarget)}">${escapeHtml(playlist.title)}</a><ul class="sidebar-modules">${playlist.modules.map((module) => {
       const moduleTarget = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug, "index.html");
-      return `<li><a class="${activePlaylist === playlist.slug && activeModule === module.slug && !activePage ? "active" : ""}" href="${relativeUrl(outputFile, moduleTarget)}">${escapeHtml(module.title)}</a><ul class="sidebar-pages">${module.pages.map((page) => {
+      const pageLinks = module.pages.length > 1 ? `<ul class="sidebar-pages">${module.pages.map((page) => {
         const pageTarget = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug, "pages", page.slug, "index.html");
         return `<li><a class="${activePlaylist === playlist.slug && activeModule === module.slug && activePage === page.slug ? "active" : ""}" href="${relativeUrl(outputFile, pageTarget)}">${escapeHtml(page.title)}</a></li>`;
-      }).join("")}</ul></li>`;
+      }).join("")}</ul>` : "";
+      return `<li><a class="${activePlaylist === playlist.slug && activeModule === module.slug && !activePage ? "active" : ""}" href="${relativeUrl(outputFile, moduleTarget)}">${escapeHtml(module.title)}</a>${pageLinks}</li>`;
     }).join("")}</ul></li>`;
   }).join("")}</ul>
     </nav>
@@ -673,7 +675,7 @@ async function build() {
   const moduleCatalog = modules.map((module) => ({
     name: module.title,
     path: `modules/${module.slug}/index.html`,
-    pages: module.pages.map((page) => ({
+    pages: (module.pages.length > 1 ? module.pages : []).map((page) => ({
       name: page.title,
       path: `modules/${module.slug}/pages/${page.slug}/index.html`,
     })),
