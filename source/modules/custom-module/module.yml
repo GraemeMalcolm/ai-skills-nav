@@ -1,6 +1,7 @@
 title: Copilot Quickstart
 description: Get hands-on with Microsoft Copilot as you explore its core capabilities and complete practical exercises.
-modality: Multimodal
+modalities:
+  - Lab
 level: 100
 duration: 30 minutes
 topics:

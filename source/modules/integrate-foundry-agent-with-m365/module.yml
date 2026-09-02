@@ -1,6 +1,8 @@
 title: Integrate your agent with Microsoft 365
 description: Learn how to publish Microsoft Foundry agents to Teams and Microsoft 365 Copilot, access organizational data with Work IQ, and refine your integration.
-modality: Multimodal
+modalities:
+  - Video
+  - Lab
 level: 200
 duration: 60 minutes
 topics:

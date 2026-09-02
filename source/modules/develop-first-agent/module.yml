@@ -1,6 +1,8 @@
 title: Develop your first agent with Microsoft Foundry
 description: Learn how to create, configure, test, and deploy an AI agent with Microsoft Foundry using models, instructions, tools, tracing, endpoints, and client applications.
-modality: Multimodal
+modalities:
+  - Video
+  - Lab
 level: 200
 duration: 40 minutes
 topics:

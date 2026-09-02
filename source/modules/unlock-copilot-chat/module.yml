@@ -1,6 +1,7 @@
 title: Unlock productivity and unleash creativity with AI powered chat
 description: Learn how Microsoft Copilot Chat helps you interact with your content across files, meetings, chats, emails, people, and the web.
-modality: Multimodal
+modalities:
+  - Video
 level: 100
 duration: 40 minutes
 topics:

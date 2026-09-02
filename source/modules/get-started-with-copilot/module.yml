@@ -1,6 +1,7 @@
 title: Get ready to work with Microsoft Copilot
 description: Explore how Microsoft Copilot grounds responses in your organizational data and the web across Microsoft 365 apps, discover how agents handle complex multi-step tasks, understand how enterprise data protection and sensitivity labels keep your data secure, and apply a four-element prompting framework to get accurate, useful results.
-modality: Multimodal
+modalities:
+  - Video
 level: 100
 duration: 30 minutes
 topics:

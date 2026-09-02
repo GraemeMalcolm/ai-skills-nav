@@ -1,6 +1,7 @@
 title: Build announcement - Microsoft AI models
 description: See the Microsoft AI models announcement at Microsoft Build 2026
-modality: Video
+modalities:
+  - Video
 level: 100
 duration: 15 minutes
 topics:

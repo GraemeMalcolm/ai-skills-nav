@@ -1,6 +1,7 @@
 title: Azure Copilot Demo
 description: Learn how Azure Copilot can help you manage virtual machines, administer Azure resources, and streamline cloud operations.
-modality: Video
+modalities:
+  - Video
 level: 100
 duration: 10 minutes
 topics:

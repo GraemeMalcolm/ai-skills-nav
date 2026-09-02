@@ -1,6 +1,7 @@
 title: Explore Microsoft Copilot
 description: Get hands-on with Microsoft Copilot as you explore its features, capabilities, and user interface in a guided lab.
-modality: Lab
+modalities:
+  - Lab
 level: 100
 duration: 30 minutes
 topics:

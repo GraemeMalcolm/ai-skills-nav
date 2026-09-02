@@ -706,6 +706,7 @@ const moduleEmptyState = document.querySelector("[data-module-empty]");
 const playlistEmptyState = document.querySelector("[data-playlist-empty]");
 const catalogEmptyState = document.querySelector("[data-catalog-empty]");
 let appliedFilters = Object.fromEntries(filterFields.map((field) => [field, []]));
+let appliedModalitiesMode = "all";
 let searchTerms = [];
 let searchActive = false;
 
@@ -725,10 +726,11 @@ const applyCatalogVisibility = () => {
     if (!searchActive && card.hasAttribute("data-default-hidden")) matches = false;
     if (matches && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
-      // Audience is the only multi-valued filter encoded as JSON on each card.
+      // Audience and module modalities are encoded as JSON arrays on each card.
       matches = filterFields.every((field) => {
+        if (field === "modalities" && appliedModalitiesMode === "containing" && !appliedFilters[field].length) return false;
         if (!appliedFilters[field].length) return true;
-        const value = field === "audience" ? JSON.parse(card.dataset[field] || "[]") : [card.dataset[field]];
+        const value = ["audience", "modalities"].includes(field) ? JSON.parse(card.dataset[field] || "[]") : [card.dataset[field]];
         return appliedFilters[field].some((selected) => value.includes(selected));
       });
     }
@@ -766,28 +768,46 @@ if (searchForm && searchInput && searchClear && catalogCards.length) {
 
 if (filterDialog && filterForm && filterCards.length) {
   const filterCount = document.querySelector("[data-filter-count]");
+  const modalitiesMode = () => filterForm.querySelector('input[name="modalities-mode"]:checked')?.value;
+  const syncModalitiesControls = () => {
+    const disabled = modalitiesMode() !== "containing";
+    filterForm.querySelectorAll('input[name="modalities"]').forEach((input) => {
+      input.disabled = disabled;
+    });
+  };
 
   const readFilters = () => Object.fromEntries(filterFields.map((name) => [
     name,
-    [...filterForm.querySelectorAll(`input[name="${name}"]:checked`)].map((input) => input.value),
+    name === "modalities" && modalitiesMode() !== "containing"
+      ? []
+      : [...filterForm.querySelectorAll(`input[name="${name}"]:checked`)].map((input) => input.value),
   ]));
 
   const restoreAppliedFilters = () => {
     // Closing/cancelling is transactional: discard checkbox edits that were
     // made after the dialog opened but were never explicitly applied.
     filterForm.querySelectorAll('input[type="checkbox"]').forEach((input) => {
-      input.checked = appliedFilters[input.name].includes(input.value);
+      input.checked = input.name === "modalities" && !appliedFilters.modalities.length
+        ? true
+        : appliedFilters[input.name].includes(input.value);
     });
+    const mode = filterForm.querySelector(`input[name="modalities-mode"][value="${appliedModalitiesMode}"]`);
+    if (mode) mode.checked = true;
+    syncModalitiesControls();
   };
 
   const applyFilters = () => {
+    appliedModalitiesMode = modalitiesMode() || "all";
     appliedFilters = readFilters();
+    syncModalitiesControls();
     const selectedCount = Object.values(appliedFilters).reduce((total, values) => total + values.length, 0);
     filterCount.textContent = String(selectedCount);
     filterCount.hidden = selectedCount === 0;
     applyCatalogVisibility();
   };
 
+  filterForm.querySelectorAll('input[name="modalities-mode"]').forEach((input) => input.addEventListener("change", syncModalitiesControls));
+  syncModalitiesControls();
   document.querySelector("[data-filter-open]")?.addEventListener("click", () => filterDialog.showModal());
   filterDialog.querySelector("[data-filter-close]")?.addEventListener("click", () => {
     restoreAppliedFilters();

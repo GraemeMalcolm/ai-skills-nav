@@ -365,7 +365,7 @@ function card(outputFile, item, type, filterable = false, defaultHidden = false)
   const searchText = [item.title, item.course_number, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
   const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}"`;
   const filterData = filterable
-    ? ` data-filter-card data-modality="${escapeHtml(item.modality || "")}" data-level="${escapeHtml(item.level || "")}" data-duration="${escapeHtml(item.duration || "")}" data-audience="${escapeHtml(JSON.stringify(item.audience || []))}"`
+    ? ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.modalities || []))}" data-level="${escapeHtml(item.level || "")}" data-duration="${escapeHtml(item.duration || "")}" data-audience="${escapeHtml(JSON.stringify(item.audience || []))}"`
     : "";
   // Home includes every catalog item so its search can truly search all
   // content, but only the featured subset is visible before a search begins.
@@ -392,21 +392,29 @@ function filterOptions(name, values, label) {
   return `<fieldset class="filter-group"><legend>${escapeHtml(label)}</legend><div class="filter-options">${values.map((value) => `<label><input type="checkbox" name="${escapeHtml(name)}" value="${escapeHtml(value)}"><span>${escapeHtml(value)}</span></label>`).join("")}</div></fieldset>`;
 }
 
+function modalityFilterOptions(values) {
+  return `<fieldset class="filter-group" data-modalities-filter><legend>Modality</legend>
+    <div class="filter-choice"><label><input type="radio" name="modalities-mode" value="all" checked><span>Show all skilling</span></label></div>
+    <div class="filter-choice"><label><input type="radio" name="modalities-mode" value="containing"><span>Show only skilling containing...</span></label></div>
+    <div class="filter-options">${values.map((value) => `<label><input type="checkbox" name="modalities" value="${escapeHtml(value)}" checked><span>${escapeHtml(value)}</span></label>`).join("")}</div>
+  </fieldset>`;
+}
+
 function catalogFilterDialog(items, fields, subject) {
   const uniqueValues = (selector) => [...new Set(items.flatMap(selector).filter((value) => value !== undefined && value !== null && value !== ""))]
     .sort((left, right) => String(left).localeCompare(String(right), undefined, { numeric: true }));
   const selectors = {
-    modality: (item) => [item.modality],
+    modalities: (item) => Array.isArray(item.modalities) ? item.modalities : [],
     level: (item) => [item.level],
     audience: (item) => Array.isArray(item.audience) ? item.audience : [item.audience],
     duration: (item) => [item.duration],
   };
-  const labels = { modality: "Modality", level: "Level", audience: "Audience", duration: "Duration" };
+  const labels = { level: "Level", audience: "Audience", duration: "Duration" };
   return `<dialog class="filter-dialog" data-filter-dialog data-filter-fields="${escapeHtml(fields.join(","))}" aria-labelledby="filter-title">
     <form method="dialog" data-filter-form>
       <header class="filter-dialog-header"><div><p class="kicker">Refine ${escapeHtml(subject)}</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
       <div class="filter-dialog-body">
-        ${fields.map((field) => filterOptions(field, uniqueValues(selectors[field]).map(String), labels[field])).join("")}
+        ${fields.map((field) => field === "modalities" ? modalityFilterOptions(uniqueValues(selectors[field]).map(String)) : filterOptions(field, uniqueValues(selectors[field]).map(String), labels[field])).join("")}
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-filter-clear>Clear all</button><button class="primary-button" type="submit" value="apply">Apply filters</button></footer>
     </form>
@@ -600,7 +608,7 @@ async function build() {
   const moduleSearch = catalogSearch("module-search-input", "Search skilling content", "Search skilling content");
   const skillingContent = `<section class="catalog-intro"><p class="kicker">Build your skills</p><h1>Skilling content</h1><p>Explore all learning experiences and find content by topic, modality, level, or audience.</p></section>
     <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Explore the catalog</p><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><h2>Available learning experiences</h2></div><div class="card-grid" data-module-grid>${modules.map((item) => card(skillingContentFile, item, "modules", true)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p></section>
-    ${catalogFilterDialog(modules, ["modality", "level", "audience"], "skilling content")}`;
+    ${catalogFilterDialog(modules, ["modalities", "level", "audience"], "skilling content")}`;
   await writePage(skillingContentFile, shell({ outputFile: skillingContentFile, title: "Skilling content", breadcrumbs: [{ label: "Skilling content" }], headerExtra: moduleSearch, avatar: defaultAvatar, content: skillingContent, bodyClass: "catalog-page", hasModuleCards: true }));
 
   const moduleCatalog = modules.map((module) => ({

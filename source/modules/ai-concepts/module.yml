@@ -1,6 +1,8 @@
 title: Introduction to AI Concepts
 description: Curious about artificial intelligence? Want to understand what the buzz is about? This module introduces you to the world of AI.
-modality: Multimodal
+modalities:
+  - Video
+  - Lab
 level: 100
 duration: 120 minutes
 topics:
