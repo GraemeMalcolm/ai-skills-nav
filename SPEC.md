@@ -334,13 +334,14 @@ The home page MUST include:
 - A skilling-content section containing the first eight alphabetically sorted modules.
 - Links to all three catalogs and personal playlists.
 - A search form covering the complete course, playlist, and module catalogs. Non-featured cards MUST be present but hidden until a search is active, then matching cards MAY be revealed.
+- A single catalog filter control beside the search form. Its dialog MUST include audience, series, level, and modality choices generated from metadata across all three catalogs.
 - The default-avatar learning assistant described in section 10.
 
-Clearing home search MUST restore the initial featured subsets. The “New and popular” module label does not indicate ranking; initial selection is alphabetical.
+When filters are active, each Home section MUST show the first matching items in catalog order, up to its normal four-course, four-playlist, or eight-module limit. This backfills filtered featured items with later matching items when available. An active search MAY reveal all matching items. Clearing Home search MUST restore the filtered featured subsets. The “New and popular” module label does not indicate ranking; initial selection is alphabetical.
 
 ### 7.2 Catalogs
 
-Each catalog MUST show an introduction, search form, filter trigger, card grid, and accessible empty state.
+Each catalog MUST show an introduction, search form, card grid, and accessible empty state. Catalog pages MUST NOT duplicate the Home filter control.
 
 Cards MUST include:
 
@@ -374,15 +375,14 @@ your yours yourself yourselves
 3. Compose with currently applied filters.
 4. Provide a clear action that resets results and focuses the input.
 
-Filters MUST be generated from unique values in current metadata and sorted with locale-aware numeric ordering.
+The Home filter choices MUST be generated from unique values in current metadata and sorted with locale-aware numeric ordering. Applied filters MUST persist in local storage and remain active on the Home, Courses, Playlists, and Modules pages.
 
 Required filter fields:
 
-- Courses: audience, level, duration.
-- Curated playlists: level, audience.
-- Modules: modality, level, audience.
+- All content: audience, series, and level.
+- Modules only: modality. Modality selections MUST NOT exclude courses or playlists.
 
-Multiple selections in one field use OR semantics. Different fields, and search plus filters, use AND semantics. Filters are applied when the filter dialog is submitted. Cancelling or closing MUST discard unsubmitted checkbox changes. **Clear all** MUST clear and immediately apply filters. Search and filter state are not persisted.
+Multiple selections in one field use OR semantics. Different fields, and search plus filters, use AND semantics. Filters are applied when the filter dialog is submitted. Cancelling or closing MUST discard unsubmitted checkbox changes. **Clear all** MUST clear and immediately apply filters. Search state is page-local and is not persisted.
 
 ### 7.3 Course detail
 

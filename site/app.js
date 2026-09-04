@@ -733,14 +733,14 @@ if (personalPlaylistsPage) {
 // ---------------------------------------------------------------------------
 // Catalog search and metadata filters
 // ---------------------------------------------------------------------------
-// Catalog pages declare their supported filter fields in data-filter-fields.
-// Home has search cards but no filter dialog, allowing the same logic to serve
-// all page types without route-specific code.
+// Home owns the filter dialog; all catalog pages consume the same persisted
+// state so navigation does not reset the user's catalog view.
+const catalogFilterStorageKey = "ai-skills-nav:catalog-filters";
+const filterFields = ["audience", "series", "level", "modalities"];
 const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
 const catalogCards = [...document.querySelectorAll("[data-catalog-card]")];
 const filterCards = [...document.querySelectorAll("[data-filter-card]")];
-const filterFields = filterDialog?.dataset.filterFields.split(",").filter(Boolean) || [];
 const searchForm = document.querySelector("[data-site-search]");
 const searchInput = searchForm?.querySelector('input[type="search"]');
 const searchClear = searchForm?.querySelector("[data-search-clear]");
@@ -748,8 +748,24 @@ const courseEmptyState = document.querySelector("[data-course-empty]");
 const moduleEmptyState = document.querySelector("[data-module-empty]");
 const playlistEmptyState = document.querySelector("[data-playlist-empty]");
 const catalogEmptyState = document.querySelector("[data-catalog-empty]");
-let appliedFilters = Object.fromEntries(filterFields.map((field) => [field, []]));
-let appliedModalitiesMode = "all";
+const emptyFilters = () => Object.fromEntries(filterFields.map((field) => [field, []]));
+const readPersistedFilters = () => {
+  try {
+    const stored = JSON.parse(localStorage.getItem(catalogFilterStorageKey) || "null");
+    const filters = Object.fromEntries(filterFields.map((field) => [
+      field,
+      Array.isArray(stored?.filters?.[field]) ? stored.filters[field].filter((value) => typeof value === "string") : [],
+    ]));
+    const modalitiesMode = stored?.modalitiesMode === "containing" ? "containing" : "all";
+    if (modalitiesMode === "all") filters.modalities = [];
+    return { filters, modalitiesMode };
+  } catch {
+    return { filters: emptyFilters(), modalitiesMode: "all" };
+  }
+};
+const persistedFilterState = readPersistedFilters();
+let appliedFilters = persistedFilterState.filters;
+let appliedModalitiesMode = persistedFilterState.modalitiesMode;
 let searchTerms = [];
 let searchActive = false;
 
@@ -758,24 +774,33 @@ let searchActive = false;
 const matchesSearch = (card) => searchTerms.every((term) => card.dataset.searchText.includes(term));
 
 const applyCatalogVisibility = () => {
+  const homeLimits = { courses: 4, playlists: 4, modules: 8 };
+  const homeVisible = { courses: 0, playlists: 0, modules: 0 };
+  const isHomePage = document.body.classList.contains("home-page");
   let visibleModules = 0;
   let visiblePlaylists = 0;
   let visibleCourses = 0;
   let visibleCatalogItems = 0;
   catalogCards.forEach((card) => {
     let matches = matchesSearch(card);
-    // Home-only overflow cards participate in an active search but return to
-    // their initial hidden state when the search is cleared.
-    if (!searchActive && card.hasAttribute("data-default-hidden")) matches = false;
     if (matches && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
-      // Audience and module modalities are encoded as JSON arrays on each card.
+      // Modality selections constrain modules only; other content types are
+      // evaluated against the remaining site-wide fields.
       matches = filterFields.every((field) => {
+        if (field === "modalities" && card.dataset.catalogType !== "modules") return true;
         if (field === "modalities" && appliedModalitiesMode === "containing" && !appliedFilters[field].length) return false;
         if (!appliedFilters[field].length) return true;
         const value = ["audience", "modalities"].includes(field) ? JSON.parse(card.dataset[field] || "[]") : [card.dataset[field]];
         return appliedFilters[field].some((selected) => value.includes(selected));
       });
+    }
+    // With no active search, Home keeps its 4/4/8 section sizes by promoting
+    // the next matching items when filters remove an initially featured card.
+    if (matches && isHomePage && !searchActive) {
+      const type = card.dataset.catalogType;
+      matches = homeVisible[type] < homeLimits[type];
+      if (matches) homeVisible[type]++;
     }
     card.hidden = !matches;
     if (matches && card.dataset.catalogType === "modules") visibleModules++;
@@ -787,6 +812,14 @@ const applyCatalogVisibility = () => {
   if (playlistEmptyState) playlistEmptyState.hidden = visiblePlaylists !== 0;
   if (courseEmptyState) courseEmptyState.hidden = visibleCourses !== 0;
   if (catalogEmptyState) catalogEmptyState.hidden = visibleCatalogItems !== 0;
+};
+
+const persistFilters = () => {
+  try {
+    localStorage.setItem(catalogFilterStorageKey, JSON.stringify({ filters: appliedFilters, modalitiesMode: appliedModalitiesMode }));
+  } catch {
+    // Filtering remains available for this page when browser storage is unavailable.
+  }
 };
 
 if (searchForm && searchInput && searchClear && catalogCards.length) {
@@ -842,15 +875,23 @@ if (filterDialog && filterForm && filterCards.length) {
   const applyFilters = () => {
     appliedModalitiesMode = modalitiesMode() || "all";
     appliedFilters = readFilters();
+    persistFilters();
     syncModalitiesControls();
     const selectedCount = Object.values(appliedFilters).reduce((total, values) => total + values.length, 0);
-    filterCount.textContent = String(selectedCount);
-    filterCount.hidden = selectedCount === 0;
+    if (filterCount) {
+      filterCount.textContent = String(selectedCount);
+      filterCount.hidden = selectedCount === 0;
+    }
     applyCatalogVisibility();
   };
 
   filterForm.querySelectorAll('input[name="modalities-mode"]').forEach((input) => input.addEventListener("change", syncModalitiesControls));
-  syncModalitiesControls();
+  restoreAppliedFilters();
+  const selectedCount = Object.values(appliedFilters).reduce((total, values) => total + values.length, 0);
+  if (filterCount) {
+    filterCount.textContent = String(selectedCount);
+    filterCount.hidden = selectedCount === 0;
+  }
   document.querySelector("[data-filter-open]")?.addEventListener("click", () => filterDialog.showModal());
   filterDialog.querySelector("[data-filter-close]")?.addEventListener("click", () => {
     restoreAppliedFilters();
@@ -873,6 +914,23 @@ if (filterDialog && filterForm && filterCards.length) {
     filterDialog.close();
   });
 }
+
+if (catalogCards.length) applyCatalogVisibility();
+
+window.addEventListener("storage", (event) => {
+  if (event.key !== catalogFilterStorageKey) return;
+  const stored = readPersistedFilters();
+  appliedFilters = stored.filters;
+  appliedModalitiesMode = stored.modalitiesMode;
+  if (filterForm) {
+    filterForm.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+      input.checked = input.name === "modalities" && !appliedFilters.modalities.length
+        ? true
+        : appliedFilters[input.name].includes(input.value);
+    });
+  }
+  applyCatalogVisibility();
+});
 
 // ---------------------------------------------------------------------------
 // Knowledge-check quiz
