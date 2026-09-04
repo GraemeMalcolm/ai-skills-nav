@@ -161,6 +161,14 @@
                     "exercises"
                 ],
                 "content": "Microsoft Labs is a series of learning experiences designed to help individuals gain skills and knowledge through hands-on practice, with minimal time spent on conceptual background and theory."
+            },
+            {
+                "id": 13,
+                "title": "Series",
+                "keywords": [
+                    "series"
+                ],
+                "content": "This site includes content from multiple sources and in a variety of styles. Some specific series are identified on the course, playlist, and module pages. Series can help you find content that is designed to be consumed together or that shares a common style or approach. Common series include Microsoft Official Curriculum, Microsoft Short Form Skilling, and Microsoft Labs."
             }
         ]
     }
