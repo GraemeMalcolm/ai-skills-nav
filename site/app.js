@@ -768,6 +768,13 @@ let appliedFilters = persistedFilterState.filters;
 let appliedModalitiesMode = persistedFilterState.modalitiesMode;
 let searchTerms = [];
 let searchActive = false;
+const updateFilterCounts = () => {
+  const selectedCount = Object.values(appliedFilters).reduce((total, values) => total + values.length, 0);
+  document.querySelectorAll("[data-filter-count]").forEach((count) => {
+    count.textContent = String(selectedCount);
+    count.hidden = selectedCount === 0;
+  });
+};
 
 // Every submitted term is required, giving search case-insensitive AND
 // semantics. Search text is normalized and embedded by the build script.
@@ -841,7 +848,6 @@ if (searchForm && searchInput && searchClear && catalogCards.length) {
 }
 
 if (filterDialog && filterForm && filterCards.length) {
-  const filterCount = document.querySelector("[data-filter-count]");
   const modalitiesMode = () => filterForm.querySelector('input[name="modalities-mode"]:checked')?.value;
   const syncModalitiesControls = () => {
     const disabled = modalitiesMode() !== "containing";
@@ -875,21 +881,12 @@ if (filterDialog && filterForm && filterCards.length) {
     appliedFilters = readFilters();
     persistFilters();
     syncModalitiesControls();
-    const selectedCount = Object.values(appliedFilters).reduce((total, values) => total + values.length, 0);
-    if (filterCount) {
-      filterCount.textContent = String(selectedCount);
-      filterCount.hidden = selectedCount === 0;
-    }
+    updateFilterCounts();
     applyCatalogVisibility();
   };
 
   filterForm.querySelectorAll('input[name="modalities-mode"]').forEach((input) => input.addEventListener("change", syncModalitiesControls));
   restoreAppliedFilters();
-  const selectedCount = Object.values(appliedFilters).reduce((total, values) => total + values.length, 0);
-  if (filterCount) {
-    filterCount.textContent = String(selectedCount);
-    filterCount.hidden = selectedCount === 0;
-  }
   document.querySelector("[data-filter-open]")?.addEventListener("click", () => filterDialog.showModal());
   filterDialog.querySelector("[data-filter-close]")?.addEventListener("click", () => {
     restoreAppliedFilters();
@@ -911,8 +908,10 @@ if (filterDialog && filterForm && filterCards.length) {
     applyFilters();
     filterDialog.close();
   });
+  if (location.hash === "#catalog-filter") filterDialog.showModal();
 }
 
+updateFilterCounts();
 if (catalogCards.length) applyCatalogVisibility();
 
 window.addEventListener("storage", (event) => {
@@ -927,6 +926,7 @@ window.addEventListener("storage", (event) => {
         : appliedFilters[input.name].includes(input.value);
     });
   }
+  updateFilterCounts();
   applyCatalogVisibility();
 });
 

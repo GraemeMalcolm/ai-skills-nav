@@ -341,7 +341,7 @@ When filters are active, each Home section MUST show the first matching items in
 
 ### 7.2 Catalogs
 
-Each catalog MUST show an introduction, search form, card grid, and accessible empty state. Catalog pages MUST NOT duplicate the Home filter control.
+Each catalog MUST show an introduction, search form, filter link, card grid, and accessible empty state. Catalog pages MUST NOT duplicate the Home filter dialog. Their filter link MUST show the number of currently applied filter values when nonzero and navigate to the Home filter dialog.
 
 Cards MUST include:
 
