@@ -257,7 +257,7 @@ The implementation SHOULD also validate thumbnail existence, field types, array 
 The output route contract is:
 
 | Experience | Output route |
-|---|---|
+| --- | --- |
 | Home | `/index.html` |
 | Course catalog | `/courses/index.html` |
 | Course detail | `/courses/<course-slug>/index.html` |
@@ -289,6 +289,14 @@ A module with multiple pages MUST generate:
 - Disabled previous navigation on the first page and disabled next navigation on the last page.
 
 The same rules apply to standalone and playlist-contained module routes.
+
+### 5.2 Playlist navigation behavior
+
+A playlist with one module MUST link directly to that module from catalog and course entry points. Its navigation MUST omit the playlist overview and promote the module and any applicable page links.
+
+A playlist with multiple modules MUST include its overview page in navigation before its modules.
+
+The module route rules in section 5.1 continue to apply, so a one-module playlist whose module has one page resolves directly to that page at the module index.
 
 ## 6. Shared visual shell
 
@@ -352,10 +360,11 @@ so some such t tell than that the their theirs them themselves then there these 
 under until up use using ve very want was we were what when where which while who whom why will with would you
 your yours yourself yourselves
 ```
+
 5. Require every remaining term to occur as a substring of the card's search text.
-6. Treat an expression containing only stop words as having no search constraint while retaining the clear action for the non-empty input.
-7. Compose with currently applied filters.
-8. Provide a clear action that resets results and focuses the input.
+2. Treat an expression containing only stop words as having no search constraint while retaining the clear action for the non-empty input.
+3. Compose with currently applied filters.
+4. Provide a clear action that resets results and focuses the input.
 
 Filters MUST be generated from unique values in current metadata and sorted with locale-aware numeric ordering.
 
@@ -565,7 +574,7 @@ A successful response MUST concatenate matching document content and include ava
 
 ### 10.4 Microsoft Learn search
 
-Treat a prompt as documentation-search intent when it begins with `search ` or `find `, or contains indicators such as `documentation`, `docs`, `Microsoft Learn`, `how to`, `how do I`, `sample code`, or `code example`.
+Treat a prompt as documentation-search intent when it begins with `search` or `find`, or contains indicators such as `documentation`, `docs`, `Microsoft Learn`, `how to`, `how do I`, `sample code`, or `code example`.
 
 For documentation intent, attempt an MCP request to:
 

@@ -99,6 +99,13 @@ function relativeUrl(fromFile, target) {
   return toPosix(relative || ".");
 }
 
+function playlistEntryTarget(playlistRoot, playlist) {
+  if (playlist.modules.length !== 1) return path.join(playlistRoot, playlist.slug, "index.html");
+  const module = playlist.modules[0];
+  const moduleSlug = typeof module === "string" ? module : module.slug;
+  return path.join(playlistRoot, playlist.slug, "modules", moduleSlug, "index.html");
+}
+
 function isExternalUrl(value) {
   return /^(?:[a-z]+:|#|\/\/)/i.test(value);
 }
@@ -379,7 +386,9 @@ function thumbnail(outputFile, item, type) {
 }
 
 function card(outputFile, item, type, filterable = false, defaultHidden = false) {
-  const target = path.join(outputRoot, type, item.slug, "index.html");
+  const target = type === "playlists"
+    ? playlistEntryTarget(path.join(outputRoot, "playlists"), item)
+    : path.join(outputRoot, type, item.slug, "index.html");
   const tooltipId = `${type}-${item.slug}-description`;
   const searchText = [item.title, item.course_number, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
   const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}"`;
@@ -455,7 +464,7 @@ function overview(outputFile, item, type, action = "", imageDetails = "") {
 
 function courseOverview(outputFile, course, playlists) {
   const playlistList = `<section class="module-page-list" aria-labelledby="course-playlists-title"><h2 id="course-playlists-title">Self-paced learning</h2><ol>${playlists.map((playlist) => {
-    const target = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "index.html");
+    const target = playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), playlist);
     return `<li><a href="${relativeUrl(outputFile, target)}">${escapeHtml(playlist.title)}</a></li>`;
   }).join("")}</ol></section>`;
   const credential = `<section class="credential"><h2>Credential preparation</h2><p>${escapeHtml(course.credential || "No associated credential is specified.")}</p></section>`;
@@ -497,10 +506,13 @@ function moduleSidebar(outputFile, module, pages, activePage = "") {
 
 function playlistSidebar(outputFile, playlist, modules, activeModule = "", activePage = "") {
   const playlistTarget = path.join(outputRoot, "playlists", playlist.slug, "index.html");
+  const playlistLink = modules.length > 1
+    ? `<a class="playlist-link${activeModule ? "" : " active"}" href="${relativeUrl(outputFile, playlistTarget)}">${escapeHtml(playlist.title)}</a>`
+    : "";
   return `<aside class="sidebar" data-sidebar>
     <div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div>
     <nav aria-label="Playlist">
-      <a class="playlist-link${activeModule ? "" : " active"}" href="${relativeUrl(outputFile, playlistTarget)}">${escapeHtml(playlist.title)}</a>
+      ${playlistLink}
       <ul class="sidebar-modules">${modules.map((module) => {
     const target = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug, "index.html");
     const pageLinks = module.pages.length > 1 ? `<ul class="sidebar-pages">${module.pages.map((page) => {
@@ -521,7 +533,10 @@ function courseSidebar(outputFile, course, playlists, activePlaylist = "", activ
       <a class="playlist-link${activePlaylist ? "" : " active"}" href="${relativeUrl(outputFile, courseTarget)}">${escapeHtml(course.title)}</a>
       <ul class="sidebar-playlists">${playlists.map((playlist) => {
     const playlistTarget = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "index.html");
-    return `<li><a class="${activePlaylist === playlist.slug && !activeModule ? "active" : ""}" href="${relativeUrl(outputFile, playlistTarget)}">${escapeHtml(playlist.title)}</a><ul class="sidebar-modules">${playlist.modules.map((module) => {
+    const playlistLink = playlist.modules.length > 1
+      ? `<a class="${activePlaylist === playlist.slug && !activeModule ? "active" : ""}" href="${relativeUrl(outputFile, playlistTarget)}">${escapeHtml(playlist.title)}</a>`
+      : "";
+    return `<li>${playlistLink}<ul class="sidebar-modules">${playlist.modules.map((module) => {
       const moduleTarget = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug, "index.html");
       const pageLinks = module.pages.length > 1 ? `<ul class="sidebar-pages">${module.pages.map((page) => {
         const pageTarget = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug, "pages", page.slug, "index.html");
@@ -728,7 +743,7 @@ async function build() {
       const sidebarFactory = (outputFile, activePage) => playlistSidebar(outputFile, playlist, playlistModules, module.slug, activePage);
       const breadcrumbParents = [
         { label: "Skilling playlists", target: playlistsFile },
-        { label: playlist.title, target: playlistFile },
+        ...(playlistModules.length > 1 ? [{ label: playlist.title, target: playlistFile }] : []),
       ];
       await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents);
     }
@@ -774,7 +789,7 @@ async function build() {
         const breadcrumbParents = [
           { label: "Courses", target: coursesFile },
           { label: course.title, target: courseFile },
-          { label: playlist.title, target: playlistFile },
+          ...(playlist.modules.length > 1 ? [{ label: playlist.title, target: playlistFile }] : []),
         ];
         await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents);
       }
