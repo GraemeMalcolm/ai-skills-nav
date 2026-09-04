@@ -785,10 +785,8 @@ const applyCatalogVisibility = () => {
     let matches = matchesSearch(card);
     if (matches && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
-      // Modality selections constrain modules only; other content types are
-      // evaluated against the remaining site-wide fields.
+      // Playlist and course modality arrays are inherited from their modules.
       matches = filterFields.every((field) => {
-        if (field === "modalities" && card.dataset.catalogType !== "modules") return true;
         if (field === "modalities" && appliedModalitiesMode === "containing" && !appliedFilters[field].length) return false;
         if (!appliedFilters[field].length) return true;
         const value = ["audience", "modalities"].includes(field) ? JSON.parse(card.dataset[field] || "[]") : [card.dataset[field]];

@@ -682,6 +682,22 @@ async function build() {
   courses.sort((a, b) => a.title.localeCompare(b.title));
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));
   const playlistMap = new Map(playlists.map((playlist) => [playlist.slug, playlist]));
+  for (const playlist of playlists) {
+    if (!Array.isArray(playlist.modules)) throw new Error(`Playlist ${playlist.slug} must define modules`);
+    playlist.modalities = [...new Set(playlist.modules.flatMap((slug) => {
+      const module = moduleMap.get(slug);
+      if (!module) throw new Error(`Playlist ${playlist.slug} references missing module ${slug}`);
+      return Array.isArray(module.modalities) ? module.modalities : [];
+    }))].sort((left, right) => String(left).localeCompare(String(right)));
+  }
+  for (const course of courses) {
+    if (!Array.isArray(course.playlists) || course.playlists.length === 0) throw new Error(`Course ${course.slug} must define at least one playlist`);
+    course.modalities = [...new Set(course.playlists.flatMap((slug) => {
+      const playlist = playlistMap.get(slug);
+      if (!playlist) throw new Error(`Course ${course.slug} references missing playlist ${slug}`);
+      return playlist.modalities;
+    }))].sort((left, right) => String(left).localeCompare(String(right)));
+  }
   await Promise.all(modules.map(async (module) => {
     module.pages = await getModulePages(module);
   }));

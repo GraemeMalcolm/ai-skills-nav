@@ -379,8 +379,9 @@ The Home filter choices MUST be generated from unique values in current metadata
 
 Required filter fields:
 
-- All content: audience, series, and level.
-- Modules only: modality. Modality selections MUST NOT exclude courses or playlists.
+- All content: audience, series, level, and modality.
+
+A module's modality values come directly from its metadata. A curated playlist MUST inherit the sorted, unique union of modalities declared by its modules. A course MUST inherit the sorted, unique union of modalities from all modules in its playlists. Modality filtering MUST apply to courses and playlists using these inherited values.
 
 Multiple selections in one field use OR semantics. Different fields, and search plus filters, use AND semantics. Filters are applied when the filter dialog is submitted. Cancelling or closing MUST discard unsubmitted checkbox changes. **Clear all** MUST clear and immediately apply filters. Search state is page-local and is not persisted.
 
