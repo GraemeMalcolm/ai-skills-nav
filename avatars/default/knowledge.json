@@ -3,14 +3,25 @@
         "category": "Content organization",
         "documents": [
             {
+                "id": 0,
+                "title": "Content Architecture",
+                "keywords": [
+                    "organization",
+                    "architecture",
+                    "structure",
+                    "hierarchy",
+                    "structured"
+                ],
+                "content": "The content on this website is organized into a hierarchy of courses, playlists, and modules. Courses are Microsoft Official Curriculum that group one or more ordered curated playlists. A curated playlist is an ordered collection of related modules selected to help you build skills in a focused sequence. A module is an individual learning experience made up of one or more ordered pages. Modules can include articles, videos, labs, and other learning activities. You can add modules to personal playlists, which are stored only in your current browser and device."
+            },
+            {
                 "id": 1,
                 "title": "Module",
                 "keywords": [
                     "module",
                     "modules",
                     "learning experience",
-                    "skilling content",
-                    "content organization"
+                    "skilling content"
                 ],
                 "content": "A module is an individual learning experience made up of one or more ordered pages. Modules can include articles, videos, labs, and other learning activities. You can open a module directly, find it within a curated playlist, or add it to a personal playlist."
             },
@@ -92,6 +103,31 @@
                     "exam"
                 ],
                 "content": "A Microsoft Certification demonstrates expertise associated with a job role or technology and normally has requirements outside this website, such as passing an assessment or exam. Relevant courses and learning experiences can support certification preparation, but completing them does not automatically make you certified."
+            }
+        ]
+    },
+    {
+        "category": "Instructional Design",
+        "documents": [
+            {
+                "id": 8,
+                "title": "Audience",
+                "keywords": [
+                    "audience",
+                    "role",
+                    "audiences",
+                    "roles"
+                ],
+                "content": "Content in this site is designed for specific audiences, reflecting the skills people need to succeed in a given job role. Use the provided filters to find content that is relevant to your role or the role you want to prepare for."
+            },
+            {
+                "id": 9,
+                "title": "Levels",
+                "keywords": [
+                    "level",
+                    "levels"
+                ],
+                "content": "Levels indicate the complexity or depth of a learning experience. They help you understand what prior knowledge or skills are expected and what you can expect to gain. Levels span from 100 (novice) to 500 (expert). The level of a course is determined by the levels of its included playlists and modules."
             }
         ]
     }
