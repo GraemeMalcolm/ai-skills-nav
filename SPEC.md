@@ -282,13 +282,13 @@ A module with one page MUST render that page directly at the module index and MU
 
 A module with multiple pages MUST generate:
 
-- An index overview with thumbnail, description, metadata, ordered page list, and **Start** link.
+- An index overview with thumbnail, description, metadata, and ordered page list.
 - One route per page.
 - **Previous** and **Next** links.
 
-The module overview is the first navigation step for a multi-page module. Within a module, **Previous** and **Next** MUST navigate between the overview and content pages in order. A standalone module MUST disable **Previous** at its first step and **Next** at its last step.
+The module overview is the first navigation step for a multi-page module. Within a module, **Previous** and **Next** MUST navigate between the overview and content pages in order. Course, playlist, and module overviews MUST use **Next** instead of a separate **Start** action.
 
-In a playlist, the first-step **Previous** link MUST open the previous module's last content page, and the last-step **Next** link MUST open the next module's first step. When no adjacent module exists, navigation MUST use the playlist overview when it precedes the first module, or be disabled at the outer playlist boundary.
+In a playlist, the first-step **Previous** link MUST open the previous module's last content page, and the last-step **Next** link MUST open the next module's first step. When no adjacent module exists, navigation MUST use the playlist overview when it precedes the first module. A **Previous** or **Next** control with no logical destination MUST be omitted.
 
 In a course, the same behavior MUST cross playlist boundaries. The last step in a playlist MUST continue to the next playlist's effective start, and the first step in a playlist overview MUST return to the previous playlist's last content page. A one-module playlist has no overview in this sequence.
 
@@ -386,7 +386,7 @@ A course detail MUST show its thumbnail, title, description, course number, leve
 
 ### 7.4 Curated playlist detail
 
-A curated playlist detail MUST show its thumbnail, title, description, metadata, and a navigation sidebar. A **Start** button below the thumbnail MUST open the first module in metadata order. The sidebar MUST link to the playlist overview and list modules in metadata order. The current item MUST be visibly identified. An empty playlist MUST omit the **Start** button.
+A curated playlist detail MUST show its thumbnail, title, description, metadata, and a navigation sidebar. The sidebar MUST link to the playlist overview when the playlist contains multiple modules and list modules in metadata order. The current item MUST be visibly identified.
 
 ### 7.5 Breadcrumbs and responsive navigation
 
@@ -453,7 +453,7 @@ A selected personal playlist MUST use:
 ?playlist=<playlist-id>
 ```
 
-When a valid personal-playlist module is opened, browser JavaScript MUST dynamically add a sidebar using the stored module order, propagate the query parameter through module navigation links, and connect the outer **Previous** and **Next** links to adjacent modules. A missing, stale, or invalid playlist ID MUST fall back to ordinary standalone module browsing.
+When a valid personal-playlist module is opened, browser JavaScript MUST dynamically add a sidebar using the stored module order and module page links, propagate the query parameter through navigation links, and connect the outer **Previous** and **Next** links to adjacent modules. A missing, stale, or invalid playlist ID MUST fall back to ordinary standalone module browsing.
 
 When a personal playlist opens, module names MUST be refreshed from the generated module catalog and stale module paths MUST be removed from storage.
 

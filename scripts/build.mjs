@@ -484,18 +484,26 @@ function courseOverview(outputFile, course, playlists) {
     return `<li><a href="${relativeUrl(outputFile, target)}">${escapeHtml(playlist.title)}</a></li>`;
   }).join("")}</ol></section>`;
   const credential = `<section class="credential"><h2>Credential preparation</h2><p>${escapeHtml(course.credential || "No associated credential is specified.")}</p></section>`;
-  return overview(outputFile, course, "courses", credential, playlistList);
+  const firstPlaylist = playlists.find((playlist) => playlist.modules.length);
+  const nextTarget = firstPlaylist
+    ? playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), firstPlaylist)
+    : null;
+  return overview(outputFile, course, "courses", credential, playlistList, pageNavigation(outputFile, null, nextTarget));
 }
 
 function pageNavigation(outputFile, previousTarget = null, nextTarget = null, boundaries = {}) {
-  const button = (label, target, boundary, iconMarkup = "") => {
-    const href = target ? `href="${relativeUrl(outputFile, target)}"` : 'aria-disabled="true"';
+  const button = (label, direction, target, boundary, iconMarkup = "") => {
+    if (!target && !boundary) return "";
+    const href = target ? ` href="${relativeUrl(outputFile, target)}"` : " hidden";
     const boundaryData = boundary ? ` data-playlist-boundary="${boundary}"` : "";
-    return `<a class="nav-button${target ? "" : " is-disabled"}" ${href}${boundaryData}>${label}${iconMarkup}</a>`;
+    return `<a class="nav-button nav-button-${direction}"${href}${boundaryData}>${label}${iconMarkup}</a>`;
   };
-  return `<nav class="page-nav" aria-label="Learning experience pages">
-    ${button("Previous", previousTarget, boundaries.previous ? "previous" : "")}
-    ${button("Next", nextTarget, boundaries.next ? "next" : "", ` ${icon("arrow")}`)}
+  const previous = button("Previous", "previous", previousTarget, boundaries.previous ? "previous" : "");
+  const next = button("Next", "next", nextTarget, boundaries.next ? "next" : "", ` ${icon("arrow")}`);
+  if (!previous && !next) return "";
+  return `<nav class="page-nav" aria-label="Learning experience pages"${previousTarget || nextTarget ? "" : " hidden"}>
+    ${previous}
+    ${next}
   </nav>`;
 }
 
@@ -605,10 +613,9 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
   }
 
   const startTarget = pageTargets[0];
-  const action = `<a class="primary-button" href="${relativeUrl(indexFile, startTarget)}">Start ${icon("arrow")}</a>`;
   const pageList = `<section class="module-page-list" aria-labelledby="module-pages-title"><h2 id="module-pages-title">In this learning experience</h2><ol>${pages.map((page, index) => `<li><a href="${relativeUrl(indexFile, pageTargets[index])}">${escapeHtml(page.title)}</a></li>`).join("")}</ol></section>`;
   const overviewNavigation = pageNavigation(indexFile, navigationContext.previousTarget, startTarget, { previous: true });
-  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: overview(indexFile, module, "modules", action, pageList, overviewNavigation) }));
+  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: overview(indexFile, module, "modules", "", pageList, overviewNavigation) }));
 
   for (const [pageIndex, page] of pages.entries()) {
     const outputFile = pageTargets[pageIndex];
@@ -672,6 +679,9 @@ async function build() {
   courses.sort((a, b) => a.title.localeCompare(b.title));
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));
   const playlistMap = new Map(playlists.map((playlist) => [playlist.slug, playlist]));
+  await Promise.all(modules.map(async (module) => {
+    module.pages = await getModulePages(module);
+  }));
 
   for (const contentRoot of contentRoots) {
     if (await exists(contentRoot.directory)) {
@@ -737,10 +747,8 @@ async function build() {
   await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, avatar: defaultAvatar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
 
   for (const module of modules) {
-    const pages = await getModulePages(module);
-    module.pages = pages;
-    const sidebarFactory = pages.length > 1 ? (outputFile, activePage) => moduleSidebar(outputFile, module, pages, activePage) : null;
-    await buildModuleRoute(module, pages, path.join(outputRoot, "modules", module.slug), defaultAvatar, sidebarFactory);
+    const sidebarFactory = module.pages.length > 1 ? (outputFile, activePage) => moduleSidebar(outputFile, module, module.pages, activePage) : null;
+    await buildModuleRoute(module, module.pages, path.join(outputRoot, "modules", module.slug), defaultAvatar, sidebarFactory);
   }
 
   for (const playlist of playlists) {
@@ -756,11 +764,8 @@ async function build() {
     const firstModuleTarget = playlistModules.length
       ? path.join(outputRoot, "playlists", playlist.slug, "modules", playlistModules[0].slug, "index.html")
       : null;
-    const startAction = firstModuleTarget
-      ? `<a class="primary-button playlist-start" href="${relativeUrl(playlistFile, firstModuleTarget)}">Start ${icon("arrow")}</a>`
-      : "";
     const playlistNavigation = firstModuleTarget ? pageNavigation(playlistFile, null, firstModuleTarget) : "";
-    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", startAction, playlistNavigation) }));
+    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", "", playlistNavigation) }));
     const modulesRoot = path.join(outputRoot, "playlists", playlist.slug, "modules");
     for (const [moduleIndex, module] of playlistModules.entries()) {
       const routeRoot = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug);
@@ -809,9 +814,6 @@ async function build() {
       const firstModuleTarget = playlist.modules.length
         ? path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", playlist.modules[0].slug, "index.html")
         : null;
-      const startAction = firstModuleTarget
-        ? `<a class="primary-button playlist-start" href="${relativeUrl(playlistFile, firstModuleTarget)}">Start ${icon("arrow")}</a>`
-        : "";
       const previousPlaylist = coursePlaylists.slice(0, playlistIndex).reverse().find((item) => item.modules.length);
       const nextPlaylist = coursePlaylists.slice(playlistIndex + 1).find((item) => item.modules.length);
       const previousPlaylistTarget = previousPlaylist ? playlistEndTarget(coursePlaylistsRoot, previousPlaylist) : null;
@@ -819,7 +821,7 @@ async function build() {
       const playlistNavigation = playlist.modules.length > 1
         ? pageNavigation(playlistFile, previousPlaylistTarget, firstModuleTarget)
         : "";
-      await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar: courseSidebar(playlistFile, course, coursePlaylists, playlist.slug), avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", startAction, playlistNavigation) }));
+      await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar: courseSidebar(playlistFile, course, coursePlaylists, playlist.slug), avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", "", playlistNavigation) }));
 
       const modulesRoot = path.join(coursePlaylistsRoot, playlist.slug, "modules");
       for (const [moduleIndex, module] of playlist.modules.entries()) {

@@ -82,6 +82,7 @@ const writePersonalPlaylists = (playlists) => {
 };
 
 const menuIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+const arrowIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
 
 /**
  * Recreate playlist navigation when a standalone module was opened from a
@@ -156,7 +157,7 @@ const hydratePersonalPlaylistSidebar = () => {
       pageItem.append(pageLink);
       pageList.append(pageItem);
     });
-    item.append(pageList);
+    if (module.pages.length) item.append(pageList);
     moduleList.append(item);
   });
   navigation.append(playlistLink, moduleList);
@@ -189,15 +190,15 @@ const hydratePersonalPlaylistSidebar = () => {
   const nextModule = moduleIndex >= 0 && moduleIndex < playlist.modules.length - 1 ? playlist.modules[moduleIndex + 1] : null;
   const previousPath = previousModule?.pages.at(-1)?.path || previousModule?.path;
   const boundaryTargets = {
-    previous: previousPath ? new URL(`../${previousPath}`, playlistsUrl) : playlistsUrl,
+    previous: previousPath ? new URL(`../${previousPath}`, playlistsUrl) : playlist.modules.length > 1 ? playlistsUrl : null,
     next: nextModule ? new URL(`../${nextModule.path}`, playlistsUrl) : null,
   };
   main.querySelectorAll("[data-playlist-boundary]").forEach((link) => {
     const target = boundaryTargets[link.dataset.playlistBoundary];
     if (!target) return;
     link.href = withPlaylistContext(target);
-    link.classList.remove("is-disabled");
-    link.removeAttribute("aria-disabled");
+    link.hidden = false;
+    link.closest(".page-nav").hidden = false;
   });
 };
 
@@ -567,7 +568,7 @@ if (personalPlaylistsPage) {
         pageItem.append(pageLink);
         pageList.append(pageItem);
       });
-      item.append(pageList);
+      if (module.pages.length) item.append(pageList);
       moduleList.append(item);
     });
     navigation.append(playlistLink, moduleList);
@@ -584,15 +585,6 @@ if (personalPlaylistsPage) {
     image.alt = "";
     overviewImage.append(image);
     media.append(overviewImage);
-    if (playlist.modules.length) {
-      // Start uses the same playlist-aware URL as the sidebar so the module can
-      // reconstruct this personal playlist's navigation and learning order.
-      const startLink = document.createElement("a");
-      startLink.className = "primary-button playlist-start";
-      startLink.href = moduleUrl(playlist.modules[0].path);
-      startLink.textContent = "Start";
-      media.append(startLink);
-    }
     const copy = document.createElement("div");
     copy.className = "overview-copy";
     const kicker = document.createElement("p");
@@ -717,6 +709,17 @@ if (personalPlaylistsPage) {
     });
     copy.append(kicker, title, description, manageSection, deleteButton);
     overview.append(media, copy);
+    if (playlist.modules.length) {
+      const pageNavigation = document.createElement("nav");
+      pageNavigation.className = "page-nav";
+      pageNavigation.setAttribute("aria-label", "Learning experience pages");
+      const nextLink = document.createElement("a");
+      nextLink.className = "nav-button nav-button-next";
+      nextLink.href = moduleUrl(playlist.modules[0].path);
+      nextLink.innerHTML = `Next ${arrowIcon}`;
+      pageNavigation.append(nextLink);
+      overview.append(pageNavigation);
+    }
     personalPlaylistsPage.append(overview);
   };
 

@@ -959,10 +959,6 @@ img {
   min-width: 0;
 }
 
-.playlist-start {
-  margin-top: 18px;
-}
-
 .overview-image img {
   width: 100%;
   display: block;
@@ -1222,15 +1218,18 @@ img {
   grid-column: 1 / -1;
 }
 
-.page-nav .nav-button:last-child {
-  justify-self: end;
+.page-nav .nav-button {
+  width: 140px;
 }
 
-.nav-button.is-disabled {
-  border-color: var(--line);
-  background: transparent;
-  color: #98938d;
-  pointer-events: none;
+.nav-button-previous {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.nav-button-next {
+  grid-column: 2;
+  justify-self: end;
 }
 
 .quiz-chat {
