@@ -1,7 +1,5 @@
 title: Leading at the frontier
 description: Leading at the Frontier is an executive conversation series exploring how AI is reshaping work, organizations, and leadership. Hosted by Katy George, Corporate Vice President of Workforce Transformation, and Jeana Jorgensen, Corporate Vice President of Global Skilling at Microsoft, each episode unpacks how leaders can drive AI transformation with confidence across their organization. From redesigning workflows to building AI skills at scale, this series provides practical frameworks grounded in Microsoft's own transformation journey.
-modalities:
-  - Video
 level: 100
 duration: 60 minutes
 topics:
@@ -9,9 +7,5 @@ topics:
   - Professional development
 audience:
   - Business Leader
-pages:
-  - 01-drive-ai.md
-  - 02-leaders-ai.md
-  - 03-build-skills.md
-  - 04-adoption.md
-  - 05-culture.md
+modules:
+  - leading-frontier
