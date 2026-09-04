@@ -1679,16 +1679,17 @@ img {
     gap: 10px;
   }
 
-  .home-page .header-tools {
+  .home-page .header-tools,
+  .catalog-page .header-tools {
     width: 100%;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 12px;
   }
 
   .home-page .site-search,
   .catalog-page .site-search {
-    width: 100%;
-    order: 2;
+    width: auto;
+    flex: 1;
   }
 
   .home-page .site-search input,

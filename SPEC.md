@@ -334,14 +334,14 @@ The home page MUST include:
 - A skilling-content section containing the first eight alphabetically sorted modules.
 - Links to all three catalogs and personal playlists.
 - A search form covering the complete course, playlist, and module catalogs. Non-featured cards MUST be present but hidden until a search is active, then matching cards MAY be revealed.
-- A single catalog filter control beside the search form. Its dialog MUST include audience, series, level, and modality choices generated from metadata across all three catalogs.
+- A single catalog filter control beside the search form in the page header. Its dialog MUST include audience, series, level, and modality choices generated from metadata across all three catalogs.
 - The default-avatar learning assistant described in section 10.
 
 When filters are active, each Home section MUST show the first matching items in catalog order, up to its normal four-course, four-playlist, or eight-module limit. This backfills filtered featured items with later matching items when available. An active search MAY reveal all matching items. Clearing Home search MUST restore the filtered featured subsets. The “New and popular” module label does not indicate ranking; initial selection is alphabetical.
 
 ### 7.2 Catalogs
 
-Each catalog MUST show an introduction, search form, filter link, card grid, and accessible empty state. Catalog pages MUST NOT duplicate the Home filter dialog. Their filter link MUST show the number of currently applied filter values when nonzero and navigate to the Home filter dialog.
+Each catalog MUST show an introduction, search form, filter link, card grid, and accessible empty state. The filter link MUST appear beside Search in the page header, matching its position on Home. Catalog pages MUST NOT duplicate the Home filter dialog. Their filter link MUST show the number of currently applied filter values when nonzero and navigate to the Home filter dialog.
 
 Cards MUST include:
 
