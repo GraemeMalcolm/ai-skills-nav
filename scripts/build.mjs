@@ -342,6 +342,21 @@ function personalPlaylistDialog(outputFile, module) {
   </dialog>`;
 }
 
+function shareDialog() {
+  return `<a class="header-link" href="#share-dialog" data-share-open>Share</a>
+  <dialog class="filter-dialog share-dialog" id="share-dialog" data-share-dialog aria-labelledby="share-title">
+    <form method="dialog">
+      <header class="filter-dialog-header"><div><p class="kicker">Share this page</p><h2 id="share-title">Page URL</h2></div><button class="icon-button" type="submit" aria-label="Close">${icon("close")}</button></header>
+      <div class="filter-dialog-body share-dialog-body">
+        <label for="share-url">URL</label>
+        <div class="share-url-row"><input id="share-url" type="url" readonly data-share-url><button class="primary-button" type="button" data-share-copy>Copy</button></div>
+        <p class="share-status" data-share-status role="status" aria-live="polite"></p>
+      </div>
+      <footer class="filter-dialog-actions"><button class="text-button" type="submit">Close</button></footer>
+    </form>
+  </dialog>`;
+}
+
 function breadcrumbs(outputFile, items = []) {
   const home = path.join(outputRoot, "index.html");
   const trail = [{ label: "Home", target: items.length ? home : null }, ...items];
@@ -358,6 +373,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
+  const share = bodyClass.split(/\s+/).includes("learning-page") ? shareDialog() : "";
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -372,7 +388,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a>
-    ${headerExtra}
+    ${headerExtra}${share}
   </header>
   ${breadcrumbs(outputFile, breadcrumbItems)}
   <div class="site-frame${sidebar ? " has-sidebar" : ""}">

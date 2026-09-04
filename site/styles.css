@@ -780,6 +780,46 @@ img {
   margin-top: 0;
 }
 
+.share-dialog {
+  width: min(680px, calc(100% - 32px));
+}
+
+.share-dialog-body {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.share-dialog-body>label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.share-url-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+}
+
+.share-url-row input {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #8f8a84;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.share-url-row .primary-button {
+  margin-top: 0;
+}
+
+.share-status {
+  min-height: 1.4em;
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
 .text-button {
   padding: 8px 2px;
   border: 0;

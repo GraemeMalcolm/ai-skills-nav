@@ -254,6 +254,45 @@ menuReveal?.addEventListener("click", () => {
 document.querySelectorAll("[data-menu-close]").forEach((button) => button.addEventListener("click", () => setMenu(false)));
 
 // ---------------------------------------------------------------------------
+// Share current page
+// ---------------------------------------------------------------------------
+const shareDialog = document.querySelector("[data-share-dialog]");
+
+if (shareDialog) {
+  const shareUrl = shareDialog.querySelector("[data-share-url]");
+  const shareStatus = shareDialog.querySelector("[data-share-status]");
+
+  document.querySelector("[data-share-open]")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    shareUrl.value = window.location.href;
+    shareStatus.textContent = "";
+    shareDialog.showModal();
+    shareUrl.focus();
+    shareUrl.select();
+  });
+
+  shareDialog.querySelector("[data-share-copy]")?.addEventListener("click", async () => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl.value);
+      } else {
+        shareUrl.select();
+        if (!document.execCommand("copy")) throw new Error("Copy command failed");
+      }
+      shareStatus.textContent = "Copied to clipboard.";
+    } catch {
+      shareStatus.textContent = "Could not copy the URL. Select it and copy it manually.";
+      shareUrl.focus();
+      shareUrl.select();
+    }
+  });
+
+  shareDialog.addEventListener("click", (event) => {
+    if (event.target === shareDialog) shareDialog.close();
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Module zone pivots and page selection
 // ---------------------------------------------------------------------------
 const moduleSlug = document.body.dataset.moduleSlug;

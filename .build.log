@@ -1,0 +1,5 @@
+
+> ai-skills-nav@1.0.0 build
+> node scripts/build.mjs
+
+Built 24 modules, 10 playlists, and 5 courses in dist/
