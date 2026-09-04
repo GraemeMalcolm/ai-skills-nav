@@ -1213,27 +1213,17 @@ img {
   padding-top: 24px;
   border-top: 1px solid var(--line);
   display: grid;
-  grid-template-columns: auto minmax(210px, 1fr) auto;
-  align-items: end;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
   gap: 18px;
 }
 
-.page-nav label {
-  display: grid;
-  gap: 7px;
-  color: var(--muted);
-  font-size: .78rem;
-  font-weight: 600;
+.overview>.page-nav {
+  grid-column: 1 / -1;
 }
 
-.page-nav select {
-  width: 100%;
-  min-height: 44px;
-  padding: 0 38px 0 12px;
-  border: 1px solid #88847f;
-  border-radius: 4px;
-  background: white;
-  color: var(--ink);
+.page-nav .nav-button:last-child {
+  justify-self: end;
 }
 
 .nav-button.is-disabled {
@@ -1730,11 +1720,6 @@ img {
 
   .page-nav {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .page-nav label {
-    grid-column: 1 / -1;
-    grid-row: 1;
   }
 
   .nav-button {

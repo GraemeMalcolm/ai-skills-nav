@@ -184,9 +184,20 @@ const hydratePersonalPlaylistSidebar = () => {
     const target = new URL(link.href, window.location.href);
     if (target.origin === window.location.origin && target.pathname.startsWith(moduleRoot)) link.href = withPlaylistContext(target);
   });
-  main.querySelectorAll("[data-page-select] option").forEach((option) => {
-    const target = new URL(option.value, window.location.href);
-    if (target.origin === window.location.origin && target.pathname.startsWith(moduleRoot)) option.value = withPlaylistContext(target);
+  const moduleIndex = playlist.modules.findIndex((module) => module.path === `modules/${moduleSlug}/index.html`);
+  const previousModule = moduleIndex > 0 ? playlist.modules[moduleIndex - 1] : null;
+  const nextModule = moduleIndex >= 0 && moduleIndex < playlist.modules.length - 1 ? playlist.modules[moduleIndex + 1] : null;
+  const previousPath = previousModule?.pages.at(-1)?.path || previousModule?.path;
+  const boundaryTargets = {
+    previous: previousPath ? new URL(`../${previousPath}`, playlistsUrl) : playlistsUrl,
+    next: nextModule ? new URL(`../${nextModule.path}`, playlistsUrl) : null,
+  };
+  main.querySelectorAll("[data-playlist-boundary]").forEach((link) => {
+    const target = boundaryTargets[link.dataset.playlistBoundary];
+    if (!target) return;
+    link.href = withPlaylistContext(target);
+    link.classList.remove("is-disabled");
+    link.removeAttribute("aria-disabled");
   });
 };
 
@@ -298,11 +309,6 @@ document.querySelectorAll("[data-pivot]").forEach((pivot) => {
       tabs[next].focus();
     });
   });
-});
-
-// The option values are already relative URLs generated for the current route.
-document.querySelectorAll("[data-page-select]").forEach((select) => {
-  select.addEventListener("change", () => window.location.assign(select.value));
 });
 
 // ---------------------------------------------------------------------------

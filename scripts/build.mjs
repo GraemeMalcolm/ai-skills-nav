@@ -106,6 +106,21 @@ function playlistEntryTarget(playlistRoot, playlist) {
   return path.join(playlistRoot, playlist.slug, "modules", moduleSlug, "index.html");
 }
 
+function moduleStartTarget(modulesRoot, module) {
+  return path.join(modulesRoot, module.slug, "index.html");
+}
+
+function moduleEndTarget(modulesRoot, module) {
+  if (module.pages.length === 1) return moduleStartTarget(modulesRoot, module);
+  const lastPage = module.pages.at(-1);
+  return path.join(modulesRoot, module.slug, "pages", lastPage.slug, "index.html");
+}
+
+function playlistEndTarget(playlistsRoot, playlist) {
+  const modulesRoot = path.join(playlistsRoot, playlist.slug, "modules");
+  return moduleEndTarget(modulesRoot, playlist.modules.at(-1));
+}
+
 function isExternalUrl(value) {
   return /^(?:[a-z]+:|#|\/\/)/i.test(value);
 }
@@ -449,7 +464,7 @@ function catalogFilterDialog(items, fields, subject) {
   </dialog>`;
 }
 
-function overview(outputFile, item, type, action = "", imageDetails = "") {
+function overview(outputFile, item, type, action = "", imageDetails = "", footer = "") {
   return `<article class="overview">
     <div class="overview-media"><div class="overview-image">${thumbnail(outputFile, item, type)}</div>${imageDetails}</div>
     <div class="overview-copy">
@@ -459,6 +474,7 @@ function overview(outputFile, item, type, action = "", imageDetails = "") {
       ${metadataLine(item) ? `<p class="metadata">${metadataLine(item)}</p>` : ""}
       ${action}
     </div>
+    ${footer}
   </article>`;
 }
 
@@ -471,13 +487,15 @@ function courseOverview(outputFile, course, playlists) {
   return overview(outputFile, course, "courses", credential, playlistList);
 }
 
-function pageNavigation(outputFile, pages, currentIndex, pageTargets) {
-  const previous = currentIndex > 0 ? relativeUrl(outputFile, pageTargets[currentIndex - 1]) : "";
-  const next = currentIndex < pages.length - 1 ? relativeUrl(outputFile, pageTargets[currentIndex + 1]) : "";
+function pageNavigation(outputFile, previousTarget = null, nextTarget = null, boundaries = {}) {
+  const button = (label, target, boundary, iconMarkup = "") => {
+    const href = target ? `href="${relativeUrl(outputFile, target)}"` : 'aria-disabled="true"';
+    const boundaryData = boundary ? ` data-playlist-boundary="${boundary}"` : "";
+    return `<a class="nav-button${target ? "" : " is-disabled"}" ${href}${boundaryData}>${label}${iconMarkup}</a>`;
+  };
   return `<nav class="page-nav" aria-label="Learning experience pages">
-    <a class="nav-button${previous ? "" : " is-disabled"}" ${previous ? `href="${previous}"` : 'aria-disabled="true"'}>Previous</a>
-    <label><span>Page</span><select data-page-select>${pages.map((page, index) => `<option value="${relativeUrl(outputFile, pageTargets[index])}"${index === currentIndex ? " selected" : ""}>${index + 1}. ${escapeHtml(page.title)}</option>`).join("")}</select></label>
-    <a class="nav-button${next ? "" : " is-disabled"}" ${next ? `href="${next}"` : 'aria-disabled="true"'}>Next ${icon("arrow")}</a>
+    ${button("Previous", previousTarget, boundaries.previous ? "previous" : "")}
+    ${button("Next", nextTarget, boundaries.next ? "next" : "", ` ${icon("arrow")}`)}
   </nav>`;
 }
 
@@ -571,7 +589,7 @@ async function getModulePages(module) {
   }));
 }
 
-async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebarFactory = null, breadcrumbParents = null) {
+async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebarFactory = null, breadcrumbParents = null, navigationContext = {}) {
   const indexFile = path.join(routeRoot, "index.html");
   const pageTargets = pages.map((page) => path.join(routeRoot, "pages", page.slug, "index.html"));
   const sidebar = sidebarFactory ? sidebarFactory(indexFile) : "";
@@ -581,20 +599,24 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
   if (pages.length === 1) {
     const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`);
     const quiz = quizInterface(indexFile, rendered.quiz, module.avatarData || defaultAvatar);
-    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, pages[0], rendered.html, "", quiz) }));
+    const navigation = pageNavigation(indexFile, navigationContext.previousTarget, navigationContext.nextTarget, { previous: true, next: true });
+    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, pages[0], rendered.html, navigation, quiz) }));
     return;
   }
 
   const startTarget = pageTargets[0];
   const action = `<a class="primary-button" href="${relativeUrl(indexFile, startTarget)}">Start ${icon("arrow")}</a>`;
   const pageList = `<section class="module-page-list" aria-labelledby="module-pages-title"><h2 id="module-pages-title">In this learning experience</h2><ol>${pages.map((page, index) => `<li><a href="${relativeUrl(indexFile, pageTargets[index])}">${escapeHtml(page.title)}</a></li>`).join("")}</ol></section>`;
-  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: overview(indexFile, module, "modules", action, pageList) }));
+  const overviewNavigation = pageNavigation(indexFile, navigationContext.previousTarget, startTarget, { previous: true });
+  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: overview(indexFile, module, "modules", action, pageList, overviewNavigation) }));
 
   for (const [pageIndex, page] of pages.entries()) {
     const outputFile = pageTargets[pageIndex];
     const rendered = await renderMarkdownPage(page.sourceFile, outputFile, `${module.slug}-${page.slug}`);
     const pageSidebar = sidebarFactory ? sidebarFactory(outputFile, page.slug) : "";
-    const navigation = pageNavigation(outputFile, pages, pageIndex, pageTargets);
+    const previousTarget = pageIndex > 0 ? pageTargets[pageIndex - 1] : indexFile;
+    const nextTarget = pageIndex < pages.length - 1 ? pageTargets[pageIndex + 1] : navigationContext.nextTarget;
+    const navigation = pageNavigation(outputFile, previousTarget, nextTarget, { next: pageIndex === pages.length - 1 });
     const pageBreadcrumbs = [...parents, { label: module.title, target: indexFile }, { label: rendered.title }];
     const quiz = quizInterface(outputFile, rendered.quiz, module.avatarData || defaultAvatar);
     await writePage(outputFile, shell({ outputFile, title: rendered.title, breadcrumbs: pageBreadcrumbs, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, page, rendered.html, navigation, quiz) }));
@@ -737,15 +759,23 @@ async function build() {
     const startAction = firstModuleTarget
       ? `<a class="primary-button playlist-start" href="${relativeUrl(playlistFile, firstModuleTarget)}">Start ${icon("arrow")}</a>`
       : "";
-    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", startAction) }));
-    for (const module of playlistModules) {
+    const playlistNavigation = firstModuleTarget ? pageNavigation(playlistFile, null, firstModuleTarget) : "";
+    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", startAction, playlistNavigation) }));
+    const modulesRoot = path.join(outputRoot, "playlists", playlist.slug, "modules");
+    for (const [moduleIndex, module] of playlistModules.entries()) {
       const routeRoot = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug);
       const sidebarFactory = (outputFile, activePage) => playlistSidebar(outputFile, playlist, playlistModules, module.slug, activePage);
       const breadcrumbParents = [
         { label: "Skilling playlists", target: playlistsFile },
         ...(playlistModules.length > 1 ? [{ label: playlist.title, target: playlistFile }] : []),
       ];
-      await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents);
+      const previousTarget = moduleIndex > 0
+        ? moduleEndTarget(modulesRoot, playlistModules[moduleIndex - 1])
+        : playlistModules.length > 1 ? playlistFile : null;
+      const nextTarget = moduleIndex < playlistModules.length - 1
+        ? moduleStartTarget(modulesRoot, playlistModules[moduleIndex + 1])
+        : null;
+      await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents, { previousTarget, nextTarget });
     }
   }
 
@@ -768,7 +798,8 @@ async function build() {
     const courseBreadcrumbs = [{ label: "Courses", target: coursesFile }, { label: course.title }];
     await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, sidebar: courseSidebar(courseFile, course, coursePlaylists), avatar: course.avatarData, bodyClass: "learning-page", content: courseOverview(courseFile, course, coursePlaylists) }));
 
-    for (const playlist of coursePlaylists) {
+    const coursePlaylistsRoot = path.join(outputRoot, "courses", course.slug, "playlists");
+    for (const [playlistIndex, playlist] of coursePlaylists.entries()) {
       const playlistFile = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "index.html");
       const playlistBreadcrumbs = [
         { label: "Courses", target: coursesFile },
@@ -781,9 +812,17 @@ async function build() {
       const startAction = firstModuleTarget
         ? `<a class="primary-button playlist-start" href="${relativeUrl(playlistFile, firstModuleTarget)}">Start ${icon("arrow")}</a>`
         : "";
-      await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar: courseSidebar(playlistFile, course, coursePlaylists, playlist.slug), avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", startAction) }));
+      const previousPlaylist = coursePlaylists.slice(0, playlistIndex).reverse().find((item) => item.modules.length);
+      const nextPlaylist = coursePlaylists.slice(playlistIndex + 1).find((item) => item.modules.length);
+      const previousPlaylistTarget = previousPlaylist ? playlistEndTarget(coursePlaylistsRoot, previousPlaylist) : null;
+      const nextPlaylistTarget = nextPlaylist ? playlistEntryTarget(coursePlaylistsRoot, nextPlaylist) : null;
+      const playlistNavigation = playlist.modules.length > 1
+        ? pageNavigation(playlistFile, previousPlaylistTarget, firstModuleTarget)
+        : "";
+      await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar: courseSidebar(playlistFile, course, coursePlaylists, playlist.slug), avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", startAction, playlistNavigation) }));
 
-      for (const module of playlist.modules) {
+      const modulesRoot = path.join(coursePlaylistsRoot, playlist.slug, "modules");
+      for (const [moduleIndex, module] of playlist.modules.entries()) {
         const routeRoot = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug);
         const sidebarFactory = (outputFile, activePage) => courseSidebar(outputFile, course, coursePlaylists, playlist.slug, module.slug, activePage);
         const breadcrumbParents = [
@@ -791,7 +830,13 @@ async function build() {
           { label: course.title, target: courseFile },
           ...(playlist.modules.length > 1 ? [{ label: playlist.title, target: playlistFile }] : []),
         ];
-        await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents);
+        const previousTarget = moduleIndex > 0
+          ? moduleEndTarget(modulesRoot, playlist.modules[moduleIndex - 1])
+          : playlist.modules.length > 1 ? playlistFile : previousPlaylistTarget;
+        const nextTarget = moduleIndex < playlist.modules.length - 1
+          ? moduleStartTarget(modulesRoot, playlist.modules[moduleIndex + 1])
+          : nextPlaylistTarget;
+        await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents, { previousTarget, nextTarget });
       }
     }
   }

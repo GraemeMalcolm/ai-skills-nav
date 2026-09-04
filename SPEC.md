@@ -285,8 +285,12 @@ A module with multiple pages MUST generate:
 - An index overview with thumbnail, description, metadata, ordered page list, and **Start** link.
 - One route per page.
 - **Previous** and **Next** links.
-- A page-selection list containing numbered page titles.
-- Disabled previous navigation on the first page and disabled next navigation on the last page.
+
+The module overview is the first navigation step for a multi-page module. Within a module, **Previous** and **Next** MUST navigate between the overview and content pages in order. A standalone module MUST disable **Previous** at its first step and **Next** at its last step.
+
+In a playlist, the first-step **Previous** link MUST open the previous module's last content page, and the last-step **Next** link MUST open the next module's first step. When no adjacent module exists, navigation MUST use the playlist overview when it precedes the first module, or be disabled at the outer playlist boundary.
+
+In a course, the same behavior MUST cross playlist boundaries. The last step in a playlist MUST continue to the next playlist's effective start, and the first step in a playlist overview MUST return to the previous playlist's last content page. A one-module playlist has no overview in this sequence.
 
 The same rules apply to standalone and playlist-contained module routes.
 
@@ -361,7 +365,7 @@ under until up use using ve very want was we were what when where which while wh
 your yours yourself yourselves
 ```
 
-5. Require every remaining term to occur as a substring of the card's search text.
+1. Require every remaining term to occur as a substring of the card's search text.
 2. Treat an expression containing only stop words as having no search constraint while retaining the clear action for the non-empty input.
 3. Compose with currently applied filters.
 4. Provide a clear action that resets results and focuses the input.
@@ -449,7 +453,7 @@ A selected personal playlist MUST use:
 ?playlist=<playlist-id>
 ```
 
-When a valid personal-playlist module is opened, browser JavaScript MUST dynamically add a sidebar using the stored module order and propagate the query parameter through that module's internal page links and page selector. A missing, stale, or invalid playlist ID MUST fall back to ordinary standalone module browsing.
+When a valid personal-playlist module is opened, browser JavaScript MUST dynamically add a sidebar using the stored module order, propagate the query parameter through module navigation links, and connect the outer **Previous** and **Next** links to adjacent modules. A missing, stale, or invalid playlist ID MUST fall back to ordinary standalone module browsing.
 
 When a personal playlist opens, module names MUST be refreshed from the generated module catalog and stale module paths MUST be removed from storage.
 
