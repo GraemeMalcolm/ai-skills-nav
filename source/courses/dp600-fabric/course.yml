@@ -5,6 +5,7 @@ credentials:
 description: This course covers how to prepare, enrich, and serve data for analysis by consumers such as data analysts, report developers, and AI agents. The course focuses on designing dimensional models and transforming data by using dataflows, notebooks, and T-SQL across lakehouses, warehouses, and eventhouses in Microsoft Fabric. The course also covers building and optimizing semantic models, managing the analytics development lifecycle, and enforcing security and governance across data assets.
 level: 400
 duration: 4 days
+series: Microsoft Official Curriculum
 topics:
   - Microsoft Fabric
 audience:

@@ -3,6 +3,7 @@ course_number: MS-4018
 description: This course teaches learners how to use Copilot and agents to complete real-world workflows across Microsoft 365 apps. The course highlights how Copilot supports key business outcomes, including drafting content, analyzing data, preparing for meetings, and managing communication. Learners also see how Copilot Chat, in‑app experiences, and agents work together to combine organizational context and user intent across everyday work.
 level: 100
 duration: 1 day
+series: Microsoft Official Curriculum
 topics:
   - Microsoft Copilot
 audience:

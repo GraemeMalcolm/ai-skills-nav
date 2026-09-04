@@ -53,8 +53,6 @@
                 "keywords": [
                     "course",
                     "courses",
-                    "Microsoft Official Curriculum",
-                    "Microsoft Official Curricula",
                     "instructor-led"
                 ],
                 "content": "A course is Microsoft Official Curriculum that groups one or more ordered curated playlists. A course can be completed through the linked self-paced learning experiences or delivered as instructor-led training by Microsoft and Microsoft Learning Partners. A course may also identify a related credential."
@@ -128,6 +126,41 @@
                     "levels"
                 ],
                 "content": "Levels indicate the complexity or depth of a learning experience. They help you understand what prior knowledge or skills are expected and what you can expect to gain. Levels span from 100 (novice) to 500 (expert). The level of a course is determined by the levels of its included playlists and modules."
+            }
+        ]
+    }
+    {
+        "category": "Content Series",
+        "documents": [
+            {
+                "id": 10,
+                "title": "Microsoft Official Curriculum",
+                "keywords": [
+                    "Microsoft Official Curriculum",
+                    "Microsoft Official Curricula"
+                ],
+                "content": "Microsoft Official Curriculum (MOC) is a series of training materials and courses developed by Microsoft to help individuals gain skills and knowledge in specific Microsoft technologies. MOC courses are often used for certification preparation and are available in various formats, including instructor-led training and online learning. MOC includes a mix of content modalities, including text and graphics, videos, labs, and assessments. MOC courses are designed to provide a comprehensive learning experience and are often updated to reflect the latest Microsoft technologies and best practices."
+            },
+            {
+                "id": 11,
+                "title": "Microsoft Short Form Skilling",
+                "keywords": [
+                    "Short Form",
+                    "Short Form"
+                ],
+                "content": "Microsoft Short Form Skilling is a series of short, focused learning experiences designed to help individuals quickly gain skills and knowledge about relevant topics. These experiences are typically shorter than traditional courses and are designed to provide a quick and efficient way for individuals to learn new skills and stay up-to-date with the latest Microsoft technologies and trends."
+            },
+            {
+                "id": 12,
+                "title": "Microsoft Labs",
+                "keywords": [
+                    "lab",
+                    "labs",
+                    "hands-on",
+                    "practice",
+                    "exercises"
+                ],
+                "content": "Microsoft Labs is a series of learning experiences designed to help individuals gain skills and knowledge through hands-on practice, with minimal time spent on conceptual background and theory."
             }
         ]
     }

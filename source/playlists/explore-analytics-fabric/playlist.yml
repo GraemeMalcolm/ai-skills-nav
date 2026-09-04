@@ -2,6 +2,7 @@ title: Explore analytics data stores in Microsoft Fabric
 description: Understand how Microsoft Fabric unifies analytics storage through OneLake, and evaluate when to use lakehouses, warehouses, or eventhouses for your data workloads.
 level: 400
 duration: 400 minutes
+series: Microsoft Official Curriculum
 topics:
   - Microsoft Fabric
 audience:

@@ -6,6 +6,7 @@ credentials:
 description: In this course, you'll learn how to develop an AI agent with Microsoft Foundry. The course explores the capabilities of Microsoft Foundry and how to use it to create AI agents that can perform tasks, interact with users, and integrate with other systems. You'll gain hands-on experience in building, testing, and deploying AI agents, as well as best practices for designing effective agent interactions.
 level: 200
 duration: 1 day
+series: Microsoft Official Curriculum
 topics:
   - Microsoft Foundry
   - AI agents

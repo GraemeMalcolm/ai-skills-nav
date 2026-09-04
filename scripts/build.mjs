@@ -394,6 +394,10 @@ function metadataLine(item) {
   return [item.course_number, item.modality, item.level ? `Level ${item.level}` : "", item.duration].filter(Boolean).map(escapeHtml).join(" · ");
 }
 
+function cardMetadataLine(item) {
+  return [item.series, item.course_number, item.modality, item.level ? `Level ${item.level}` : "", item.duration].filter(Boolean).join(" · ");
+}
+
 function thumbnail(outputFile, item, type) {
   const source = path.join(item.directory, "thumbnail.png");
   const target = path.join(outputRoot, "content", type, item.slug, "thumbnail.png");
@@ -405,7 +409,7 @@ function card(outputFile, item, type, filterable = false, defaultHidden = false)
     ? playlistEntryTarget(path.join(outputRoot, "playlists"), item)
     : path.join(outputRoot, type, item.slug, "index.html");
   const tooltipId = `${type}-${item.slug}-description`;
-  const searchText = [item.title, item.course_number, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
+  const searchText = [item.title, item.course_number, item.series, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
   const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}"`;
   const filterData = filterable
     ? ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.modalities || []))}" data-level="${escapeHtml(item.level || "")}" data-duration="${escapeHtml(item.duration || "")}" data-audience="${escapeHtml(JSON.stringify(item.audience || []))}"`
@@ -417,7 +421,7 @@ function card(outputFile, item, type, filterable = false, defaultHidden = false)
   const describedBy = item.description ? ` aria-describedby="${escapeHtml(tooltipId)}"` : "";
   const cardLink = `<a class="content-card" href="${relativeUrl(outputFile, target)}"${describedBy}>
     <span class="card-image">${thumbnail(outputFile, item, type)}</span>
-    <span class="card-body"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(metadataLine(item))}</span></span>
+    <span class="card-body"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(cardMetadataLine(item))}</span></span>
     ${tooltip}
   </a>`;
   if (type !== "modules") return cardLink.replace('class="content-card"', `class="content-card"${searchData}${filterData}${defaultVisibility}`);

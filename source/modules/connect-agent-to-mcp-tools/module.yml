@@ -5,6 +5,7 @@ modalities:
   - Lab
 level: 200
 duration: 60 minutes
+series: Microsoft Official Curriculum
 topics:
   - Model Control Protocol (MCP)
   - Microsoft Foundry

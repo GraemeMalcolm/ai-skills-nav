@@ -4,6 +4,7 @@ modalities:
   - Lab
 level: 100
 duration: 120 minutes
+series: Microsoft Labs
 topics:
   - Artificial Intelligence
 audience:

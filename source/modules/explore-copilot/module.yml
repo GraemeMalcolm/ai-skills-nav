@@ -4,6 +4,7 @@ modalities:
   - Lab
 level: 100
 duration: 30 minutes
+series: Microsoft Labs
 topics:
   - Artificial Intelligence
   - Microsoft Copilot

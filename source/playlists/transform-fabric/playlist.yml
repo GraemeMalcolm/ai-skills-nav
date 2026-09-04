@@ -2,6 +2,7 @@ title: Transform analytics data in Microsoft Fabric
 description: Design dimensional models and apply transformations using dataflows, Spark notebooks, and T-SQL to produce consistent, analysis-ready data in Microsoft Fabric.
 level: 400
 duration: 350 minutes
+series: Microsoft Official Curriculum
 topics:
   - Microsoft Fabric
 audience:

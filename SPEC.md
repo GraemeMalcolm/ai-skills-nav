@@ -81,6 +81,7 @@ credentials:
 description: Course description
 level: 200
 duration: 1 day
+series: Microsoft Official Curriculum
 topics:
   - Topic
 audience:
@@ -92,7 +93,7 @@ playlists:
 
 Rules:
 
-- `title`, `course_number`, `description`, `level`, `duration`, `topics`, `audience`, and `playlists` SHOULD be present.
+- `title`, `course_number`, `description`, `level`, `duration`, `series`, `topics`, `audience`, and `playlists` SHOULD be present.
 - `course_number` MUST be present.
 - `playlists` MUST be a non-empty array of existing playlist slugs.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
@@ -108,6 +109,7 @@ title: Playlist title
 description: Playlist description
 level: 200
 duration: 120 minutes
+series: Microsoft Official Curriculum
 topics:
   - Topic
 audience:
@@ -119,7 +121,7 @@ modules:
 
 Rules:
 
-- `title`, `description`, `level`, `duration`, `topics`, `audience`, and `modules` SHOULD be present.
+- `title`, `description`, `level`, `duration`, `series`, `topics`, `audience`, and `modules` SHOULD be present.
 - `modules` MUST be an array of existing module slugs.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - Module order MUST follow the YAML array.
@@ -134,6 +136,7 @@ description: Module description
 modality: Multimodal
 level: 200
 duration: 40 minutes
+series: Microsoft Official Curriculum
 topics:
   - Topic
 audience:
@@ -148,7 +151,7 @@ pages:
 
 Rules:
 
-- `title`, `description`, `modality`, `level`, `duration`, `topics`, `audience`, and `pages` SHOULD be present.
+- `title`, `description`, `modality`, `level`, `duration`, `series`, `topics`, `audience`, and `pages` SHOULD be present.
 - `pages` MUST be a non-empty array.
 - A page entry MAY be a relative filename or an object containing `file`, optional `title`, and optional `description`.
 - Every page file MUST exist inside the module folder.

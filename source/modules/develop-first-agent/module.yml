@@ -5,6 +5,7 @@ modalities:
   - Lab
 level: 200
 duration: 40 minutes
+series: Microsoft Official Curriculum
 topics:
   - Microsoft Foundry
   - AI agents
