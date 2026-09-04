@@ -394,10 +394,6 @@ function metadataLine(item) {
   return [item.course_number, item.modality, item.level ? `Level ${item.level}` : "", item.duration].filter(Boolean).map(escapeHtml).join(" · ");
 }
 
-function cardMetadataLine(item) {
-  return [item.series, item.course_number, item.modality, item.level ? `Level ${item.level}` : "", item.duration].filter(Boolean).join(" · ");
-}
-
 function thumbnail(outputFile, item, type) {
   const source = path.join(item.directory, "thumbnail.png");
   const target = path.join(outputRoot, "content", type, item.slug, "thumbnail.png");
@@ -419,9 +415,10 @@ function card(outputFile, item, type, filterable = false, defaultHidden = false)
   const defaultVisibility = defaultHidden ? " data-default-hidden hidden" : "";
   const tooltip = item.description ? `<span class="card-tooltip" id="${escapeHtml(tooltipId)}" role="tooltip">${escapeHtml(item.description)}</span>` : "";
   const describedBy = item.description ? ` aria-describedby="${escapeHtml(tooltipId)}"` : "";
+  const series = item.series ? `<span>${escapeHtml(item.series)}</span>` : "";
   const cardLink = `<a class="content-card" href="${relativeUrl(outputFile, target)}"${describedBy}>
     <span class="card-image">${thumbnail(outputFile, item, type)}</span>
-    <span class="card-body"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(cardMetadataLine(item))}</span></span>
+    <span class="card-body"><strong>${escapeHtml(item.title)}</strong>${series}<span>${metadataLine(item)}</span></span>
     ${tooltip}
   </a>`;
   if (type !== "modules") return cardLink.replace('class="content-card"', `class="content-card"${searchData}${filterData}${defaultVisibility}`);
