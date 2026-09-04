@@ -483,12 +483,16 @@ function courseOverview(outputFile, course, playlists) {
     const target = playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), playlist);
     return `<li><a href="${relativeUrl(outputFile, target)}">${escapeHtml(playlist.title)}</a></li>`;
   }).join("")}</ol></section>`;
-  const credential = `<section class="credential"><h2>Credential preparation</h2><p>${escapeHtml(course.credential || "No associated credential is specified.")}</p></section>`;
+  const credentials = Array.isArray(course.credentials) ? course.credentials.filter(Boolean) : [];
+  const credentialContent = credentials.length
+    ? `<ul>${credentials.map((credential) => `<li>${escapeHtml(credential)}</li>`).join("")}</ul>`
+    : "<p>No associated credential is specified.</p>";
+  const credentialSection = `<section class="credential"><h2>Credential preparation</h2>${credentialContent}</section>`;
   const firstPlaylist = playlists.find((playlist) => playlist.modules.length);
   const nextTarget = firstPlaylist
     ? playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), firstPlaylist)
     : null;
-  return overview(outputFile, course, "courses", credential, playlistList, pageNavigation(outputFile, null, nextTarget));
+  return overview(outputFile, course, "courses", credentialSection, playlistList, pageNavigation(outputFile, null, nextTarget));
 }
 
 function pageNavigation(outputFile, previousTarget = null, nextTarget = null, boundaries = {}) {

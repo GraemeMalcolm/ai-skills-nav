@@ -1,6 +1,7 @@
 title: Introduction to AI in Azure
 course_number: AI-901
-credential: Microsoft Certified - Azure AI Fundamentals
+credentials:
+  - Microsoft Certified - Azure AI Fundamentals
 description: This course provides a foundational understanding of artificial intelligence (AI) concepts and services available in Microsoft Azure. Learners will explore core AI workloads, including computer vision, natural language processing, conversational AI, and responsible AI practices. The course prepares students for the AI-901 certification exam.
 level: 200
 duration: 1 day

@@ -1,6 +1,7 @@
 title: Analyze data with Azure Databricks
 course_number: DP-1234
-credential: Microsoft Certified - Azure Databricks Data Analyst
+credentials:
+  - Microsoft Certified - Azure Databricks Data Analyst
 description: In this course, you'll learn how to analyze data with Azure Databricks. The course explores the capabilities of Azure Databricks and how to use it to process and analyze large datasets. You'll gain hands-on experience in data exploration, transformation, and visualization, as well as best practices for working with big data in the cloud.
 level: 200
 duration: 2 days

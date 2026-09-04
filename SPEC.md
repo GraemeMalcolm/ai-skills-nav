@@ -76,7 +76,8 @@ Each course folder MUST contain `course.yml` and `thumbnail.png`.
 ```yaml
 title: Course title
 course_number: XX-0000
-credential: Optional credential name
+credentials:
+  - Optional credential name
 description: Course description
 level: 200
 duration: 1 day
@@ -95,7 +96,7 @@ Rules:
 - `course_number` MUST be present.
 - `playlists` MUST be a non-empty array of existing playlist slugs.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
-- `credential` is optional. The detail page MUST show “No associated credential is specified.” when omitted.
+- `credentials` is an optional array of credential names. The detail page MUST list every credential in metadata order, or show “No associated credential is specified.” when omitted or empty.
 - Playlist order MUST follow the YAML array.
 
 ### 3.2 Curated playlist schema
