@@ -1214,6 +1214,11 @@ img {
   gap: 18px;
 }
 
+.page-nav[hidden],
+.page-nav .nav-button[hidden] {
+  display: none;
+}
+
 .overview>.page-nav {
   grid-column: 1 / -1;
 }
