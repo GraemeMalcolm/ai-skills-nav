@@ -28,7 +28,7 @@ const searchStopWords = new Set([
   "t", "the", "to", "ve", "was", "were", "will", "with", "would",
 
   // Generic words used to frame a search request rather than describe its topic.
-  "course", "courses", "describe", "explain", "find", "get", "getting", "give", "help", "information",
+ "describe", "explain", "find", "get", "getting", "give", "help", "information",
   "know", "learn", "learning", "look", "looking", "need", "please", "search", "show", "tell", "use", "using",
   "want",
 ]);
