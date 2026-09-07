@@ -28,7 +28,7 @@ const searchStopWords = new Set([
   "t", "the", "to", "ve", "was", "were", "will", "with", "would",
 
   // Generic words used to frame a search request rather than describe its topic.
- "describe", "explain", "find", "get", "getting", "give", "help", "information",
+  "describe", "explain", "find", "get", "getting", "give", "help", "information",
   "know", "learn", "learning", "look", "looking", "need", "please", "search", "show", "tell", "use", "using",
   "want",
 ]);
@@ -264,7 +264,7 @@ if (shareDialog) {
 
   document.querySelector("[data-share-open]")?.addEventListener("click", (event) => {
     event.preventDefault();
-    shareUrl.value = window.location.href;
+    shareUrl.value = event.currentTarget.dataset.shareUrl || window.location.href;
     shareStatus.textContent = "";
     shareDialog.showModal();
     shareUrl.focus();
@@ -469,8 +469,25 @@ const personalPlaylistsPage = document.querySelector("[data-personal-playlists]"
 if (personalPlaylistsPage) {
   // The build embeds the current module catalog. It is the source of truth for
   // display names and is also used to remove references to deleted modules.
-  const moduleCatalog = new Map(JSON.parse(personalPlaylistsPage.dataset.moduleCatalog).map((module) => [module.path, module]));
-  const playlistId = new URLSearchParams(window.location.search).get("playlist");
+  const catalogModules = JSON.parse(personalPlaylistsPage.dataset.moduleCatalog);
+  const moduleCatalog = new Map(catalogModules.map((module) => [module.path, module]));
+  const moduleCatalogById = new Map(catalogModules.map((module) => [module.id, module]));
+  const query = new URLSearchParams(window.location.search);
+  const playlistId = query.get("playlist");
+
+  const importSharedPlaylist = (playlists) => {
+    if (!playlistId || playlists.some((playlist) => playlist.id === playlistId)) return playlists;
+    const name = query.get("name")?.trim();
+    if (!name || !query.has("modules")) return playlists;
+    const modules = query.get("modules").split(",")
+      .map((moduleId) => moduleCatalogById.get(moduleId))
+      .filter(Boolean)
+      .filter((module, index, items) => items.findIndex((item) => item.id === module.id) === index)
+      .map((module) => ({ name: module.name, path: module.path, pages: module.pages }));
+    const sharedPlaylist = { id: playlistId, name: name.slice(0, 80), description: "", modules };
+    const updatedPlaylists = [...playlists, sharedPlaylist];
+    return writePersonalPlaylists(updatedPlaylists) ? updatedPlaylists : playlists;
+  };
   const moduleUrl = (modulePath) => {
     // Resolve from My Playlists and retain the selected collection so the
     // destination module can hydrate the browser-generated sidebar.
@@ -578,6 +595,16 @@ if (personalPlaylistsPage) {
       pages: moduleCatalog.get(module.path).pages,
     }));
     if (JSON.stringify(playlist.modules) !== before) writePersonalPlaylists(playlists);
+
+    const shareUrl = new URL(window.location.pathname, window.location.href);
+    shareUrl.searchParams.set("playlist", playlist.id);
+    shareUrl.searchParams.set("name", playlist.name);
+    shareUrl.searchParams.set("modules", playlist.modules.map((module) => moduleCatalog.get(module.path).id).join(","));
+    const shareTrigger = document.querySelector("[data-share-open]");
+    if (shareTrigger) {
+      shareTrigger.dataset.shareUrl = shareUrl.href;
+      shareTrigger.hidden = false;
+    }
 
     document.title = `${playlist.name} | AI Skills Nav`;
     const frame = personalPlaylistsPage.closest(".site-frame");
@@ -762,7 +789,7 @@ if (personalPlaylistsPage) {
     personalPlaylistsPage.append(overview);
   };
 
-  const playlists = readPersonalPlaylists();
+  const playlists = importSharedPlaylist(readPersonalPlaylists());
   const selectedPlaylist = playlists.find((playlist) => playlist.id === playlistId);
   // An absent or stale query-string ID intentionally falls back to the list.
   if (playlistId && selectedPlaylist) renderPlaylist(selectedPlaylist, playlists);

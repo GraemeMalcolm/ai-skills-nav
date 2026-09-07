@@ -342,8 +342,8 @@ function personalPlaylistDialog(outputFile, module) {
   </dialog>`;
 }
 
-function shareDialog() {
-  return `<a class="header-link" href="#share-dialog" data-share-open>Share</a>
+function shareDialog(hidden = false) {
+  return `<a class="header-link" href="#share-dialog" data-share-open${hidden ? " hidden" : ""}>Share</a>
   <dialog class="filter-dialog share-dialog" id="share-dialog" data-share-dialog aria-labelledby="share-title">
     <form method="dialog">
       <header class="filter-dialog-header"><div><p class="kicker">Share this page</p><h2 id="share-title">Page URL</h2></div><button class="icon-button" type="submit" aria-label="Close">${icon("close")}</button></header>
@@ -756,6 +756,7 @@ async function build() {
   await writePage(skillingContentFile, shell({ outputFile: skillingContentFile, title: "Skilling content", breadcrumbs: [{ label: "Skilling content" }], headerExtra: moduleTools, avatar: defaultAvatar, content: skillingContent, bodyClass: "catalog-page", hasModuleCards: true }));
 
   const moduleCatalog = modules.map((module) => ({
+    id: module.slug,
     name: module.title,
     path: `modules/${module.slug}/index.html`,
     pages: (module.pages.length > 1 ? module.pages : []).map((page) => ({
@@ -780,7 +781,7 @@ async function build() {
     </form>
   </dialog>`;
   const personalPlaylistSidebar = `<aside class="sidebar" data-sidebar><div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div><nav aria-label="Playlist" data-personal-playlist-navigation></nav></aside><div class="sidebar-scrim" data-menu-close></div>`;
-  await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, avatar: defaultAvatar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
+  await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, headerExtra: shareDialog(true), avatar: defaultAvatar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
 
   for (const module of modules) {
     const sidebarFactory = module.pages.length > 1 ? (outputFile, activePage) => moduleSidebar(outputFile, module, module.pages, activePage) : null;
