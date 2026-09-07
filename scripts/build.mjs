@@ -126,6 +126,10 @@ function isExternalUrl(value) {
 }
 
 function rewriteAssetUrl(value, sourceFile, outputFile) {
+  if (/^https?:\/\//i.test(sourceFile)) {
+    if (!value || /^(?:[a-z]+:|#|\/\/)/i.test(value)) return value;
+    return new URL(value, sourceFile).href;
+  }
   if (!value || isExternalUrl(value)) return value;
   const [pathname, suffix = ""] = value.split(/(?=[?#])/u, 2);
   let sourceTarget = path.resolve(path.dirname(sourceFile), pathname);
@@ -148,12 +152,32 @@ function rewriteMarkdownAssets(markdown, sourceFile, outputFile) {
 }
 
 async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
-  const includePattern = /\[!INCLUDE(?:\[[^\]]*\])?\(([^)]+)\)\]|\[!INCLUDE\s+([^\]]+)\]/gi;
+  const includePattern = /\[!(INCLUDE|LAB_STEPS)(?:\[[^\]]*\])?\(([^)]+)\)\]|\[!(INCLUDE|LAB_STEPS)\s+([^\]]+)\]/gi;
   let result = "";
   let cursor = 0;
   for (const match of markdown.matchAll(includePattern)) {
     result += rewriteMarkdownAssets(markdown.slice(cursor, match.index), sourceFile, outputFile);
-    const includeReference = (match[1] || match[2]).trim();
+    const directive = (match[1] || match[3]).toUpperCase();
+    const includeReference = (match[2] || match[4]).trim();
+    const remoteReference = /^https?:\/\//i.test(includeReference);
+    if (directive === "LAB_STEPS" && !remoteReference) {
+      throw new Error(`LAB_STEPS must reference a fully-qualified HTTP(S) URL in ${sourceFile}`);
+    }
+    const remoteSource = /^https?:\/\//i.test(sourceFile);
+    if (remoteReference || remoteSource) {
+      const includeUrl = new URL(includeReference, remoteSource ? sourceFile : undefined).href;
+      if (stack.includes(includeUrl)) {
+        throw new Error(`Recursive include ${includeReference} in ${sourceFile}`);
+      }
+      const response = await fetch(includeUrl);
+      if (!response.ok) {
+        throw new Error(`Could not fetch include ${includeReference}: ${response.status} ${response.statusText}`);
+      }
+      const included = parseFrontMatter(await response.text(), includeUrl);
+      result += await expandIncludes(included.body, includeUrl, outputFile, [...stack, includeUrl]);
+      cursor = match.index + match[0].length;
+      continue;
+    }
     const includePath = /^[\\/]/.test(includeReference)
       ? path.resolve(root, includeReference.replace(/^[\\/]+/, ""))
       : path.resolve(path.dirname(sourceFile), includeReference);

@@ -16,6 +16,6 @@ Hosted labs are provided by our hosting partner *Skillable*, and include a virtu
 ::: zone pivot="Use your own environment"
 
 <!-- Import lab exercise from existing MicrosoftLearning GitHub source -->
-[!INCLUDE[](/MicrosoftLearning/ai-concepts/01-ai-workloads.md)]
+[!LAB_STEPS[](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-concepts/refs/heads/main/Instructions/exercises/00-ai-workloads.md)]
 
 ::: zone-end
