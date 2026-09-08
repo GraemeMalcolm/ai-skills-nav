@@ -8,6 +8,7 @@ import { marked } from "marked";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceRoot = path.join(root, "source");
 const outputRoot = path.join(root, "dist");
+const hostedLabTemplate = path.join(root, "templates", "hosted-lab.md");
 const contentRoots = [
   { name: "modules", directory: path.join(sourceRoot, "modules") },
   { name: "playlists", directory: path.join(sourceRoot, "playlists") },
@@ -152,7 +153,7 @@ function rewriteMarkdownAssets(markdown, sourceFile, outputFile) {
 }
 
 async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
-  const includePattern = /\[!(INCLUDE|LAB_STEPS)(?:\[[^\]]*\])?\(([^)]+)\)\]|\[!(INCLUDE|LAB_STEPS)\s+([^\]]+)\]/gi;
+  const includePattern = /\[!(INCLUDE|LAB_STEPS|LAB_HOST)(?:\[[^\]]*\])?\(([^)]+)\)\]|\[!(INCLUDE|LAB_STEPS|LAB_HOST)\s+([^\]]+)\]/gi;
   let result = "";
   let cursor = 0;
   for (const match of markdown.matchAll(includePattern)) {
@@ -160,6 +161,16 @@ async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
     const directive = (match[1] || match[3]).toUpperCase();
     const includeReference = (match[2] || match[4]).trim();
     const remoteReference = /^https?:\/\//i.test(includeReference);
+    if (directive === "LAB_HOST") {
+      if (!remoteReference) {
+        throw new Error(`LAB_HOST must reference a fully-qualified HTTP(S) URL in ${sourceFile}`);
+      }
+      const template = await readFile(hostedLabTemplate, "utf8");
+      const hostedLabMarkdown = template.replaceAll("{LAB_URL}", includeReference);
+      result += await expandIncludes(hostedLabMarkdown, hostedLabTemplate, outputFile, [...stack, hostedLabTemplate]);
+      cursor = match.index + match[0].length;
+      continue;
+    }
     if (directive === "LAB_STEPS" && !remoteReference) {
       throw new Error(`LAB_STEPS must reference a fully-qualified HTTP(S) URL in ${sourceFile}`);
     }
@@ -910,6 +921,7 @@ async function build() {
     copyFile(path.join(root, "site", "app.js"), path.join(outputRoot, "assets", "app.js")),
     copyFile(path.join(root, "site", "moderation.txt"), path.join(outputRoot, "assets", "moderation.txt")),
     copyFile(path.join(root, "site", "media", "playlist.png"), path.join(outputRoot, "assets", "playlist.png")),
+    cp(path.join(root, "templates", "media"), path.join(outputRoot, "content", "templates", "media"), { recursive: true }),
     writeFile(path.join(outputRoot, ".nojekyll"), "", "utf8"),
   ]);
   console.log(`Built ${modules.length} modules, ${playlists.length} playlists, and ${courses.length} courses in dist/`);
