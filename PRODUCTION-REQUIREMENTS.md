@@ -57,7 +57,7 @@ A publisher validates content, reviews errors, controls publication, and ensures
 
 ## 5. Content hierarchy
 
-The source content model is authoritative. The production solution must support this hierarchy:
+The source content model is authoritative. The production solution must support this hierarchy for source content organization:
 
 - *Course*
   - *Playlist*
@@ -70,6 +70,10 @@ Note the following constraints and behavior when mapping the back-end source hie
 - When a module contains multiple pages, opening the module shows an "Overview" page within a navigation pane in which the user can browse the pages in the module. For example, the [Copilot Quickstart module](https://graememalcolm.github.io/ai-skills-nav/modules/custom-module/index.html) in the PoC contains two pages.
 - One or more modules can optionally be organized in a *playlist*, which defines an ordered sequence of modules. Playlists are the core mechanism for grouping skilling experiences that can be shared/assigned. The system must support both *curated* playlists (authored and maintained by Global Skilling and authorized content contributors) and *personal* playlists (created by users). When browsing a playlist, the hierarchy flattening rule for single-page modules is observed. For example, the [Build 2026 Highlights](https://graememalcolm.github.io/ai-skills-nav/playlists/build-2026/index.html) playlist contains three single-page modules, and only page level (for the three individual pages) is shown in the navigation pane for the playlist. Conversely, the [AI Fundamentals](https://graememalcolm.github.io/ai-skills-nav/playlists/ai-fundamentals/index.html) playlist contains two multi-page modules, so the playlist navigation pane shows the module overview page level with the individual module pages indented beneath them.
 - For Microsoft Official Curriculum content (modules and playlists authored and maintained by the Global Skilling content team to support ILT delivery and credential preparation), one or more playlists can be combined to form a *course*. For example, the [Develop Agents with Microsoft Foundry](https://graememalcolm.github.io/ai-skills-nav/courses/ai3026-develop-agents/index.html) course contains two playlists, each of which contains two modules, each containing multiple pages.
+
+This taxonomy and rigid structure applies only to the back-end content organization, which is authored using the same tools as are currently used for Microsoft Learn (Markdown in GitHub using VS Code or other Markdown editors) or custom tools that abstract (but enforce) the hierarchical structure and metadata specification.
+
+In the front-end web site, users may navigate the rendered content using alternative asset type names and flattened hierarchies. In particular, a user may perceive a single-page *module* as a standalone *page*; with the back-end hierarchy abstracted in the navigation UI.
 
 ### 5.1 General content requirements
 
