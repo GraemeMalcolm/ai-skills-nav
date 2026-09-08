@@ -53,6 +53,9 @@ site/
   styles.css
   moderation.txt
   media/playlist.png
+templates/
+  hosted-lab.md
+  media/launch-exercise.png
 scripts/
   build.mjs
 ```
@@ -239,8 +242,9 @@ Running `npm run build` MUST perform these steps:
 6. Copy source collections, `MicrosoftLearning`, and avatars to `dist/content`.
 7. Generate all HTML routes.
 8. Copy global CSS, JavaScript, moderation data, and the personal-playlist image to `dist/assets`.
-9. Write an empty `dist/.nojekyll` file.
-10. Exit non-zero with an actionable error when required content is invalid.
+9. Copy hosted-lab template media to `dist/content/templates/media`.
+10. Write an empty `dist/.nojekyll` file.
+11. Exit non-zero with an actionable error when required content is invalid.
 
 The build MUST fail for:
 
@@ -491,7 +495,19 @@ A leading slash denotes a repository-root-relative include. Includes MUST:
 - Rewrite included images relative to the included file.
 - Reject missing files, paths outside the repository, and recursive inclusion.
 
-### 9.3 Videos
+### 9.3 Hosted labs
+
+A hosted-lab directive MUST use a fully qualified HTTP or HTTPS launch URL:
+
+```markdown
+[!LAB_HOST[](https://www.skillable.com/login?lab_id=01234)]
+```
+
+The renderer MUST read `templates/hosted-lab.md`, replace every `{LAB_URL}` placeholder with the directive URL, and render the resulting Markdown at the directive position. Template Markdown MUST pass through the same recursive directive processing as page content.
+
+Relative images in the template MUST resolve from the template file, not from the module page containing `LAB_HOST`. The build MUST publish the referenced template media beneath `dist/content/templates` and rewrite its URL relative to each generated page. The launch link MUST preserve the complete authored URL, including query parameters, and retain the template's safe new-window behavior. A relative or otherwise unsupported launch URL MUST fail the build.
+
+### 9.4 Videos
 
 A directive occupying its own line MUST render as a responsive, lazy-loaded iframe with fullscreen enabled:
 
@@ -501,7 +517,7 @@ A directive occupying its own line MUST render as a responsive, lazy-loaded ifra
 
 The colon is optional. `youtu.be` and YouTube watch URLs MUST be converted to `https://www.youtube-nocookie.com/embed/<video-id>`. Other HTTP(S) URLs MUST be embedded unchanged.
 
-### 9.4 Zone pivots
+### 9.5 Zone pivots
 
 Consecutive strict blocks MUST render as one accessible tab interface:
 
@@ -531,11 +547,11 @@ ai-skills-nav:pivots:<module-slug>
 
 The value is an object mapping a sorted, normalized tab-label signature to the normalized selected label. Matching pivot groups in the same module MUST reuse the selection. Storage unavailability MUST not prevent pivot use.
 
-### 9.5 New-window links
+### 9.6 New-window links
 
 A Markdown link followed by either `{target="_blank"}` or `{:target="_blank"}` MUST render with `target="_blank"` and `rel="noopener noreferrer"`. Linked images MUST also be supported.
 
-### 9.6 HTML and unsupported syntax
+### 9.7 HTML and unsupported syntax
 
 Raw HTML is passed through by the current Markdown renderer and is not sanitized; content MUST therefore be trusted. Microsoft Learn `:::image` directives are not implemented in the current app and render as literal content. A new implementation SHOULD either preserve this behavior for exact parity or implement/reject the directive explicitly.
 
@@ -713,6 +729,7 @@ A conforming implementation MUST satisfy the following checks.
 - Relative and root-relative includes expand recursively.
 - Include traversal and recursion fail the build.
 - Included image paths are rewritten from the included source.
+- Hosted-lab directives render `templates/hosted-lab.md` with the complete launch URL and template-relative image path.
 - Video directives and privacy-enhanced YouTube embeds work.
 - Zone tabs are accessible, keyboard operable, and restore module preferences.
 - New-window links include `noopener noreferrer`.

@@ -713,6 +713,10 @@ Authors may request a new browsing context with either supported attribute form:
 
 **FR-REUSE-006** The production solution must define availability, caching, integrity, and change-control policies for externally sourced content so that publication is repeatable and does not unexpectedly change after approval.
 
+**FR-REUSE-007** `[!LAB_HOST]` with a fully qualified HTTP or HTTPS URL must render the governed hosted-lab Markdown template at the directive position after replacing its `{LAB_URL}` placeholder with the complete authored URL.
+
+**FR-REUSE-008** Relative media referenced by the hosted-lab template must resolve from the template document and be published at a stable content path accessible from every generated route.
+
 Supported local include forms:
 
 ```markdown
@@ -732,6 +736,14 @@ Supported external lab form:
 ```
 
 `LAB_STEPS` accepts only a fully qualified HTTP or HTTPS Markdown URL. The fetched document body is inserted at the directive position. Its relative images, links to media, and nested includes resolve against the fetched document's URL. The directive itself must never remain visible in published content.
+
+Supported hosted-lab form:
+
+```markdown
+[!LAB_HOST[](https://www.skillable.com/login?lab_id=01234)]
+```
+
+`LAB_HOST` accepts only a fully qualified HTTP or HTTPS launch URL. The publisher reads `templates/hosted-lab.md`, replaces `{LAB_URL}` with the complete URL including query parameters, and renders the resulting Markdown. Relative template assets, including `./media/launch-exercise.png`, resolve from the template file rather than the containing module page. The template and its media are governed reusable content; missing placeholders, missing assets, invalid URLs, or unresolved output paths must produce a publication error.
 
 ### 10.4 Video
 
@@ -835,17 +847,20 @@ Expected rendering behavior:
 
 **FR-LAB-003** Self-directed lab instructions may be maintained locally or sourced from an approved external Markdown location.
 
+**FR-LAB-004** Authors must invoke the standard hosted-lab launcher with `[!LAB_HOST[](<launch-url>)]` rather than duplicating its explanatory text, image, link target, or new-window behavior in module pages.
+
+**FR-LAB-005** Hosted-lab launch URLs must preserve all authored path, query-string, and fragment components when substituted into the standard template.
+
 Example page combining hosted and self-directed lab choices:
 
 ```markdown
 ---
 title: Exercise - Explore AI workloads
-skillable_lab_id: "00000"
 ---
 
 ::: zone pivot="Use a hosted lab environment"
 
-[![Launch the exercise.](./media/launch-exercise.png)](https://example.com/lab/){:target="_blank"}
+[!LAB_HOST[](https://www.skillable.com/login?lab_id=00000)]
 
 ::: zone-end
 
@@ -856,7 +871,7 @@ skillable_lab_id: "00000"
 ::: zone-end
 ```
 
-The hosted variant must use `skillable_lab_id` or an equivalent governed lab reference when resolving the learner's lab environment. The self-directed variant must render the referenced instructions inline so learners remain within the module's navigation context.
+The hosted variant must use `LAB_HOST` with a governed launch URL. It renders the shared `templates/hosted-lab.md` content, substitutes the URL for `{LAB_URL}`, and resolves the launch image from the template's media folder. The self-directed variant must render the referenced instructions inline so learners remain within the module's navigation context.
 
 ## 11. Personal playlists
 
@@ -950,7 +965,7 @@ The production implementation must demonstrate at least the following end-to-end
 6. A catalog item matches terms present in its title, description, or topics. The same item does not match a term found only in its audience, series, level, modality, duration, identifier, hierarchy references, or page body.
 7. Audience, series, level, and modality values refine results through filters. Multiple values in one filter use OR; different filters use AND; and active search terms combine with all filters using AND.
 8. Clearing search retains active filters, clearing filters retains an active search, active constraints are visible, and an empty combined result produces accessible feedback.
-9. A page renders Markdown, local and root-relative includes, an external `[!LAB_STEPS]` source, relative images, video, and keyboard-operable choice pivots.
+9. A page renders Markdown, local and root-relative includes, an external `[!LAB_STEPS]` source, a `[!LAB_HOST]` launcher with its full URL and template-relative image, relative images, video, and keyboard-operable choice pivots.
 10. Invalid metadata, broken hierarchy references, recursive includes, and inaccessible required external content prevent publication with actionable errors.
 11. A learner creates a personal playlist, adds modules from multiple entry points, reorders it, traverses module boundaries, removes a module, and deletes the playlist.
 12. A recipient opens a shared personal-playlist URL. An existing playlist is loaded unchanged; when it is absent, a new playlist is created from the shared name and valid ordered module identifiers.
