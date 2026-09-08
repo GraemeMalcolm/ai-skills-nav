@@ -59,12 +59,17 @@ A publisher validates content, reviews errors, controls publication, and ensures
 
 The source content model is authoritative. The production solution must support this hierarchy:
 
-```text
-Course
-  -> ordered Playlists
-       -> ordered Modules
-            -> ordered Pages
-```
+- *Course*
+  - *Playlist*
+    - *Module*
+      - *Page* (must exist within the context of a module)
+
+Note the following constraints and behavior when mapping the back-end source hierarchy to the front-end user experience:
+
+- A *module* is the most granular unit of content that can be authored and published. An individual page cannot be published independently of a module. The minimum content asset that can be published on the site is a *module* containing a single *page*. The page can contains any valid content (such as an embedded video, text and graphics, an embedded lab, etc.). The user experience when viewing a single-page module flattens the hierarchy so that the module level is abstracted and the user sees only the page. For example, opening the **Azure Copilot Demo** module in the [PoC Home page](https://graememalcolm.github.io/ai-skills-nav), results in [this view](https://graememalcolm.github.io/ai-skills-nav/modules/azure-copilot-demo/index.html).
+- When a module contains multiple pages, opening the module shows an "Overview" page within a navigation pane in which the user can browse the pages in the module. For example, the [Copilot Quickstart module](https://graememalcolm.github.io/ai-skills-nav/modules/custom-module/index.html) in the PoC contains two pages.
+- One or more modules can optionally be organized in a *playlist*, which defines an ordered sequence of modules. Playlists are the core mechanism for grouping skilling experiences that can be shared/assigned. The system must support both *curated* playlists (authored and maintained by Global Skilling and authorized content contributors) and *personal* playlists (created by users). When browsing a playlist, the hierarchy flattening rule for single-page modules is observed. For example, the [Build 2026 Highlights](https://graememalcolm.github.io/ai-skills-nav/playlists/build-2026/index.html) playlist contains three single-page modules, and only page level (for the three individual pages) is shown in the navigation pane for the playlist. Conversely, the [AI Fundamentals](https://graememalcolm.github.io/ai-skills-nav/playlists/ai-fundamentals/index.html) playlist contains two multi-page modules, so the playlist navigation pane shows the module overview page level with the individual module pages indented beneath them.
+- For Microsoft Official Curriculum content (modules and playlists authored and maintained by the Global Skilling content team to support ILT delivery and credential preparation), one or more playlists can be combined to form a *course*. For example, the [Develop Agents with Microsoft Foundry](https://graememalcolm.github.io/ai-skills-nav/courses/ai3026-develop-agents/index.html) course contains two playlists, each of which contains two modules, each containing multiple pages.
 
 ### 5.1 General content requirements
 
