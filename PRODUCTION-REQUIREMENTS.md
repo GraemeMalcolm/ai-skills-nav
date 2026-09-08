@@ -1,8 +1,8 @@
-# AI Skills NavigatorContent Architecture Requirements
+# AI Skills Navigator Content Architecture Requirements
 
 ## 1. Purpose
 
-This document defines the core product requirements for a production implementation of the proposed content architecture proof of concept. It describes the content model, discovery experiences, content rendering, and learner navigation that the production solution must preserve.
+This document defines the core product requirements for a production implementation of the proposed content architecture proof of concept. It describes the content model, discovery experiences, content rendering behavior, and learner navigation that the production solution must preserve.
 
 The requirements are intentionally independent of the proof of concept's static-site generator, file-system routing, browser-only persistence, and frontend implementation. The production team may choose different technologies provided that the resulting authoring and learner experiences satisfy this document.
 
@@ -92,7 +92,7 @@ The content architecture deliberately favors rich, meaningful text over a large 
 Titles and descriptions are the primary discovery content:
 
 - A title must name the subject and learning intent clearly enough to make sense in search results, recommendations, cards, navigation, and shared links.
-- A description must summarize what the learner will understand or be able to do, using the terms a learner is likely to search for.
+- A description must be rich enough for an agent to be able to identify the key topics, audience, and skills covered in the content.
 - `topics` provides a small amount of additional subject vocabulary that would be awkward or repetitive in the title or description.
 - Other metadata exists for identity, hierarchy, presentation, filtering, or operations; it must not automatically become search-keyword data.
 
@@ -128,7 +128,7 @@ Course metadata uses the following source contract:
 | `series` | One string | Yes | Displayed content family and catalog filter value. |
 | `topics` | List of strings | Yes | Search terms, topic presentation, recommendations, and future topic browsing. At least one value is required. |
 | `audience` | List of strings | Yes | Intended learner roles shown in metadata and used as catalog filter values. At least one value is required. |
-| `avatar` | One identifier | No | Associates a contextual assistant configuration with the course experience. The reference must resolve when supplied. |
+| `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the course. The reference must resolve when supplied. |
 | `playlists` | Ordered list of playlist identifiers | Yes | Defines course membership and the complete course learning sequence. At least one valid reference is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Course cards and course overview. It must have an accessible treatment appropriate to whether the image is informative or decorative. |
 
@@ -139,6 +139,7 @@ title: Develop AI agents with Microsoft Foundry
 course_number: AI-3026
 credentials:
      - Microsoft Applied Skill - Develop AI agents with Microsoft Foundry
+     - Microsoft Certified - Azure AI Apps and Agrnt Developer Associate
 description: Learn to build, test, and deploy AI agents.
 level: 200
 duration: 1 day
@@ -173,10 +174,10 @@ Playlist metadata uses the following source contract:
 | `description` | One string | Yes | Playlist overview, catalog summary or tooltip, and search text. |
 | `level` | One string or number | Yes | Displayed level and catalog filter value. |
 | `duration` | One string | Yes | Human-readable estimated completion time. A normalized value should also be available in the production model. |
-| `series` | One string | Yes | Displayed content family and catalog filter value. |
+| `series` | One string | No | Content family and catalog filter value to reflect source or type of skilling - for example "Microsoft Official Curriculum", "Microsoft Short-Form Skilling", "Microsoft Labs", "LinkedIn Training", et.c. |
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
 | `audience` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
-| `avatar` | One identifier | No | Associates a contextual assistant configuration with the playlist experience. |
+| `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the playlist. |
 | `modules` | Ordered list of module identifiers | Yes | Defines playlist membership, sidebar order, and cross-module Previous/Next navigation. At least one valid reference is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Playlist cards and overview. |
 
@@ -220,13 +221,13 @@ Module metadata uses the following source contract:
 | Stable identifier | One | Yes | Canonical reusable identity for playlist references, personal playlists, routes, analytics, and sharing. In the current source layout this is the module folder name. |
 | `title` | One string | Yes | Module heading, card title, playlist navigation label, breadcrumbs, and search text. |
 | `description` | One string | Yes | Module overview, card summary or tooltip, and search text. |
-| `modalities` | List of strings | Yes | Describes delivery formats such as `Video` and `Lab`; displayed as metadata and used directly and transitively for filtering. At least one value is required. Values are content-defined rather than a closed enumeration unless product governance establishes one. |
+| `modalities` | List of strings | No | Describes delivery formats present in the module such as `Video` and `Lab`; displayed as metadata and used directly and transitively for filtering. At least one value is required. Values are content-defined rather than a closed enumeration unless product governance establishes one. |
 | `level` | One string or number | Yes | Displayed level and catalog filter value. |
 | `duration` | One string | Yes | Human-readable estimated completion time. A normalized value should also be available in the production model. |
 | `series` | One string | Yes | Displayed content family and catalog filter value. |
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
 | `audience` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
-| `avatar` | One identifier | No | Associates a contextual assistant configuration with every overview and page in the module. |
+| `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the module. |
 | `pages` | Ordered list of page entries | Yes | Defines the module structure, overview page list, sidebar, and Previous/Next sequence. At least one entry is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Module cards, module overview, and personal-playlist management. |
 
@@ -276,7 +277,6 @@ Page source consists of optional YAML front matter followed by a Markdown body.
 | Stable identifier | One | Yes | Canonical identity for routes, deep links, ordering, and analytics. In the current source layout this is derived from the Markdown filename without its extension. |
 | `title` | One string | Recommended | Visible page heading, document title, breadcrumbs, and default navigation label. |
 | `lab.title` | One string | No | Fallback page heading for imported lab documents when top-level `title` is absent. |
-| `skillable_lab_id` | One string | No | Associates the page with a hosted lab definition. It must remain a string so leading zeroes are preserved. Production use may include launch URL resolution, entitlement, and lab telemetry. |
 | `quiz` | List of question groups | No | Declares an interactive formative knowledge check. Each `item` contains ordered questions with `question` text and an `answer` key. |
 | Markdown body | One body | Yes, except quiz-only pages | Rendered as the learning content after reusable-content expansion and directive processing. |
 | Referenced media | Zero or more assets | No | Images, downloads, and other assets used by the page or included content. |
@@ -296,7 +296,6 @@ Example lab page metadata:
 ```markdown
 ---
 title: Exercise - Explore AI workloads
-skillable_lab_id: "00000"
 ---
 ```
 
@@ -630,7 +629,7 @@ Curated and personal playlists may contain any ordered mix of single-page and mu
 
 **FR-RENDER-005** Raw HTML and any additional authoring directives must have an explicit support and sanitization policy. Unsupported syntax must produce a validation warning or error rather than silently degrading into misleading content.
 
-The baseline authoring syntax includes:
+The baseline authoring syntax includes standard GitHub-compatible markdown, including:
 
 ````markdown
 # Page heading
@@ -659,8 +658,6 @@ Expected rendering behavior:
 - Tables must remain readable on narrow screens without forcing the whole page beyond the viewport.
 - Links must retain descriptive text and be distinguishable without relying only on color.
 - Raw HTML must never bypass the production sanitization and content-security policy.
-
-### 10.2 Images, media paths, and new-window links
 
 Standard Markdown images must be supported:
 
@@ -692,7 +689,20 @@ For this directive:
 
 **FR-ASSET-005** The `:::image` directive must render as an image with its authored alternative text and an accessible lightbox action when `lightbox` is supplied.
 
-Authors may request a new browsing context with either supported attribute form:
+#### Example
+
+- Source: [2-how-copilot-works.md](https://github.com/GraemeMalcolm/ai-skills-nav/blob/main/source/modules/get-started-with-copilot/2-how-copilot-works.md)
+- Rendered page: [Explore how Copilot works across your Microsoft 365 apps](https://graememalcolm.github.io/ai-skills-nav/modules/get-started-with-copilot/pages/2-how-copilot-works/index.html)
+
+### 10.2 Hyperlinks
+
+The standard Markdown syntax for a hyperlink must be supported.
+
+````markdown
+[Micrsoft Foundry portal](https://ai.azure.com)
+````
+
+Authors may request a new browsing context by specifying a target attribute using the following extension syntax:
 
 ```markdown
 [Open the lab](https://example.com/lab){target="_blank"}
@@ -704,23 +714,22 @@ Authors may request a new browsing context with either supported attribute form:
 
 **FR-LINK-002** New-window links must render with `target="_blank"`, `rel="noopener noreferrer"`, and an accessible indication that they open a new browsing context.
 
+#### Example
+
+- Source: [08-summary.md](https://github.com/GraemeMalcolm/ai-skills-nav/blob/main/source/modules/start-databricks/08-summary.md)
+- Rendered page: [Summary](https://graememalcolm.github.io/ai-skills-nav/modules/start-databricks/pages/08-summary/index.html)
+
 ### 10.3 Reusable content
 
 **FR-REUSE-001** `[!INCLUDE]` references must insert the referenced Markdown into the containing page before rendering.
 
 **FR-REUSE-002** Includes must support repository-root-relative and containing-document-relative references, recursive expansion, removal of included front matter, and media resolution relative to the included source.
 
-**FR-REUSE-003** `[!LAB_STEPS]` with a fully qualified HTTP or HTTPS Markdown URL must fetch and render the external Markdown as if it were included content.
-
 **FR-REUSE-004** Relative media and nested includes in externally sourced Markdown must resolve against the external document URL.
 
 **FR-REUSE-005** Missing, inaccessible, unsupported, or recursive includes must produce a publication error with the source and failed reference identified.
 
 **FR-REUSE-006** The production solution must define availability, caching, integrity, and change-control policies for externally sourced content so that publication is repeatable and does not unexpectedly change after approval.
-
-**FR-REUSE-007** `[!LAB_HOST]` with a fully qualified HTTP or HTTPS URL must render the governed hosted-lab Markdown template at the directive position after replacing its `{LAB_URL}` placeholder with the complete authored URL.
-
-**FR-REUSE-008** Relative media referenced by the hosted-lab template must resolve from the template document and be published at a stable content path accessible from every generated route.
 
 Supported local include forms:
 
@@ -734,21 +743,10 @@ Supported local include forms:
 
 The first two references resolve from the containing Markdown file. A leading slash resolves from the configured content-repository root, not from the public website root. Included front matter is removed; its Markdown body is inserted at the directive position and then processed recursively.
 
-Supported external lab form:
+#### Example (reusing a page in a second module)
 
-```markdown
-[!LAB_STEPS[](https://raw.githubusercontent.com/Example/Training/main/labs/exercise.md)]
-```
-
-`LAB_STEPS` accepts only a fully qualified HTTP or HTTPS Markdown URL. The fetched document body is inserted at the directive position. Its relative images, links to media, and nested includes resolve against the fetched document's URL. The directive itself must never remain visible in published content.
-
-Supported hosted-lab form:
-
-```markdown
-[!LAB_HOST[](https://www.skillable.com/login?lab_id=01234)]
-```
-
-`LAB_HOST` accepts only a fully qualified HTTP or HTTPS launch URL. The publisher reads `templates/hosted-lab.md`, replaces `{LAB_URL}` with the complete URL including query parameters, and renders the resulting Markdown. Relative template assets, including `./media/launch-exercise.png`, resolve from the template file rather than the containing module page. The template and its media are governed reusable content; missing placeholders, missing assets, invalid URLs, or unresolved output paths must produce a publication error.
+- Source: [01-copilot.md](https://github.com/GraemeMalcolm/ai-skills-nav/blob/main/source/modules/custom-module/01-copilot.md)
+- Rendered page: [What is Copilot?](https://graememalcolm.github.io/ai-skills-nav/modules/custom-module/pages/01-copilot/index.html)
 
 ### 10.4 Video
 
@@ -773,6 +771,11 @@ Expected rendering behavior:
 - The embed must not begin playback automatically.
 - The rendered experience must provide the source URL as a fallback when embedding is blocked or unsupported.
 - Invalid, non-HTTP(S), or unsupported provider URLs must fail validation or render as a safe ordinary link according to the governed provider policy.
+
+#### Example
+
+- Source: [01-azure-copilot.md](https://github.com/GraemeMalcolm/ai-skills-nav/blob/main/source/modules/azure-copilot-demo/01-azure-copilot.md)
+- Rendered page: [Azure Copilot Demo](https://graememalcolm.github.io/ai-skills-nav/modules/azure-copilot-demo/index.html)
 
 ### 10.5 Choice pivots
 
@@ -811,6 +814,11 @@ Expected rendering behavior:
 - Only one panel in a group is active at a time.
 - An unclosed block, missing label, or `zone-end` without a matching start must fail validation.
 - Pivot content must pass through the same Markdown and directive processing as ordinary page content.
+
+#### Example
+
+- Source: [02-generative-ai.md](https://github.com/GraemeMalcolm/ai-skills-nav/blob/main/source/modules/ai-concepts/02-generative-ai.md)
+- Rendered page: [Generative AI and agents](https://graememalcolm.github.io/ai-skills-nav/modules/ai-concepts/pages/02-generative-ai/index.html)
 
 ### 10.6 Knowledge checks
 
@@ -856,6 +864,8 @@ Expected rendering behavior:
 
 **FR-LAB-005** Hosted-lab launch URLs must preserve all authored path, query-string, and fragment components when substituted into the standard template.
 
+**FR-LAB-007** Relative media referenced by the hosted-lab template must resolve from the template document and be published at a stable content path accessible from every generated route.
+
 Example page combining hosted and self-directed lab choices:
 
 ```markdown
@@ -877,6 +887,11 @@ title: Exercise - Explore AI workloads
 ```
 
 The hosted variant must use `LAB_HOST` with a governed launch URL. It renders the shared `templates/hosted-lab.md` content, substitutes the URL for `{LAB_URL}`, and resolves the launch image from the template's media folder. The self-directed variant must render the referenced instructions inline so learners remain within the module's navigation context.
+
+#### Example
+
+- Source: [01-ai-workloads.md](https://github.com/GraemeMalcolm/ai-skills-nav/blob/main/source/modules/hands-on-ai-concepts/01-ai-workloads.md)
+- Rendered page: [Exercise - Explore AI workloads](https://graememalcolm.github.io/ai-skills-nav/modules/hands-on-ai-concepts/pages/01-ai-workloads/index.html)
 
 ## 11. Personal playlists
 
@@ -909,6 +924,8 @@ Personal playlists are learner-defined ordered collections of modules. Their pro
 **FR-PERSONAL-013** The product must disclose whether personal playlists are device-local or synchronized to an account and define the expected behavior for signed-out learners.
 
 ## 12. Sharing and URLs
+
+Each course, playlist, module, and individual page must be accessible via deep-linked URL that users can share, or which can be included in Microsoft websites, blogs, and social media posts.
 
 **FR-SHARE-001** Course, curated-playlist, module, page, and personal-playlist experiences must provide a Share action that exposes a copyable URL.
 
@@ -992,3 +1009,15 @@ The product owner and production team must resolve these decisions during planni
 - Search ranking, synonyms, typo tolerance, analytics, and scale targets beyond the proof-of-concept behavior.
 - Authentication, authorization, privacy, retention, geographic, and compliance requirements.
 - Availability, performance, browser-support, and service-level targets.
+
+## 17. Suggestions for future AI agent integration
+
+While the integration of interactive AI agents is outside the scope of this document, the proof-of-concept encapsulates a suggested approach in which multiple domain-specific agent personalities are available in the site, and can be associated with modules, playlists, and courses to ensure a consistent subject-matter expert AI is available to support each curriculum area. An additional default agent persona is available to support the site in general.
+
+Each agent personality uses a common base LLM and agent definition with "pluggable" avatar images, voices, and knowledge bases.
+
+In the POC, the available avatars are defined in a central [avatars](https://github.com/GraemeMalcolm/ai-skills-nav/tree/main/avatars) folder and assigned by name to a content asset in its metadata using the `avatar` property.
+
+As a result, the assigned avatar is used in any AI integration within the mapped content asset. For example, [AI Development content assets](https://graememalcolm.github.io/ai-skills-nav/modules/develop-first-agent/index.html) use the *Anton* avatar, as seen in the *Ask Anton* popup chat interface and in [Quizzes](https://graememalcolm.github.io/ai-skills-nav/modules/ai-concepts/pages/09-knowledge-check/index.html).
+
+The domain-specific avatar names, images, and voices are based on the Synthesia avatars used in AI-generated videos within the Microsoft Official Curriculum content.
