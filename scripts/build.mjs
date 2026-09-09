@@ -515,12 +515,18 @@ function catalogFilterDialog(items, fields, subject) {
 }
 
 function overview(outputFile, item, type, action = "", imageDetails = "", footer = "", wideImageDetails = false) {
-  return `<article class="overview${wideImageDetails ? " overview-wide-details" : ""}">
+  const isCollection = type === "playlists" || type === "courses";
+  const description = String(item.description || "");
+  const descriptionCharacters = Array.from(description);
+  const descriptionIsTruncated = isCollection && descriptionCharacters.length > 500;
+  const displayedDescription = descriptionIsTruncated ? `${descriptionCharacters.slice(0, 500).join("")}...` : description;
+  const descriptionTooltip = descriptionIsTruncated ? ` title="${escapeHtml(description)}"` : "";
+  return `<article class="overview${wideImageDetails ? " overview-wide-details" : ""}${isCollection ? " overview-collection" : ""}">
     <div class="overview-media"><div class="overview-image">${thumbnail(outputFile, item, type)}</div>${wideImageDetails ? "" : imageDetails}</div>
     <div class="overview-copy">
       <p class="kicker">${escapeHtml(type === "playlists" ? "Learning playlist" : type === "courses" ? "Microsoft Official Course" : "Learning experience")}</p>
       <h1>${escapeHtml(item.title)}</h1>
-      <p class="lede">${escapeHtml(item.description || "")}</p>
+      <p class="lede"${descriptionTooltip}>${escapeHtml(displayedDescription)}</p>
       ${metadataLine(item) ? `<p class="metadata">${metadataLine(item)}</p>` : ""}
       ${action}
     </div>
