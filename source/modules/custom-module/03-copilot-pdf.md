@@ -1,5 +1,5 @@
 ---
-title: Exercise - Explore Copilot
+title: Copilot Comparison
 ---
 
 [!PDF[](./media/copilot.pdf)]
