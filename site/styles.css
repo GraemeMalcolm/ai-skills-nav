@@ -990,23 +990,13 @@ img {
   min-height: calc(100vh - 68px);
   display: grid;
   grid-template-columns: minmax(280px, .9fr) minmax(360px, 1.1fr);
-  align-items: center;
+  align-items: start;
   gap: clamp(36px, 6vw, 90px);
   padding: clamp(44px, 8vw, 110px);
 }
 
 .overview-media {
   min-width: 0;
-}
-
-.overview-wide-details {
-  align-items: start;
-}
-
-.overview-wide-details>.overview-contents {
-  grid-column: 1 / -1;
-  width: 100%;
-  margin-top: 0;
 }
 
 .overview-image img {
@@ -1107,12 +1097,8 @@ img {
 
 .overview-copy h1 {
   margin: 10px 0 20px;
-  font: 700 clamp(1.9rem, 3.25vw, 3.4rem)/1.05 "Manrope", sans-serif;
+  font: 700 clamp(1.65rem, 2.5vw, 2.6rem)/1.05 "Manrope", sans-serif;
   letter-spacing: 0;
-}
-
-.overview-collection .overview-copy h1 {
-  font-size: clamp(1.65rem, 2.5vw, 2.6rem);
 }
 
 .lede {
