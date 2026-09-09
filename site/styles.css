@@ -999,6 +999,16 @@ img {
   min-width: 0;
 }
 
+.overview-wide-details {
+  align-items: start;
+}
+
+.overview-wide-details>.overview-contents {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-top: 0;
+}
+
 .overview-image img {
   width: 100%;
   display: block;
