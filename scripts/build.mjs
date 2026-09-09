@@ -146,6 +146,8 @@ function rewriteAssetUrl(value, sourceFile, outputFile) {
 
 function rewriteMarkdownAssets(markdown, sourceFile, outputFile) {
   return markdown
+    .replace(/(\[!PDF\[\]\()([^)]+)(\)\])/gi, (match, prefix, url, suffix) =>
+      `${prefix}${rewriteAssetUrl(url, sourceFile, outputFile)}${suffix}`)
     .replace(/(!\[[^\]]*\]\()([^\s)]+)([^)]*\))/g, (match, prefix, url, suffix) =>
       `${prefix}${rewriteAssetUrl(url, sourceFile, outputFile)}${suffix}`)
     .replace(/(<img\b[^>]*?\bsrc=["'])([^"']+)(["'][^>]*>)/gi, (match, prefix, url, suffix) =>
@@ -216,22 +218,28 @@ function videoEmbed(url) {
   return `<div class="video-frame"><iframe src="${escapeHtml(source)}" title="Embedded video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>`;
 }
 
+function pdfEmbed(url) {
+  const source = url.trim();
+  const escapedSource = escapeHtml(source);
+  return `<div class="pdf-frame"><iframe src="${escapedSource}" title="Embedded PDF document" loading="lazy"><p>PDF preview unavailable. <a href="${escapedSource}">Open the PDF document</a>.</p></iframe></div>`;
+}
+
 function parseMarkdown(markdown) {
   return marked.parse(markdown);
 }
 
 function renderMarkdown(markdown) {
-  const videoPattern = /^\s*\[!VIDEO\s*:?\s*(https?:\/\/[^\]\s]+)\]\s*$/gim;
+  const embedPattern = /^\s*(?:\[!VIDEO\s*:?\s*(https?:\/\/[^\]\s]+)\]|\[!PDF\[\]\(([^)]+)\)\])\s*$/gim;
   const chunks = [];
   let cursor = 0;
-  for (const match of markdown.matchAll(videoPattern)) {
-    const beforeVideo = markdown.slice(cursor, match.index).trim();
-    if (beforeVideo) chunks.push(parseMarkdown(beforeVideo));
-    chunks.push(videoEmbed(match[1]));
+  for (const match of markdown.matchAll(embedPattern)) {
+    const beforeEmbed = markdown.slice(cursor, match.index).trim();
+    if (beforeEmbed) chunks.push(parseMarkdown(beforeEmbed));
+    chunks.push(match[1] ? videoEmbed(match[1]) : pdfEmbed(match[2]));
     cursor = match.index + match[0].length;
   }
-  const afterVideo = markdown.slice(cursor).trim();
-  if (afterVideo) chunks.push(parseMarkdown(afterVideo));
+  const afterEmbed = markdown.slice(cursor).trim();
+  if (afterEmbed) chunks.push(parseMarkdown(afterEmbed));
   return chunks.join("\n");
 }
 
