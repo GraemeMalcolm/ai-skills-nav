@@ -528,11 +528,24 @@ function overview(outputFile, item, type, action = "", imageDetails = "", footer
   </article>`;
 }
 
+function overviewContents(outputFile, items, type, heading, targetForItem) {
+  const excerpt = (description = "") => description.length > 150 ? `${description.slice(0, 150)}...` : description;
+  return `<section class="overview-contents" aria-labelledby="overview-contents-title">
+    <h2 id="overview-contents-title">${escapeHtml(heading)}</h2>
+    <ol>${items.map((item) => {
+    const description = item.description || "";
+    const tooltip = description ? ` title="${escapeHtml(description)}"` : "";
+    return `<li><a href="${relativeUrl(outputFile, targetForItem(item))}"${tooltip}>
+        ${thumbnail(outputFile, item, type)}
+        <span><strong>${escapeHtml(item.title)}</strong>${description ? `<small>${escapeHtml(excerpt(description))}</small>` : ""}</span>
+      </a></li>`;
+  }).join("")}</ol>
+  </section>`;
+}
+
 function courseOverview(outputFile, course, playlists) {
-  const playlistList = `<section class="module-page-list" aria-labelledby="course-playlists-title"><h2 id="course-playlists-title">Self-paced learning</h2><ol>${playlists.map((playlist) => {
-    const target = playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), playlist);
-    return `<li><a href="${relativeUrl(outputFile, target)}">${escapeHtml(playlist.title)}</a></li>`;
-  }).join("")}</ol></section>`;
+  const playlistList = overviewContents(outputFile, playlists, "playlists", "In this course:", (playlist) =>
+    playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), playlist));
   const credentials = Array.isArray(course.credentials) ? course.credentials.filter(Boolean) : [];
   const credentialContent = credentials.length
     ? `<ul>${credentials.map((credential) => `<li>${escapeHtml(credential)}</li>`).join("")}</ul>`
@@ -837,7 +850,9 @@ async function build() {
       ? path.join(outputRoot, "playlists", playlist.slug, "modules", playlistModules[0].slug, "index.html")
       : null;
     const playlistNavigation = firstModuleTarget ? pageNavigation(playlistFile, null, firstModuleTarget) : "";
-    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", "", playlistNavigation) }));
+    const moduleList = overviewContents(playlistFile, playlistModules, "modules", "In this playlist:", (module) =>
+      path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug, "index.html"));
+    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", moduleList, playlistNavigation) }));
     const modulesRoot = path.join(outputRoot, "playlists", playlist.slug, "modules");
     for (const [moduleIndex, module] of playlistModules.entries()) {
       const routeRoot = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug);
@@ -893,7 +908,9 @@ async function build() {
       const playlistNavigation = playlist.modules.length > 1
         ? pageNavigation(playlistFile, previousPlaylistTarget, firstModuleTarget)
         : "";
-      await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar: courseSidebar(playlistFile, course, coursePlaylists, playlist.slug), avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", "", playlistNavigation) }));
+      const moduleList = overviewContents(playlistFile, playlist.modules, "modules", "In this playlist:", (module) =>
+        path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug, "index.html"));
+      await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar: courseSidebar(playlistFile, course, coursePlaylists, playlist.slug), avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", moduleList, playlistNavigation) }));
 
       const modulesRoot = path.join(coursePlaylistsRoot, playlist.slug, "modules");
       for (const [moduleIndex, module] of playlist.modules.entries()) {
