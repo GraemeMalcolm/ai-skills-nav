@@ -235,6 +235,53 @@ function renderMarkdown(markdown) {
   return chunks.join("\n");
 }
 
+function knowledgeCheckInterface(outputFile, source, attributes, avatar, id) {
+  const parsed = yaml.load(source);
+  const questions = Array.isArray(parsed) ? parsed.flatMap((entry) => entry?.item || []) : [];
+  const normalizedQuestions = questions.map((entry) => {
+    const options = Object.entries(entry || {})
+      .filter(([key, value]) => /^[a-z]$/i.test(key) && typeof value === "string")
+      .map(([key, value]) => ({ key: key.toUpperCase(), text: value }));
+    const answer = String(entry?.answer || "").toUpperCase();
+    if (typeof entry?.question !== "string" || options.length < 2 || !options.some((option) => option.key === answer)) {
+      throw new Error(`Knowledge check ${id} must contain questions with at least two options and a matching answer`);
+    }
+    return { question: entry.question, options, answer, feedback: String(entry.feedback || "") };
+  });
+  if (!normalizedQuestions.length) throw new Error(`Knowledge check ${id} must contain at least one question`);
+
+  const attribute = (name) => attributes.match(new RegExp(`(?:^|\\s)${name}\\s*=\\s*["']([^"']*)["']`, "i"))?.[1] || "";
+  const type = attribute("type").toLocaleLowerCase();
+  const showAnswers = attribute("show-answers").toLocaleLowerCase() === "true";
+  const allowRetry = attribute("allow-retry").toLocaleLowerCase() === "true";
+  const config = escapeHtml(JSON.stringify({ name: avatar.name, questions: normalizedQuestions, showAnswers, allowRetry }));
+
+  if (type === "chat") {
+    const avatarImage = relativeUrl(outputFile, path.join(outputRoot, "content", "avatars", avatar.slug, "avatar.png"));
+    return `<section class="quiz-chat" data-knowledge-check="chat" data-quiz-config="${config}" aria-labelledby="${id}-title">
+      <header class="quiz-header"><img src="${avatarImage}" alt=""><div><p class="kicker">Knowledge check</p><h2 id="${id}-title">Chat with ${escapeHtml(avatar.name)}</h2></div></header>
+      <div class="quiz-messages" data-quiz-messages role="log" aria-live="polite" aria-relevant="additions"></div>
+      <div class="quiz-chat-options" data-quiz-options aria-label="Answer options"></div>
+      <form class="quiz-form" data-quiz-form><label for="${id}-answer">Your answer</label><div><input id="${id}-answer" type="text" placeholder="Enter an option" autocomplete="off" required><button type="submit">Send</button></div></form>
+    </section>`;
+  }
+
+  return `<section class="knowledge-quiz" data-knowledge-check="quiz" data-quiz-config="${config}" aria-labelledby="${id}-title">
+    <header class="knowledge-quiz-header"><p class="kicker">Knowledge check</p><h2 id="${id}-title">Check your knowledge</h2></header>
+    <form data-quiz-form>
+      <div class="knowledge-quiz-questions">${normalizedQuestions.map((question, questionIndex) => `<fieldset data-quiz-question><legend><span>${questionIndex + 1}.</span> ${escapeHtml(question.question)}</legend><div class="knowledge-quiz-options">${question.options.map((option) => `<label><input type="radio" name="${id}-question-${questionIndex}" value="${option.key}"><span><strong>${option.key}.</strong> ${escapeHtml(option.text)}</span></label>`).join("")}</div><div class="knowledge-quiz-feedback" data-quiz-feedback hidden></div></fieldset>`).join("")}</div>
+      <p class="knowledge-quiz-status" data-quiz-status role="status" aria-live="polite"></p>
+      <button class="primary-button knowledge-quiz-submit" type="submit">Submit answers</button>
+    </form>
+  </section>`;
+}
+
+function renderKnowledgeChecks(markdown, outputFile, avatar, seed) {
+  let index = 0;
+  return markdown.replace(/^::: knowledge-check([^\r\n]*)\r?\n([\s\S]*?)^::: end-knowledge-check\s*$/gim, (match, attributes, source) =>
+    knowledgeCheckInterface(outputFile, source.trim(), attributes, avatar, `${seed}-knowledge-check-${index++}`));
+}
+
 function renderZones(markdown, groupSeed) {
   const lines = markdown.split(/\r?\n/);
   const chunks = [];
@@ -286,32 +333,13 @@ function renderZones(markdown, groupSeed) {
   return chunks.join("\n");
 }
 
-async function renderMarkdownPage(sourceFile, outputFile, seed) {
+async function renderMarkdownPage(sourceFile, outputFile, seed, avatar) {
   const parsed = parseFrontMatter(await readFile(sourceFile, "utf8"), sourceFile);
   const expanded = await expandIncludes(parsed.body, sourceFile, outputFile, [sourceFile]);
   return {
     title: parsed.data.title || parsed.data.lab?.title || pageSlug(sourceFile),
-    html: renderZones(expanded, seed),
-    quiz: parsed.data.quiz,
+    html: renderZones(renderKnowledgeChecks(expanded, outputFile, avatar, seed), seed),
   };
-}
-
-function quizInterface(outputFile, quiz, avatar) {
-  if (quiz === undefined) return "";
-  const questions = Array.isArray(quiz) ? quiz.flatMap((entry) => entry?.item || []) : [];
-  if (!questions.length || questions.some((entry) => typeof entry?.question !== "string" || !/^[abc]$/i.test(entry?.answer || ""))) {
-    throw new Error("Quiz metadata must contain questions with an A, B, or C answer");
-  }
-  const avatarImage = relativeUrl(outputFile, path.join(outputRoot, "content", "avatars", avatar.slug, "avatar.png"));
-  const config = escapeHtml(JSON.stringify({
-    name: avatar.name,
-    questions: questions.map((entry) => ({ question: entry.question.replaceAll("\\n", "\n"), answer: entry.answer.toUpperCase() })),
-  }));
-  return `<section class="quiz-chat" data-quiz-config="${config}" aria-labelledby="quiz-title">
-    <header class="quiz-header"><img src="${avatarImage}" alt=""><div><p class="kicker">Knowledge check</p><h2 id="quiz-title">Chat with ${escapeHtml(avatar.name)}</h2></div></header>
-    <div class="quiz-messages" data-quiz-messages role="log" aria-live="polite" aria-relevant="additions"></div>
-    <form class="quiz-form" data-quiz-form><label for="quiz-answer">Your answer</label><div><input id="quiz-answer" type="text" placeholder="A, B, or C" autocomplete="off" required><button type="submit">Send</button></div></form>
-  </section>`;
 }
 
 function icon(name) {
@@ -575,11 +603,10 @@ function pageNavigation(outputFile, previousTarget = null, nextTarget = null, bo
   </nav>`;
 }
 
-function articleContent(module, page, pageHtml, navigation, quiz = "") {
+function articleContent(module, page, pageHtml, navigation) {
   return `<article class="lesson">
     <header class="lesson-header"><p class="kicker">${escapeHtml(module.title)}</p><h1>${escapeHtml(page.title)}</h1></header>
     ${pageHtml ? `<div class="prose">${pageHtml}</div>` : ""}
-    ${quiz}
     ${navigation}
   </article>`;
 }
@@ -673,10 +700,9 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
   const moduleBreadcrumbs = [...parents, { label: module.title }];
 
   if (pages.length === 1) {
-    const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`);
-    const quiz = quizInterface(indexFile, rendered.quiz, module.avatarData || defaultAvatar);
+    const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`, module.avatarData || defaultAvatar);
     const navigation = pageNavigation(indexFile, navigationContext.previousTarget, navigationContext.nextTarget, { previous: true, next: true });
-    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, pages[0], rendered.html, navigation, quiz) }));
+    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, pages[0], rendered.html, navigation) }));
     return;
   }
 
@@ -687,14 +713,13 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
 
   for (const [pageIndex, page] of pages.entries()) {
     const outputFile = pageTargets[pageIndex];
-    const rendered = await renderMarkdownPage(page.sourceFile, outputFile, `${module.slug}-${page.slug}`);
+    const rendered = await renderMarkdownPage(page.sourceFile, outputFile, `${module.slug}-${page.slug}`, module.avatarData || defaultAvatar);
     const pageSidebar = sidebarFactory ? sidebarFactory(outputFile, page.slug) : "";
     const previousTarget = pageIndex > 0 ? pageTargets[pageIndex - 1] : indexFile;
     const nextTarget = pageIndex < pages.length - 1 ? pageTargets[pageIndex + 1] : navigationContext.nextTarget;
     const navigation = pageNavigation(outputFile, previousTarget, nextTarget, { next: pageIndex === pages.length - 1 });
     const pageBreadcrumbs = [...parents, { label: module.title, target: indexFile }, { label: rendered.title }];
-    const quiz = quizInterface(outputFile, rendered.quiz, module.avatarData || defaultAvatar);
-    await writePage(outputFile, shell({ outputFile, title: rendered.title, breadcrumbs: pageBreadcrumbs, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, page, rendered.html, navigation, quiz) }));
+    await writePage(outputFile, shell({ outputFile, title: rendered.title, breadcrumbs: pageBreadcrumbs, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, page, rendered.html, navigation) }));
   }
 }
 

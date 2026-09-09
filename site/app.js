@@ -1071,87 +1071,172 @@ window.addEventListener("storage", (event) => {
 // ---------------------------------------------------------------------------
 // Knowledge-check quiz
 // ---------------------------------------------------------------------------
-const quiz = document.querySelector("[data-quiz-config]");
-
-if (quiz) {
+document.querySelectorAll("[data-knowledge-check]").forEach((quiz) => {
   const config = JSON.parse(quiz.dataset.quizConfig);
-  const messages = quiz.querySelector("[data-quiz-messages]");
+  const scoreText = (correct) => `You scored ${correct} out of ${config.questions.length} (${Math.round(correct / config.questions.length * 100)}%).`;
+  const answerText = (question) => {
+    const option = question.options.find((item) => item.key === question.answer);
+    return `${question.answer}. ${option?.text || ""}`;
+  };
+
+  if (quiz.dataset.knowledgeCheck === "chat") {
+    const messages = quiz.querySelector("[data-quiz-messages]");
+    const options = quiz.querySelector("[data-quiz-options]");
+    const form = quiz.querySelector("[data-quiz-form]");
+    const input = form.querySelector("input");
+    let questionIndex = 0;
+    let responses = [];
+    let completed = false;
+
+    const addMessage = (role, text) => {
+      const message = document.createElement("div");
+      message.className = `quiz-message ${role}`;
+      const label = document.createElement("span");
+      label.textContent = role === "assistant" ? config.name : "You";
+      const content = document.createElement("p");
+      content.textContent = text;
+      message.append(label, content);
+      messages.append(message);
+      messages.scrollTop = messages.scrollHeight;
+    };
+
+    const renderOptions = () => {
+      options.replaceChildren();
+      if (completed) {
+        if (config.allowRetry) {
+          const retry = document.createElement("button");
+          retry.type = "button";
+          retry.textContent = "Retry knowledge check";
+          retry.addEventListener("click", restart);
+          options.append(retry);
+        }
+        return;
+      }
+      config.questions[questionIndex].options.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = `${option.key}. ${option.text}`;
+        button.addEventListener("click", () => submitAnswer(option.key));
+        options.append(button);
+      });
+    };
+
+    const showQuestion = () => {
+      const question = config.questions[questionIndex];
+      addMessage("assistant", `${question.question}\n${question.options.map((option) => `${option.key}. ${option.text}`).join("\n")}`);
+      input.placeholder = `Enter ${question.options.map((option) => option.key).join(", ")}`;
+      renderOptions();
+    };
+
+    const showResults = () => {
+      completed = true;
+      const correct = responses.filter((response, index) => response === config.questions[index].answer).length;
+      let result = scoreText(correct);
+      if (config.showAnswers) {
+        result += `\n\n${config.questions.map((question, index) => `${index + 1}. Correct answer: ${answerText(question)}${question.feedback ? `\n${question.feedback}` : ""}`).join("\n\n")}`;
+      }
+      addMessage("assistant", result);
+      input.disabled = true;
+      form.querySelector("button").disabled = true;
+      renderOptions();
+    };
+
+    const submitAnswer = (response) => {
+      if (completed) return;
+      addMessage("user", response);
+      responses.push(response);
+      questionIndex++;
+      if (questionIndex === config.questions.length) showResults();
+      else showQuestion();
+    };
+
+    function restart() {
+      messages.replaceChildren();
+      questionIndex = 0;
+      responses = [];
+      completed = false;
+      input.disabled = false;
+      form.querySelector("button").disabled = false;
+      addMessage("assistant", "Let's check your learning. Select an answer or type its letter.");
+      showQuestion();
+      input.focus();
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const value = input.value.trim();
+      const question = config.questions[questionIndex];
+      const response = question.options.find((option) => option.key.toLocaleLowerCase() === value.toLocaleLowerCase() || option.text.toLocaleLowerCase() === value.toLocaleLowerCase());
+      if (!response) {
+        addMessage("assistant", `Choose ${question.options.map((option) => option.key).join(", ")}, or enter the matching answer.`);
+        return;
+      }
+      input.value = "";
+      submitAnswer(response.key);
+    });
+
+    restart();
+    return;
+  }
+
   const form = quiz.querySelector("[data-quiz-form]");
-  const input = form.querySelector("input");
-  const opening = "OK, let's check your learning.\nEnter your answer (A, B, or C) to my questions below. After we've finished, I'll let you know how you did.";
-  let questionIndex = 0;
-  let responses = [];
-  let cancelled = false;
+  const status = quiz.querySelector("[data-quiz-status]");
+  const submit = form.querySelector("button[type='submit']");
+  const fields = [...quiz.querySelectorAll("[data-quiz-question]")];
   let completed = false;
 
-  const addQuizMessage = (role, text) => {
-    const message = document.createElement("div");
-    message.className = `quiz-message ${role}`;
-    const label = document.createElement("span");
-    label.textContent = role === "assistant" ? config.name : "You";
-    const content = document.createElement("p");
-    content.textContent = text;
-    message.append(label, content);
-    messages.append(message);
-    messages.scrollTop = messages.scrollHeight;
-  };
-
-  const restartQuiz = () => {
-    messages.replaceChildren();
-    questionIndex = 0;
-    responses = [];
-    cancelled = false;
+  const reset = () => {
+    form.reset();
     completed = false;
-    input.placeholder = "A, B, or C";
-    addQuizMessage("assistant", `OK, let;s start again\n${config.questions[0].question}`);
-  };
-
-  const showResults = () => {
-    completed = true;
-    input.placeholder = "Enter Restart to try again";
-    const correctCount = responses.filter((response, index) => response === config.questions[index].answer).length;
-    const details = config.questions.map((question, index) => {
-      const response = responses[index];
-      return response === question.answer
-        ? `${index + 1}. ${question.question}\nYour answer: ${response} - Correct`
-        : `${index + 1}. ${question.question}\nYour answer: ${response} - Incorrect. Correct answer: ${question.answer}`;
+    status.textContent = "";
+    fields.forEach((field) => {
+      field.classList.remove("is-correct", "is-incorrect");
+      field.querySelectorAll("input").forEach((input) => { input.disabled = false; });
+      const feedback = field.querySelector("[data-quiz-feedback]");
+      feedback.hidden = true;
+      feedback.replaceChildren();
     });
-    addQuizMessage("assistant", `You scored ${correctCount} out of ${config.questions.length} (${Math.round(correctCount / config.questions.length * 100)}%).\n\n${details.join("\n\n")}`);
+    submit.textContent = "Submit answers";
+    submit.type = "submit";
+    fields[0]?.querySelector("input")?.focus();
   };
-
-  addQuizMessage("assistant", `${opening}\n${config.questions[0].question}`);
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const response = input.value.trim();
-    if (!response) return;
-    addQuizMessage("user", response);
-    input.value = "";
-
-    if (response.toLocaleLowerCase() === "restart") {
-      restartQuiz();
+    if (completed) {
+      if (config.allowRetry) reset();
       return;
     }
-    if (response.toLocaleLowerCase() === "cancel") {
-      cancelled = true;
-      addQuizMessage("assistant", "OK. Enter 'Restart' if you want to restart the test.");
+    const responses = fields.map((field) => field.querySelector("input:checked")?.value || "");
+    if (responses.some((response) => !response)) {
+      status.textContent = "Answer every question before submitting.";
+      fields[responses.indexOf("")]?.querySelector("input")?.focus();
       return;
     }
-    if (cancelled || completed) {
-      addQuizMessage("assistant", "Please enter Restart to restart the test.");
-      return;
-    }
-    if (!/^[abc]$/i.test(response)) {
-      addQuizMessage("assistant", "Please enter A, B, or C");
-      return;
-    }
-
-    responses.push(response.toUpperCase());
-    questionIndex++;
-    if (questionIndex === config.questions.length) showResults();
-    else addQuizMessage("assistant", config.questions[questionIndex].question);
+    completed = true;
+    const correct = responses.filter((response, index) => response === config.questions[index].answer).length;
+    status.textContent = scoreText(correct);
+    fields.forEach((field, index) => {
+      const question = config.questions[index];
+      field.classList.add(responses[index] === question.answer ? "is-correct" : "is-incorrect");
+      field.querySelectorAll("input").forEach((input) => { input.disabled = true; });
+      if (config.showAnswers) {
+        const feedback = field.querySelector("[data-quiz-feedback]");
+        const answer = document.createElement("strong");
+        answer.textContent = `Correct answer: ${answerText(question)}`;
+        feedback.append(answer);
+        if (question.feedback) {
+          const explanation = document.createElement("p");
+          explanation.textContent = question.feedback;
+          feedback.append(explanation);
+        }
+        feedback.hidden = false;
+      }
+    });
+    if (config.allowRetry) submit.textContent = "Retry knowledge check";
+    else submit.disabled = true;
   });
-}
+});
 
 // ---------------------------------------------------------------------------
 // Learning assistant
