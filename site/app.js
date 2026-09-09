@@ -83,6 +83,9 @@ const writePersonalPlaylists = (playlists) => {
 
 const menuIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
 const arrowIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
+const moveUpIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>';
+const moveDownIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+const removeIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5M14 11v5"/></svg>';
 
 /**
  * Recreate playlist navigation when a standalone module was opened from a
@@ -514,7 +517,7 @@ if (personalPlaylistsPage) {
     const title = document.createElement("strong");
     title.textContent = playlist.name;
     const description = document.createElement("span");
-    description.textContent = playlist.description;
+    description.textContent = playlist.description || "A personal playlist.";
     body.append(title, description);
     card.append(imageContainer, body);
     return card;
@@ -538,6 +541,11 @@ if (personalPlaylistsPage) {
   const newPlaylistName = newPlaylistForm.querySelector("[data-new-personal-playlist-name]");
   const newPlaylistDescription = newPlaylistForm.querySelector("[data-new-personal-playlist-description]");
   const newPlaylistStatus = newPlaylistForm.querySelector("[data-new-personal-playlist-status]");
+  const editPlaylistDialog = document.querySelector("[data-edit-personal-playlist-dialog]");
+  const editPlaylistForm = editPlaylistDialog.querySelector("[data-edit-personal-playlist-form]");
+  const editPlaylistName = editPlaylistForm.querySelector("[data-edit-personal-playlist-name]");
+  const editPlaylistDescription = editPlaylistForm.querySelector("[data-edit-personal-playlist-description]");
+  const editPlaylistStatus = editPlaylistForm.querySelector("[data-edit-personal-playlist-status]");
 
   document.querySelector("[data-new-personal-playlist-open]")?.addEventListener("click", () => {
     newPlaylistForm.reset();
@@ -582,6 +590,10 @@ if (personalPlaylistsPage) {
     }
     newPlaylistDialog.close();
     renderCollection();
+  });
+  editPlaylistDialog.querySelectorAll("[data-edit-personal-playlist-close]").forEach((button) => button.addEventListener("click", () => editPlaylistDialog.close()));
+  editPlaylistDialog.addEventListener("click", (event) => {
+    if (event.target === editPlaylistDialog) editPlaylistDialog.close();
   });
 
   const renderPlaylist = (playlist, playlists) => {
@@ -641,7 +653,7 @@ if (personalPlaylistsPage) {
 
     personalPlaylistsPage.replaceChildren();
     const overview = document.createElement("article");
-    overview.className = "overview";
+    overview.className = "overview overview-collection personal-playlist-overview";
     const media = document.createElement("div");
     media.className = "overview-media";
     const overviewImage = document.createElement("div");
@@ -660,7 +672,7 @@ if (personalPlaylistsPage) {
     title.textContent = playlist.name;
     const description = document.createElement("p");
     description.className = "lede";
-    description.textContent = playlist.description;
+    description.textContent = playlist.description || "A personal playlist.";
 
     const manageSection = document.createElement("section");
     manageSection.className = "personal-playlist-manage";
@@ -668,10 +680,7 @@ if (personalPlaylistsPage) {
     const manageTitle = document.createElement("h2");
     manageTitle.id = "personal-playlist-modules-title";
     manageTitle.tabIndex = -1;
-    manageTitle.textContent = "Modules";
-    const manageHelp = document.createElement("p");
-    manageHelp.className = "personal-playlist-manage-help";
-    manageHelp.textContent = "Change the learning order or remove modules from this playlist.";
+    manageTitle.textContent = "In this playlist:";
     const manageStatus = document.createElement("p");
     manageStatus.className = "sr-only";
     manageStatus.setAttribute("role", "status");
@@ -701,25 +710,37 @@ if (personalPlaylistsPage) {
     playlist.modules.forEach((module, index) => {
       const item = document.createElement("li");
       item.dataset.modulePath = module.path;
-      const moduleDetails = document.createElement("div");
+      const catalogModule = moduleCatalog.get(module.path);
+      const moduleDetails = document.createElement("a");
       moduleDetails.className = "personal-playlist-module-details";
+      moduleDetails.href = moduleUrl(module.path);
+      if (catalogModule.description) moduleDetails.title = catalogModule.description;
       const thumbnail = document.createElement("img");
       thumbnail.className = "personal-playlist-module-thumbnail";
-      thumbnail.src = moduleCatalog.get(module.path).thumbnail;
+      thumbnail.src = catalogModule.thumbnail;
       thumbnail.alt = "";
       thumbnail.loading = "lazy";
-      const moduleLink = document.createElement("a");
-      moduleLink.href = moduleUrl(module.path);
-      moduleLink.textContent = module.name;
-      moduleDetails.append(thumbnail, moduleLink);
+      const moduleText = document.createElement("span");
+      const moduleName = document.createElement("strong");
+      moduleName.textContent = module.name;
+      moduleText.append(moduleName);
+      if (catalogModule.description) {
+        const moduleDescription = document.createElement("small");
+        moduleDescription.textContent = catalogModule.description.length > 150
+          ? `${catalogModule.description.slice(0, 150)}...`
+          : catalogModule.description;
+        moduleText.append(moduleDescription);
+      }
+      moduleDetails.append(thumbnail, moduleText);
       const actions = document.createElement("div");
       actions.className = "personal-playlist-module-actions";
 
       const moveUp = document.createElement("button");
-      moveUp.className = "text-button personal-playlist-move-up";
+      moveUp.className = "icon-button personal-playlist-module-action personal-playlist-move-up";
       moveUp.type = "button";
-      moveUp.textContent = "Move up";
+      moveUp.innerHTML = moveUpIcon;
       moveUp.disabled = index === 0;
+      moveUp.title = "Move up";
       moveUp.setAttribute("aria-label", `Move ${module.name} up`);
       moveUp.addEventListener("click", () => {
         const previousModules = [...playlist.modules];
@@ -728,10 +749,11 @@ if (personalPlaylistsPage) {
       });
 
       const moveDown = document.createElement("button");
-      moveDown.className = "text-button";
+      moveDown.className = "icon-button personal-playlist-module-action";
       moveDown.type = "button";
-      moveDown.textContent = "Move down";
+      moveDown.innerHTML = moveDownIcon;
       moveDown.disabled = index === playlist.modules.length - 1;
+      moveDown.title = "Move down";
       moveDown.setAttribute("aria-label", `Move ${module.name} down`);
       moveDown.addEventListener("click", () => {
         const previousModules = [...playlist.modules];
@@ -740,9 +762,10 @@ if (personalPlaylistsPage) {
       });
 
       const remove = document.createElement("button");
-      remove.className = "text-button personal-playlist-module-remove";
+      remove.className = "icon-button personal-playlist-module-action personal-playlist-module-remove";
       remove.type = "button";
-      remove.textContent = "Remove";
+      remove.innerHTML = removeIcon;
+      remove.title = "Remove from playlist";
       remove.setAttribute("aria-label", `Remove ${module.name} from this playlist`);
       remove.addEventListener("click", () => {
         const previousModules = [...playlist.modules];
@@ -759,9 +782,9 @@ if (personalPlaylistsPage) {
       const empty = document.createElement("p");
       empty.className = "personal-playlist-manage-empty";
       empty.textContent = "This playlist does not contain any modules yet.";
-      manageSection.append(manageTitle, manageHelp, manageStatus, empty);
+      manageSection.append(manageTitle, manageStatus, empty);
     } else {
-      manageSection.append(manageTitle, manageHelp, manageStatus, managedList);
+      manageSection.append(manageTitle, manageStatus, managedList);
     }
 
     const deleteButton = document.createElement("button");
@@ -773,7 +796,56 @@ if (personalPlaylistsPage) {
       writePersonalPlaylists(playlists.filter((item) => item.id !== playlist.id));
       window.location.assign(window.location.pathname);
     });
-    copy.append(kicker, title, description, manageSection, deleteButton);
+    const editButton = document.createElement("button");
+    editButton.className = "text-button personal-playlist-edit";
+    editButton.type = "button";
+    editButton.textContent = "Edit playlist";
+    editButton.addEventListener("click", () => {
+      editPlaylistName.value = playlist.name;
+      editPlaylistDescription.value = playlist.description;
+      editPlaylistStatus.hidden = true;
+      editPlaylistStatus.classList.remove("is-error");
+      editPlaylistDialog.showModal();
+      editPlaylistName.focus();
+    });
+    editPlaylistForm.onsubmit = (event) => {
+      event.preventDefault();
+      const name = editPlaylistName.value.trim();
+      if (!name) {
+        editPlaylistStatus.textContent = "Enter a name for the playlist.";
+        editPlaylistStatus.classList.add("is-error");
+        editPlaylistStatus.hidden = false;
+        editPlaylistName.focus();
+        return;
+      }
+      if (playlists.some((item) => item.id !== playlist.id && item.name.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+        editPlaylistStatus.textContent = "A playlist with that name already exists.";
+        editPlaylistStatus.classList.add("is-error");
+        editPlaylistStatus.hidden = false;
+        editPlaylistName.focus();
+        return;
+      }
+      const previousName = playlist.name;
+      const previousDescription = playlist.description;
+      playlist.name = name;
+      playlist.description = editPlaylistDescription.value.trim();
+      if (!writePersonalPlaylists(playlists)) {
+        playlist.name = previousName;
+        playlist.description = previousDescription;
+        editPlaylistStatus.textContent = "Your browser could not update the playlist.";
+        editPlaylistStatus.classList.add("is-error");
+        editPlaylistStatus.hidden = false;
+        return;
+      }
+      editPlaylistDialog.close();
+      renderPlaylist(playlist, playlists);
+      personalPlaylistsPage.querySelector(".personal-playlist-edit")?.focus();
+    };
+    const playlistActions = document.createElement("div");
+    playlistActions.className = "personal-playlist-overview-actions";
+    playlistActions.append(editButton, deleteButton);
+    copy.append(kicker, title, description, playlistActions);
+    media.append(manageSection);
     overview.append(media, copy);
     if (playlist.modules.length) {
       const pageNavigation = document.createElement("nav");

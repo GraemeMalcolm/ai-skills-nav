@@ -807,6 +807,7 @@ async function build() {
   const moduleCatalog = modules.map((module) => ({
     id: module.slug,
     name: module.title,
+    description: module.description || "",
     path: `modules/${module.slug}/index.html`,
     pages: (module.pages.length > 1 ? module.pages : []).map((page) => ({
       name: page.title,
@@ -827,6 +828,17 @@ async function build() {
         <p class="personal-playlist-status" data-new-personal-playlist-status role="status" aria-live="polite" hidden></p>
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-new-personal-playlist-close>Cancel</button><button class="primary-button" type="submit">Create playlist</button></footer>
+    </form>
+  </dialog>
+  <dialog class="filter-dialog personal-playlist-dialog" data-edit-personal-playlist-dialog aria-labelledby="edit-personal-playlist-title">
+    <form data-edit-personal-playlist-form>
+      <header class="filter-dialog-header"><div><p class="kicker">Personal collection</p><h2 id="edit-personal-playlist-title">Edit playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-edit-personal-playlist-close>${icon("close")}</button></header>
+      <div class="filter-dialog-body personal-playlist-fields">
+        <label><span>Name</span><input type="text" maxlength="80" data-edit-personal-playlist-name></label>
+        <label><span>Description</span><textarea rows="3" maxlength="300" data-edit-personal-playlist-description></textarea></label>
+        <p class="personal-playlist-status" data-edit-personal-playlist-status role="status" aria-live="polite" hidden></p>
+      </div>
+      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-edit-personal-playlist-close>Cancel</button><button class="primary-button" type="submit">Save changes</button></footer>
     </form>
   </dialog>`;
   const personalPlaylistSidebar = `<aside class="sidebar" data-sidebar><div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div><nav aria-label="Playlist" data-personal-playlist-navigation></nav></aside><div class="sidebar-scrim" data-menu-close></div>`;
