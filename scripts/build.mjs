@@ -430,7 +430,7 @@ function shareDialog(hidden = false) {
 
 function signInDialog(outputFile) {
   const logo = relativeUrl(outputFile, path.join(outputRoot, "assets", "microsoft-logo.svg"));
-  return `<a class="filter-trigger" href="#sign-in" data-auth-open>Sign-in</a>
+  return `<a class="filter-trigger auth-link" href="#sign-in" data-auth-open>Sign-in</a>
   <dialog class="filter-dialog sign-in-dialog" data-sign-in-dialog aria-labelledby="sign-in-title">
     <form data-sign-in-form novalidate>
       <header class="filter-dialog-header"><div><img class="sign-in-logo" src="${logo}" alt="Microsoft"><h2 id="sign-in-title">Sign-in</h2></div><button class="icon-button" type="button" aria-label="Close sign-in" data-sign-in-close>${icon("close")}</button></header>

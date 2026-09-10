@@ -148,6 +148,20 @@ img {
   text-underline-offset: 4px;
 }
 
+.header-tools+.auth-link {
+  position: relative;
+  margin-left: 24px;
+}
+
+.header-tools+.auth-link::before {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: -13px;
+  border-left: 1px solid var(--line);
+  content: "";
+}
+
 .site-search {
   display: flex;
   align-items: stretch;
@@ -2036,6 +2050,14 @@ body.access-denied>[data-agent] {
     width: 100%;
     flex-wrap: nowrap;
     gap: 12px;
+  }
+
+  .header-tools+.auth-link {
+    margin-left: auto;
+  }
+
+  .header-tools+.auth-link::before {
+    display: none;
   }
 
   .home-page .site-search,
