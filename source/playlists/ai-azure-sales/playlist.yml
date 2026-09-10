@@ -1,0 +1,14 @@
+title: Azure AI Solution Customer Discussions
+description: Explore how Azure AI solutions can be discussed with customers, including understanding their needs, presenting AI capabilities, and demonstrating practical applications using Microsoft Foundry.
+level: 200
+duration: 60 minutes
+restricted_to:
+  - microsoft.com
+topics:
+  - Azure
+audience:
+  - Technical Sales Specialist
+modules:
+  - ai-concepts
+  - get-started-ai-azure
+  - intro-to-caldova
