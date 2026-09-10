@@ -98,8 +98,8 @@ playlists:
 
 Rules:
 
-- `title`, `course_number`, `description`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `playlists` SHOULD be present.
-- `course_number` MUST be present.
+- `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `playlists` SHOULD be present.
+- `course_number` is optional. When supplied, it MUST be a string.
 - `playlists` MUST be a non-empty array of existing playlist slugs.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
@@ -265,7 +265,7 @@ The build MUST fail for:
 - An unknown avatar, module, or playlist reference.
 - Missing required avatar values, image, knowledge file, or audio file.
 - Avatar knowledge with a non-array root or a category without a document array.
-- A course with no course number or no playlists.
+- A course with no playlists.
 
 The implementation SHOULD also validate thumbnail existence, field types, array item types, unique page route slugs, and duplicate references, even though the original implementation does not fully validate those cases.
 
@@ -402,7 +402,7 @@ Multiple selections in one field use OR semantics. Different fields, and search 
 
 ### 7.3 Course detail
 
-A course detail MUST show its thumbnail, title, description, course number, level, duration, credential information, and ordered links to its self-paced playlists.
+A course detail MUST show its thumbnail, title, description, level, duration, credential information, and ordered links to its self-paced playlists. It MUST show the course number when one is supplied.
 
 ### 7.4 Curated playlist detail
 

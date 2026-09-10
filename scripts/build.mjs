@@ -951,7 +951,6 @@ async function build() {
   }
 
   for (const course of courses) {
-    if (!course.course_number) throw new Error(`Course ${course.slug} must define course_number`);
     if (!Array.isArray(course.playlists) || course.playlists.length === 0) throw new Error(`Course ${course.slug} must define at least one playlist`);
     const coursePlaylists = course.playlists.map((slug) => {
       const playlist = playlistMap.get(slug);

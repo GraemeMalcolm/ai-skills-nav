@@ -124,7 +124,7 @@ Course metadata uses the following source contract:
 | --- | --- | --- | --- |
 | Stable identifier | One | Yes | Canonical identity for relationships, routes, analytics, and sharing. In the current source layout this is the course folder name, such as `ai3026-develop-agents`; a production CMS may store it explicitly. |
 | `title` | One string | Yes | Course heading, catalog-card title, breadcrumbs, search text, and accessible labels. |
-| `course_number` | One string | Yes | Course identity and display metadata on course cards and detail pages. It is not part of general free-text search. It must remain a string so values such as `AI-3026` retain formatting. |
+| `course_number` | Zero or one string | No | Optional course identity and display metadata on course cards and detail pages. It is not part of general free-text search. When supplied, it must remain a string so values such as `AI-3026` retain formatting. |
 | `credentials` | List of strings | No | Associated credentials displayed on the course detail page in source order. An empty or absent list means that no credential is specified. |
 | `description` | One string | Yes | Course overview copy, catalog summary or tooltip, and searchable text. |
 | `level` | One string or number | Yes | Displayed difficulty/level and an exact-match catalog filter value. |
@@ -160,7 +160,7 @@ playlists:
      - microsoft-iq
 ```
 
-**FR-COURSE-001** A course detail page must present its title, course number, description, image, level, duration, experience type, audiences, topics, credentials, and ordered playlists.
+**FR-COURSE-001** A course detail page must present its title, description, image, level, duration, experience type, audiences, topics, credentials, and ordered playlists. It must present the course number when one is supplied.
 
 **FR-COURSE-002** A learner must be able to begin or continue the course from its first effective learning step.
 
