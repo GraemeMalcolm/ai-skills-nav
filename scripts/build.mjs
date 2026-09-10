@@ -579,10 +579,11 @@ function catalogFilterDialog(items, fields, subject) {
 
 function overview(outputFile, item, type, action = "", imageDetails = "", footer = "") {
   const isCollection = type === "playlists" || type === "courses";
+  const defaultExperienceType = type === "courses" ? "Course" : type === "playlists" ? "Skilling Playlist" : "Learning Experience";
   return `<article class="overview${isCollection ? " overview-collection" : ""}">
     <div class="overview-media"><div class="overview-image">${thumbnail(outputFile, item, type)}</div>${imageDetails}</div>
     <div class="overview-copy">
-      <p class="kicker">${escapeHtml(type === "playlists" ? "Learning playlist" : type === "courses" ? "Microsoft Official Course" : "Learning experience")}</p>
+      <p class="kicker">${escapeHtml(item.experience_type || defaultExperienceType)}</p>
       <h1>${escapeHtml(item.title)}</h1>
       <p class="lede">${escapeHtml(item.description || "")}</p>
       ${metadataLine(item) ? `<p class="metadata">${metadataLine(item)}</p>` : ""}

@@ -404,6 +404,8 @@ Multiple selections in one field use OR semantics. Different fields, and search 
 
 A course detail MUST show its thumbnail, title, description, level, duration, credential information, and ordered links to its self-paced playlists. It MUST show the course number when one is supplied.
 
+Course, curated playlist, and module home pages MUST show the authored `experience_type` above the title when supplied. When it is absent, they MUST use `Course`, `Skilling Playlist`, and `Learning Experience`, respectively.
+
 ### 7.4 Curated playlist detail
 
 A curated playlist detail MUST show its thumbnail, title, description, metadata, and a navigation sidebar. The sidebar MUST link to the playlist overview when the playlist contains multiple modules and list modules in metadata order. The current item MUST be visibly identified.

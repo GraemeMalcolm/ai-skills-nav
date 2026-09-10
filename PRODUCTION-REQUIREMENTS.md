@@ -166,6 +166,8 @@ playlists:
 
 **FR-COURSE-003** Course navigation must continue across playlist boundaries while preserving the source-defined order.
 
+**FR-CONTENT-001** Course, curated playlist, and module home pages must show the authored `experience_type` above the title when supplied. When absent, the labels must default to `Course`, `Skilling Playlist`, and `Learning Experience`, respectively.
+
 ### 5.3 Curated playlist
 
 A curated playlist is an ordered learning journey containing one or more modules. It may be used independently or as part of one or more courses.
