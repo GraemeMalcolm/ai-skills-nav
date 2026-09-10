@@ -390,7 +390,7 @@ your yours yourself yourselves
 3. Compose with currently applied filters.
 4. Provide a clear action that resets results and focuses the input.
 
-The Home filter choices MUST be generated from unique values in current metadata and sorted with locale-aware numeric ordering. Applied filters MUST persist in local storage and remain active on the Home, Courses, Playlists, and Modules pages.
+The Home filter choices MUST be generated from unique values in current metadata and sorted with locale-aware numeric ordering. Experience type and audience choices MUST include only values assigned to content the current user can access, and an active choice that becomes inaccessible MUST be cleared. Applied filters MUST persist in local storage and remain active on the Home, Courses, Playlists, and Modules pages.
 
 Required filter fields:
 

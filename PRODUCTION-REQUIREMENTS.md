@@ -380,6 +380,8 @@ Separate catalogs must be available for courses, curated playlists, and modules.
 
 **FR-CATALOG-013** Client-side simulated access control must not be treated as protection for confidential source or generated content; production authorization requires server-side enforcement.
 
+**FR-CATALOG-014** Experience type and audience filter choices must include only values assigned to content accessible to the current learner. If an access change makes an active value inaccessible, the filter must clear that selection.
+
 ### 7.3 Search behavior
 
 Search is a free-text discovery mechanism, not a substitute for filtering and not a reason to expand the metadata model. Its primary signal is well-authored title and description text, supplemented only by the concise `topics` list.

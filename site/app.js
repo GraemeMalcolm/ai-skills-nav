@@ -108,6 +108,7 @@ const refreshAuthorization = () => {
   updateAuthLink();
   updateRestrictedElements();
   updatePageAccess();
+  updateAccessAwareFilterOptions();
   applyCatalogVisibility?.();
 };
 
@@ -1086,6 +1087,34 @@ const persistFilters = () => {
   }
 };
 
+function updateAccessAwareFilterOptions() {
+  if (!filterForm) return;
+  let selectionChanged = false;
+  ["experience_type", "audience"].forEach((field) => {
+    const accessibleValues = new Set(filterCards
+      .filter((card) => canAccess(card.dataset.restrictedTo))
+      .flatMap((card) => field === "audience" ? parseRestrictedDomains(card.dataset[field]) : [card.dataset[field]])
+      .filter(Boolean));
+    filterForm.querySelectorAll(`input[name="${field}"]`).forEach((input) => {
+      const available = accessibleValues.has(input.value);
+      input.closest("label").hidden = !available;
+      if (!available && input.checked) {
+        input.checked = false;
+        selectionChanged = true;
+      }
+    });
+    const accessibleSelections = appliedFilters[field].filter((value) => accessibleValues.has(value));
+    if (accessibleSelections.length !== appliedFilters[field].length) {
+      appliedFilters[field] = accessibleSelections;
+      selectionChanged = true;
+    }
+  });
+  if (selectionChanged) {
+    persistFilters();
+    updateFilterCounts();
+  }
+}
+
 if (searchForm && searchInput && searchClear && catalogCards.length) {
   searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -1171,6 +1200,7 @@ if (filterDialog && filterForm && filterCards.length) {
 }
 
 updateFilterCounts();
+updateAccessAwareFilterOptions();
 if (catalogCards.length) applyCatalogVisibility();
 
 window.addEventListener("storage", (event) => {

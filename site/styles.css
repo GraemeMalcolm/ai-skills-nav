@@ -760,6 +760,10 @@ img {
   cursor: pointer;
 }
 
+.filter-options label[hidden] {
+  display: none;
+}
+
 .filter-options input,
 .filter-choice input {
   width: 18px;
