@@ -39,6 +39,126 @@ const normalizeSearchTerms = (value) => value
   .split(/\s+/)
   .filter((term) => term && !searchStopWords.has(term));
 
+// Authentication is intentionally simulated for this static proof of concept.
+// Persist only the email address; passwords are discarded immediately.
+const authStorageKey = "ai-skills-nav:auth";
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const readAuth = () => {
+  try {
+    const auth = JSON.parse(localStorage.getItem(authStorageKey) || "null");
+    if (!auth || typeof auth.email !== "string" || !emailPattern.test(auth.email)) return null;
+    return { email: auth.email, domain: auth.email.slice(auth.email.lastIndexOf("@") + 1).toLocaleLowerCase() };
+  } catch {
+    return null;
+  }
+};
+let currentAuth = readAuth();
+const parseRestrictedDomains = (value) => {
+  try {
+    const domains = JSON.parse(value || "[]");
+    return Array.isArray(domains) ? domains : [];
+  } catch {
+    return [];
+  }
+};
+const canAccess = (restrictedTo) => {
+  const domains = Array.isArray(restrictedTo) ? restrictedTo : parseRestrictedDomains(restrictedTo);
+  return domains.length === 0 || Boolean(currentAuth && domains.includes(currentAuth.domain));
+};
+
+const authLink = document.querySelector("[data-auth-open]");
+const signInDialog = document.querySelector("[data-sign-in-dialog]");
+const signInForm = signInDialog?.querySelector("[data-sign-in-form]");
+const signInEmail = signInDialog?.querySelector("[data-sign-in-email]");
+const signInPassword = signInDialog?.querySelector("[data-sign-in-password]");
+const signInStatus = signInDialog?.querySelector("[data-sign-in-status]");
+const updateAuthLink = () => {
+  if (!authLink) return;
+  authLink.textContent = currentAuth ? "Sign-out" : "Sign-in";
+  authLink.href = currentAuth ? "#sign-out" : "#sign-in";
+};
+const updateRestrictedElements = () => {
+  document.querySelectorAll("[data-access-domains]").forEach((element) => {
+    element.hidden = !canAccess(element.dataset.accessDomains);
+  });
+};
+const updatePageAccess = () => {
+  const allowed = canAccess(document.body.dataset.restrictedTo);
+  document.body.classList.toggle("access-denied", !allowed);
+  document.querySelector("[data-access-denied]")?.remove();
+  if (allowed) return;
+  const notice = document.createElement("main");
+  notice.className = "access-denied-message";
+  notice.dataset.accessDenied = "";
+  const heading = document.createElement("h1");
+  heading.textContent = "This learning experience is restricted";
+  const message = document.createElement("p");
+  message.textContent = currentAuth
+    ? "Your signed-in email domain does not have access to this content."
+    : "Sign in with an authorized email address to view this content.";
+  const action = document.createElement("button");
+  action.className = "primary-button";
+  action.type = "button";
+  action.textContent = currentAuth ? "Sign-out" : "Sign-in";
+  action.addEventListener("click", () => authLink?.click());
+  notice.append(heading, message, action);
+  document.querySelector(".site-header")?.insertAdjacentElement("afterend", notice);
+};
+const refreshAuthorization = () => {
+  updateAuthLink();
+  updateRestrictedElements();
+  updatePageAccess();
+  applyCatalogVisibility?.();
+};
+
+if (authLink && signInDialog && signInForm && signInEmail && signInPassword && signInStatus) {
+  authLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (currentAuth) {
+      localStorage.removeItem(authStorageKey);
+      currentAuth = null;
+      refreshAuthorization();
+      return;
+    }
+    signInForm.reset();
+    signInStatus.hidden = true;
+    signInDialog.showModal();
+    signInEmail.focus();
+  });
+  signInDialog.querySelectorAll("[data-sign-in-close]").forEach((button) => button.addEventListener("click", () => signInDialog.close()));
+  signInDialog.addEventListener("click", (event) => {
+    if (event.target === signInDialog) signInDialog.close();
+  });
+  signInForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const email = signInEmail.value.trim().toLocaleLowerCase();
+    if (!emailPattern.test(email)) {
+      signInStatus.textContent = "Enter a valid email address.";
+      signInStatus.hidden = false;
+      signInEmail.focus();
+      return;
+    }
+    if (!signInPassword.value) {
+      signInStatus.textContent = "Enter a password.";
+      signInStatus.hidden = false;
+      signInPassword.focus();
+      return;
+    }
+    currentAuth = { email, domain: email.slice(email.lastIndexOf("@") + 1) };
+    try {
+      localStorage.setItem(authStorageKey, JSON.stringify({ email }));
+    } catch {
+      // The signed-in state still works for this page when storage is unavailable.
+    }
+    signInPassword.value = "";
+    signInDialog.close();
+    refreshAuthorization();
+  });
+}
+updateAuthLink();
+updateRestrictedElements();
+updatePageAccess();
+
 // Personal playlists deliberately live in browser storage: the proof of
 // concept has no account system or backend. Module paths are stored relative to
 // the site root so the same record works when GitHub Pages uses a repo subpath.
@@ -473,8 +593,9 @@ if (personalPlaylistsPage) {
   // The build embeds the current module catalog. It is the source of truth for
   // display names and is also used to remove references to deleted modules.
   const catalogModules = JSON.parse(personalPlaylistsPage.dataset.moduleCatalog);
-  const moduleCatalog = new Map(catalogModules.map((module) => [module.path, module]));
-  const moduleCatalogById = new Map(catalogModules.map((module) => [module.id, module]));
+  const accessibleModules = catalogModules.filter((module) => canAccess(module.restrictedTo));
+  const moduleCatalog = new Map(accessibleModules.map((module) => [module.path, module]));
+  const moduleCatalogById = new Map(accessibleModules.map((module) => [module.id, module]));
   const query = new URLSearchParams(window.location.search);
   const playlistId = query.get("playlist");
 
@@ -927,7 +1048,7 @@ const applyCatalogVisibility = () => {
   let visibleCourses = 0;
   let visibleCatalogItems = 0;
   catalogCards.forEach((card) => {
-    let matches = matchesSearch(card);
+    let matches = canAccess(card.dataset.restrictedTo) && matchesSearch(card);
     if (matches && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
       // Playlist and course modality arrays are inherited from their modules.

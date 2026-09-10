@@ -89,6 +89,8 @@ topics:
   - Topic
 audience:
   - Audience
+restricted_to:
+  - example.com
 avatar: optional-avatar-slug
 playlists:
   - playlist-slug
@@ -100,6 +102,7 @@ Rules:
 - `course_number` MUST be present.
 - `playlists` MUST be a non-empty array of existing playlist slugs.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
+- `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
 - `credentials` is an optional array of credential names. The detail page MUST list every credential in metadata order, or show “No associated credential is specified.” when omitted or empty.
 - Playlist order MUST follow the YAML array.
 
@@ -117,6 +120,8 @@ topics:
   - Topic
 audience:
   - Audience
+restricted_to:
+  - example.com
 avatar: optional-avatar-slug
 modules:
   - module-slug
@@ -127,6 +132,7 @@ Rules:
 - `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `modules` SHOULD be present.
 - `modules` MUST be an array of existing module slugs.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
+- `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
 - Module order MUST follow the YAML array.
 
 ### 3.3 Module schema
@@ -144,6 +150,8 @@ topics:
   - Topic
 audience:
   - Audience
+restricted_to:
+  - example.com
 avatar: optional-avatar-slug
 pages:
   - 01-introduction.md
@@ -160,6 +168,7 @@ Rules:
 - Every page file MUST exist inside the module folder.
 - Page order MUST follow the YAML array.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
+- `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
 - Modality and audience values are content-defined, not hard-coded enums. Current modalities are `Lab`, `Multimodal`, and `Video`.
 
 ### 3.4 Page front matter
@@ -346,6 +355,8 @@ When filters are active, each Home section MUST show the first matching items in
 ### 7.2 Catalogs
 
 Each catalog MUST show an introduction, search form, filter link, card grid, and accessible empty state. The filter link MUST appear beside Search in the page header, matching its position on Home. Catalog pages MUST NOT duplicate the Home filter dialog. Their filter link MUST show the number of currently applied filter values when nonzero and navigate to the Home filter dialog.
+
+The page header MUST provide a Sign-in link after the filter control. Sign-in MUST accept any syntactically valid email address and non-empty password, persist only the email address, and change the link to Sign-out. Signed-out learners MUST NOT see restricted assets. Signed-in learners MUST see a restricted asset only when their email domain matches one of its `restricted_to` values. This authorization check MUST apply before browsing, search, filtering, personal-playlist discovery, nested navigation, and direct-route display. Because this is a static-site simulation, it MUST NOT be represented as a security boundary for confidential content.
 
 Cards MUST include:
 

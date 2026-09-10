@@ -3,7 +3,8 @@ description: Learn about the Caldova demo solution and how to use it to explore 
 level: 100
 duration: 10 minutes
 experience_type: Learning Bite
-restricted_to: microsoft.com
+restricted_to:
+  - microsoft.com
 topics:
   - Azure
 audience:

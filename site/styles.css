@@ -784,6 +784,62 @@ img {
   width: min(680px, calc(100% - 32px));
 }
 
+.sign-in-dialog {
+  width: min(460px, calc(100% - 32px));
+}
+
+.sign-in-logo {
+  display: block;
+  width: 108px;
+  height: 23px;
+  margin-bottom: 18px;
+}
+
+.sign-in-fields {
+  display: grid;
+  gap: 18px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.sign-in-fields label {
+  display: grid;
+  gap: 7px;
+  font-weight: 700;
+}
+
+.sign-in-fields input {
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid #8f8a84;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+
+.sign-in-status {
+  margin: 0;
+  color: #a4262c;
+  font-weight: 700;
+}
+
+body.access-denied>.breadcrumbs,
+body.access-denied>.site-frame,
+body.access-denied>[data-agent] {
+  display: none;
+}
+
+.access-denied-message {
+  width: min(720px, calc(100% - 40px));
+  margin: clamp(70px, 12vh, 130px) auto;
+  text-align: center;
+}
+
+.access-denied-message h1 {
+  font: 700 clamp(2rem, 5vw, 3.5rem) "Manrope", sans-serif;
+}
+
 .share-dialog-body {
   padding-top: 24px;
   padding-bottom: 24px;

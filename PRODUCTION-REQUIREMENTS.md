@@ -132,6 +132,7 @@ Course metadata uses the following source contract:
 | `experience_type` | One string | Yes | Displayed experience type and catalog filter value. |
 | `topics` | List of strings | Yes | Search terms, topic presentation, recommendations, and future topic browsing. At least one value is required. |
 | `audience` | List of strings | Yes | Intended learner roles shown in metadata and used as catalog filter values. At least one value is required. |
+| `restricted_to` | List of domain strings | No | Limits simulated browsing and discovery to signed-in email addresses whose domain matches one listed value. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the course. The reference must resolve when supplied. |
 | `playlists` | Ordered list of playlist identifiers | Yes | Defines course membership and the complete course learning sequence. At least one valid reference is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Course cards and course overview. It must have an accessible treatment appropriate to whether the image is informative or decorative. |
@@ -181,6 +182,7 @@ Playlist metadata uses the following source contract:
 | `experience_type` | One string | No | Experience type and catalog filter value to reflect the source or type of skilling - for example "Microsoft Official Curriculum", "Microsoft Short-Form Skilling", "Microsoft Labs", "LinkedIn Training", et.c. |
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
 | `audience` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
+| `restricted_to` | List of domain strings | No | Limits simulated browsing and discovery to signed-in email addresses whose domain matches one listed value. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the playlist. |
 | `modules` | Ordered list of module identifiers | Yes | Defines playlist membership, sidebar order, and cross-module Previous/Next navigation. At least one valid reference is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Playlist cards and overview. |
@@ -231,6 +233,7 @@ Module metadata uses the following source contract:
 | `experience_type` | One string | Yes | Displayed experience type and catalog filter value. |
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
 | `audience` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
+| `restricted_to` | List of domain strings | No | Limits simulated browsing and discovery to signed-in email addresses whose domain matches one listed value. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the module. |
 | `pages` | Ordered list of page entries | Yes | Defines the module structure, overview page list, sidebar, and Previous/Next sequence. At least one entry is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Module cards, module overview, and personal-playlist management. |
@@ -370,6 +373,12 @@ Separate catalogs must be available for courses, curated playlists, and modules.
 **FR-CATALOG-009** Learners must be able to clear search and filters, and the interface must communicate active filters.
 
 **FR-CATALOG-010** The solution should preserve applied filters while the learner moves among catalog experiences during the same browsing journey.
+
+**FR-CATALOG-011** The header must provide simulated Sign-in and Sign-out controls. Sign-in must validate email syntax and require a password, but persist only the email address.
+
+**FR-CATALOG-012** Signed-out learners must not discover assets with `restricted_to`. Signed-in learners may discover or browse them only when the signed-in email domain matches an allowed domain. This check must precede catalogs, search, filtering, personal playlists, nested navigation, and direct-route display.
+
+**FR-CATALOG-013** Client-side simulated access control must not be treated as protection for confidential source or generated content; production authorization requires server-side enforcement.
 
 ### 7.3 Search behavior
 

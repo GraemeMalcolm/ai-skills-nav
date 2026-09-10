@@ -428,6 +428,22 @@ function shareDialog(hidden = false) {
   </dialog>`;
 }
 
+function signInDialog(outputFile) {
+  const logo = relativeUrl(outputFile, path.join(outputRoot, "assets", "microsoft-logo.svg"));
+  return `<a class="header-link auth-link" href="#sign-in" data-auth-open>Sign-in</a>
+  <dialog class="filter-dialog sign-in-dialog" data-sign-in-dialog aria-labelledby="sign-in-title">
+    <form data-sign-in-form novalidate>
+      <header class="filter-dialog-header"><div><img class="sign-in-logo" src="${logo}" alt="Microsoft"><h2 id="sign-in-title">Sign-in</h2></div><button class="icon-button" type="button" aria-label="Close sign-in" data-sign-in-close>${icon("close")}</button></header>
+      <div class="filter-dialog-body sign-in-fields">
+        <label><span>Email address</span><input type="email" name="email" autocomplete="email" data-sign-in-email required></label>
+        <label><span>Password</span><input type="password" name="password" autocomplete="current-password" data-sign-in-password required></label>
+        <p class="sign-in-status" data-sign-in-status role="status" aria-live="polite" hidden></p>
+      </div>
+      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-sign-in-close>Cancel</button><button class="primary-button" type="submit">Sign-in</button></footer>
+    </form>
+  </dialog>`;
+}
+
 function breadcrumbs(outputFile, items = []) {
   const home = path.join(outputRoot, "index.html");
   const trail = [{ label: "Home", target: items.length ? home : null }, ...items];
@@ -440,7 +456,7 @@ function breadcrumbs(outputFile, items = []) {
   }).join("")}</ol></nav>`;
 }
 
-function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, agentOptions = {}, bodyClass = "", module = null, hasModuleCards = false }) {
+function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, agentOptions = {}, bodyClass = "", module = null, hasModuleCards = false, restrictedTo = [] }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
@@ -455,11 +471,11 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   <link rel="stylesheet" href="${styles}">
   <script src="${script}" defer></script>
 </head>
-<body class="${escapeHtml(bodyClass)}"${module ? ` data-module-slug="${escapeHtml(module.slug)}"` : ""}>
+<body class="${escapeHtml(bodyClass)}"${module ? ` data-module-slug="${escapeHtml(module.slug)}"` : ""} data-restricted-to="${escapeHtml(JSON.stringify(restrictedTo))}">
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a>
-    ${headerExtra}${share}
+    ${headerExtra}${share}${signInDialog(outputFile)}
   </header>
   ${breadcrumbs(outputFile, breadcrumbItems)}
   <div class="site-frame${sidebar ? " has-sidebar" : ""}">
@@ -481,6 +497,17 @@ function metadataLine(item) {
   return [item.course_number, item.modality, item.level ? `Level ${item.level}` : "", item.duration].filter(Boolean).map(escapeHtml).join(" · ");
 }
 
+function combinedRestrictions(...domainLists) {
+  const restrictions = domainLists.filter((domains) => Array.isArray(domains) && domains.length);
+  if (!restrictions.length) return [];
+  const allowed = restrictions.slice(1).reduce((domains, required) => domains.filter((domain) => required.includes(domain)), [...restrictions[0]]);
+  return allowed.length ? allowed : ["__no_matching_domain__"];
+}
+
+function accessData(item, inherited = []) {
+  return ` data-access-domains="${escapeHtml(JSON.stringify(combinedRestrictions(inherited, item.restricted_to)))}"`;
+}
+
 function thumbnail(outputFile, item, type) {
   const source = path.join(item.directory, "thumbnail.png");
   const target = path.join(outputRoot, "content", type, item.slug, "thumbnail.png");
@@ -493,7 +520,7 @@ function card(outputFile, item, type, defaultHidden = false) {
     : path.join(outputRoot, type, item.slug, "index.html");
   const tooltipId = `${type}-${item.slug}-description`;
   const searchText = [item.title, item.course_number, item.experience_type, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
-  const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}"`;
+  const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}" data-restricted-to="${escapeHtml(JSON.stringify(item.restricted_to || []))}"`;
   const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.modalities || []))}" data-level="${escapeHtml(item.level || "")}" data-experience_type="${escapeHtml(item.experience_type || "")}" data-audience="${escapeHtml(JSON.stringify(item.audience || []))}"`;
   // Home includes every catalog item so its search can truly search all
   // content, but only the featured subset is visible before a search begins.
@@ -572,7 +599,7 @@ function overviewContents(outputFile, items, type, heading, targetForItem) {
     <ol>${items.map((item) => {
     const description = item.description || "";
     const tooltip = description ? ` title="${escapeHtml(description)}"` : "";
-    return `<li><a href="${relativeUrl(outputFile, targetForItem(item))}"${tooltip}>
+    return `<li${accessData(item)}><a href="${relativeUrl(outputFile, targetForItem(item))}"${tooltip}>
         ${thumbnail(outputFile, item, type)}
         <span><strong>${escapeHtml(item.title)}</strong>${description ? `<small>${escapeHtml(excerpt(description))}</small>` : ""}</span>
       </a></li>`;
@@ -648,7 +675,7 @@ function playlistSidebar(outputFile, playlist, modules, activeModule = "", activ
       const pageTarget = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug, "pages", page.slug, "index.html");
       return `<li><a class="${activeModule === module.slug && activePage === page.slug ? "active" : ""}" href="${relativeUrl(outputFile, pageTarget)}">${escapeHtml(page.title)}</a></li>`;
     }).join("")}</ul>` : "";
-    return `<li><a class="${activeModule === module.slug && !activePage ? "active" : ""}" href="${relativeUrl(outputFile, target)}">${escapeHtml(module.title)}</a>${pageLinks}</li>`;
+    return `<li${accessData(module, playlist.restricted_to)}><a class="${activeModule === module.slug && !activePage ? "active" : ""}" href="${relativeUrl(outputFile, target)}">${escapeHtml(module.title)}</a>${pageLinks}</li>`;
   }).join("")}</ul>
     </nav>
   </aside><div class="sidebar-scrim" data-menu-close></div>`;
@@ -665,13 +692,13 @@ function courseSidebar(outputFile, course, playlists, activePlaylist = "", activ
     const playlistLink = playlist.modules.length > 1
       ? `<a class="${activePlaylist === playlist.slug && !activeModule ? "active" : ""}" href="${relativeUrl(outputFile, playlistTarget)}">${escapeHtml(playlist.title)}</a>`
       : "";
-    return `<li>${playlistLink}<ul class="sidebar-modules">${playlist.modules.map((module) => {
+    return `<li${accessData(playlist, course.restricted_to)}>${playlistLink}<ul class="sidebar-modules">${playlist.modules.map((module) => {
       const moduleTarget = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug, "index.html");
       const pageLinks = module.pages.length > 1 ? `<ul class="sidebar-pages">${module.pages.map((page) => {
         const pageTarget = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug, "pages", page.slug, "index.html");
         return `<li><a class="${activePlaylist === playlist.slug && activeModule === module.slug && activePage === page.slug ? "active" : ""}" href="${relativeUrl(outputFile, pageTarget)}">${escapeHtml(page.title)}</a></li>`;
       }).join("")}</ul>` : "";
-      return `<li><a class="${activePlaylist === playlist.slug && activeModule === module.slug && !activePage ? "active" : ""}" href="${relativeUrl(outputFile, moduleTarget)}">${escapeHtml(module.title)}</a>${pageLinks}</li>`;
+      return `<li${accessData(module, combinedRestrictions(course.restricted_to, playlist.restricted_to))}><a class="${activePlaylist === playlist.slug && activeModule === module.slug && !activePage ? "active" : ""}" href="${relativeUrl(outputFile, moduleTarget)}">${escapeHtml(module.title)}</a>${pageLinks}</li>`;
     }).join("")}</ul></li>`;
   }).join("")}</ul>
     </nav>
@@ -706,18 +733,19 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
   const sidebar = sidebarFactory ? sidebarFactory(indexFile) : "";
   const parents = breadcrumbParents || [{ label: "Skilling content", target: path.join(outputRoot, "skilling-content", "index.html") }];
   const moduleBreadcrumbs = [...parents, { label: module.title }];
+  const routeRestrictions = combinedRestrictions(navigationContext.restrictedTo, module.restricted_to);
 
   if (pages.length === 1) {
     const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`, module.avatarData || defaultAvatar);
     const navigation = pageNavigation(indexFile, navigationContext.previousTarget, navigationContext.nextTarget, { previous: true, next: true });
-    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, pages[0], rendered.html, navigation) }));
+    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, restrictedTo: routeRestrictions, content: articleContent(module, pages[0], rendered.html, navigation) }));
     return;
   }
 
   const startTarget = pageTargets[0];
   const pageList = `<section class="module-page-list" aria-labelledby="module-pages-title"><h2 id="module-pages-title">In this learning experience</h2><ol>${pages.map((page, index) => `<li><a href="${relativeUrl(indexFile, pageTargets[index])}">${escapeHtml(page.title)}</a></li>`).join("")}</ol></section>`;
   const overviewNavigation = pageNavigation(indexFile, navigationContext.previousTarget, startTarget, { previous: true });
-  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: overview(indexFile, module, "modules", "", pageList, overviewNavigation) }));
+  await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, restrictedTo: routeRestrictions, content: overview(indexFile, module, "modules", "", pageList, overviewNavigation) }));
 
   for (const [pageIndex, page] of pages.entries()) {
     const outputFile = pageTargets[pageIndex];
@@ -727,7 +755,7 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
     const nextTarget = pageIndex < pages.length - 1 ? pageTargets[pageIndex + 1] : navigationContext.nextTarget;
     const navigation = pageNavigation(outputFile, previousTarget, nextTarget, { next: pageIndex === pages.length - 1 });
     const pageBreadcrumbs = [...parents, { label: module.title, target: indexFile }, { label: rendered.title }];
-    await writePage(outputFile, shell({ outputFile, title: rendered.title, breadcrumbs: pageBreadcrumbs, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", module, content: articleContent(module, page, rendered.html, navigation) }));
+    await writePage(outputFile, shell({ outputFile, title: rendered.title, breadcrumbs: pageBreadcrumbs, sidebar: pageSidebar, avatar: module.avatarData, bodyClass: "learning-page", module, restrictedTo: routeRestrictions, content: articleContent(module, page, rendered.html, navigation) }));
   }
 }
 
@@ -768,6 +796,10 @@ async function build() {
   await validateAvatar(defaultAvatar, false);
   for (const [type, items] of [["Module", modules], ["Playlist", playlists], ["Course", courses]]) {
     for (const item of items) {
+      if (item.restricted_to !== undefined && (!Array.isArray(item.restricted_to) || item.restricted_to.length === 0 || item.restricted_to.some((domain) => typeof domain !== "string" || !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i.test(domain)))) {
+        throw new Error(`${type} ${item.slug} has invalid restricted_to domains`);
+      }
+      item.restricted_to = (item.restricted_to || []).map((domain) => domain.toLocaleLowerCase());
       if (!item.avatar) continue;
       const avatar = avatars.get(item.avatar);
       if (!avatar) throw new Error(`${type} ${item.slug} references unknown avatar ${item.avatar}`);
@@ -841,6 +873,7 @@ async function build() {
     id: module.slug,
     name: module.title,
     description: module.description || "",
+    restrictedTo: module.restricted_to,
     path: `modules/${module.slug}/index.html`,
     pages: (module.pages.length > 1 ? module.pages : []).map((page) => ({
       name: page.title,
@@ -898,7 +931,7 @@ async function build() {
     const playlistNavigation = firstModuleTarget ? pageNavigation(playlistFile, null, firstModuleTarget) : "";
     const moduleList = overviewContents(playlistFile, playlistModules, "modules", "In this playlist:", (module) =>
       path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug, "index.html"));
-    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", moduleList, playlistNavigation) }));
+    await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar, avatar: playlist.avatarData, bodyClass: "learning-page", restrictedTo: playlist.restricted_to, content: overview(playlistFile, playlist, "playlists", "", moduleList, playlistNavigation) }));
     const modulesRoot = path.join(outputRoot, "playlists", playlist.slug, "modules");
     for (const [moduleIndex, module] of playlistModules.entries()) {
       const routeRoot = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug);
@@ -913,7 +946,7 @@ async function build() {
       const nextTarget = moduleIndex < playlistModules.length - 1
         ? moduleStartTarget(modulesRoot, playlistModules[moduleIndex + 1])
         : null;
-      await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents, { previousTarget, nextTarget });
+      await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents, { previousTarget, nextTarget, restrictedTo: playlist.restricted_to });
     }
   }
 
@@ -934,7 +967,7 @@ async function build() {
     });
     const courseFile = path.join(outputRoot, "courses", course.slug, "index.html");
     const courseBreadcrumbs = [{ label: "Courses", target: coursesFile }, { label: course.title }];
-    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, sidebar: courseSidebar(courseFile, course, coursePlaylists), avatar: course.avatarData, bodyClass: "learning-page", content: courseOverview(courseFile, course, coursePlaylists) }));
+    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, sidebar: courseSidebar(courseFile, course, coursePlaylists), avatar: course.avatarData, bodyClass: "learning-page", restrictedTo: course.restricted_to, content: courseOverview(courseFile, course, coursePlaylists) }));
 
     const coursePlaylistsRoot = path.join(outputRoot, "courses", course.slug, "playlists");
     for (const [playlistIndex, playlist] of coursePlaylists.entries()) {
@@ -956,7 +989,8 @@ async function build() {
         : "";
       const moduleList = overviewContents(playlistFile, playlist.modules, "modules", "In this playlist:", (module) =>
         path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug, "index.html"));
-      await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar: courseSidebar(playlistFile, course, coursePlaylists, playlist.slug), avatar: playlist.avatarData, bodyClass: "learning-page", content: overview(playlistFile, playlist, "playlists", "", moduleList, playlistNavigation) }));
+      const playlistRestrictions = combinedRestrictions(course.restricted_to, playlist.restricted_to);
+      await writePage(playlistFile, shell({ outputFile: playlistFile, title: playlist.title, breadcrumbs: playlistBreadcrumbs, sidebar: courseSidebar(playlistFile, course, coursePlaylists, playlist.slug), avatar: playlist.avatarData, bodyClass: "learning-page", restrictedTo: playlistRestrictions, content: overview(playlistFile, playlist, "playlists", "", moduleList, playlistNavigation) }));
 
       const modulesRoot = path.join(coursePlaylistsRoot, playlist.slug, "modules");
       for (const [moduleIndex, module] of playlist.modules.entries()) {
@@ -973,7 +1007,7 @@ async function build() {
         const nextTarget = moduleIndex < playlist.modules.length - 1
           ? moduleStartTarget(modulesRoot, playlist.modules[moduleIndex + 1])
           : nextPlaylistTarget;
-        await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents, { previousTarget, nextTarget });
+        await buildModuleRoute(module, module.pages, routeRoot, defaultAvatar, sidebarFactory, breadcrumbParents, { previousTarget, nextTarget, restrictedTo: playlistRestrictions });
       }
     }
   }
@@ -983,6 +1017,7 @@ async function build() {
     copyFile(path.join(root, "site", "styles.css"), path.join(outputRoot, "assets", "styles.css")),
     copyFile(path.join(root, "site", "app.js"), path.join(outputRoot, "assets", "app.js")),
     copyFile(path.join(root, "site", "moderation.txt"), path.join(outputRoot, "assets", "moderation.txt")),
+    copyFile(path.join(root, "site", "media", "microsoft-logo.svg"), path.join(outputRoot, "assets", "microsoft-logo.svg")),
     copyFile(path.join(root, "site", "media", "playlist.png"), path.join(outputRoot, "assets", "playlist.png")),
     cp(path.join(root, "templates", "media"), path.join(outputRoot, "content", "templates", "media"), { recursive: true }),
     writeFile(path.join(outputRoot, ".nojekyll"), "", "utf8"),
