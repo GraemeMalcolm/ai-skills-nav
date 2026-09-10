@@ -330,6 +330,7 @@ The UI SHOULD reproduce the reference design intent:
 - Image-led 16:9 catalog cards.
 - Large asymmetric home hero.
 - Two-column detail overviews on wide screens.
+- Right-aligned main-pane actions: Share on course and curated-playlist overviews; Add to personal playlist followed by Share on module overviews and pages.
 - Sticky playlist navigation on wide screens.
 - Fixed lower-right assistant launcher and flyout.
 

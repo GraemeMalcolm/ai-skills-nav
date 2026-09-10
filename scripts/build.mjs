@@ -395,9 +395,7 @@ function personalPlaylistDialog(outputFile, module) {
   const playlistsUrl = relativeUrl(outputFile, path.join(outputRoot, "my-playlists", "index.html"));
   const moduleName = module?.title || "";
   const modulePath = module ? `modules/${module.slug}/index.html` : "";
-  const pageTrigger = module ? `<a class="filter-trigger personal-playlist-add" href="#personal-playlist-dialog" data-personal-playlist-open>Add to personal playlist</a>` : "";
-  return `${pageTrigger}
-  <dialog class="filter-dialog personal-playlist-dialog" id="personal-playlist-dialog" data-personal-playlist-dialog data-module-name="${escapeHtml(moduleName)}" data-module-path="${escapeHtml(modulePath)}" data-playlists-url="${escapeHtml(playlistsUrl)}" aria-labelledby="personal-playlist-title">
+  return `<dialog class="filter-dialog personal-playlist-dialog" id="personal-playlist-dialog" data-personal-playlist-dialog data-module-name="${escapeHtml(moduleName)}" data-module-path="${escapeHtml(modulePath)}" data-playlists-url="${escapeHtml(playlistsUrl)}" aria-labelledby="personal-playlist-title">
     <form data-personal-playlist-form>
       <header class="filter-dialog-header"><div><p class="kicker">Save learning experience</p><h2 id="personal-playlist-title">Add to personal playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-personal-playlist-close>${icon("close")}</button></header>
       <div class="filter-dialog-body personal-playlist-fields">
@@ -413,9 +411,16 @@ function personalPlaylistDialog(outputFile, module) {
   </dialog>`;
 }
 
-function shareDialog(hidden = false) {
-  return `<a class="header-link" href="#share-dialog" data-share-open${hidden ? " hidden" : ""}>Share</a>
-  <dialog class="filter-dialog share-dialog" id="share-dialog" data-share-dialog aria-labelledby="share-title">
+function personalPlaylistTrigger() {
+  return `<a class="filter-trigger" href="#personal-playlist-dialog" data-personal-playlist-open>Add to personal playlist</a>`;
+}
+
+function shareTrigger(hidden = false, className = "header-link") {
+  return `<a class="${className}" href="#share-dialog" data-share-open${hidden ? " hidden" : ""}>Share</a>`;
+}
+
+function shareDialog(hidden = false, includeTrigger = true) {
+  return `${includeTrigger ? shareTrigger(hidden) : ""}<dialog class="filter-dialog share-dialog" id="share-dialog" data-share-dialog aria-labelledby="share-title">
     <form method="dialog">
       <header class="filter-dialog-header"><div><p class="kicker">Share this page</p><h2 id="share-title">Page URL</h2></div><button class="icon-button" type="submit" aria-label="Close">${icon("close")}</button></header>
       <div class="filter-dialog-body share-dialog-body">
@@ -460,7 +465,9 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
-  const share = bodyClass.split(/\s+/).includes("learning-page") ? shareDialog() : "";
+  const isLearningPage = bodyClass.split(/\s+/).includes("learning-page");
+  const share = isLearningPage ? shareDialog(false, false) : "";
+  const pageActions = isLearningPage ? `<div class="page-actions">${module ? personalPlaylistTrigger() : ""}${shareTrigger(false, "filter-trigger")}</div>` : "";
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -475,13 +482,13 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a>
-    ${headerExtra}${share}${signInDialog(outputFile)}
+    ${headerExtra}${signInDialog(outputFile)}
   </header>
   ${breadcrumbs(outputFile, breadcrumbItems)}
   <div class="site-frame${sidebar ? " has-sidebar" : ""}">
     ${sidebar}
     ${sidebar ? `<button class="icon-button nav-reveal" type="button" aria-label="Show navigation" aria-expanded="false" data-menu-reveal>${icon("menu")}</button>` : ""}
-    <main id="main-content" class="main-content">${module || hasModuleCards ? personalPlaylistDialog(outputFile, module) : ""}${content}</main>
+    <main id="main-content" class="main-content">${pageActions}${share}${module || hasModuleCards ? personalPlaylistDialog(outputFile, module) : ""}${content}</main>
   </div>
   ${agentFlyout(outputFile, avatar, agentOptions)}
 </body>

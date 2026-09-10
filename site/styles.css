@@ -904,11 +904,15 @@ body.access-denied>[data-agent] {
   cursor: pointer;
 }
 
-.personal-playlist-add {
+.page-actions {
   position: absolute;
   z-index: 5;
   top: 24px;
   right: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 20px;
 }
 
 .personal-playlist-fields {

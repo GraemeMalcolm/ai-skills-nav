@@ -946,6 +946,8 @@ Each course, playlist, module, and individual page must be accessible via deep-l
 
 **FR-SHARE-001** Course, curated-playlist, module, page, and personal-playlist experiences must provide a Share action that exposes a copyable URL.
 
+**FR-SHARE-001A** Course and curated-playlist overviews must place Share at the top right of the main pane. Module overviews and pages must place Share to the right of Add to personal playlist in the same main-pane action row.
+
 **FR-SHARE-002** Shared URLs must be stable, canonical, and usable without navigation history.
 
 **FR-SHARE-003** A shared URL must restore the referenced item and any valid course, curated-playlist, or personal-playlist context necessary to continue the journey.
