@@ -9,6 +9,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceRoot = path.join(root, "source");
 const outputRoot = path.join(root, "dist");
 const hostedLabTemplate = path.join(root, "templates", "hosted-lab.md");
+const simulationTemplate = path.join(root, "templates", "simulation.md");
 const contentRoots = [
   { name: "modules", directory: path.join(sourceRoot, "modules") },
   { name: "playlists", directory: path.join(sourceRoot, "playlists") },
@@ -155,7 +156,7 @@ function rewriteMarkdownAssets(markdown, sourceFile, outputFile) {
 }
 
 async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
-  const includePattern = /\[!(INCLUDE|LAB_STEPS|LAB_HOST)(?:\[[^\]]*\])?\(([^)]+)\)\]|\[!(INCLUDE|LAB_STEPS|LAB_HOST)\s+([^\]]+)\]/gi;
+  const includePattern = /\[!(INCLUDE|LAB_STEPS|LAB_HOST|SIMULATION)(?:\[[^\]]*\])?\(([^)]+)\)\]|\[!(INCLUDE|LAB_STEPS|LAB_HOST|SIMULATION)\s+([^\]]+)\]/gi;
   let result = "";
   let cursor = 0;
   for (const match of markdown.matchAll(includePattern)) {
@@ -170,6 +171,16 @@ async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
       const template = await readFile(hostedLabTemplate, "utf8");
       const hostedLabMarkdown = template.replaceAll("{LAB_URL}", includeReference);
       result += await expandIncludes(hostedLabMarkdown, hostedLabTemplate, outputFile, [...stack, hostedLabTemplate]);
+      cursor = match.index + match[0].length;
+      continue;
+    }
+    if (directive === "SIMULATION") {
+      if (!remoteReference) {
+        throw new Error(`SIMULATION must reference a fully-qualified HTTP(S) URL in ${sourceFile}`);
+      }
+      const template = await readFile(simulationTemplate, "utf8");
+      const simulationMarkdown = template.replaceAll("{SIMULATION_URL}", includeReference);
+      result += await expandIncludes(simulationMarkdown, simulationTemplate, outputFile, [...stack, simulationTemplate]);
       cursor = match.index + match[0].length;
       continue;
     }

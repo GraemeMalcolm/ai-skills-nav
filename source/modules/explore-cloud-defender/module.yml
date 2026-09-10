@@ -1,0 +1,14 @@
+title: Explore Microsoft Defender for Cloud
+description: Learn the purpose of Microsoft Defender for Cloud and how to enable the system.
+modalities:
+  - Lab
+level: 200
+duration: 30 minutes
+experience_type: Microsoft Official Curriculum
+topics:
+  - Microsoft Defender for Cloud
+audience:
+  - Security administrator
+pages:
+  - 01-cloud-defender.md
+  - 02-simulation.md

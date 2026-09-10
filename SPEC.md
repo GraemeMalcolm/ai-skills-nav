@@ -509,7 +509,7 @@ A leading slash denotes a repository-root-relative include. Includes MUST:
 - Rewrite included images relative to the included file.
 - Reject missing files, paths outside the repository, and recursive inclusion.
 
-### 9.3 Hosted labs
+### 9.3 Hosted labs and simulations
 
 A hosted-lab directive MUST use a fully qualified HTTP or HTTPS launch URL:
 
@@ -520,6 +520,14 @@ A hosted-lab directive MUST use a fully qualified HTTP or HTTPS launch URL:
 The renderer MUST read `templates/hosted-lab.md`, replace every `{LAB_URL}` placeholder with the directive URL, and render the resulting Markdown at the directive position. Template Markdown MUST pass through the same recursive directive processing as page content.
 
 Relative images in the template MUST resolve from the template file, not from the module page containing `LAB_HOST`. The build MUST publish the referenced template media beneath `dist/content/templates` and rewrite its URL relative to each generated page. The launch link MUST preserve the complete authored URL, including query parameters, and retain the template's safe new-window behavior. A relative or otherwise unsupported launch URL MUST fail the build.
+
+A simulation directive follows the same rendering and URL-validation rules:
+
+```markdown
+[!SIMULATION[](https://example.com/simulations/intro)]
+```
+
+The renderer MUST read `templates/simulation.md`, replace every `{SIMULATION_URL}` placeholder with the directive URL, and resolve template-relative media from that template file.
 
 ### 9.4 Videos
 

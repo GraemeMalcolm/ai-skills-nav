@@ -869,7 +869,7 @@ Expected rendering behavior:
 - Feedback must identify whether the response is correct and allow the learner to understand or retry the question according to the product's assessment design.
 - The production content model should evolve toward structured answer options while remaining compatible with the current source representation.
 
-### 10.7 Labs
+### 10.7 Labs and simulations
 
 **FR-LAB-001** A page may offer hosted and self-directed lab variants through choice pivots.
 
@@ -882,6 +882,12 @@ Expected rendering behavior:
 **FR-LAB-005** Hosted-lab launch URLs must preserve all authored path, query-string, and fragment components when substituted into the standard template.
 
 **FR-LAB-007** Relative media referenced by the hosted-lab template must resolve from the template document and be published at a stable content path accessible from every generated route.
+
+**FR-SIM-001** Authors must invoke the standard simulation launcher with `[!SIMULATION[](<launch-url>)]` rather than duplicating its explanatory text, image, link target, or new-window behavior in module pages.
+
+**FR-SIM-002** Simulation launch URLs must be fully qualified HTTP or HTTPS URLs and preserve all authored path, query-string, and fragment components when substituted for `{SIMULATION_URL}` in `templates/simulation.md`.
+
+**FR-SIM-003** Simulation template content must use the same recursive directive processing and template-relative media resolution as the hosted-lab template.
 
 Example page combining hosted and self-directed lab choices:
 
@@ -1006,7 +1012,7 @@ The production implementation must demonstrate at least the following end-to-end
 6. A catalog item matches terms present in its title, description, or topics. The same item does not match a term found only in its audience, experience type, level, modality, duration, identifier, hierarchy references, or page body.
 7. Audience, experience type, level, and modality values refine results through filters. Multiple values in one filter use OR; different filters use AND; and active search terms combine with all filters using AND.
 8. Clearing search retains active filters, clearing filters retains an active search, active constraints are visible, and an empty combined result produces accessible feedback.
-9. A page renders Markdown, local and root-relative includes, an external `[!LAB_STEPS]` source, a `[!LAB_HOST]` launcher with its full URL and template-relative image, relative images, video, and keyboard-operable choice pivots.
+9. A page renders Markdown, local and root-relative includes, an external `[!LAB_STEPS]` source, `[!LAB_HOST]` and `[!SIMULATION]` launchers with their full URLs and template-relative images, relative images, video, and keyboard-operable choice pivots.
 10. Invalid metadata, broken hierarchy references, recursive includes, and inaccessible required external content prevent publication with actionable errors.
 11. A learner creates a personal playlist, adds modules from multiple entry points, reorders it, traverses module boundaries, removes a module, and deletes the playlist.
 12. A recipient opens a shared personal-playlist URL. An existing playlist is loaded unchanged; when it is absent, a new playlist is created from the shared name and valid ordered module identifiers.
