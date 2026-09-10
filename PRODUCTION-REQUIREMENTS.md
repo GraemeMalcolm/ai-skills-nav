@@ -129,7 +129,7 @@ Course metadata uses the following source contract:
 | `description` | One string | Yes | Course overview copy, catalog summary or tooltip, and searchable text. |
 | `level` | One string or number | Yes | Displayed difficulty/level and an exact-match catalog filter value. |
 | `duration` | One string | Yes | Human-readable estimated completion time. The production model should additionally support a normalized duration for sorting and analytics. |
-| `series` | One string | Yes | Displayed content family and catalog filter value. |
+| `experience_type` | One string | Yes | Displayed experience type and catalog filter value. |
 | `topics` | List of strings | Yes | Search terms, topic presentation, recommendations, and future topic browsing. At least one value is required. |
 | `audience` | List of strings | Yes | Intended learner roles shown in metadata and used as catalog filter values. At least one value is required. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the course. The reference must resolve when supplied. |
@@ -147,7 +147,7 @@ credentials:
 description: Learn to build, test, and deploy AI agents.
 level: 200
 duration: 1 day
-series: Microsoft Official Curriculum
+experience_type: Microsoft Official Curriculum
 topics:
      - Microsoft Foundry
      - AI agents
@@ -159,7 +159,7 @@ playlists:
      - microsoft-iq
 ```
 
-**FR-COURSE-001** A course detail page must present its title, course number, description, image, level, duration, series, audiences, topics, credentials, and ordered playlists.
+**FR-COURSE-001** A course detail page must present its title, course number, description, image, level, duration, experience type, audiences, topics, credentials, and ordered playlists.
 
 **FR-COURSE-002** A learner must be able to begin or continue the course from its first effective learning step.
 
@@ -178,7 +178,7 @@ Playlist metadata uses the following source contract:
 | `description` | One string | Yes | Playlist overview, catalog summary or tooltip, and search text. |
 | `level` | One string or number | Yes | Displayed level and catalog filter value. |
 | `duration` | One string | Yes | Human-readable estimated completion time. A normalized value should also be available in the production model. |
-| `series` | One string | No | Content family and catalog filter value to reflect source or type of skilling - for example "Microsoft Official Curriculum", "Microsoft Short-Form Skilling", "Microsoft Labs", "LinkedIn Training", et.c. |
+| `experience_type` | One string | No | Experience type and catalog filter value to reflect the source or type of skilling - for example "Microsoft Official Curriculum", "Microsoft Short-Form Skilling", "Microsoft Labs", "LinkedIn Training", et.c. |
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
 | `audience` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the playlist. |
@@ -194,7 +194,7 @@ title: Develop your first AI agent
 description: Learn how to develop AI agents with Microsoft Foundry.
 level: 200
 duration: 90 minutes
-series: Microsoft Official Curriculum
+experience_type: Microsoft Official Curriculum
 topics:
      - Microsoft Foundry
      - AI agents
@@ -228,7 +228,7 @@ Module metadata uses the following source contract:
 | `modalities` | List of strings | No | Describes delivery formats present in the module such as `Video` and `Lab`; displayed as metadata and used directly and transitively for filtering. At least one value is required. Values are content-defined rather than a closed enumeration unless product governance establishes one. |
 | `level` | One string or number | Yes | Displayed level and catalog filter value. |
 | `duration` | One string | Yes | Human-readable estimated completion time. A normalized value should also be available in the production model. |
-| `series` | One string | Yes | Displayed content family and catalog filter value. |
+| `experience_type` | One string | Yes | Displayed experience type and catalog filter value. |
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
 | `audience` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the module. |
@@ -247,7 +247,7 @@ modalities:
      - Lab
 level: 100
 duration: 120 minutes
-series: Microsoft Official Curriculum
+experience_type: Microsoft Official Curriculum
 topics:
      - Artificial Intelligence
 audience:
@@ -357,11 +357,11 @@ Separate catalogs must be available for courses, curated playlists, and modules.
 
 **FR-CATALOG-003** Module results must provide an action to add the module to a personal playlist without requiring the learner to open it first.
 
-**FR-CATALOG-004** General catalog search must use exactly the published `title`, `description`, and `topics` of each course, playlist, or module. It must not search course number, audience, level, duration, series, modality, hierarchy labels, stable identifiers, page body text, assistant metadata, or other fields.
+**FR-CATALOG-004** General catalog search must use exactly the published `title`, `description`, and `topics` of each course, playlist, or module. It must not search course number, audience, level, duration, experience type, modality, hierarchy labels, stable identifiers, page body text, assistant metadata, or other fields.
 
 **FR-CATALOG-005** Search must be case-insensitive, tolerate punctuation and common conversational words, and require all meaningful query terms to match.
 
-**FR-CATALOG-006** Filters must include audience, series, level, and modality where those values apply.
+**FR-CATALOG-006** Filters must include audience, experience type, level, and modality where those values apply.
 
 **FR-CATALOG-007** Playlist modality must be derived from its modules. Course modality must be derived from all modules in its playlists.
 
@@ -377,9 +377,9 @@ Search is a free-text discovery mechanism, not a substitute for filtering and no
 
 | Content type | Searchable fields | Explicitly excluded examples |
 | --- | --- | --- |
-| Course | `title`, `description`, `topics` | `course_number`, `credentials`, `level`, `duration`, `series`, `audience`, `avatar`, playlist references |
-| Curated playlist | `title`, `description`, `topics` | `level`, `duration`, `series`, `audience`, derived modality, `avatar`, module references |
-| Module | `title`, `description`, `topics` | `modalities`, `level`, `duration`, `series`, `audience`, `avatar`, page references and page body text |
+| Course | `title`, `description`, `topics` | `course_number`, `credentials`, `level`, `duration`, `experience_type`, `audience`, `avatar`, playlist references |
+| Curated playlist | `title`, `description`, `topics` | `level`, `duration`, `experience_type`, `audience`, derived modality, `avatar`, module references |
+| Module | `title`, `description`, `topics` | `modalities`, `level`, `duration`, `experience_type`, `audience`, `avatar`, page references and page body text |
 
 For example, a module with this metadata:
 
@@ -429,7 +429,7 @@ Filters provide structured refinement using the existing small set of stable cat
 | Filter | Authored or derived source | Applies to |
 | --- | --- | --- |
 | Audience | Authored `audience` | Courses, playlists, and modules |
-| Series | Authored `series` | Courses, playlists, and modules |
+| Experience type | Authored `experience_type` | Courses, playlists, and modules |
 | Level | Authored `level` | Courses, playlists, and modules |
 | Modality | Module `modalities`; derived union for playlists and courses | Courses, playlists, and modules |
 
@@ -988,8 +988,8 @@ The production implementation must demonstrate at least the following end-to-end
 3. A playlist ordered as single-page Module A, multi-page Module B, and single-page Module C produces the effective sequence Playlist overview, Page A1, Module B overview, all Module B pages, and Page C1. Previous and Next traverse that exact sequence in both directions while all three modules remain visible in hierarchy navigation.
 4. A single-module playlist omits a redundant playlist overview and opens the module's effective first step while retaining playlist context.
 5. The same module opens independently and within different playlists without duplicated source content or incorrect navigation context.
-6. A catalog item matches terms present in its title, description, or topics. The same item does not match a term found only in its audience, series, level, modality, duration, identifier, hierarchy references, or page body.
-7. Audience, series, level, and modality values refine results through filters. Multiple values in one filter use OR; different filters use AND; and active search terms combine with all filters using AND.
+6. A catalog item matches terms present in its title, description, or topics. The same item does not match a term found only in its audience, experience type, level, modality, duration, identifier, hierarchy references, or page body.
+7. Audience, experience type, level, and modality values refine results through filters. Multiple values in one filter use OR; different filters use AND; and active search terms combine with all filters using AND.
 8. Clearing search retains active filters, clearing filters retains an active search, active constraints are visible, and an empty combined result produces accessible feedback.
 9. A page renders Markdown, local and root-relative includes, an external `[!LAB_STEPS]` source, a `[!LAB_HOST]` launcher with its full URL and template-relative image, relative images, video, and keyboard-operable choice pivots.
 10. Invalid metadata, broken hierarchy references, recursive includes, and inaccessible required external content prevent publication with actionable errors.

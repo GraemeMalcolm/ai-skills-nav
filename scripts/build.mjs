@@ -492,18 +492,18 @@ function card(outputFile, item, type, defaultHidden = false) {
     ? playlistEntryTarget(path.join(outputRoot, "playlists"), item)
     : path.join(outputRoot, type, item.slug, "index.html");
   const tooltipId = `${type}-${item.slug}-description`;
-  const searchText = [item.title, item.course_number, item.series, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
+  const searchText = [item.title, item.course_number, item.experience_type, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
   const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}"`;
-  const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.modalities || []))}" data-level="${escapeHtml(item.level || "")}" data-series="${escapeHtml(item.series || "")}" data-audience="${escapeHtml(JSON.stringify(item.audience || []))}"`;
+  const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.modalities || []))}" data-level="${escapeHtml(item.level || "")}" data-experience_type="${escapeHtml(item.experience_type || "")}" data-audience="${escapeHtml(JSON.stringify(item.audience || []))}"`;
   // Home includes every catalog item so its search can truly search all
   // content, but only the featured subset is visible before a search begins.
   const defaultVisibility = defaultHidden ? " data-default-hidden hidden" : "";
   const tooltip = item.description ? `<span class="card-tooltip" id="${escapeHtml(tooltipId)}" role="tooltip">${escapeHtml(item.description)}</span>` : "";
   const describedBy = item.description ? ` aria-describedby="${escapeHtml(tooltipId)}"` : "";
-  const series = item.series ? `<span>${escapeHtml(item.series)}</span>` : "";
+  const experienceType = item.experience_type ? `<span>${escapeHtml(item.experience_type)}</span>` : "";
   const cardLink = `<a class="content-card" href="${relativeUrl(outputFile, target)}"${describedBy}>
     <span class="card-image">${thumbnail(outputFile, item, type)}</span>
-    <span class="card-body"><strong>${escapeHtml(item.title)}</strong>${series}<span>${metadataLine(item)}</span></span>
+    <span class="card-body"><strong>${escapeHtml(item.title)}</strong>${experienceType}<span>${metadataLine(item)}</span></span>
     ${tooltip}
   </a>`;
   if (type !== "modules") return cardLink.replace('class="content-card"', `class="content-card"${searchData}${filterData}${defaultVisibility}`);
@@ -535,10 +535,10 @@ function catalogFilterDialog(items, fields, subject) {
   const selectors = {
     modalities: (item) => Array.isArray(item.modalities) ? item.modalities : [],
     level: (item) => [item.level],
-    series: (item) => [item.series],
+    experience_type: (item) => [item.experience_type],
     audience: (item) => Array.isArray(item.audience) ? item.audience : [item.audience],
   };
-  const labels = { level: "Level", series: "Series", audience: "Audience" };
+  const labels = { level: "Level", experience_type: "Experience type", audience: "Audience" };
   return `<dialog class="filter-dialog" id="catalog-filter" data-filter-dialog data-filter-fields="${escapeHtml(fields.join(","))}" aria-labelledby="filter-title">
     <form method="dialog" data-filter-form>
       <header class="filter-dialog-header"><div><p class="kicker">Refine ${escapeHtml(subject)}</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
@@ -816,7 +816,7 @@ async function build() {
     <section class="catalog-section" data-course-catalog><div class="section-heading"><p class="kicker">Microsoft Official Curriculum</p><h2>Courses</h2></div><div class="card-grid">${courses.map((item, index) => card(homeFile, item, "courses", index >= 4)).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, coursesFile)}">See all courses</a></div></section>
     <section class="catalog-section alt" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning we think you'll like</p><h2>Skilling playlists</h2></div><div class="card-grid">${playlists.map((item, index) => card(homeFile, item, "playlists", index >= 4)).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, personalPlaylistsFile)}">Personal playlists</a><a class="filter-trigger" href="${relativeUrl(homeFile, playlistsFile)}">See all playlists</a></div></section>
     <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${modules.map((item, index) => card(homeFile, item, "modules", index >= 8)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>
-    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "series", "level", "modalities"], "the catalog")}`;
+    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "modalities"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", headerExtra: homeSearch, avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
 
   const courseSearch = catalogSearch("course-search-input", "Search courses", "Search courses");

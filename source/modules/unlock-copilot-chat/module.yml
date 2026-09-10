@@ -4,7 +4,7 @@ modalities:
   - Video
 level: 100
 duration: 40 minutes
-series: Microsoft Official Curriculum
+experience_type: Microsoft Official Curriculum
 topics:
   - Microsoft Copilot
 audience:

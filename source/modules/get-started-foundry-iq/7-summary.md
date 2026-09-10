@@ -21,4 +21,4 @@ Foundry IQ uses agentic retrieval to plan searches, decompose complex questions,
 
 ::: zone-end
 
-For more information, see [Foundry IQ](https://azure.microsoft.com/products/ai-foundry/iq?azure-portal=true)
+For more information, see [Foundry IQ](https://azure.microsoft.com/products/ai-foundry/iq)

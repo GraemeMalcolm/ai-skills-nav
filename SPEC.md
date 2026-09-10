@@ -84,7 +84,7 @@ credentials:
 description: Course description
 level: 200
 duration: 1 day
-series: Microsoft Official Curriculum
+experience_type: Microsoft Official Curriculum
 topics:
   - Topic
 audience:
@@ -96,7 +96,7 @@ playlists:
 
 Rules:
 
-- `title`, `course_number`, `description`, `level`, `duration`, `series`, `topics`, `audience`, and `playlists` SHOULD be present.
+- `title`, `course_number`, `description`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `playlists` SHOULD be present.
 - `course_number` MUST be present.
 - `playlists` MUST be a non-empty array of existing playlist slugs.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
@@ -112,7 +112,7 @@ title: Playlist title
 description: Playlist description
 level: 200
 duration: 120 minutes
-series: Microsoft Official Curriculum
+experience_type: Microsoft Official Curriculum
 topics:
   - Topic
 audience:
@@ -124,7 +124,7 @@ modules:
 
 Rules:
 
-- `title`, `description`, `level`, `duration`, `series`, `topics`, `audience`, and `modules` SHOULD be present.
+- `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `modules` SHOULD be present.
 - `modules` MUST be an array of existing module slugs.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - Module order MUST follow the YAML array.
@@ -139,7 +139,7 @@ description: Module description
 modality: Multimodal
 level: 200
 duration: 40 minutes
-series: Microsoft Official Curriculum
+experience_type: Microsoft Official Curriculum
 topics:
   - Topic
 audience:
@@ -154,7 +154,7 @@ pages:
 
 Rules:
 
-- `title`, `description`, `modality`, `level`, `duration`, `series`, `topics`, `audience`, and `pages` SHOULD be present.
+- `title`, `description`, `modality`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `pages` SHOULD be present.
 - `pages` MUST be a non-empty array.
 - A page entry MAY be a relative filename or an object containing `file`, optional `title`, and optional `description`.
 - Every page file MUST exist inside the module folder.
@@ -338,7 +338,7 @@ The home page MUST include:
 - A skilling-content section containing the first eight alphabetically sorted modules.
 - Links to all three catalogs and personal playlists.
 - A search form covering the complete course, playlist, and module catalogs. Non-featured cards MUST be present but hidden until a search is active, then matching cards MAY be revealed.
-- A single catalog filter control beside the search form in the page header. Its dialog MUST include audience, series, level, and modality choices generated from metadata across all three catalogs.
+- A single catalog filter control beside the search form in the page header. Its dialog MUST include audience, experience type, level, and modality choices generated from metadata across all three catalogs.
 - The default-avatar learning assistant described in section 10.
 
 When filters are active, each Home section MUST show the first matching items in catalog order, up to its normal four-course, four-playlist, or eight-module limit. This backfills filtered featured items with later matching items when available. An active search MAY reveal all matching items. Clearing Home search MUST restore the filtered featured subsets. The “New and popular” module label does not indicate ranking; initial selection is alphabetical.
@@ -383,7 +383,7 @@ The Home filter choices MUST be generated from unique values in current metadata
 
 Required filter fields:
 
-- All content: audience, series, level, and modality.
+- All content: audience, experience type, level, and modality.
 
 A module's modality values come directly from its metadata. A curated playlist MUST inherit the sorted, unique union of modalities declared by its modules. A course MUST inherit the sorted, unique union of modalities from all modules in its playlists. Modality filtering MUST apply to courses and playlists using these inherited values.
 

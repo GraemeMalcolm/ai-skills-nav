@@ -874,7 +874,7 @@ if (personalPlaylistsPage) {
 // Home owns the filter dialog; all catalog pages consume the same persisted
 // state so navigation does not reset the user's catalog view.
 const catalogFilterStorageKey = "ai-skills-nav:catalog-filters";
-const filterFields = ["audience", "series", "level", "modalities"];
+const filterFields = ["audience", "experience_type", "level", "modalities"];
 const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
 const catalogCards = [...document.querySelectorAll("[data-catalog-card]")];

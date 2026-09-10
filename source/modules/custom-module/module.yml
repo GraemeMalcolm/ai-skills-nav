@@ -4,7 +4,7 @@ modalities:
   - Lab
 level: 100
 duration: 30 minutes
-series: Microsoft Short Form Skilling
+experience_type: Microsoft Short Form Skilling
 topics:
   - Artificial Intelligence
   - Microsoft Copilot
