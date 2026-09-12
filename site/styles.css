@@ -148,6 +148,26 @@ img {
   text-underline-offset: 4px;
 }
 
+.account-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-left: auto;
+}
+
+.account-links .auth-link {
+  position: relative;
+}
+
+.account-links [data-profile-open]:not([hidden])+.auth-link::before {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: -12px;
+  border-left: 1px solid var(--line);
+  content: "";
+}
+
 .header-tools+.auth-link {
   position: relative;
   margin-left: 24px;
@@ -1031,6 +1051,31 @@ body.access-denied>[data-agent] {
   display: grid;
   gap: 20px;
   padding-block: 24px;
+}
+
+.profile-fields {
+  display: grid;
+  gap: 22px;
+  padding-block: 24px;
+}
+
+.profile-fields>div,
+.profile-fields label {
+  display: grid;
+  gap: 8px;
+}
+
+.profile-fields span {
+  font-weight: 700;
+}
+
+.profile-fields select {
+  min-height: 42px;
+  padding: 8px 36px 8px 10px;
+  border: 1px solid #9d9892;
+  border-radius: 3px;
+  background: var(--surface);
+  color: var(--ink);
 }
 
 .personal-playlist-fields label,

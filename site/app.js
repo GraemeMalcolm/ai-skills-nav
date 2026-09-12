@@ -72,7 +72,35 @@ const signInForm = signInDialog?.querySelector("[data-sign-in-form]");
 const signInEmail = signInDialog?.querySelector("[data-sign-in-email]");
 const signInPassword = signInDialog?.querySelector("[data-sign-in-password]");
 const signInStatus = signInDialog?.querySelector("[data-sign-in-status]");
+const profileLink = document.querySelector("[data-profile-open]");
+const profileDialog = document.querySelector("[data-profile-dialog]");
+const profileForm = profileDialog?.querySelector("[data-profile-form]");
+const profileEmail = profileDialog?.querySelector("[data-profile-email]");
+const profileRole = profileDialog?.querySelector("[data-profile-role]");
 let pendingPersonalPlaylistTrigger = null;
+const profileStorageKey = () => currentAuth
+  ? `ai-skills-nav:profile:${encodeURIComponent(currentAuth.email)}`
+  : null;
+const readProfile = () => {
+  try {
+    const storageKey = profileStorageKey();
+    if (!storageKey) return { role: "" };
+    const profile = JSON.parse(localStorage.getItem(storageKey) || "null");
+    return { role: typeof profile?.role === "string" ? profile.role : "" };
+  } catch {
+    return { role: "" };
+  }
+};
+const writeProfile = (role) => {
+  try {
+    const storageKey = profileStorageKey();
+    if (!storageKey) return false;
+    localStorage.setItem(storageKey, JSON.stringify({ role }));
+    return true;
+  } catch {
+    return false;
+  }
+};
 const updateAuthLink = () => {
   if (!authLink) return;
   authLink.textContent = currentAuth ? "Sign-out" : "Sign-in";
@@ -135,7 +163,7 @@ if (authLink && signInDialog && signInForm && signInEmail && signInPassword && s
       currentAuth = null;
       pendingPersonalPlaylistTrigger = null;
       refreshAuthorization();
-      if (document.querySelector("[data-personal-playlists]")) window.location.reload();
+      if (document.querySelector("[data-personal-playlists], [data-personalized-plan]")) window.location.reload();
       return;
     }
     openSignInDialog();
@@ -168,7 +196,7 @@ if (authLink && signInDialog && signInForm && signInEmail && signInPassword && s
     signInPassword.value = "";
     signInDialog.close();
     refreshAuthorization();
-    if (document.querySelector("[data-personal-playlists]")) {
+    if (document.querySelector("[data-personal-playlists], [data-personalized-plan]")) {
       window.location.reload();
       return;
     }
@@ -181,6 +209,28 @@ updateAuthLink();
 updateAuthOnlyElements();
 updateRestrictedElements();
 updatePageAccess();
+
+if (profileLink && profileDialog && profileForm && profileEmail && profileRole) {
+  profileLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (!currentAuth) return;
+    profileEmail.textContent = currentAuth.email;
+    const savedRole = readProfile().role;
+    profileRole.value = [...profileRole.options].some((option) => option.value === savedRole) ? savedRole : "";
+    profileDialog.showModal();
+    profileRole.focus();
+  });
+  profileDialog.querySelectorAll("[data-profile-close]").forEach((button) => button.addEventListener("click", () => profileDialog.close()));
+  profileDialog.addEventListener("click", (event) => {
+    if (event.target === profileDialog) profileDialog.close();
+  });
+  profileRole.addEventListener("change", () => writeProfile(profileRole.value));
+  profileForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!profileForm.reportValidity() || !writeProfile(profileRole.value)) return;
+    window.location.assign(profileForm.dataset.personalizedPlanUrl);
+  });
+}
 
 // Personal playlists deliberately live in browser storage: the proof of
 // concept has no account system or backend. Module paths are stored relative to
@@ -228,6 +278,28 @@ const writePersonalPlaylists = (playlists) => {
   } catch {
     return false;
   }
+};
+
+const createPersonalPlaylistCard = (playlist, href, thumbnailSource) => {
+  const card = document.createElement("a");
+  card.className = "content-card";
+  card.href = href;
+  const imageContainer = document.createElement("span");
+  imageContainer.className = "card-image";
+  const image = document.createElement("img");
+  image.src = thumbnailSource;
+  image.alt = "";
+  image.loading = "lazy";
+  imageContainer.append(image);
+  const body = document.createElement("span");
+  body.className = "card-body";
+  const title = document.createElement("strong");
+  title.textContent = playlist.name;
+  const description = document.createElement("span");
+  description.textContent = playlist.description || "A personal playlist.";
+  body.append(title, description);
+  card.append(imageContainer, body);
+  return card;
 };
 
 const menuIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
@@ -661,25 +733,7 @@ if (personalPlaylistsPage) {
   const createCard = (playlist) => {
     // Use DOM APIs and textContent for user-authored names/descriptions rather
     // than interpolating strings into HTML, avoiding markup injection.
-    const card = document.createElement("a");
-    card.className = "content-card";
-    card.href = `?playlist=${encodeURIComponent(playlist.id)}`;
-    const imageContainer = document.createElement("span");
-    imageContainer.className = "card-image";
-    const image = document.createElement("img");
-    image.src = personalPlaylistsPage.dataset.playlistThumbnail;
-    image.alt = "";
-    image.loading = "lazy";
-    imageContainer.append(image);
-    const body = document.createElement("span");
-    body.className = "card-body";
-    const title = document.createElement("strong");
-    title.textContent = playlist.name;
-    const description = document.createElement("span");
-    description.textContent = playlist.description || "A personal playlist.";
-    body.append(title, description);
-    card.append(imageContainer, body);
-    return card;
+    return createPersonalPlaylistCard(playlist, `?playlist=${encodeURIComponent(playlist.id)}`, personalPlaylistsPage.dataset.playlistThumbnail);
   };
 
   const renderCollection = () => {
@@ -1027,6 +1081,29 @@ if (personalPlaylistsPage) {
   else renderCollection();
 }
 
+const personalizedPlanPage = document.querySelector("[data-personalized-plan]");
+
+if (personalizedPlanPage && !currentAuth) {
+  openSignInDialog("Sign in to view your personalized skilling plan.");
+}
+
+if (personalizedPlanPage && currentAuth) {
+  const role = readProfile().role;
+  const summary = personalizedPlanPage.querySelector("[data-personalized-summary]");
+  summary.textContent = role
+    ? `Recommendations for your role: ${role}.`
+    : "Choose your role in your profile to see personalized recommendations.";
+  const playlists = readPersonalPlaylists();
+  const playlistsUrl = new URL(personalizedPlanPage.dataset.playlistsUrl, window.location.href);
+  const playlistGrid = personalizedPlanPage.querySelector("[data-plan-playlist-grid]");
+  playlistGrid.replaceChildren(...playlists.map((playlist) => {
+    const url = new URL(playlistsUrl);
+    url.searchParams.set("playlist", playlist.id);
+    return createPersonalPlaylistCard(playlist, url.href, personalizedPlanPage.dataset.playlistThumbnail);
+  }));
+  personalizedPlanPage.querySelector("[data-plan-playlist-empty]").hidden = playlists.length !== 0;
+}
+
 // ---------------------------------------------------------------------------
 // Catalog search and metadata filters
 // ---------------------------------------------------------------------------
@@ -1043,6 +1120,7 @@ const courseEmptyState = document.querySelector("[data-course-empty]");
 const moduleEmptyState = document.querySelector("[data-module-empty]");
 const playlistEmptyState = document.querySelector("[data-playlist-empty]");
 const catalogEmptyState = document.querySelector("[data-catalog-empty]");
+const roleSkillingEmptyState = document.querySelector("[data-role-skilling-empty]");
 const emptyFilters = () => Object.fromEntries(filterFields.map((field) => [field, []]));
 const readPersistedFilters = () => {
   try {
@@ -1079,12 +1157,18 @@ const applyCatalogVisibility = () => {
   const homeLimits = { courses: 4, playlists: 4, modules: 8 };
   const homeVisible = { courses: 0, playlists: 0, modules: 0 };
   const isHomePage = document.body.classList.contains("home-page");
+  const isPersonalizedPage = document.body.classList.contains("personalized-page");
+  const selectedRole = isPersonalizedPage ? readProfile().role : "";
   let visibleModules = 0;
   let visiblePlaylists = 0;
   let visibleCourses = 0;
   let visibleCatalogItems = 0;
   catalogCards.forEach((card) => {
     let matches = canAccess(card.dataset.restrictedTo) && matchesSearch(card);
+    if (matches && isPersonalizedPage) {
+      const audiences = JSON.parse(card.dataset.audience || "[]");
+      matches = Boolean(selectedRole) && audiences.includes(selectedRole);
+    }
     if (matches && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
       // Playlist and course modality arrays are inherited from their modules.
@@ -1112,6 +1196,7 @@ const applyCatalogVisibility = () => {
   if (playlistEmptyState) playlistEmptyState.hidden = visiblePlaylists !== 0;
   if (courseEmptyState) courseEmptyState.hidden = visibleCourses !== 0;
   if (catalogEmptyState) catalogEmptyState.hidden = visibleCatalogItems !== 0;
+  if (roleSkillingEmptyState) roleSkillingEmptyState.hidden = visibleCatalogItems !== 0;
 };
 
 const persistFilters = () => {

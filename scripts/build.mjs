@@ -17,6 +17,7 @@ const contentRoots = [
   { name: "MicrosoftLearning", directory: path.join(root, "MicrosoftLearning") },
   { name: "avatars", directory: path.join(root, "avatars") },
 ];
+let profileAudienceValues = [];
 
 marked.setOptions({ gfm: true });
 
@@ -446,7 +447,9 @@ function shareDialog(hidden = false, includeTrigger = true) {
 
 function signInDialog(outputFile) {
   const logo = relativeUrl(outputFile, path.join(outputRoot, "assets", "microsoft-logo.svg"));
-  return `<a class="filter-trigger auth-link" href="#sign-in" data-auth-open>Sign-in</a>
+  const playlistsUrl = relativeUrl(outputFile, path.join(outputRoot, "my-playlists", "index.html"));
+  const personalizedPlanUrl = relativeUrl(outputFile, path.join(outputRoot, "personalized-plan", "index.html"));
+  return `<div class="account-links"><a class="header-link" href="#profile" data-profile-open data-auth-only hidden>Profile</a><a class="filter-trigger auth-link" href="#sign-in" data-auth-open>Sign-in</a></div>
   <dialog class="filter-dialog sign-in-dialog" data-sign-in-dialog aria-labelledby="sign-in-title">
     <form data-sign-in-form novalidate>
       <header class="filter-dialog-header"><div><img class="sign-in-logo" src="${logo}" alt="Microsoft"><h2 id="sign-in-title">Sign-in</h2></div><button class="icon-button" type="button" aria-label="Close sign-in" data-sign-in-close>${icon("close")}</button></header>
@@ -456,6 +459,17 @@ function signInDialog(outputFile) {
         <p class="sign-in-status" data-sign-in-status role="status" aria-live="polite" hidden></p>
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-sign-in-close>Cancel</button><button class="primary-button" type="submit">Sign-in</button></footer>
+    </form>
+  </dialog>
+  <dialog class="filter-dialog profile-dialog" data-profile-dialog aria-labelledby="profile-title">
+    <form data-profile-form data-personalized-plan-url="${escapeHtml(personalizedPlanUrl)}">
+      <header class="filter-dialog-header"><div><p class="kicker">Your account</p><h2 id="profile-title">Profile</h2></div><button class="icon-button" type="button" aria-label="Close profile" data-profile-close>${icon("close")}</button></header>
+      <div class="filter-dialog-body profile-fields">
+        <div><span>Email address</span><strong data-profile-email></strong></div>
+        <label><span>My role</span><select data-profile-role required><option value="">Select a role</option>${profileAudienceValues.map((audience) => `<option value="${escapeHtml(audience)}">${escapeHtml(audience)}</option>`).join("")}</select></label>
+        <a href="${escapeHtml(playlistsUrl)}">My personal playlists</a>
+      </div>
+      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-profile-close>Cancel</button><button class="primary-button" type="submit">Show personalized skilling plan</button></footer>
     </form>
   </dialog>`;
 }
@@ -829,6 +843,9 @@ async function build() {
   modules.sort((a, b) => a.title.localeCompare(b.title));
   playlists.sort((a, b) => a.title.localeCompare(b.title));
   courses.sort((a, b) => a.title.localeCompare(b.title));
+  profileAudienceValues = [...new Set([...courses, ...playlists, ...modules]
+    .flatMap((item) => Array.isArray(item.audience) ? item.audience : [item.audience])
+    .filter(Boolean))].sort((left, right) => String(left).localeCompare(String(right)));
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));
   const playlistMap = new Map(playlists.map((playlist) => [playlist.slug, playlist]));
   for (const playlist of playlists) {
@@ -862,6 +879,7 @@ async function build() {
   const playlistsFile = path.join(outputRoot, "playlists", "index.html");
   const skillingContentFile = path.join(outputRoot, "skilling-content", "index.html");
   const personalPlaylistsFile = path.join(outputRoot, "my-playlists", "index.html");
+  const personalizedPlanFile = path.join(outputRoot, "personalized-plan", "index.html");
   const heroSearchHints = escapeHtml(JSON.stringify([
     "Develop agents with Microsoft Foundry",
     "Use Microsoft Copilot",
@@ -941,6 +959,13 @@ async function build() {
   </dialog>`;
   const personalPlaylistSidebar = `<aside class="sidebar" data-sidebar><div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div><nav aria-label="Playlist" data-personal-playlist-navigation></nav></aside><div class="sidebar-scrim" data-menu-close></div>`;
   await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, avatar: defaultAvatar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
+
+  const personalizedPlanContent = `<div data-personalized-plan data-auth-only data-playlists-url="${relativeUrl(personalizedPlanFile, personalPlaylistsFile)}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}">
+    <section class="catalog-intro"><p class="kicker">Personalized learning</p><h1>My skilling plan</h1><p data-personalized-summary>Your recommendations are based on the role selected in your profile.</p></section>
+    <section class="catalog-section"><div class="section-heading"><p class="kicker">Recommended learning</p><h2>Skilling for my role</h2></div><div class="card-grid" data-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-role-skilling-empty hidden>No skilling items match your selected role.</p></section>
+    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Saved by you</p><h2>My playlists</h2></div><div class="card-grid" data-plan-playlist-grid></div><p class="filter-empty" data-plan-playlist-empty hidden>You have not created any personal playlists yet.</p></section>
+  </div>`;
+  await writePage(personalizedPlanFile, shell({ outputFile: personalizedPlanFile, title: "My skilling plan", breadcrumbs: [{ label: "My skilling plan" }], avatar: defaultAvatar, content: personalizedPlanContent, bodyClass: "catalog-page personalized-page", hasModuleCards: true }));
 
   for (const module of modules) {
     const sidebarFactory = module.pages.length > 1 ? (outputFile, activePage) => moduleSidebar(outputFile, module, module.pages, activePage) : null;
