@@ -72,10 +72,24 @@ const signInForm = signInDialog?.querySelector("[data-sign-in-form]");
 const signInEmail = signInDialog?.querySelector("[data-sign-in-email]");
 const signInPassword = signInDialog?.querySelector("[data-sign-in-password]");
 const signInStatus = signInDialog?.querySelector("[data-sign-in-status]");
+let pendingPersonalPlaylistTrigger = null;
 const updateAuthLink = () => {
   if (!authLink) return;
   authLink.textContent = currentAuth ? "Sign-out" : "Sign-in";
   authLink.href = currentAuth ? "#sign-out" : "#sign-in";
+};
+const updateAuthOnlyElements = () => {
+  document.querySelectorAll("[data-auth-only]").forEach((element) => {
+    element.hidden = !currentAuth;
+  });
+};
+const openSignInDialog = (message = "") => {
+  if (!signInDialog || !signInForm || !signInEmail || !signInStatus) return;
+  signInForm.reset();
+  signInStatus.textContent = message;
+  signInStatus.hidden = !message;
+  signInDialog.showModal();
+  signInEmail.focus();
 };
 const updateRestrictedElements = () => {
   document.querySelectorAll("[data-access-domains]").forEach((element) => {
@@ -106,6 +120,7 @@ const updatePageAccess = () => {
 };
 const refreshAuthorization = () => {
   updateAuthLink();
+  updateAuthOnlyElements();
   updateRestrictedElements();
   updatePageAccess();
   updateAccessAwareFilterOptions();
@@ -118,13 +133,12 @@ if (authLink && signInDialog && signInForm && signInEmail && signInPassword && s
     if (currentAuth) {
       localStorage.removeItem(authStorageKey);
       currentAuth = null;
+      pendingPersonalPlaylistTrigger = null;
       refreshAuthorization();
+      if (document.querySelector("[data-personal-playlists]")) window.location.reload();
       return;
     }
-    signInForm.reset();
-    signInStatus.hidden = true;
-    signInDialog.showModal();
-    signInEmail.focus();
+    openSignInDialog();
   });
   signInDialog.querySelectorAll("[data-sign-in-close]").forEach((button) => button.addEventListener("click", () => signInDialog.close()));
   signInDialog.addEventListener("click", (event) => {
@@ -154,16 +168,26 @@ if (authLink && signInDialog && signInForm && signInEmail && signInPassword && s
     signInPassword.value = "";
     signInDialog.close();
     refreshAuthorization();
+    if (document.querySelector("[data-personal-playlists]")) {
+      window.location.reload();
+      return;
+    }
+    const pendingTrigger = pendingPersonalPlaylistTrigger;
+    pendingPersonalPlaylistTrigger = null;
+    pendingTrigger?.click();
   });
 }
 updateAuthLink();
+updateAuthOnlyElements();
 updateRestrictedElements();
 updatePageAccess();
 
 // Personal playlists deliberately live in browser storage: the proof of
 // concept has no account system or backend. Module paths are stored relative to
 // the site root so the same record works when GitHub Pages uses a repo subpath.
-const personalPlaylistsStorageKey = "ai-skills-nav:personal-playlists";
+const personalPlaylistsStorageKey = () => currentAuth
+  ? `ai-skills-nav:personal-playlists:${encodeURIComponent(currentAuth.email)}`
+  : null;
 
 /**
  * Read and defensively normalize personal playlists from localStorage.
@@ -175,7 +199,9 @@ const personalPlaylistsStorageKey = "ai-skills-nav:personal-playlists";
  */
 const readPersonalPlaylists = () => {
   try {
-    const playlists = JSON.parse(localStorage.getItem(personalPlaylistsStorageKey) || "[]");
+    const storageKey = personalPlaylistsStorageKey();
+    if (!storageKey) return [];
+    const playlists = JSON.parse(localStorage.getItem(storageKey) || "[]");
     if (!Array.isArray(playlists)) return [];
     return playlists.filter((playlist) => playlist && typeof playlist.id === "string" && typeof playlist.name === "string").map((playlist) => ({
       id: playlist.id,
@@ -195,7 +221,9 @@ const readPersonalPlaylists = () => {
 /** Persist the complete playlist collection and report quota/security errors. */
 const writePersonalPlaylists = (playlists) => {
   try {
-    localStorage.setItem(personalPlaylistsStorageKey, JSON.stringify(playlists));
+    const storageKey = personalPlaylistsStorageKey();
+    if (!storageKey) return false;
+    localStorage.setItem(storageKey, JSON.stringify(playlists));
     return true;
   } catch {
     return false;
@@ -523,6 +551,11 @@ if (personalPlaylistDialog) {
 
   document.querySelectorAll("[data-personal-playlist-open]").forEach((trigger) => trigger.addEventListener("click", (event) => {
     event.preventDefault();
+    if (!currentAuth) {
+      pendingPersonalPlaylistTrigger = trigger;
+      openSignInDialog("Sign in to create or use personal playlists.");
+      return;
+    }
     // Card buttons identify their module at runtime. The module-page link uses
     // the defaults embedded directly on the shared dialog by the build.
     if (trigger.dataset.moduleName && trigger.dataset.modulePath) {
@@ -589,6 +622,10 @@ if (personalPlaylistDialog) {
 // My Playlists collection and detail views
 // ---------------------------------------------------------------------------
 const personalPlaylistsPage = document.querySelector("[data-personal-playlists]");
+
+if (personalPlaylistsPage && !currentAuth) {
+  openSignInDialog("Sign in to create or use personal playlists.");
+}
 
 if (personalPlaylistsPage) {
   // The build embeds the current module catalog. It is the source of truth for
