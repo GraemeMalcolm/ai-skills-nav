@@ -7,13 +7,13 @@ AI Skills Nav is a content-driven learning site for discovering and consuming Mi
 The application MUST:
 
 - Generate a complete static site at build time.
-- Run on GitHub Pages without an application server, database, authentication system, or client-side framework.
+- Run on GitHub Pages without an application server, database, real identity provider, or client-side framework.
 - Present courses, curated playlists, modules, and module pages.
-- Support search, metadata filters, responsive navigation, personal playlists, custom Markdown extensions, and content-specific learning assistants.
+- Support search, metadata filters, simulated authentication, profiles, personalized plans, responsive navigation, personal playlists, custom Markdown extensions, and content-specific learning assistants.
 - Use relative internal URLs so deployment beneath a repository subpath works.
 - Remain usable without a generative AI model.
 
-The current content set produces 5 courses, 9 curated playlists, 24 modules, 4 avatars, and 225 HTML files.
+The current content set produces 6 courses, 12 curated playlists, 26 modules, 4 specialist avatars plus the default avatar, and 398 HTML files.
 
 ## 2. Technology and repository layout
 
@@ -282,6 +282,7 @@ The output route contract is:
 | Curated playlist detail | `/playlists/<playlist-slug>/index.html` |
 | Module catalog | `/skilling-content/index.html` |
 | Personal playlists | `/my-playlists/index.html` |
+| Personalized plan | `/personalized-plan/index.html` |
 | Standalone module | `/modules/<module-slug>/index.html` |
 | Standalone module page | `/modules/<module-slug>/pages/<page-slug>/index.html` |
 | Playlist module | `/playlists/<playlist-slug>/modules/<module-slug>/index.html` |
@@ -346,18 +347,20 @@ The home page MUST include:
 - A course section containing the first four alphabetically sorted courses.
 - A curated playlist section containing the first four alphabetically sorted playlists.
 - A skilling-content section containing the first eight alphabetically sorted modules.
-- Links to all three catalogs and personal playlists.
-- A search form covering the complete course, playlist, and module catalogs. Non-featured cards MUST be present but hidden until a search is active, then matching cards MAY be revealed.
-- A single catalog filter control beside the search form in the page header. Its dialog MUST include audience, experience type, level, and modality choices generated from metadata across all three catalogs.
+- Links to all three catalogs. The personal-playlists link MUST be visible only while signed in.
+- A search form at the bottom of the hero covering the complete course, playlist, and module catalogs. Non-featured cards MUST be present but hidden until a search is active, then matching cards MAY be revealed.
+- A left-aligned “What do you want to learn how to do?” label and a Clear action beneath the search field's right edge.
+- Five example search prompts typed once in sequence, followed by the persistent text “Build the skills you need.” Reduced-motion mode MUST show the final text immediately.
+- A single catalog filter control at the top right of the Courses card section. Its dialog MUST include audience, experience type, level, and modality choices generated from metadata across all three catalogs.
 - The default-avatar learning assistant described in section 10.
 
 When filters are active, each Home section MUST show the first matching items in catalog order, up to its normal four-course, four-playlist, or eight-module limit. This backfills filtered featured items with later matching items when available. An active search MAY reveal all matching items. Clearing Home search MUST restore the filtered featured subsets. The “New and popular” module label does not indicate ranking; initial selection is alphabetical.
 
 ### 7.2 Catalogs
 
-Each catalog MUST show an introduction, search form, filter link, card grid, and accessible empty state. The filter link MUST appear beside Search in the page header, matching its position on Home. Catalog pages MUST NOT duplicate the Home filter dialog. Their filter link MUST show the number of currently applied filter values when nonzero and navigate to the Home filter dialog.
+Each catalog MUST show an introduction, search form, filter link, card grid, and accessible empty state. Search and Filter MUST appear at the top right of the card section, with Clear beneath the search field's right edge. Catalog pages MUST NOT duplicate the Home filter dialog. Their filter link MUST show the number of currently applied filter values when nonzero and navigate to the Home filter dialog.
 
-The page header MUST provide a Sign-in link after the filter control. Sign-in MUST accept any syntactically valid email address and non-empty password, persist only the email address, and change the link to Sign-out. Signed-out learners MUST NOT see restricted assets. Signed-in learners MUST see a restricted asset only when their email domain matches one of its `restricted_to` values. This authorization check MUST apply before browsing, search, filtering, personal-playlist discovery, nested navigation, and direct-route display. Because this is a static-site simulation, it MUST NOT be represented as a security boundary for confidential content.
+The page header MUST provide a Sign-in link. Sign-in MUST accept any syntactically valid email address and non-empty password, persist only the normalized email address, discard the password, and replace Sign-in with Profile and Sign-out links. Sign-out MUST clear the active identity and return to Home. Signed-out learners MUST NOT see restricted assets. Signed-in learners MUST see a restricted asset only when their email domain matches one of its `restricted_to` values. This authorization check MUST apply before browsing, search, filtering, personal-playlist discovery, nested navigation, and direct-route display. Because this is a static-site simulation, it MUST NOT be represented as a security boundary for confidential content.
 
 Cards MUST include:
 
@@ -366,6 +369,7 @@ Cards MUST include:
 - Available metadata summary.
 - Description tooltip when a description exists.
 - Link to the item's detail route.
+- Authored experience type, falling back to `Course`, `Skilling Playlist`, or `Learning Experience` according to the card's content type.
 - For module cards, an overlaid add icon that appears on hover or keyboard focus and opens the same personal-playlist dialog available inside a module. The icon MUST remain visible on devices without hover support.
 
 Search text MUST concatenate title, course number when present, description, and topics. Search MUST:
@@ -417,16 +421,28 @@ Breadcrumbs MUST represent the generated hierarchy and identify the current page
 
 Above 860 px, a playlist sidebar MUST be sticky and collapsible. At or below 860 px, it MUST become an off-canvas drawer with a reveal control, close control, scrim, and body-scroll lock. At or below 600 px, search, catalog headers, filters, page controls, and assistant layout MUST reflow for narrow screens. All experiences MUST remain usable at 320 px viewport width.
 
+### 7.6 Profile and personalized plan
+
+Profile MUST display the normalized signed-in email address, a role selector, a link to personal playlists, and an action to open the personalized plan. The available roles MUST be generated from content audiences and limited to roles backed by unrestricted content or restricted content authorized for the current email domain. A saved role that is no longer available MUST be cleared.
+
+Store each user's selected role under:
+
+```text
+ai-skills-nav:profile:<encoded-normalized-email>
+```
+
+The personalized-plan route MUST require sign-in and a valid role. Its **Skilling for my role** section MUST show accessible courses, curated playlists, and modules whose audience exactly includes the selected role. Its **My playlists** section MUST render the signed-in user's personal playlists. Profile and plan state MUST remain isolated between signed-in email addresses.
+
 ## 8. Personal playlists
 
-Personal playlists are browser-local collections and do not require authentication or a backend.
+Personal playlists are browser-local, email-scoped collections. They require simulated sign-in but do not require a backend.
 
 ### 8.1 Persistence
 
 Use the local-storage key:
 
 ```text
-ai-skills-nav:personal-playlists
+ai-skills-nav:personal-playlists:<encoded-normalized-email>
 ```
 
 Store an array with this shape:
@@ -454,7 +470,7 @@ On read, invalid JSON or a non-array root MUST become an empty collection. Recor
 Users MUST be able to:
 
 - Create a playlist with a required name and optional description.
-- Add a module from any standalone module overview or page.
+- Add a module from a module card or any standalone module overview or page.
 - Add to an existing playlist or create one within the add dialog.
 - Open a personal playlist overview.
 - Start a non-empty playlist from a **Start** button below its thumbnail. The button MUST open the first module in the current stored order and preserve personal-playlist context.
@@ -463,10 +479,14 @@ Users MUST be able to:
 - Remove individual modules from a playlist without deleting the underlying module. Changes MUST be saved immediately and reflected in playlist navigation.
 - View a small 16:9 module thumbnail beside each module in the personal-playlist management list.
 - Delete an entire playlist after confirmation.
+- Edit a playlist's name and description.
+- Share an individual playlist from its top-right content action. The playlist collection itself MUST NOT offer Share.
 
 Names MUST be trimmed, non-empty, and unique case-insensitively. Adding an existing module path MUST not create a duplicate. IDs SHOULD use `crypto.randomUUID()` with a timestamp/random fallback.
 
-The app does not support renaming playlists, editing descriptions, reordering playlists, synchronization, or account storage.
+The app does not support reordering playlists, cross-device synchronization, or backend account storage.
+
+When a signed-out user invokes an add-to-playlist action, the app MUST explain that sign-in is required, open Sign-in, and resume the pending add after successful sign-in. Direct access to the personal-playlists route MUST likewise prompt for sign-in and hide personal content until authentication succeeds.
 
 ### 8.3 URL and navigation context
 
@@ -717,7 +737,7 @@ A conforming implementation MUST satisfy the following checks.
 ### Build and routing
 
 - A clean dependency install and build succeeds on Node.js 22.
-- The current repository content generates 5 courses, 9 playlists, 24 modules, and 225 HTML files.
+- The current repository content generates 6 courses, 12 playlists, 26 modules, and 398 HTML files.
 - All required routes and `.nojekyll` exist.
 - Every local image, script, stylesheet, and generated navigation target resolves under the GitHub Pages subpath.
 - Broken content relationships, includes, and required avatar assets fail the build with useful errors.
@@ -736,7 +756,8 @@ A conforming implementation MUST satisfy the following checks.
 
 ### Personal playlists
 
-- Stored data uses the documented key and shape.
+- Personal-playlist and profile data use the documented per-email keys and remain isolated between signed-in users.
+- Signed-out entry points request sign-in and a pending add resumes after successful sign-in.
 - Invalid data is normalized safely.
 - Blank and case-insensitive duplicate names are rejected.
 - Duplicate module paths are not inserted.
@@ -744,6 +765,13 @@ A conforming implementation MUST satisfy the following checks.
 - Removing a module is persisted without affecting the module catalog or other playlists.
 - A valid `playlist` query parameter restores navigation.
 - Stale modules and storage failures are handled without page failure.
+
+### Profile and personalization
+
+- Profile displays the signed-in email and only roles supported by content accessible to that email domain.
+- A valid saved role restores the personalized plan; an inaccessible or stale role is cleared.
+- The role section contains only accessible cards with an exact matching audience, and the playlist section contains the current user's personal playlists.
+- Sign-out from any route clears the active identity and returns to Home.
 
 ### Content rendering
 

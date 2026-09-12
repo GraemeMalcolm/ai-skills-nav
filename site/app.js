@@ -62,6 +62,8 @@ const parseRestrictedDomains = (value) => {
   }
 };
 const canAccess = (restrictedTo) => {
+  // An empty domain list is public; otherwise the simulated signed-in domain
+  // must exactly match one of the normalized metadata values.
   const domains = Array.isArray(restrictedTo) ? restrictedTo : parseRestrictedDomains(restrictedTo);
   return domains.length === 0 || Boolean(currentAuth && domains.includes(currentAuth.domain));
 };
@@ -211,6 +213,8 @@ updateRestrictedElements();
 updatePageAccess();
 
 if (profileLink && profileDialog && profileForm && profileEmail && profileRole) {
+  const isAvailableProfileRole = () => Array.from(profileRole.options)
+    .some((option) => option.value && option.value === profileRole.value);
   profileLink.addEventListener("click", (event) => {
     event.preventDefault();
     if (!currentAuth) return;
@@ -228,10 +232,10 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole) 
   profileDialog.addEventListener("click", (event) => {
     if (event.target === profileDialog) profileDialog.close();
   });
-  profileRole.addEventListener("change", () => writeProfile(profileRole.value));
+  profileRole.addEventListener("change", () => writeProfile(isAvailableProfileRole() ? profileRole.value : ""));
   profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    if (!profileForm.reportValidity() || !writeProfile(profileRole.value)) return;
+    if (!profileForm.reportValidity() || !isAvailableProfileRole() || !writeProfile(profileRole.value)) return;
     window.location.assign(profileForm.dataset.personalizedPlanUrl);
   });
 }
@@ -285,6 +289,8 @@ const writePersonalPlaylists = (playlists) => {
 };
 
 const createPersonalPlaylistCard = (playlist, href, thumbnailSource) => {
+  // User-authored names and descriptions are assigned with textContent rather
+  // than interpolated into HTML so saved playlist data cannot inject markup.
   const card = document.createElement("a");
   card.className = "content-card";
   card.href = href;
@@ -735,8 +741,6 @@ if (personalPlaylistsPage) {
   };
 
   const createCard = (playlist) => {
-    // Use DOM APIs and textContent for user-authored names/descriptions rather
-    // than interpolating strings into HTML, avoiding markup injection.
     return createPersonalPlaylistCard(playlist, `?playlist=${encodeURIComponent(playlist.id)}`, personalPlaylistsPage.dataset.playlistThumbnail);
   };
 

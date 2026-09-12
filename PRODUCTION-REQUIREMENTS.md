@@ -352,17 +352,23 @@ quiz:
 
 **FR-HOME-004** It must provide filters derived from current published metadata rather than hard-coded content values.
 
+**FR-HOME-005** Search must appear within the home banner with a task-oriented label, example prompts that settle on a stable invitation, and a clearly associated Clear action. Reduced-motion preferences must suppress the typing animation.
+
+**FR-HOME-006** The shared catalog Filter action must appear with the featured card area rather than in the global header.
+
 ### 7.2 Catalogs
 
 Separate catalogs must be available for courses, curated playlists, and modules.
 
 **FR-CATALOG-001** Each catalog must provide an introduction, search, applicable filters, a result count or equivalent status, a result collection, and an accessible no-results state.
 
+Search and Filter controls must appear with the result collection heading rather than in the global header. Clear must remain visually and programmatically associated with Search.
+
 **FR-CATALOG-002** Each result must show a representative image, title, concise metadata, description or summary, and a link to the appropriate detail or learning route.
 
 **FR-CATALOG-003** Module results must provide an action to add the module to a personal playlist without requiring the learner to open it first.
 
-**FR-CATALOG-004** General catalog search must use exactly the published `title`, `description`, and `topics` of each course, playlist, or module. It must not search course number, audience, level, duration, experience type, modality, hierarchy labels, stable identifiers, page body text, assistant metadata, or other fields.
+**FR-CATALOG-004** General catalog search must use published `title`, `description`, `topics`, and experience type, plus course number for courses. It must not search audience, level, duration, modality, hierarchy labels, stable identifiers, page body text, assistant metadata, or other fields.
 
 **FR-CATALOG-005** Search must be case-insensitive, tolerate punctuation and common conversational words, and require all meaningful query terms to match.
 
@@ -384,15 +390,37 @@ Separate catalogs must be available for courses, curated playlists, and modules.
 
 **FR-CATALOG-014** Experience type and audience filter choices must include only values assigned to content accessible to the current learner. If an access change makes an active value inaccessible, the filter must clear that selection.
 
-### 7.3 Search behavior
+**FR-CATALOG-015** Signed-in headers must replace Sign-in with Profile and Sign-out. Sign-out must clear the active identity and return the learner to Home from any route.
+
+**FR-CATALOG-016** Cards and detail overviews must display authored experience type when present. Missing values must fall back to `Course`, `Skilling Playlist`, and `Learning Experience` for their respective content types.
+
+### 7.3 Profile and personalized plan
+
+**FR-PROFILE-001** Signed-in learners must be able to open Profile from the global header and view the email address associated with the current session.
+
+**FR-PROFILE-002** Profile must provide a role selector populated from published audience values. A role may be offered only when at least one item for that role is public or accessible to the learner's email domain.
+
+**FR-PROFILE-003** A selected role must be persisted per learner identity. A saved role that becomes unavailable must be cleared rather than used to expose inaccessible recommendations.
+
+**FR-PROFILE-004** Profile must provide direct access to the learner's personal playlists and personalized skilling plan.
+
+**FR-PLAN-001** The personalized plan must require sign-in and a valid selected role.
+
+**FR-PLAN-002** The plan must contain a **Skilling for my role** section showing accessible courses, curated playlists, and modules assigned to the selected role.
+
+**FR-PLAN-003** The plan must contain a **My playlists** section showing only the current learner's personal playlists.
+
+**FR-PLAN-004** Personalized recommendations, role choices, and playlist content must all respect the same authorization rules used by catalogs and direct routes.
+
+### 7.4 Search behavior
 
 Search is a free-text discovery mechanism, not a substitute for filtering and not a reason to expand the metadata model. Its primary signal is well-authored title and description text, supplemented only by the concise `topics` list.
 
 | Content type | Searchable fields | Explicitly excluded examples |
 | --- | --- | --- |
-| Course | `title`, `description`, `topics` | `course_number`, `credentials`, `level`, `duration`, `experience_type`, `audience`, `avatar`, playlist references |
-| Curated playlist | `title`, `description`, `topics` | `level`, `duration`, `experience_type`, `audience`, derived modality, `avatar`, module references |
-| Module | `title`, `description`, `topics` | `modalities`, `level`, `duration`, `experience_type`, `audience`, `avatar`, page references and page body text |
+| Course | `title`, `course_number`, `description`, `topics`, `experience_type` or its fallback | `credentials`, `level`, `duration`, `audience`, `avatar`, playlist references |
+| Curated playlist | `title`, `description`, `topics`, `experience_type` or its fallback | `level`, `duration`, `audience`, derived modality, `avatar`, module references |
+| Module | `title`, `description`, `topics`, `experience_type` or its fallback | `modalities`, `level`, `duration`, `audience`, `avatar`, page references and page body text |
 
 For example, a module with this metadata:
 
@@ -920,7 +948,11 @@ The hosted variant must use `LAB_HOST` with a governed launch URL. It renders th
 
 Personal playlists are learner-defined ordered collections of modules. Their production persistence mechanism may be browser-local, account-based, or both; this decision must not change the learner-facing behaviors below.
 
+**FR-PERSONAL-000** Personal playlists must require sign-in and must be scoped to the current learner identity. Signed-out attempts to access playlists or add a module must request sign-in; a pending add action should resume after successful sign-in.
+
 **FR-PERSONAL-001** A learner must be able to create a personal playlist with a required name and optional description.
+
+**FR-PERSONAL-001A** A learner must be able to edit the name and description of an existing personal playlist.
 
 **FR-PERSONAL-002** Playlist names must be trimmed, non-empty, length-limited, and unique within the learner's collection using case-insensitive comparison.
 
@@ -938,13 +970,15 @@ Personal playlists are learner-defined ordered collections of modules. Their pro
 
 **FR-PERSONAL-009** A personal playlist detail page must offer a Share action consistent with courses, curated playlists, and modules.
 
+The Share action must occupy the standard top-right content action location and must not appear on the overall personal-playlist collection.
+
 **FR-PERSONAL-010** A shared personal-playlist URL must encode the playlist identifier, display name, and ordered module identifiers.
 
 **FR-PERSONAL-011** When a shared link is opened, an existing playlist with that identifier must be loaded without being overwritten by URL data.
 
 **FR-PERSONAL-012** If the identifier does not exist for the learner, the solution must create and open a playlist from the shared name and all valid module identifiers. Unknown or duplicate module identifiers must be ignored safely.
 
-**FR-PERSONAL-013** The product must disclose whether personal playlists are device-local or synchronized to an account and define the expected behavior for signed-out learners.
+**FR-PERSONAL-013** The product must disclose whether personal playlists are device-local or synchronized to an account. Persistence must remain isolated between learner identities even when multiple people use the same browser.
 
 ## 12. Sharing and URLs
 
@@ -1009,16 +1043,18 @@ The production implementation must demonstrate at least the following end-to-end
 3. A playlist ordered as single-page Module A, multi-page Module B, and single-page Module C produces the effective sequence Playlist overview, Page A1, Module B overview, all Module B pages, and Page C1. Previous and Next traverse that exact sequence in both directions while all three modules remain visible in hierarchy navigation.
 4. A single-module playlist omits a redundant playlist overview and opens the module's effective first step while retaining playlist context.
 5. The same module opens independently and within different playlists without duplicated source content or incorrect navigation context.
-6. A catalog item matches terms present in its title, description, or topics. The same item does not match a term found only in its audience, experience type, level, modality, duration, identifier, hierarchy references, or page body.
+6. A catalog item matches terms present in its title, description, topics, or displayed experience type, and a course also matches its course number. The same item does not match a term found only in its audience, level, modality, duration, identifier, hierarchy references, or page body.
 7. Audience, experience type, level, and modality values refine results through filters. Multiple values in one filter use OR; different filters use AND; and active search terms combine with all filters using AND.
 8. Clearing search retains active filters, clearing filters retains an active search, active constraints are visible, and an empty combined result produces accessible feedback.
 9. A page renders Markdown, local and root-relative includes, an external `[!LAB_STEPS]` source, `[!LAB_HOST]` and `[!SIMULATION]` launchers with their full URLs and template-relative images, relative images, video, and keyboard-operable choice pivots.
 10. Invalid metadata, broken hierarchy references, recursive includes, and inaccessible required external content prevent publication with actionable errors.
-11. A learner creates a personal playlist, adds modules from multiple entry points, reorders it, traverses module boundaries, removes a module, and deletes the playlist.
+11. A signed-in learner creates a personal playlist, edits it, adds modules from multiple entry points, reorders it, traverses module boundaries, removes a module, shares the individual playlist, and deletes it. A second identity on the same browser cannot see that playlist.
 12. A recipient opens a shared personal-playlist URL. An existing playlist is loaded unchanged; when it is absent, a new playlist is created from the shared name and valid ordered module identifiers.
 13. A learner opens a deep link to a page with valid hierarchy context and can move backward and forward without losing that context.
 14. A signed-out recipient opens shared links to a published course overview, curated-playlist overview, and multi-page module overview and can view each overview without an authentication prompt or redirect. Any protected downstream action communicates its own authentication requirement only when invoked.
 15. All preceding learner journeys are operable by keyboard and screen reader on both narrow and wide layouts.
+16. A signed-in learner opens Profile, sees only roles backed by content accessible to their email domain, selects a role, and opens a personalized plan containing matching accessible content and only their own playlists.
+17. Signing out from a nested catalog, playlist, or personalized-plan route clears the active identity and returns to Home.
 
 ## 16. Product decisions required before implementation
 

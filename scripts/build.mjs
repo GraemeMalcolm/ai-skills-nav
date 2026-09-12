@@ -17,6 +17,8 @@ const contentRoots = [
   { name: "MicrosoftLearning", directory: path.join(root, "MicrosoftLearning") },
   { name: "avatars", directory: path.join(root, "avatars") },
 ];
+// Build-time role access summary used to limit Profile choices to roles backed
+// by public content or content authorized for the signed-in email domain.
 let profileAudienceOptions = [];
 
 marked.setOptions({ gfm: true });
