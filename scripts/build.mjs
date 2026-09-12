@@ -563,9 +563,9 @@ function card(outputFile, item, type, defaultHidden = false) {
     ? playlistEntryTarget(path.join(outputRoot, "playlists"), item)
     : path.join(outputRoot, type, item.slug, "index.html");
   const tooltipId = `${type}-${item.slug}-description`;
-  const searchText = [item.title, item.course_number, item.experience_type, item.description, ...(Array.isArray(item.topics) ? item.topics : [item.topics])].filter(Boolean).join(" ").toLocaleLowerCase();
+  const searchText = item.searchContext.text;
   const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}" data-restricted-to="${escapeHtml(JSON.stringify(item.restricted_to || []))}"`;
-  const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.modalities || []))}" data-level="${escapeHtml(item.level || "")}" data-experience_type="${escapeHtml(item.experience_type || "")}" data-audience="${escapeHtml(JSON.stringify(item.audience || []))}"`;
+  const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.searchContext.filters.modalities))}" data-level="${escapeHtml(JSON.stringify(item.searchContext.filters.level))}" data-experience_type="${escapeHtml(JSON.stringify(item.searchContext.filters.experience_type))}" data-audience="${escapeHtml(JSON.stringify(item.searchContext.filters.audience))}"`;
   // Home includes every catalog item so its search can truly search all
   // content, but only the featured subset is visible before a search begins.
   const defaultVisibility = defaultHidden ? " data-default-hidden hidden" : "";
@@ -771,6 +771,32 @@ async function getModulePages(module) {
   }));
 }
 
+const catalogFilterFields = ["audience", "experience_type", "level", "modalities"];
+
+function catalogMetadataValues(item, field) {
+  const value = item[field];
+  return (Array.isArray(value) ? value : [value])
+    .filter((entry) => entry !== undefined && entry !== null && entry !== "")
+    .map(String);
+}
+
+function buildSearchContext(item, children = []) {
+  const ownText = [item.title, item.description, item.course_number, item.experience_type, ...catalogMetadataValues(item, "topics")];
+  item.searchContext = {
+    text: [ownText.filter(Boolean).join(" "), ...children.map((child) => child.searchContext.text)]
+      .filter(Boolean)
+      .join(" ")
+      .toLocaleLowerCase(),
+    filters: Object.fromEntries(catalogFilterFields.map((field) => [
+      field,
+      [...new Set([
+        ...catalogMetadataValues(item, field),
+        ...children.flatMap((child) => child.searchContext.filters[field]),
+      ])].sort((left, right) => left.localeCompare(right, undefined, { numeric: true })),
+    ])),
+  };
+}
+
 async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebarFactory = null, breadcrumbParents = null, navigationContext = {}) {
   const indexFile = path.join(routeRoot, "index.html");
   const pageTargets = pages.map((page) => path.join(routeRoot, "pages", page.slug, "index.html"));
@@ -869,21 +895,24 @@ async function build() {
     .sort((left, right) => left.name.localeCompare(right.name));
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));
   const playlistMap = new Map(playlists.map((playlist) => [playlist.slug, playlist]));
+  modules.forEach((module) => buildSearchContext(module));
   for (const playlist of playlists) {
     if (!Array.isArray(playlist.modules)) throw new Error(`Playlist ${playlist.slug} must define modules`);
-    playlist.modalities = [...new Set(playlist.modules.flatMap((slug) => {
+    const childModules = playlist.modules.map((slug) => {
       const module = moduleMap.get(slug);
       if (!module) throw new Error(`Playlist ${playlist.slug} references missing module ${slug}`);
-      return Array.isArray(module.modalities) ? module.modalities : [];
-    }))].sort((left, right) => String(left).localeCompare(String(right)));
+      return module;
+    });
+    buildSearchContext(playlist, childModules);
   }
   for (const course of courses) {
     if (!Array.isArray(course.playlists) || course.playlists.length === 0) throw new Error(`Course ${course.slug} must define at least one playlist`);
-    course.modalities = [...new Set(course.playlists.flatMap((slug) => {
+    const childPlaylists = course.playlists.map((slug) => {
       const playlist = playlistMap.get(slug);
       if (!playlist) throw new Error(`Course ${course.slug} references missing playlist ${slug}`);
-      return playlist.modalities;
-    }))].sort((left, right) => String(left).localeCompare(String(right)));
+      return playlist;
+    });
+    buildSearchContext(course, childPlaylists);
   }
   await Promise.all(modules.map(async (module) => {
     module.pages = await getModulePages(module);

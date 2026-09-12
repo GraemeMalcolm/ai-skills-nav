@@ -1186,12 +1186,12 @@ const applyCatalogVisibility = () => {
     }
     if (matches && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
-      // Playlist and course modality arrays are inherited from their modules.
+      // Parent cards include distinct metadata values inherited from children.
       matches = filterFields.every((field) => {
         if (field === "modalities" && appliedModalitiesMode === "containing" && !appliedFilters[field].length) return false;
         if (!appliedFilters[field].length) return true;
-        const value = ["audience", "modalities"].includes(field) ? JSON.parse(card.dataset[field] || "[]") : [card.dataset[field]];
-        return appliedFilters[field].some((selected) => value.includes(selected));
+        const values = JSON.parse(card.dataset[field] || "[]");
+        return appliedFilters[field].some((selected) => values.includes(selected));
       });
     }
     // With no active search, Home keeps its 4/4/8 section sizes by promoting
@@ -1228,7 +1228,7 @@ function updateAccessAwareFilterOptions() {
   ["experience_type", "audience"].forEach((field) => {
     const accessibleValues = new Set(filterCards
       .filter((card) => canAccess(card.dataset.restrictedTo))
-      .flatMap((card) => field === "audience" ? parseRestrictedDomains(card.dataset[field]) : [card.dataset[field]])
+      .flatMap((card) => JSON.parse(card.dataset[field] || "[]"))
       .filter(Boolean));
     filterForm.querySelectorAll(`input[name="${field}"]`).forEach((input) => {
       const available = accessibleValues.has(input.value);
