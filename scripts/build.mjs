@@ -912,7 +912,8 @@ async function build() {
     })),
     thumbnail: relativeUrl(personalPlaylistsFile, path.join(outputRoot, "content", "modules", module.slug, "thumbnail.png")),
   }));
-  const personalPlaylistsContent = `<div data-personal-playlists data-auth-only data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalPlaylistsFile, path.join(outputRoot, "assets", "playlist.png"))}">
+  const personalPlaylistsContent = `<div class="page-actions">${shareTrigger(true, "filter-trigger")}</div>${shareDialog(true, false)}
+  <div data-personal-playlists data-auth-only data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalPlaylistsFile, path.join(outputRoot, "assets", "playlist.png"))}">
     <section class="catalog-intro"><p class="kicker">Personal collection</p><h1>My Playlists</h1><p>Create playlists from any learning experience and return here to continue learning.</p></section>
     <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Your collections</p><button class="filter-trigger" type="button" data-new-personal-playlist-open>New personal playlist</button></div><h2>Personal playlists</h2></div><div class="card-grid" data-personal-playlist-grid></div><p class="filter-empty" data-personal-playlist-empty hidden>You have not created any personal playlists yet.</p></section>
   </div>
@@ -939,7 +940,7 @@ async function build() {
     </form>
   </dialog>`;
   const personalPlaylistSidebar = `<aside class="sidebar" data-sidebar><div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div><nav aria-label="Playlist" data-personal-playlist-navigation></nav></aside><div class="sidebar-scrim" data-menu-close></div>`;
-  await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, headerExtra: shareDialog(true), avatar: defaultAvatar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
+  await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, avatar: defaultAvatar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
 
   for (const module of modules) {
     const sidebarFactory = module.pages.length > 1 ? (outputFile, activePage) => moduleSidebar(outputFile, module, module.pages, activePage) : null;
