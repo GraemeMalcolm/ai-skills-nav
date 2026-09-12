@@ -17,7 +17,7 @@ const contentRoots = [
   { name: "MicrosoftLearning", directory: path.join(root, "MicrosoftLearning") },
   { name: "avatars", directory: path.join(root, "avatars") },
 ];
-let profileAudienceValues = [];
+let profileAudienceOptions = [];
 
 marked.setOptions({ gfm: true });
 
@@ -449,7 +449,8 @@ function signInDialog(outputFile) {
   const logo = relativeUrl(outputFile, path.join(outputRoot, "assets", "microsoft-logo.svg"));
   const playlistsUrl = relativeUrl(outputFile, path.join(outputRoot, "my-playlists", "index.html"));
   const personalizedPlanUrl = relativeUrl(outputFile, path.join(outputRoot, "personalized-plan", "index.html"));
-  return `<div class="account-links"><a class="header-link" href="#profile" data-profile-open data-auth-only hidden>Profile</a><a class="filter-trigger auth-link" href="#sign-in" data-auth-open>Sign-in</a></div>
+  const audienceOptions = escapeHtml(JSON.stringify(profileAudienceOptions));
+  return `<div class="account-links"><a class="filter-trigger" href="#profile" data-profile-open data-auth-only hidden>Profile</a><a class="filter-trigger auth-link" href="#sign-in" data-auth-open>Sign-in</a></div>
   <dialog class="filter-dialog sign-in-dialog" data-sign-in-dialog aria-labelledby="sign-in-title">
     <form data-sign-in-form novalidate>
       <header class="filter-dialog-header"><div><img class="sign-in-logo" src="${logo}" alt="Microsoft"><h2 id="sign-in-title">Sign-in</h2></div><button class="icon-button" type="button" aria-label="Close sign-in" data-sign-in-close>${icon("close")}</button></header>
@@ -466,7 +467,7 @@ function signInDialog(outputFile) {
       <header class="filter-dialog-header"><div><p class="kicker">Your account</p><h2 id="profile-title">Profile</h2></div><button class="icon-button" type="button" aria-label="Close profile" data-profile-close>${icon("close")}</button></header>
       <div class="filter-dialog-body profile-fields">
         <div><span>Email address</span><strong data-profile-email></strong></div>
-        <label><span>My role</span><select data-profile-role required><option value="">Select a role</option>${profileAudienceValues.map((audience) => `<option value="${escapeHtml(audience)}">${escapeHtml(audience)}</option>`).join("")}</select></label>
+        <label><span>My role</span><select data-profile-role data-profile-audiences="${audienceOptions}" required><option value="">Select a role</option></select></label>
         <a href="${escapeHtml(playlistsUrl)}">My personal playlists</a>
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-profile-close>Cancel</button><button class="primary-button" type="submit">Show personalized skilling plan</button></footer>
@@ -843,9 +844,19 @@ async function build() {
   modules.sort((a, b) => a.title.localeCompare(b.title));
   playlists.sort((a, b) => a.title.localeCompare(b.title));
   courses.sort((a, b) => a.title.localeCompare(b.title));
-  profileAudienceValues = [...new Set([...courses, ...playlists, ...modules]
-    .flatMap((item) => Array.isArray(item.audience) ? item.audience : [item.audience])
-    .filter(Boolean))].sort((left, right) => String(left).localeCompare(String(right)));
+  const audienceAccess = new Map();
+  for (const item of [...courses, ...playlists, ...modules]) {
+    for (const audience of Array.isArray(item.audience) ? item.audience : [item.audience]) {
+      if (!audience) continue;
+      const access = audienceAccess.get(audience) || { name: audience, unrestricted: false, domains: new Set() };
+      if (item.restricted_to.length === 0) access.unrestricted = true;
+      item.restricted_to.forEach((domain) => access.domains.add(domain));
+      audienceAccess.set(audience, access);
+    }
+  }
+  profileAudienceOptions = [...audienceAccess.values()]
+    .map((access) => ({ name: access.name, unrestricted: access.unrestricted, domains: [...access.domains].sort() }))
+    .sort((left, right) => left.name.localeCompare(right.name));
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));
   const playlistMap = new Map(playlists.map((playlist) => [playlist.slug, playlist]));
   for (const playlist of playlists) {

@@ -216,7 +216,11 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole) 
     if (!currentAuth) return;
     profileEmail.textContent = currentAuth.email;
     const savedRole = readProfile().role;
-    profileRole.value = [...profileRole.options].some((option) => option.value === savedRole) ? savedRole : "";
+    const audienceOptions = JSON.parse(profileRole.dataset.profileAudiences || "[]")
+      .filter((audience) => audience.unrestricted || audience.domains.includes(currentAuth.domain));
+    profileRole.replaceChildren(new Option("Select a role", ""), ...audienceOptions.map((audience) => new Option(audience.name, audience.name)));
+    profileRole.value = audienceOptions.some((audience) => audience.name === savedRole) ? savedRole : "";
+    if (savedRole && !profileRole.value) writeProfile("");
     profileDialog.showModal();
     profileRole.focus();
   });
@@ -1088,7 +1092,14 @@ if (personalizedPlanPage && !currentAuth) {
 }
 
 if (personalizedPlanPage && currentAuth) {
-  const role = readProfile().role;
+  let role = readProfile().role;
+  const accessibleRoles = new Set([...personalizedPlanPage.querySelectorAll("[data-role-skilling-grid] [data-catalog-card]")]
+    .filter((card) => canAccess(card.dataset.restrictedTo))
+    .flatMap((card) => JSON.parse(card.dataset.audience || "[]")));
+  if (role && !accessibleRoles.has(role)) {
+    role = "";
+    writeProfile("");
+  }
   const summary = personalizedPlanPage.querySelector("[data-personalized-summary]");
   summary.textContent = role
     ? `Recommendations for your role: ${role}.`
