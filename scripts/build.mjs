@@ -867,6 +867,8 @@ async function build() {
     "Develop agents with Microsoft Foundry",
     "Use Microsoft Copilot",
     "Analyze data with Microsoft Fabric",
+    "Secure cloud resources with Microsoft Defender",
+    "Connect agents to MCP tools",
   ]));
   const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p class="home-hero-summary">Choose a curated path or jump straight into a learning experience.</p>
       <form class="hero-search" role="search" data-site-search data-animated-search data-search-hints="${heroSearchHints}">

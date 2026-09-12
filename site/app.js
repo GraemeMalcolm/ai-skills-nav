@@ -1144,14 +1144,13 @@ const animatedSearch = document.querySelector("[data-animated-search]");
 const animatedSearchInput = animatedSearch?.querySelector('input[type="search"]');
 if (animatedSearch && animatedSearchInput) {
   const hints = JSON.parse(animatedSearch.dataset.searchHints || "[]");
+  const finalHint = "Build the skills you need";
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (hints.length && reduceMotion) animatedSearchInput.placeholder = hints[0];
+  if (reduceMotion) animatedSearchInput.placeholder = finalHint;
   if (hints.length && !reduceMotion) {
     const wait = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration));
     const animateHints = async () => {
-      let hintIndex = 0;
-      while (animatedSearchInput.isConnected) {
-        const hint = hints[hintIndex];
+      for (const hint of hints) {
         for (let length = 1; length <= hint.length; length++) {
           animatedSearchInput.placeholder = hint.slice(0, length);
           await wait(55);
@@ -1162,7 +1161,10 @@ if (animatedSearch && animatedSearchInput) {
           await wait(25);
         }
         await wait(300);
-        hintIndex = (hintIndex + 1) % hints.length;
+      }
+      for (let length = 1; length <= finalHint.length; length++) {
+        animatedSearchInput.placeholder = finalHint.slice(0, length);
+        await wait(55);
       }
     };
     animateHints();
