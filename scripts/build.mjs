@@ -952,7 +952,7 @@ async function build() {
 
   const courseSearch = catalogSearch("course-search-input", "Search courses", "Search courses");
   const courseTools = `<div class="catalog-section-tools">${courseSearch}<a class="filter-trigger" href="${relativeUrl(coursesFile, homeFile)}#catalog-filter">Filter<span class="filter-count" data-filter-count hidden></span></a></div>`;
-  const coursesContent = `<section class="catalog-intro"><p class="kicker">Comprehrnsive training courses</p><h1>Courses</h1><p>Courses are structured, compehensive learning experiences that can be completed online as self-paced learning experiences, or delivered as instructor-led experiences.</p></section>
+  const coursesContent = `<section class="catalog-intro"><p class="kicker">Comprehensive training</p><h1>Courses</h1><p>Structured, multi-topic learning experiences that can be completed online as self-paced learning, or delivered as instructor-led training</p></section>
     <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Explore the catalog</p><h2>Available courses</h2></div>${courseTools}</div><div class="card-grid">${courses.map((item) => card(coursesFile, item, "courses")).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p></section>`;
   await writePage(coursesFile, shell({ outputFile: coursesFile, title: "Courses", breadcrumbs: [{ label: "Courses" }], avatar: defaultAvatar, content: coursesContent, bodyClass: "catalog-page" }));
 
