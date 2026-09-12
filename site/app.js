@@ -39,6 +39,58 @@ const normalizeSearchTerms = (value) => value
   .split(/\s+/)
   .filter((term) => term && !searchStopWords.has(term));
 
+const jaroWinkler = (left, right) => {
+  if (left === right) return 1;
+  if (!left.length || !right.length) return 0;
+  const range = Math.max(0, Math.floor(Math.max(left.length, right.length) / 2) - 1);
+  const leftMatches = Array(left.length).fill(false);
+  const rightMatches = Array(right.length).fill(false);
+  let matches = 0;
+  let transpositions = 0;
+  for (let leftIndex = 0; leftIndex < left.length; leftIndex++) {
+    const start = Math.max(0, leftIndex - range);
+    const end = Math.min(leftIndex + range + 1, right.length);
+    for (let rightIndex = start; rightIndex < end; rightIndex++) {
+      if (rightMatches[rightIndex] || left[leftIndex] !== right[rightIndex]) continue;
+      leftMatches[leftIndex] = true;
+      rightMatches[rightIndex] = true;
+      matches++;
+      break;
+    }
+  }
+  if (!matches) return 0;
+  let rightIndex = 0;
+  for (let leftIndex = 0; leftIndex < left.length; leftIndex++) {
+    if (!leftMatches[leftIndex]) continue;
+    while (!rightMatches[rightIndex]) rightIndex++;
+    if (left[leftIndex] !== right[rightIndex]) transpositions++;
+    rightIndex++;
+  }
+  const jaro = (matches / left.length + matches / right.length + (matches - transpositions / 2) / matches) / 3;
+  let prefix = 0;
+  while (prefix < 4 && prefix < left.length && prefix < right.length && left[prefix] === right[prefix]) prefix++;
+  return jaro + prefix * 0.1 * (1 - jaro);
+};
+
+const correctSearchToken = (token, vocabulary) => {
+  // Short strings require higher confidence because accidental matches are
+  // more common. Candidate length guards also limit noisy comparisons.
+  if (token.length < 2 || vocabulary.includes(token)) return token;
+  const threshold = token.length <= 3 ? 0.9 : token.length <= 5 ? 0.88 : 0.85;
+  let bestMatch = token;
+  let bestScore = 0;
+  vocabulary.forEach((candidate) => {
+    if (token.length > 3 && candidate.length <= 3) return;
+    if (Math.abs(candidate.length - token.length) > 3) return;
+    const score = jaroWinkler(token, candidate);
+    if (score > bestScore) {
+      bestMatch = candidate;
+      bestScore = score;
+    }
+  });
+  return bestScore >= threshold ? bestMatch : token;
+};
+
 // Authentication is intentionally simulated for this static proof of concept.
 // Persist only the email address; passwords are discarded immediately.
 const authStorageKey = "ai-skills-nav:auth";
@@ -1166,7 +1218,12 @@ const updateFilterCounts = () => {
 
 // Every submitted term is required, giving search case-insensitive AND
 // semantics. Search text is normalized and embedded by the build script.
-const matchesSearch = (card) => searchTerms.every((term) => card.dataset.searchText.includes(term));
+const matchesCatalogTerms = (card, terms) => {
+  const searchText = card.dataset.searchText;
+  const vocabulary = normalizeSearchTerms(searchText);
+  return terms.every((term) => searchText.includes(term) || searchText.includes(correctSearchToken(term, vocabulary)));
+};
+const matchesSearch = (card) => matchesCatalogTerms(card, searchTerms);
 
 const applyCatalogVisibility = () => {
   const homeLimits = { courses: 4, playlists: 4, modules: 8 };
@@ -1616,60 +1673,6 @@ if (agent) {
     activeAudio.play().catch(() => { });
   };
 
-  const jaroWinkler = (left, right) => {
-    // Small, dependency-free fuzzy matching corrects likely misspellings only
-    // against words that actually occur in this avatar's curated vocabulary.
-    if (left === right) return 1;
-    if (!left.length || !right.length) return 0;
-    const range = Math.max(0, Math.floor(Math.max(left.length, right.length) / 2) - 1);
-    const leftMatches = Array(left.length).fill(false);
-    const rightMatches = Array(right.length).fill(false);
-    let matches = 0;
-    let transpositions = 0;
-    for (let leftIndex = 0; leftIndex < left.length; leftIndex++) {
-      const start = Math.max(0, leftIndex - range);
-      const end = Math.min(leftIndex + range + 1, right.length);
-      for (let rightIndex = start; rightIndex < end; rightIndex++) {
-        if (rightMatches[rightIndex] || left[leftIndex] !== right[rightIndex]) continue;
-        leftMatches[leftIndex] = true;
-        rightMatches[rightIndex] = true;
-        matches++;
-        break;
-      }
-    }
-    if (!matches) return 0;
-    let rightIndex = 0;
-    for (let leftIndex = 0; leftIndex < left.length; leftIndex++) {
-      if (!leftMatches[leftIndex]) continue;
-      while (!rightMatches[rightIndex]) rightIndex++;
-      if (left[leftIndex] !== right[rightIndex]) transpositions++;
-      rightIndex++;
-    }
-    const jaro = (matches / left.length + matches / right.length + (matches - transpositions / 2) / matches) / 3;
-    let prefix = 0;
-    while (prefix < 4 && prefix < left.length && prefix < right.length && left[prefix] === right[prefix]) prefix++;
-    return jaro + prefix * 0.1 * (1 - jaro);
-  };
-
-  const correctToken = (token) => {
-    // Short strings require higher confidence because accidental matches are
-    // much more common. Candidate length guards also limit noisy comparisons.
-    if (token.length < 2 || vocabulary.includes(token)) return token;
-    const threshold = token.length <= 3 ? 0.9 : token.length <= 5 ? 0.88 : 0.85;
-    let bestMatch = token;
-    let bestScore = 0;
-    vocabulary.forEach((candidate) => {
-      if (token.length > 3 && candidate.length <= 3) return;
-      if (Math.abs(candidate.length - token.length) > 3) return;
-      const score = jaroWinkler(token, candidate);
-      if (score > bestScore) {
-        bestMatch = candidate;
-        bestScore = score;
-      }
-    });
-    return bestScore >= threshold ? bestMatch : token;
-  };
-
   const loadModeration = async () => {
     if (!moderationPromise) {
       moderationPromise = fetch(config.moderationUrl, { cache: "no-store" }).then(async (response) => {
@@ -1821,7 +1824,7 @@ if (agent) {
     // while still handling common misspellings and multi-word product names.
     const normalizedQuestion = normalize(question);
     const originalWords = normalizedQuestion.split(" ").filter(Boolean);
-    const words = originalWords.map(correctToken);
+    const words = originalWords.map((word) => correctSearchToken(word, vocabulary));
     const phrases = new Set();
     const maximumPhraseLength = Math.min(3, words.length);
     for (let length = maximumPhraseLength; length >= 2; length--) {
@@ -1868,7 +1871,7 @@ if (agent) {
     // cards without changing their hidden state or the search form's state.
     const terms = normalizeSearchTerms(question);
     if (!terms.length) return [];
-    return catalogCards.filter((card) => terms.every((term) => card.dataset.searchText.includes(term))).map((card) => {
+    return catalogCards.filter((card) => matchesCatalogTerms(card, terms)).map((card) => {
       const anchor = card.matches("a.content-card") ? card : card.querySelector("a.content-card");
       const title = anchor?.querySelector("strong")?.textContent?.trim();
       const type = card.dataset.catalogType;
