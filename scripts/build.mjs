@@ -863,7 +863,18 @@ async function build() {
   const skillingContentFile = path.join(outputRoot, "skilling-content", "index.html");
   const personalPlaylistsFile = path.join(outputRoot, "my-playlists", "index.html");
   const homeSearch = `<div class="header-tools">${catalogSearch("site-search-input", "Search courses, playlists, and skilling content", "Search all content")}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
-  const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p>Choose a curated path or jump straight into a learning experience.</p></section>
+  const heroSearchHints = escapeHtml(JSON.stringify([
+    "Develop agents with Microsoft Foundry",
+    "Use Microsoft Copilot",
+    "Analyze data with Microsoft Fabric",
+  ]));
+  const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p class="home-hero-summary">Choose a curated path or jump straight into a learning experience.</p>
+      <form class="hero-search" role="search" data-site-search data-animated-search data-search-hints="${heroSearchHints}">
+        <label for="hero-search-input">What do you want to learn how to do?</label>
+        <span class="hero-search-controls"><input id="hero-search-input" type="search" name="query" autocomplete="off"><button type="submit" aria-label="Search">${icon("arrow")}</button></span>
+        <button class="search-clear" type="button" data-search-clear hidden>Clear</button>
+      </form>
+    </section>
     <section class="catalog-section" data-course-catalog><div class="section-heading"><p class="kicker">Build skills for success</p><h2>Courses</h2></div><div class="card-grid">${courses.map((item, index) => card(homeFile, item, "courses", index >= 4)).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, coursesFile)}">See all courses</a></div></section>
     <section class="catalog-section alt" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning we think you'll like</p><h2>Skilling playlists</h2></div><div class="card-grid">${playlists.map((item, index) => card(homeFile, item, "playlists", index >= 4)).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, personalPlaylistsFile)}">Personal playlists</a><a class="filter-trigger" href="${relativeUrl(homeFile, playlistsFile)}">See all playlists</a></div></section>
     <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${modules.map((item, index) => card(homeFile, item, "modules", index >= 8)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>

@@ -1001,9 +1001,7 @@ const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
 const catalogCards = [...document.querySelectorAll("[data-catalog-card]")];
 const filterCards = [...document.querySelectorAll("[data-filter-card]")];
-const searchForm = document.querySelector("[data-site-search]");
-const searchInput = searchForm?.querySelector('input[type="search"]');
-const searchClear = searchForm?.querySelector("[data-search-clear]");
+const searchForms = [...document.querySelectorAll("[data-site-search]")];
 const courseEmptyState = document.querySelector("[data-course-empty]");
 const moduleEmptyState = document.querySelector("[data-module-empty]");
 const playlistEmptyState = document.querySelector("[data-playlist-empty]");
@@ -1115,24 +1113,60 @@ function updateAccessAwareFilterOptions() {
   }
 }
 
-if (searchForm && searchInput && searchClear && catalogCards.length) {
-  searchForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    searchActive = searchInput.value.trim().length > 0;
-    searchTerms = normalizeSearchTerms(searchInput.value);
-    // Keep Clear available for a non-empty expression even when it consists
-    // entirely of ignored words and therefore intentionally matches all cards.
-    searchClear.hidden = searchInput.value.trim().length === 0;
+if (searchForms.length && catalogCards.length) {
+  const setSearch = (value) => {
+    const trimmedValue = value.trim();
+    searchActive = trimmedValue.length > 0;
+    searchTerms = normalizeSearchTerms(value);
+    searchForms.forEach((form) => {
+      form.querySelector('input[type="search"]').value = value;
+      form.querySelector("[data-search-clear]").hidden = !searchActive;
+    });
     applyCatalogVisibility();
+  };
+
+  searchForms.forEach((form) => {
+    const input = form.querySelector('input[type="search"]');
+    const clear = form.querySelector("[data-search-clear]");
+    if (!input || !clear) return;
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      setSearch(input.value);
+    });
+    clear.addEventListener("click", () => {
+      setSearch("");
+      input.focus();
+    });
   });
-  searchClear.addEventListener("click", () => {
-    searchInput.value = "";
-    searchTerms = [];
-    searchActive = false;
-    searchClear.hidden = true;
-    applyCatalogVisibility();
-    searchInput.focus();
-  });
+}
+
+const animatedSearch = document.querySelector("[data-animated-search]");
+const animatedSearchInput = animatedSearch?.querySelector('input[type="search"]');
+if (animatedSearch && animatedSearchInput) {
+  const hints = JSON.parse(animatedSearch.dataset.searchHints || "[]");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (hints.length && reduceMotion) animatedSearchInput.placeholder = hints[0];
+  if (hints.length && !reduceMotion) {
+    const wait = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration));
+    const animateHints = async () => {
+      let hintIndex = 0;
+      while (animatedSearchInput.isConnected) {
+        const hint = hints[hintIndex];
+        for (let length = 1; length <= hint.length; length++) {
+          animatedSearchInput.placeholder = hint.slice(0, length);
+          await wait(55);
+        }
+        await wait(1800);
+        for (let length = hint.length - 1; length >= 0; length--) {
+          animatedSearchInput.placeholder = hint.slice(0, length);
+          await wait(25);
+        }
+        await wait(300);
+        hintIndex = (hintIndex + 1) % hints.length;
+      }
+    };
+    animateHints();
+  }
 }
 
 if (filterDialog && filterForm && filterCards.length) {
