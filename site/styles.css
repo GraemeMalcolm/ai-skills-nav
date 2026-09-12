@@ -636,6 +636,7 @@ img {
   display: none;
 }
 
+.page-actions [data-share-open][hidden],
 [data-auth-only][hidden] {
   display: none;
 }
