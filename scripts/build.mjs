@@ -492,6 +492,7 @@ function breadcrumbs(outputFile, items = []) {
 function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, agentOptions = {}, bodyClass = "", module = null, hasModuleCards = false, restrictedTo = [] }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
+  const favicon = relativeUrl(outputFile, path.join(outputRoot, "favicon.ico"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
   const isLearningPage = bodyClass.split(/\s+/).includes("learning-page");
   const share = isLearningPage ? shareDialog(false, false) : "";
@@ -503,6 +504,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f5f2">
   <title>${escapeHtml(title)} | AI Skills Nav</title>
+  <link rel="icon" href="${favicon}" sizes="any">
   <link rel="stylesheet" href="${styles}">
   <script src="${script}" defer></script>
 </head>
@@ -1094,6 +1096,7 @@ async function build() {
     copyFile(path.join(root, "site", "moderation.txt"), path.join(outputRoot, "assets", "moderation.txt")),
     copyFile(path.join(root, "site", "media", "microsoft-logo.svg"), path.join(outputRoot, "assets", "microsoft-logo.svg")),
     copyFile(path.join(root, "site", "media", "playlist.png"), path.join(outputRoot, "assets", "playlist.png")),
+    copyFile(path.join(root, "site", "media", "favicon.ico"), path.join(outputRoot, "favicon.ico")),
     cp(path.join(root, "templates", "media"), path.join(outputRoot, "content", "templates", "media"), { recursive: true }),
     writeFile(path.join(outputRoot, ".nojekyll"), "", "utf8"),
   ]);
