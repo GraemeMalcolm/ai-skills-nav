@@ -162,8 +162,8 @@ if (authLink && signInDialog && signInForm && signInEmail && signInPassword && s
       localStorage.removeItem(authStorageKey);
       currentAuth = null;
       pendingPersonalPlaylistTrigger = null;
-      refreshAuthorization();
-      if (document.querySelector("[data-personal-playlists], [data-personalized-plan]")) window.location.reload();
+      const homeUrl = document.querySelector(".brand")?.href;
+      if (homeUrl) window.location.assign(homeUrl);
       return;
     }
     openSignInDialog();

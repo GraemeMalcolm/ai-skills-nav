@@ -547,6 +547,13 @@ function thumbnail(outputFile, item, type) {
   return `<img src="${relativeUrl(outputFile, target)}" alt="" loading="lazy">`;
 }
 
+function experienceTypeName(item, type) {
+  if (item.experience_type) return item.experience_type;
+  if (type === "courses") return "Course";
+  if (type === "playlists") return "Skilling Playlist";
+  return "Learning Experience";
+}
+
 function card(outputFile, item, type, defaultHidden = false) {
   const target = type === "playlists"
     ? playlistEntryTarget(path.join(outputRoot, "playlists"), item)
@@ -560,7 +567,7 @@ function card(outputFile, item, type, defaultHidden = false) {
   const defaultVisibility = defaultHidden ? " data-default-hidden hidden" : "";
   const tooltip = item.description ? `<span class="card-tooltip" id="${escapeHtml(tooltipId)}" role="tooltip">${escapeHtml(item.description)}</span>` : "";
   const describedBy = item.description ? ` aria-describedby="${escapeHtml(tooltipId)}"` : "";
-  const experienceType = item.experience_type ? `<span>${escapeHtml(item.experience_type)}</span>` : "";
+  const experienceType = `<span>${escapeHtml(experienceTypeName(item, type))}</span>`;
   const cardLink = `<a class="content-card" href="${relativeUrl(outputFile, target)}"${describedBy}>
     <span class="card-image">${thumbnail(outputFile, item, type)}</span>
     <span class="card-body"><strong>${escapeHtml(item.title)}</strong>${experienceType}<span>${metadataLine(item)}</span></span>
@@ -612,11 +619,10 @@ function catalogFilterDialog(items, fields, subject) {
 
 function overview(outputFile, item, type, action = "", imageDetails = "", footer = "") {
   const isCollection = type === "playlists" || type === "courses";
-  const defaultExperienceType = type === "courses" ? "Course" : type === "playlists" ? "Skilling Playlist" : "Learning Experience";
   return `<article class="overview${isCollection ? " overview-collection" : ""}">
     <div class="overview-media"><div class="overview-image">${thumbnail(outputFile, item, type)}</div>${imageDetails}</div>
     <div class="overview-copy">
-      <p class="kicker">${escapeHtml(item.experience_type || defaultExperienceType)}</p>
+      <p class="kicker">${escapeHtml(experienceTypeName(item, type))}</p>
       <h1>${escapeHtml(item.title)}</h1>
       <p class="lede">${escapeHtml(item.description || "")}</p>
       ${metadataLine(item) ? `<p class="metadata">${metadataLine(item)}</p>` : ""}
