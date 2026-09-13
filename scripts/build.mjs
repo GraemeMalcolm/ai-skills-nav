@@ -660,7 +660,7 @@ function card(outputFile, item, type, defaultHidden = false, instance = "") {
   const experienceType = `<span>${escapeHtml(experienceTypeName(item, type))}</span>`;
   const cardLink = `<a class="content-card" href="${relativeUrl(outputFile, target)}"${describedBy}>
     <span class="card-image">${thumbnail(outputFile, item, type)}</span>
-    <span class="card-body"><strong>${escapeHtml(item.title)}</strong>${experienceType}<span class="card-meta-row"><span>${metadataLine(item)}</span>${cardRating(item)}</span></span>
+    <span class="card-body"><strong>${escapeHtml(item.title)}</strong>${experienceType}<span class="card-meta-row">${metadataLine(item)}</span>${cardRating(item)}</span>
     ${tooltip}
   </a>`;
   if (type !== "modules") return cardLink.replace('class="content-card"', `class="content-card"${searchData}${filterData}${defaultVisibility}`);
