@@ -28,4 +28,5 @@ pages:
   - 04-key-concepts.md
   - 05-data-governance-using-unity-catalog-and-microsoft-purview.md
   - 06-exercise-explore-databricks.md
+  - 06b-knowledge-check.md
   - 08-summary.md
