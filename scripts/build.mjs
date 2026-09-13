@@ -644,11 +644,11 @@ function cardRating(item) {
   return `<span class="card-rating" role="img" aria-label="${rating.toFixed(1)} out of 5 stars"><span class="card-rating-stars" aria-hidden="true"><span>${stars}</span><span class="card-rating-fill" style="width: ${(rating / 5) * 100}%">${stars}</span></span><span class="card-rating-value">${rating.toFixed(1)}</span></span>`;
 }
 
-function card(outputFile, item, type, defaultHidden = false) {
+function card(outputFile, item, type, defaultHidden = false, instance = "") {
   const target = type === "playlists"
     ? playlistEntryTarget(path.join(outputRoot, "playlists"), item)
     : path.join(outputRoot, type, item.slug, "index.html");
-  const tooltipId = `${type}-${item.slug}-description`;
+  const tooltipId = `${type}-${item.slug}${instance ? `-${instance}` : ""}-description`;
   const searchText = item.searchContext.text;
   const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}" data-restricted-to="${escapeHtml(JSON.stringify(item.restricted_to || []))}"`;
   const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.searchContext.filters.modalities))}" data-level="${escapeHtml(JSON.stringify(item.searchContext.filters.level))}" data-experience_type="${escapeHtml(JSON.stringify(item.searchContext.filters.experience_type))}" data-credential_type="${escapeHtml(JSON.stringify(item.searchContext.filters.credential_type))}" data-audience="${escapeHtml(JSON.stringify(item.searchContext.filters.audience))}"`;
@@ -1286,7 +1286,12 @@ async function build() {
   const personalizedPlanContent = `<div data-personalized-plan data-auth-only data-playlists-url="${relativeUrl(personalizedPlanFile, personalPlaylistsFile)}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}">
     <section class="catalog-intro"><p class="kicker">Personalized learning</p><h1>My skilling plan</h1><p data-personalized-summary>Your recommendations are based on the role selected in your profile.</p></section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Recommended learning</p><h2>Skilling for my role</h2></div><div class="card-grid" data-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-role-skilling-empty hidden>No skilling items match your selected role.</p></section>
-    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Saved by you</p><h2>My playlists</h2></div><div class="card-grid" data-plan-playlist-grid></div><p class="filter-empty" data-plan-playlist-empty hidden>You have not created any personal playlists yet.</p></section>
+    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Available to your organization</p><h2>Skilling for my organization</h2></div><div class="card-grid" data-organization-skilling-grid>${[
+      ...courses.filter((item) => item.restricted_to.length).map((item) => card(personalizedPlanFile, item, "courses", false, "organization")),
+      ...playlists.filter((item) => item.restricted_to.length).map((item) => card(personalizedPlanFile, item, "playlists", false, "organization")),
+      ...modules.filter((item) => item.restricted_to.length).map((item) => card(personalizedPlanFile, item, "modules", false, "organization")),
+    ].join("")}</div><p class="filter-empty" data-organization-skilling-empty hidden>No skilling items are assigned to your organization.</p></section>
+    <section class="catalog-section"><div class="section-heading"><p class="kicker">Saved by you</p><h2>My playlists</h2></div><div class="card-grid" data-plan-playlist-grid></div><p class="filter-empty" data-plan-playlist-empty hidden>You have not created any personal playlists yet.</p></section>
   </div>`;
   await writePage(personalizedPlanFile, shell({ outputFile: personalizedPlanFile, title: "My skilling plan", breadcrumbs: [{ label: "My skilling plan" }], avatar: defaultAvatar, content: personalizedPlanContent, bodyClass: "catalog-page personalized-page", hasModuleCards: true }));
 

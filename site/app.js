@@ -1350,6 +1350,7 @@ const moduleEmptyState = document.querySelector("[data-module-empty]");
 const playlistEmptyState = document.querySelector("[data-playlist-empty]");
 const catalogEmptyState = document.querySelector("[data-catalog-empty]");
 const roleSkillingEmptyState = document.querySelector("[data-role-skilling-empty]");
+const organizationSkillingEmptyState = document.querySelector("[data-organization-skilling-empty]");
 const emptyFilters = () => Object.fromEntries(filterFields.map((field) => [field, []]));
 const readPersistedFilters = () => {
   try {
@@ -1397,11 +1398,18 @@ const applyCatalogVisibility = () => {
   let visiblePlaylists = 0;
   let visibleCourses = 0;
   let visibleCatalogItems = 0;
+  let visibleRoleItems = 0;
+  let visibleOrganizationItems = 0;
   catalogCards.forEach((card) => {
     let matches = canAccess(card.dataset.restrictedTo) && matchesSearch(card);
     if (matches && isPersonalizedPage) {
-      const audiences = JSON.parse(card.dataset.audience || "[]");
-      matches = Boolean(selectedRole) && audiences.includes(selectedRole);
+      if (card.closest("[data-organization-skilling-grid]")) {
+        const domains = parseRestrictedDomains(card.dataset.restrictedTo);
+        matches = Boolean(currentAuth && domains.includes(currentAuth.domain));
+      } else {
+        const audiences = JSON.parse(card.dataset.audience || "[]");
+        matches = Boolean(selectedRole) && audiences.includes(selectedRole);
+      }
     }
     if (matches && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
@@ -1424,13 +1432,16 @@ const applyCatalogVisibility = () => {
     if (matches && card.dataset.catalogType === "modules") visibleModules++;
     if (matches && card.dataset.catalogType === "playlists") visiblePlaylists++;
     if (matches && card.dataset.catalogType === "courses") visibleCourses++;
+    if (matches && card.closest("[data-role-skilling-grid]")) visibleRoleItems++;
+    if (matches && card.closest("[data-organization-skilling-grid]")) visibleOrganizationItems++;
     if (matches) visibleCatalogItems++;
   });
   if (moduleEmptyState) moduleEmptyState.hidden = visibleModules !== 0;
   if (playlistEmptyState) playlistEmptyState.hidden = visiblePlaylists !== 0;
   if (courseEmptyState) courseEmptyState.hidden = visibleCourses !== 0;
   if (catalogEmptyState) catalogEmptyState.hidden = visibleCatalogItems !== 0;
-  if (roleSkillingEmptyState) roleSkillingEmptyState.hidden = visibleCatalogItems !== 0;
+  if (roleSkillingEmptyState) roleSkillingEmptyState.hidden = visibleRoleItems !== 0;
+  if (organizationSkillingEmptyState) organizationSkillingEmptyState.hidden = visibleOrganizationItems !== 0;
 };
 
 const persistFilters = () => {
