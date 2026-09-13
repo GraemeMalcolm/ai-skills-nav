@@ -134,6 +134,7 @@ const profileRole = profileDialog?.querySelector("[data-profile-role]");
 const profileSubmit = profileDialog?.querySelector("[data-profile-submit]");
 const profilePlanLink = profileDialog?.querySelector("[data-profile-plan]");
 let pendingPersonalPlaylistTrigger = null;
+let openProfileDialog = () => {};
 const openProfileAfterReloadKey = "ai-skills-nav:open-profile-after-sign-in";
 const rememberProfileAfterReload = () => {
   try {
@@ -275,7 +276,7 @@ if (authLink && signInDialog && signInForm && signInEmail && signInPassword && s
       window.location.reload();
       return;
     }
-    profileLink?.click();
+    openProfileDialog();
   });
 }
 updateAuthLink();
@@ -298,8 +299,7 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     pendingPersonalPlaylistTrigger = null;
     pendingTrigger?.click();
   };
-  profileLink.addEventListener("click", (event) => {
-    event.preventDefault();
+  openProfileDialog = () => {
     if (!currentAuth) return;
     profileEmail.textContent = currentAuth.email;
     const profile = readProfile();
@@ -313,6 +313,10 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     updateProfileSubmit();
     profileDialog.showModal();
     profileRole.focus();
+  };
+  profileLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    openProfileDialog();
   });
   profileDialog.querySelectorAll("[data-profile-close]").forEach((button) => button.addEventListener("click", closeProfileDialog));
   profileDialog.addEventListener("click", (event) => {
@@ -340,7 +344,7 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     updateProfileSubmit();
     closeProfileDialog();
   });
-  if (consumeProfileAfterReload()) profileLink.click();
+  if (consumeProfileAfterReload()) openProfileDialog();
 }
 
 // Personal playlists deliberately live in browser storage: the proof of
