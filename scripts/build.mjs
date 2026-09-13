@@ -373,6 +373,7 @@ function icon(name) {
     arrow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>',
     mic: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg>',
     plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+    star: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z"/></svg>',
   };
   return icons[name];
 }
@@ -448,6 +449,23 @@ function shareDialog(hidden = false, includeTrigger = true) {
   </dialog>`;
 }
 
+function ratingDialog(module) {
+  const stars = Array.from({ length: 5 }, (_, index) => {
+    const rating = index + 1;
+    return `<button type="button" aria-label="${rating} star${rating === 1 ? "" : "s"}" aria-pressed="false" data-rating-value="${rating}">${icon("star")}</button>`;
+  }).join("");
+  return `<dialog class="filter-dialog rating-dialog" id="rating-dialog" data-rating-dialog aria-labelledby="rating-title">
+    <form data-rating-form>
+      <header class="filter-dialog-header"><div><p class="kicker">${escapeHtml(module.title)}</p><h2 id="rating-title">Rate this content</h2></div><button class="icon-button" type="button" aria-label="Close rating" data-rating-close>${icon("close")}</button></header>
+      <div class="filter-dialog-body rating-fields">
+        <fieldset><legend>Your rating</legend><div class="rating-stars" role="group" aria-label="Rating out of 5">${stars}</div><input type="hidden" data-rating-input></fieldset>
+        <label><span>Feedback <small>(optional)</small></span><textarea rows="5" maxlength="1000" data-rating-comment></textarea></label>
+      </div>
+      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-rating-close>Cancel</button><button class="primary-button" type="submit" data-rating-submit disabled>Save</button></footer>
+    </form>
+  </dialog>`;
+}
+
 function contentOverviewDialog(outputFile, module) {
   return `<dialog class="content-overview-dialog" id="content-overview-dialog" data-content-overview-dialog aria-labelledby="content-overview-title">
     <button class="icon-button content-overview-close" type="button" aria-label="Close" data-content-overview-close>${icon("close")}</button>
@@ -505,7 +523,9 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   const credentials = relativeUrl(outputFile, path.join(outputRoot, "credentials", "index.html"));
   const isLearningPage = bodyClass.split(/\s+/).includes("learning-page");
   const share = isLearningPage ? shareDialog(false, false) : "";
-  const learningPageActions = `${module ? personalPlaylistTrigger() : ""}${shareTrigger(false, "filter-trigger")}`;
+  const rating = module ? ratingDialog(module) : "";
+  const ratingTrigger = module ? `<a class="filter-trigger" href="#rating-dialog" data-rating-open data-auth-only hidden>Rate this content</a>` : "";
+  const learningPageActions = `${ratingTrigger}${module ? personalPlaylistTrigger() : ""}${shareTrigger(false, "filter-trigger")}`;
   const pageActions = isLearningPage
     ? showContentOverview
       ? `<div class="page-actions page-actions-split"><a class="filter-trigger" href="#content-overview-dialog" data-content-overview-open>About this content</a><div class="page-actions-end">${learningPageActions}</div></div>`
@@ -535,7 +555,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   <div class="site-frame${sidebar ? " has-sidebar" : ""}">
     ${sidebar}
     ${sidebar ? `<button class="icon-button nav-reveal" type="button" aria-label="Show navigation" aria-expanded="false" data-menu-reveal>${icon("menu")}</button>` : ""}
-    <main id="main-content" class="main-content">${contentOverview}${pageActions}${share}${module || hasModuleCards ? personalPlaylistDialog(outputFile, module) : ""}${content}</main>
+    <main id="main-content" class="main-content">${contentOverview}${pageActions}${share}${rating}${module || hasModuleCards ? personalPlaylistDialog(outputFile, module) : ""}${content}</main>
   </div>
   ${agentFlyout(outputFile, avatar, agentOptions)}
 </body>

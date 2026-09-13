@@ -677,10 +677,73 @@ if (contentOverviewDialog) {
 }
 
 // ---------------------------------------------------------------------------
-// Module zone pivots and page selection
+// Module rating
 // ---------------------------------------------------------------------------
 const moduleSlug = document.body.dataset.moduleSlug;
+const ratingDialog = document.querySelector("[data-rating-dialog]");
 
+if (ratingDialog && moduleSlug) {
+  const form = ratingDialog.querySelector("[data-rating-form]");
+  const ratingInput = ratingDialog.querySelector("[data-rating-input]");
+  const commentInput = ratingDialog.querySelector("[data-rating-comment]");
+  const submitButton = ratingDialog.querySelector("[data-rating-submit]");
+  const stars = [...ratingDialog.querySelectorAll("[data-rating-value]")];
+  const storageKey = () => currentAuth
+    ? `ai-skills-nav:rating:${encodeURIComponent(currentAuth.email)}:${encodeURIComponent(moduleSlug)}`
+    : "";
+  const readRating = () => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey()) || "null");
+      const rating = Number(saved?.rating);
+      return {
+        rating: Number.isInteger(rating) && rating >= 1 && rating <= 5 ? rating : 0,
+        comment: typeof saved?.comment === "string" ? saved.comment : "",
+      };
+    } catch {
+      return { rating: 0, comment: "" };
+    }
+  };
+  const selectRating = (rating) => {
+    ratingInput.value = rating ? String(rating) : "";
+    stars.forEach((star) => {
+      const selected = Number(star.dataset.ratingValue) <= rating;
+      star.classList.toggle("selected", selected);
+      star.setAttribute("aria-pressed", String(Number(star.dataset.ratingValue) === rating));
+    });
+    submitButton.disabled = !rating;
+  };
+  const closeRatingDialog = () => ratingDialog.close();
+
+  document.querySelector("[data-rating-open]")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (!currentAuth) return;
+    const saved = readRating();
+    selectRating(saved.rating);
+    commentInput.value = saved.comment;
+    ratingDialog.showModal();
+    (saved.rating ? stars[saved.rating - 1] : stars[0])?.focus();
+  });
+  stars.forEach((star) => star.addEventListener("click", () => selectRating(Number(star.dataset.ratingValue))));
+  ratingDialog.querySelectorAll("[data-rating-close]").forEach((button) => button.addEventListener("click", closeRatingDialog));
+  ratingDialog.addEventListener("click", (event) => {
+    if (event.target === ratingDialog) closeRatingDialog();
+  });
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const rating = Number(ratingInput.value);
+    if (!currentAuth || !Number.isInteger(rating) || rating < 1 || rating > 5) return;
+    try {
+      localStorage.setItem(storageKey(), JSON.stringify({ rating, comment: commentInput.value.trim() }));
+      closeRatingDialog();
+    } catch {
+      // Keep the dialog open so the user does not lose unsaved feedback.
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Module zone pivots and page selection
+// ---------------------------------------------------------------------------
 document.querySelectorAll("[data-pivot]").forEach((pivot) => {
   const tabs = [...pivot.querySelectorAll('[role="tab"]')];
   const panels = [...pivot.querySelectorAll('[role="tabpanel"]')];

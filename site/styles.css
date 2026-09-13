@@ -1095,6 +1095,78 @@ body.access-denied>[data-agent] {
   color: var(--ink);
 }
 
+.rating-fields {
+  display: grid;
+  gap: 24px;
+  padding-block: 24px;
+}
+
+.rating-fields fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.rating-fields legend,
+.rating-fields label {
+  font-weight: 700;
+}
+
+.rating-fields small {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.rating-stars button {
+  width: 44px;
+  height: 44px;
+  padding: 6px;
+  border: 0;
+  background: transparent;
+  color: #817b74;
+  cursor: pointer;
+}
+
+.rating-stars svg {
+  width: 100%;
+  height: 100%;
+  fill: transparent;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.rating-stars button:hover,
+.rating-stars button.selected {
+  color: #a86400;
+}
+
+.rating-stars button.selected svg {
+  fill: #ffba22;
+}
+
+.rating-fields label {
+  display: grid;
+  gap: 8px;
+}
+
+.rating-fields textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 10px 12px;
+  border: 1px solid #88847f;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+
 .personal-playlist-fields label,
 .personal-playlist-new {
   display: grid;
@@ -2367,7 +2439,7 @@ body.access-denied>[data-agent] {
   }
 
   .single-page-module .lesson {
-    padding-top: 96px;
+    padding-top: 140px;
   }
 
   .page-nav {
