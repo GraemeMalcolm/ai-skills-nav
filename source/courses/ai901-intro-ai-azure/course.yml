@@ -13,5 +13,9 @@ audience:
   - Developer
   - AI Engineer
 avatar: anton
+prerequisites:
+  - Basic familiarity with digital technology, cloud concepts, and an interest in artificial intelligence
+learning_outcomes:
+  - Develop a foundational understanding of AI concepts and Azure-based AI solution development.
 playlists:
   - ai-fundamentals

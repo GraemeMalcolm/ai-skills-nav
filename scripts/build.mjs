@@ -537,6 +537,18 @@ function metadataLine(item) {
   return [item.course_number, item.modality, item.level ? `Level ${item.level}` : "", item.duration].filter(Boolean).map(escapeHtml).join(" · ");
 }
 
+function learningDetails(item) {
+  if (!item.prerequisites || !item.learning_outcomes) return "";
+  const outcomes = item.learning_outcomes.map((outcome, index) => {
+    const isOverall = item.learning_outcomes.length > 1 && index === item.learning_outcomes.length - 1;
+    return `<li>${isOverall ? `<strong>Overall outcome: ${escapeHtml(outcome)}</strong>` : escapeHtml(outcome)}</li>`;
+  }).join("");
+  return `<div class="learning-details">
+    <section aria-labelledby="prerequisites-${escapeHtml(item.slug)}"><h2 id="prerequisites-${escapeHtml(item.slug)}">Prerequisites</h2><ul>${item.prerequisites.map((prerequisite) => `<li>${escapeHtml(prerequisite)}</li>`).join("")}</ul></section>
+    <section aria-labelledby="outcomes-${escapeHtml(item.slug)}"><h2 id="outcomes-${escapeHtml(item.slug)}">Learning outcomes</h2><ol>${outcomes}</ol></section>
+  </div>`;
+}
+
 function combinedRestrictions(...domainLists) {
   const restrictions = domainLists.filter((domains) => Array.isArray(domains) && domains.length);
   if (!restrictions.length) return [];
@@ -635,6 +647,7 @@ function overview(outputFile, item, type, action = "", imageDetails = "", footer
       <h1>${escapeHtml(item.title)}</h1>
       <p class="lede">${escapeHtml(item.description || "")}</p>
       ${metadataLine(item) ? `<p class="metadata">${metadataLine(item)}</p>` : ""}
+      ${learningDetails(item)}
       ${action}
     </div>
     ${footer}
@@ -827,7 +840,7 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
   if (pages.length === 1) {
     const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`, module.avatarData || defaultAvatar);
     const navigation = pageNavigation(indexFile, navigationContext.previousTarget, navigationContext.nextTarget, { previous: true, next: true });
-    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, restrictedTo: routeRestrictions, content: articleContent(module, pages[0], rendered.html, navigation) }));
+    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, restrictedTo: routeRestrictions, content: `${learningDetails(module)}${articleContent(module, pages[0], rendered.html, navigation)}` }));
     return;
   }
 
@@ -886,6 +899,13 @@ async function build() {
   await validateAvatar(defaultAvatar, false);
   for (const [type, items] of [["Module", modules], ["Playlist", playlists], ["Course", courses], ["Credential", credentials]]) {
     for (const item of items) {
+      if (type !== "Credential") {
+        for (const field of ["prerequisites", "learning_outcomes"]) {
+          if (!Array.isArray(item[field]) || item[field].length === 0 || item[field].some((value) => typeof value !== "string" || value.trim() === "")) {
+            throw new Error(`${type} ${item.slug} must define ${field} as a non-empty list of strings`);
+          }
+        }
+      }
       if (item.restricted_to !== undefined && (!Array.isArray(item.restricted_to) || item.restricted_to.length === 0 || item.restricted_to.some((domain) => typeof domain !== "string" || !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i.test(domain)))) {
         throw new Error(`${type} ${item.slug} has invalid restricted_to domains`);
       }

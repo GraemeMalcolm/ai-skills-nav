@@ -11,5 +11,9 @@ audience:
   - Business User
   - Business Leader
   - Student
+prerequisites:
+  - A career self-assessment and access to Microsoft Copilot and PowerPoint
+learning_outcomes:
+  - Build a career walking deck with Copilot and PowerPoint that communicates your professional value.
 pages:
   - 01-walking-deck.md

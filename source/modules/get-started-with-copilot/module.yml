@@ -10,6 +10,16 @@ topics:
 audience:
   - Business User
 avatar: matt
+prerequisites:
+  - Familiarity with Microsoft 365 apps and basic generative AI concepts
+learning_outcomes:
+  - Explain how Microsoft Copilot grounds responses in organizational and web data.
+  - Describe how Copilot works across Microsoft 365 applications.
+  - Identify enterprise data protection and security controls for Copilot.
+  - Create effective prompts using context, goals, sources, and expectations.
+  - Check your understanding of Microsoft Copilot capabilities and practices.
+  - Summarize effective and secure use of Copilot in Microsoft 365.
+  - Use Microsoft Copilot effectively across Microsoft 365 with grounded responses and purposeful prompts.
 pages:
   - 1-introduction.md
   - 2-how-copilot-works.md

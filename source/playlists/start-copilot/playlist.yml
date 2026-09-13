@@ -7,6 +7,12 @@ topics:
   - Microsoft Copilot
 audience:
   - Business User
+prerequisites:
+  - Familiarity with Microsoft 365 applications and basic generative AI concepts
+learning_outcomes:
+  - Use Microsoft Copilot effectively across Microsoft 365 with grounded responses and purposeful prompts.
+  - Use Copilot Chat effectively with grounded work data, model selection, and specialized agents.
+  - Use Microsoft Copilot across Microsoft 365 applications and Copilot Chat to improve everyday productivity.
 modules:
   - get-started-with-copilot
   - unlock-copilot-chat

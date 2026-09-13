@@ -9,6 +9,12 @@ topics:
   - Microsoft Defender for Cloud
 audience:
   - Security administrator
+prerequisites:
+  - Basic cloud security knowledge and familiarity with Azure administration
+learning_outcomes:
+  - Explain how Microsoft Defender for Cloud supports security posture management and workload protection.
+  - Apply Defender for Cloud concepts in a guided simulation.
+  - Assess and strengthen cloud security posture with Microsoft Defender for Cloud.
 pages:
   - 01-cloud-defender.md
   - 02-simulation.md

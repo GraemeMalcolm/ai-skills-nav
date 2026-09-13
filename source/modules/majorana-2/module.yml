@@ -12,5 +12,9 @@ audience:
   - AI Engineer
   - Developer
   - Solution Architect
+prerequisites:
+  - General awareness of quantum computing concepts and Microsoft hardware research
+learning_outcomes:
+  - Explain the significance of the Majorana 2 quantum computing announcement at Microsoft Build 2026.
 pages:
   - 01-majorana-2.md

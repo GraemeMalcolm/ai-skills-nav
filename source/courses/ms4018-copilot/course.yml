@@ -9,5 +9,9 @@ topics:
 audience:
   - Business User
 avatar: matt
+prerequisites:
+  - Familiarity with Microsoft 365 applications and basic generative AI concepts
+learning_outcomes:
+  - Use Microsoft Copilot across Microsoft 365 applications and Copilot Chat to improve everyday productivity.
 playlists:
   - start-copilot

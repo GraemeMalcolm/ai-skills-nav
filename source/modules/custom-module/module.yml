@@ -11,6 +11,13 @@ topics:
 audience:
   - Business User
 avatar: matt
+prerequisites:
+  - Basic familiarity with Microsoft Copilot
+learning_outcomes:
+  - Identify core Microsoft Copilot capabilities and navigation features.
+  - Apply Microsoft Copilot capabilities in a guided exercise.
+  - Review supporting Copilot guidance in the included reference document.
+  - Explore and apply core Microsoft Copilot capabilities using guided and reference content.
 pages:
   - 01-copilot.md
   - 02-exercise.md

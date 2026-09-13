@@ -11,6 +11,20 @@ topics:
 audience:
   - Developer
 avatar: anton
+prerequisites:
+  - Basic familiarity with digital technology and an interest in artificial intelligence
+learning_outcomes:
+  - Identify core AI capabilities and common real-world applications.
+  - Explain generative AI, language models, and the role of AI agents.
+  - Describe natural language processing tasks such as classification, sentiment analysis, and entity extraction.
+  - Explain how speech recognition and speech synthesis support conversational AI.
+  - Distinguish image classification, object detection, and semantic segmentation techniques.
+  - Describe how AI extracts structured information from documents and other content.
+  - Apply the principles of fairness, reliability, privacy, inclusiveness, transparency, and accountability.
+  - Explore core AI workloads through a practical exercise.
+  - Check your understanding of foundational AI concepts.
+  - Summarize the capabilities, workloads, and responsible practices introduced in the module.
+  - Understand foundational AI concepts across generative AI, language, speech, vision, information extraction, and responsible AI.
 pages:
   - 01-introduction.md
   - 02-generative-ai.md

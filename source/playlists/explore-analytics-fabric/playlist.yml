@@ -9,6 +9,12 @@ audience:
   - Data Analyst
   - Data Engineer
 avatar: inna
+prerequisites:
+  - Foundational data analytics knowledge and familiarity with data lake concepts
+learning_outcomes:
+  - Understand Microsoft Fabric's unified analytics platform and how it supports data and AI workloads.
+  - Discover, connect to, and work with data across OneLake using its catalog and shortcuts.
+  - Use Microsoft Fabric and OneLake concepts to support unified analytics and data discovery.
 modules:
   - intro-to-fabric
   - one-lake

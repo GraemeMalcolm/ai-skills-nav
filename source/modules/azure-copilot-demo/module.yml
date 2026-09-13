@@ -9,5 +9,9 @@ topics:
   - Azure
 audience:
   - Administrator
+prerequisites:
+  - Familiarity with Azure resources and basic cloud administration
+learning_outcomes:
+  - Use Microsoft Copilot in Azure to support virtual machine management and resource administration.
 pages:
   - 01-azure-copilot.md

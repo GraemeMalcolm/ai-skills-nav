@@ -11,5 +11,9 @@ audience:
   - Business User
   - Business Leader
   - Student
+prerequisites:
+  - A completed career walking deck and basic professional communication skills
+learning_outcomes:
+  - Use a career walking deck effectively in interviews, networking, and professional conversations.
 pages:
   - 01-walking-deck.md

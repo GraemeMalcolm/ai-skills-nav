@@ -9,5 +9,9 @@ audience:
   - Data Analyst
   - Data Engineer
 avatar: inna
+prerequisites:
+  - Data analytics fundamentals and familiarity with data lakes and warehouses
+learning_outcomes:
+  - Choose the appropriate Fabric lakehouse, warehouse, or eventhouse for a business scenario.
 modules:
   - fabric-data-stores

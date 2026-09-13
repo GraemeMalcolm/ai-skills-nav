@@ -12,6 +12,18 @@ topics:
 audience:
   - Developer
 avatar: anton
+prerequisites:
+  - Foundational knowledge of generative AI and experience using development tools
+learning_outcomes:
+  - Identify the concepts and workflow involved in developing an AI agent.
+  - Explain how models, instructions, knowledge, and tools work together in generative AI agents.
+  - Describe Microsoft Foundry capabilities for building and managing AI applications.
+  - Create and configure an AI agent in Microsoft Foundry.
+  - Select developer tools and deployment options for a Foundry agent.
+  - Build a client application that communicates with a deployed agent.
+  - Complete a hands-on exercise to create and test an AI agent.
+  - Summarize the process for developing and consuming a Foundry agent.
+  - Create, configure, test, deploy, and consume an AI agent with Microsoft Foundry.
 pages:
   - 01-introduction.md
   - 02-generative-ai-agents.md

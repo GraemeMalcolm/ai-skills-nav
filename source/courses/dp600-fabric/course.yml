@@ -13,6 +13,12 @@ audience:
   - Data Analyst
   - Data Engineer
 avatar: inna
+prerequisites:
+  - Data analytics and engineering experience with data lake, warehouse, and dimensional modeling concepts
+learning_outcomes:
+  - Use Microsoft Fabric and OneLake concepts to support unified analytics and data discovery.
+  - Choose the appropriate Fabric lakehouse, warehouse, or eventhouse for a business scenario.
+  - Design analytics solutions with Microsoft Fabric's unified platform, OneLake, and analytical data stores.
 playlists:
   - explore-analytics-fabric
   - transform-fabric

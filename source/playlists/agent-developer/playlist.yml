@@ -9,6 +9,12 @@ topics:
 audience:
   - Developer
 avatar: anton
+prerequisites:
+  - Software development experience and foundational knowledge of generative AI
+learning_outcomes:
+  - Create, configure, test, deploy, and consume an AI agent with Microsoft Foundry.
+  - Build AI agents that dynamically discover and invoke tools through Model Context Protocol servers.
+  - Develop and deploy AI agents with Microsoft Foundry and integrated MCP tool ecosystems.
 modules:
   - develop-first-agent
   - connect-agent-to-mcp-tools

@@ -12,5 +12,9 @@ audience:
   - AI Engineer
   - Developer
   - Solution Architect
+prerequisites:
+  - General awareness of Microsoft, NVIDIA, and current technology trends
+learning_outcomes:
+  - Summarize key technology innovation themes shared by Microsoft and NVIDIA leaders.
 pages:
   - 01-satya-jensen.md

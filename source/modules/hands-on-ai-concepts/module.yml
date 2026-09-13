@@ -10,6 +10,17 @@ topics:
 audience:
   - Developer
 avatar: anton
+prerequisites:
+  - Basic awareness of AI and access to the provided lab environment
+learning_outcomes:
+  - Explore common AI workloads and their practical applications.
+  - Apply generative AI capabilities in a hands-on scenario.
+  - Explore natural language processing and text analysis techniques.
+  - Explore speech recognition and synthesis capabilities.
+  - Explore computer vision capabilities and use cases.
+  - Explore information extraction from documents and unstructured content.
+  - Build and test a retrieval-augmented generation experience.
+  - Apply core AI workload concepts through hands-on exercises, including retrieval-augmented generation.
 pages:
   - 01-ai-workloads.md
   - 02-generative-ai.md

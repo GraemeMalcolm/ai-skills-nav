@@ -9,6 +9,12 @@ topics:
 audience:
   - Developer
 avatar: anton
+prerequisites:
+  - AI agent development experience and familiarity with Microsoft 365 architecture
+learning_outcomes:
+  - Build and ground AI agents with enterprise knowledge using Microsoft Foundry IQ.
+  - Publish Microsoft Foundry agents to Teams and Microsoft 365 Copilot with organizational data access.
+  - Extend AI agents with enterprise knowledge and publish them into Microsoft 365 experiences.
 modules:
   - get-started-foundry-iq
   - integrate-foundry-agent-with-m365

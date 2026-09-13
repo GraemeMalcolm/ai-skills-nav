@@ -12,5 +12,9 @@ audience:
   - AI Engineer
   - Developer
   - Solution Architect
+prerequisites:
+  - Basic familiarity with generative AI and Microsoft AI products
+learning_outcomes:
+  - Describe the Microsoft AI model announcements presented at Microsoft Build 2026.
 pages:
   - 01-mai-models.md

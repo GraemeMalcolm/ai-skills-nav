@@ -10,6 +10,13 @@ audience:
   - Developer
   - AI Engineer
   - Solution Architect
+prerequisites:
+  - General awareness of current Microsoft technology and an interest in Microsoft Build announcements
+learning_outcomes:
+  - Explain the significance of the Majorana 2 quantum computing announcement at Microsoft Build 2026.
+  - Describe the Microsoft AI model announcements presented at Microsoft Build 2026.
+  - Summarize key technology innovation themes shared by Microsoft and NVIDIA leaders.
+  - Summarize major quantum, AI model, and industry innovation announcements from Microsoft Build 2026.
 modules:
   - majorana-2
   - mai-model-announcement

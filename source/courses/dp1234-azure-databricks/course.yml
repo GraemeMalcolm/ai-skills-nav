@@ -12,5 +12,9 @@ topics:
 audience:
   - Data Analyst
 avatar: alex
+prerequisites:
+  - Data analysis or engineering experience with basic SQL and Apache Spark familiarity
+learning_outcomes:
+  - Use Azure Databricks concepts to support integrated data engineering, analytics, and machine learning workloads.
 playlists:
   - azure-databricks

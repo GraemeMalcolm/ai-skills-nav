@@ -13,6 +13,17 @@ audience:
   - Data Scientist
   - Data Engineer
 avatar: alex
+prerequisites:
+  - Data engineering fundamentals and familiarity with Apache Spark concepts
+learning_outcomes:
+  - Explain how Azure Databricks supports data engineering, analytics, and machine learning.
+  - Describe the Azure Databricks platform and its Apache Spark foundation.
+  - Identify common Azure Databricks workloads and use cases.
+  - Explain lakehouse architecture, Delta Lake, and medallion design patterns.
+  - Describe data governance with Unity Catalog and Microsoft Purview.
+  - Complete a guided exercise to explore an Azure Databricks workspace.
+  - Summarize Azure Databricks capabilities, architecture, and governance.
+  - Use Azure Databricks concepts to support integrated data engineering, analytics, and machine learning workloads.
 pages:
   - 01-introduction.md
   - 02-azure-databricks.md

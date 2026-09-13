@@ -13,6 +13,12 @@ topics:
 audience:
   - Developer
 avatar: anton
+prerequisites:
+  - Software development experience and foundational knowledge of generative AI, APIs, and Microsoft 365
+learning_outcomes:
+  - Develop and deploy AI agents with Microsoft Foundry and integrated MCP tool ecosystems.
+  - Extend AI agents with enterprise knowledge and publish them into Microsoft 365 experiences.
+  - Develop, deploy, ground, and integrate production AI agents with Microsoft Foundry, MCP, and Microsoft 365.
 playlists:
   - agent-developer
   - microsoft-iq

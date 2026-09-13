@@ -10,6 +10,15 @@ topics:
   - Professional development
 audience:
   - Business Leader
+prerequisites:
+  - Leadership or management experience and an interest in organizational AI transformation
+learning_outcomes:
+  - Identify proven strategies for driving organization-wide AI transformation.
+  - Explain the leadership behaviors needed to embrace AI-driven change.
+  - Design an approach for building AI skills at organizational scale.
+  - Plan AI adoption across teams and business functions.
+  - Foster a culture that sustains responsible AI innovation.
+  - Lead organizational AI transformation through strategy, skilling, adoption, and culture.
 pages:
   - 01-drive-ai.md
   - 02-leaders-ai.md

@@ -9,5 +9,9 @@ topics:
   - Azure
 audience:
   - Technical Sales Specialist
+prerequisites:
+  - Familiarity with enterprise applications and an interest in AI-native solution patterns
+learning_outcomes:
+  - Explain how Caldova demonstrates patterns for AI-native enterprise software.
 pages:
   - 01-caldova.md

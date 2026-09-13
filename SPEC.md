@@ -89,6 +89,10 @@ topics:
   - Topic
 audience:
   - Audience
+prerequisites:
+  - Required prior knowledge or experience
+learning_outcomes:
+  - Learner outcome
 restricted_to:
   - example.com
 avatar: optional-avatar-slug
@@ -101,6 +105,9 @@ Rules:
 - `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `playlists` SHOULD be present.
 - `course_number` is optional. When supplied, it MUST be a string.
 - `playlists` MUST be a non-empty array of existing playlist slugs.
+- `prerequisites` and `learning_outcomes` MUST each be a non-empty array of strings.
+- For a course with multiple playlists, `learning_outcomes` MUST contain each child playlist's overall outcome in playlist order, followed by one overall course outcome.
+- For a course with one playlist, `learning_outcomes` MUST contain only that playlist's overall objective.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
 - `credentials` is an optional array of credential names. The detail page MUST list every credential in metadata order, or show “No associated credential is specified.” when omitted or empty.
@@ -120,6 +127,10 @@ topics:
   - Topic
 audience:
   - Audience
+prerequisites:
+  - Required prior knowledge or experience
+learning_outcomes:
+  - Learner outcome
 restricted_to:
   - example.com
 avatar: optional-avatar-slug
@@ -131,6 +142,9 @@ Rules:
 
 - `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `modules` SHOULD be present.
 - `modules` MUST be an array of existing module slugs.
+- `prerequisites` and `learning_outcomes` MUST each be a non-empty array of strings.
+- For a playlist with multiple modules, `learning_outcomes` MUST contain each child module's overall outcome in module order, followed by one overall playlist outcome.
+- For a playlist with one module, `learning_outcomes` MUST contain only that module's overall objective.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
 - Module order MUST follow the YAML array.
@@ -150,6 +164,10 @@ topics:
   - Topic
 audience:
   - Audience
+prerequisites:
+  - Required prior knowledge or experience
+learning_outcomes:
+  - Learner outcome
 restricted_to:
   - example.com
 avatar: optional-avatar-slug
@@ -164,12 +182,17 @@ Rules:
 
 - `title`, `description`, `modality`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `pages` SHOULD be present.
 - `pages` MUST be a non-empty array.
+- `prerequisites` and `learning_outcomes` MUST each be a non-empty array of strings.
+- For a module with multiple pages, `learning_outcomes` MUST contain one outcome per page in page order, followed by one overall module outcome.
+- For a module with one page, `learning_outcomes` MUST contain one learning objective.
 - A page entry MAY be a relative filename or an object containing `file`, optional `title`, and optional `description`.
 - Every page file MUST exist inside the module folder.
 - Page order MUST follow the YAML array.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
 - Modality and audience values are content-defined, not hard-coded enums. Current modalities are `Lab`, `Multimodal`, and `Video`.
+
+Course, playlist, and module home pages MUST list prerequisites and learning outcomes. When an item has multiple learning outcomes, the final value MUST be bold and prefixed with `Overall outcome:`. A single learning objective MUST be displayed without that prefix.
 
 ### 3.4 Page front matter
 

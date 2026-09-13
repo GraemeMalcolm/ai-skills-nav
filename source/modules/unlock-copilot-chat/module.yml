@@ -10,6 +10,14 @@ topics:
 audience:
   - Business User
 avatar: matt
+prerequisites:
+  - Basic familiarity with Microsoft Copilot and access to Microsoft 365
+learning_outcomes:
+  - Identify Copilot Chat capabilities for research, content creation, and complex tasks.
+  - Explain how Copilot Chat uses models, web grounding, and organizational context.
+  - Use work data and specialized agents in Copilot Chat.
+  - Summarize effective ways to use Copilot Chat for work.
+  - Use Copilot Chat effectively with grounded work data, model selection, and specialized agents.
 pages:
   - 1-introduction.md
   - 2-copilot-chat.md

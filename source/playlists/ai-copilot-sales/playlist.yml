@@ -8,6 +8,12 @@ topics:
   - Microsoft Copilot
 audience:
   - Technical Sales Specialist
+prerequisites:
+  - Sales or technical sales experience and familiarity with Microsoft 365
+learning_outcomes:
+  - Use Copilot Chat effectively with grounded work data, model selection, and specialized agents.
+  - Explore Microsoft Copilot features and apply its capabilities in a guided lab.
+  - Present and demonstrate Microsoft Copilot solutions to customers with practical product knowledge.
 modules:
   - unlock-copilot-chat
   - explore-copilot

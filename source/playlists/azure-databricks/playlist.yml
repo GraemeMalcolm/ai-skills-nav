@@ -10,5 +10,9 @@ audience:
   - Data Scientist
   - Data Engineer
 avatar: alex
+prerequisites:
+  - Data engineering fundamentals and familiarity with Apache Spark concepts
+learning_outcomes:
+  - Use Azure Databricks concepts to support integrated data engineering, analytics, and machine learning workloads.
 modules:
   - start-databricks

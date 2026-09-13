@@ -11,5 +11,9 @@ audience:
   - Business User
   - Business Leader
   - Student
+prerequisites:
+  - An interest in career development and willingness to reflect on professional strengths
+learning_outcomes:
+  - Define a personal brand and identify the content needed for a career walking deck.
 pages:
   - 01-personal-brand.md

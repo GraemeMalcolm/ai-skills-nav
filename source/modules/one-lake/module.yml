@@ -9,6 +9,14 @@ audience:
   - Data Analyst
   - Data Engineer
 avatar: inna
+prerequisites:
+  - Familiarity with data lake or lakehouse concepts
+learning_outcomes:
+  - Explain how OneLake provides unified storage and data discovery in Microsoft Fabric.
+  - Describe OneLake architecture and integration capabilities.
+  - Discover and connect to data by using the OneLake catalog and shortcuts.
+  - Summarize how OneLake unifies access to organizational data.
+  - Discover, connect to, and work with data across OneLake using its catalog and shortcuts.
 pages:
   - 01-introduction.md
   - 02-onelake.md

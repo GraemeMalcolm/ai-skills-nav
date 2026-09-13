@@ -13,6 +13,17 @@ audience:
   - Developer
   - AI Engineer
 avatar: anton
+prerequisites:
+  - Foundational cloud computing knowledge and familiarity with Azure concepts
+learning_outcomes:
+  - Explain how AI applications support enterprise digital transformation.
+  - Describe Azure tenants, subscriptions, resource groups, and resources.
+  - Identify Azure services used to develop and host AI solutions.
+  - Explain how Microsoft Foundry supports AI application and agent development.
+  - Locate and use deployment options and endpoints for Foundry resources.
+  - Complete a guided exercise using Azure and Microsoft Foundry.
+  - Summarize how Azure services and Microsoft Foundry support AI solution development.
+  - Build a foundation for developing AI solutions with Microsoft Foundry on Azure.
 pages:
   - 01-introduction.md
   - 02-azure.md

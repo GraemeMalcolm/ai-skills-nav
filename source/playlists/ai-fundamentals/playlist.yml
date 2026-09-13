@@ -10,6 +10,12 @@ audience:
   - Developer
   - AI Engineer
 avatar: anton
+prerequisites:
+  - Basic familiarity with digital technology and an interest in artificial intelligence
+learning_outcomes:
+  - Understand foundational AI concepts across generative AI, language, speech, vision, information extraction, and responsible AI.
+  - Build a foundation for developing AI solutions with Microsoft Foundry on Azure.
+  - Develop a foundational understanding of AI concepts and Azure-based AI solution development.
 modules:
   - ai-concepts
   - get-started-ai-azure

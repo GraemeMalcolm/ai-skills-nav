@@ -11,5 +11,9 @@ topics:
 audience:
   - Business User
 avatar: matt
+prerequisites:
+  - Access to Microsoft Copilot and basic familiarity with AI assistants
+learning_outcomes:
+  - Explore Microsoft Copilot features and apply its capabilities in a guided lab.
 pages:
   - 01-copilot-lab.md

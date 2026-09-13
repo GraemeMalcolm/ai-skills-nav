@@ -11,6 +11,12 @@ topics:
   - AI Agents
 audience:
   - Technical Sales Specialist
+prerequisites:
+  - Technical sales experience and foundational familiarity with cloud computing, AI, and Microsoft 365
+learning_outcomes:
+  - Conduct informed customer conversations about Microsoft AI solutions, platforms, and application patterns.
+  - Present and demonstrate Microsoft Copilot solutions to customers with practical product knowledge.
+  - Conduct comprehensive customer conversations about AI and Copilot solutions with technical credibility and business relevance.
 playlists:
   - ai-azure-sales
   - ai-copilot-sales
