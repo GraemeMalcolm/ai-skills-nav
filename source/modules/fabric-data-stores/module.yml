@@ -12,13 +12,10 @@ avatar: inna
 prerequisites:
   - Data analytics fundamentals and familiarity with data lakes and warehouses
 learning_outcomes:
-  - Identify the primary analytical data stores available in Microsoft Fabric.
   - Compare lakehouse, warehouse, and eventhouse scenarios and selection criteria.
   - Evaluate lakehouse capabilities for mixed data, Spark processing, and SQL analytics.
   - Evaluate warehouse capabilities for structured reporting, transactions, and T-SQL workloads.
   - Evaluate eventhouse capabilities for streaming, time-series data, and KQL analysis.
-  - Check your understanding of Fabric analytical data store selection.
-  - Summarize when to use each analytical data store in Microsoft Fabric.
   - Choose the appropriate Fabric lakehouse, warehouse, or eventhouse for a business scenario.
 pages:
   - 01-introduction.md

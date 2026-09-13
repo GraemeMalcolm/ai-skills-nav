@@ -13,7 +13,7 @@ prerequisites:
   - Basic cloud security knowledge and familiarity with Azure administration
 learning_outcomes:
   - Explain how Microsoft Defender for Cloud supports security posture management and workload protection.
-  - Apply Defender for Cloud concepts in a guided simulation.
+  - Use Microsoft Defender for Cloud.
   - Assess and strengthen cloud security posture with Microsoft Defender for Cloud.
 pages:
   - 01-cloud-defender.md

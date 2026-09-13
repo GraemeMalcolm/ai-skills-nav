@@ -16,14 +16,11 @@ avatar: anton
 prerequisites:
   - Experience developing AI agents and familiarity with Microsoft 365 and Microsoft Entra ID
 learning_outcomes:
-  - Explain how Foundry agents can be published to Teams and Microsoft 365 Copilot.
   - Compare direct publishing with Microsoft 365 Agents Toolkit scenarios.
   - Publish an agent from the Microsoft Foundry portal.
   - Configure advanced enterprise agent scenarios with Microsoft 365 Agents Toolkit.
   - Connect an agent to organizational data through Work IQ.
   - Test and refine an agent across Microsoft 365 publishing targets.
-  - Complete a guided exercise to publish and integrate a Foundry agent.
-  - Summarize the options and workflow for integrating Foundry agents with Microsoft 365.
   - Publish Microsoft Foundry agents to Teams and Microsoft 365 Copilot with organizational data access.
 pages:
   - 1-introduction.md

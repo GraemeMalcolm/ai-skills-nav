@@ -12,11 +12,9 @@ avatar: inna
 prerequisites:
   - Foundational data analytics knowledge and awareness of end-to-end analytics workflows
 learning_outcomes:
-  - Explain Microsoft Fabric as a unified end-to-end analytics platform.
   - Identify Fabric workloads and their roles in the analytics lifecycle.
   - Describe how data roles collaborate in a Fabric environment.
   - Evaluate how Fabric supports analytics and AI scenarios.
-  - Summarize the capabilities and value of Microsoft Fabric.
   - Understand Microsoft Fabric's unified analytics platform and how it supports data and AI workloads.
 pages:
   - 01-introduction.md

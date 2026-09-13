@@ -16,12 +16,9 @@ avatar: anton
 prerequisites:
   - Familiarity with AI agents and retrieval-augmented generation concepts
 learning_outcomes:
-  - Explain how Microsoft Foundry IQ provides a managed knowledge layer for agents.
   - Describe Foundry IQ components and the agentic retrieval architecture.
   - Configure knowledge bases that connect to enterprise knowledge sources.
   - Connect an AI agent to a Foundry IQ knowledge base through MCP.
-  - Complete an exercise that grounds agent responses in enterprise knowledge.
-  - Summarize the Foundry IQ workflow for knowledge-grounded agents.
   - Build and ground AI agents with enterprise knowledge using Microsoft Foundry IQ.
 pages:
   - 1-introduction.md

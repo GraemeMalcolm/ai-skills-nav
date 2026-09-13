@@ -16,12 +16,9 @@ avatar: anton
 prerequisites:
   - Foundational AI agent development skills and familiarity with APIs
 learning_outcomes:
-  - Explain how Model Context Protocol (MCP) extends AI agents with external tools.
   - Describe MCP tool discovery, interoperability, security, and centralized management.
   - Configure an MCP server and client to expose and invoke tools.
   - Connect a Microsoft Foundry agent to an MCP server and manage tool approvals.
-  - Complete an exercise that adds MCP-hosted tools to an AI agent.
-  - Summarize the components and workflow used to integrate agents with MCP tools.
   - Build AI agents that dynamically discover and invoke tools through Model Context Protocol servers.
 pages:
   - 1-introduction.md
