@@ -457,7 +457,6 @@ function contentOverviewDialog(outputFile, module) {
 
 function signInDialog(outputFile) {
   const logo = relativeUrl(outputFile, path.join(outputRoot, "assets", "microsoft-logo.svg"));
-  const playlistsUrl = relativeUrl(outputFile, path.join(outputRoot, "my-playlists", "index.html"));
   const personalizedPlanUrl = relativeUrl(outputFile, path.join(outputRoot, "personalized-plan", "index.html"));
   const audienceOptions = escapeHtml(JSON.stringify(profileAudienceOptions));
   return `<div class="account-links"><a class="filter-trigger" href="#profile" data-profile-open data-auth-only hidden>Profile</a><a class="filter-trigger auth-link" href="#sign-in" data-auth-open>Sign-in</a></div>
@@ -473,14 +472,14 @@ function signInDialog(outputFile) {
     </form>
   </dialog>
   <dialog class="filter-dialog profile-dialog" data-profile-dialog aria-labelledby="profile-title">
-    <form data-profile-form data-personalized-plan-url="${escapeHtml(personalizedPlanUrl)}">
+    <form data-profile-form>
       <header class="filter-dialog-header"><div><p class="kicker">Your account</p><h2 id="profile-title">Profile</h2></div><button class="icon-button" type="button" aria-label="Close profile" data-profile-close>${icon("close")}</button></header>
       <div class="filter-dialog-body profile-fields">
         <div><span>Email address</span><strong data-profile-email></strong></div>
         <label><span>My role</span><select data-profile-role data-profile-audiences="${audienceOptions}" required><option value="">Select a role</option></select></label>
-        <a href="${escapeHtml(playlistsUrl)}">My personal playlists</a>
+        <a href="${escapeHtml(personalizedPlanUrl)}">Personalized skilling plan</a>
       </div>
-      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-profile-close>Cancel</button><button class="primary-button" type="submit">Show personalized skilling plan</button></footer>
+      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-profile-close>Cancel</button><button class="primary-button" type="submit" data-profile-submit disabled>OK</button></footer>
     </form>
   </dialog>`;
 }

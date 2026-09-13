@@ -131,6 +131,7 @@ const profileDialog = document.querySelector("[data-profile-dialog]");
 const profileForm = profileDialog?.querySelector("[data-profile-form]");
 const profileEmail = profileDialog?.querySelector("[data-profile-email]");
 const profileRole = profileDialog?.querySelector("[data-profile-role]");
+const profileSubmit = profileDialog?.querySelector("[data-profile-submit]");
 let pendingPersonalPlaylistTrigger = null;
 const openProfileAfterReloadKey = "ai-skills-nav:open-profile-after-sign-in";
 const rememberProfileAfterReload = () => {
@@ -155,11 +156,12 @@ const profileStorageKey = () => currentAuth
 const readProfile = () => {
   try {
     const storageKey = profileStorageKey();
-    if (!storageKey) return { role: "" };
-    const profile = JSON.parse(localStorage.getItem(storageKey) || "null");
-    return { role: typeof profile?.role === "string" ? profile.role : "" };
+    if (!storageKey) return { role: "", exists: false };
+    const storedProfile = localStorage.getItem(storageKey);
+    const profile = JSON.parse(storedProfile || "null");
+    return { role: typeof profile?.role === "string" ? profile.role : "", exists: storedProfile !== null };
   } catch {
-    return { role: "" };
+    return { role: "", exists: false };
   }
 };
 const writeProfile = (role) => {
@@ -280,36 +282,52 @@ updateAuthOnlyElements();
 updateRestrictedElements();
 updatePageAccess();
 
-if (profileLink && profileDialog && profileForm && profileEmail && profileRole) {
+if (profileLink && profileDialog && profileForm && profileEmail && profileRole && profileSubmit) {
+  let initialProfileRole = "";
+  let isNewProfile = false;
   const isAvailableProfileRole = () => Array.from(profileRole.options)
     .some((option) => option.value && option.value === profileRole.value);
+  const updateProfileSubmit = () => {
+    profileSubmit.disabled = !isNewProfile && profileRole.value === initialProfileRole;
+  };
+  const closeProfileDialog = () => {
+    profileDialog.close();
+    const pendingTrigger = pendingPersonalPlaylistTrigger;
+    pendingPersonalPlaylistTrigger = null;
+    pendingTrigger?.click();
+  };
   profileLink.addEventListener("click", (event) => {
     event.preventDefault();
     if (!currentAuth) return;
     profileEmail.textContent = currentAuth.email;
-    const savedRole = readProfile().role;
+    const profile = readProfile();
+    const savedRole = profile.role;
     const audienceOptions = JSON.parse(profileRole.dataset.profileAudiences || "[]")
       .filter((audience) => audience.unrestricted || audience.domains.includes(currentAuth.domain));
     profileRole.replaceChildren(new Option("Select a role", ""), ...audienceOptions.map((audience) => new Option(audience.name, audience.name)));
     profileRole.value = audienceOptions.some((audience) => audience.name === savedRole) ? savedRole : "";
-    if (savedRole && !profileRole.value) writeProfile("");
+    initialProfileRole = profileRole.value;
+    isNewProfile = !profile.exists || Boolean(savedRole && !profileRole.value);
+    updateProfileSubmit();
     profileDialog.showModal();
     profileRole.focus();
   });
-  profileDialog.querySelectorAll("[data-profile-close]").forEach((button) => button.addEventListener("click", () => profileDialog.close()));
+  profileDialog.querySelectorAll("[data-profile-close]").forEach((button) => button.addEventListener("click", closeProfileDialog));
   profileDialog.addEventListener("click", (event) => {
-    if (event.target === profileDialog) profileDialog.close();
+    if (event.target === profileDialog) closeProfileDialog();
   });
-  profileDialog.addEventListener("close", () => {
-    const pendingTrigger = pendingPersonalPlaylistTrigger;
-    pendingPersonalPlaylistTrigger = null;
-    pendingTrigger?.click();
+  profileDialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeProfileDialog();
   });
-  profileRole.addEventListener("change", () => writeProfile(isAvailableProfileRole() ? profileRole.value : ""));
+  profileRole.addEventListener("change", updateProfileSubmit);
   profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!profileForm.reportValidity() || !isAvailableProfileRole() || !writeProfile(profileRole.value)) return;
-    window.location.assign(profileForm.dataset.personalizedPlanUrl);
+    initialProfileRole = profileRole.value;
+    isNewProfile = false;
+    updateProfileSubmit();
+    closeProfileDialog();
   });
   if (consumeProfileAfterReload()) profileLink.click();
 }

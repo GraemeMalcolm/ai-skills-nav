@@ -1502,9 +1502,16 @@ body.access-denied>[data-agent] {
   margin-top: 18px;
 }
 
-.primary-button:hover,
+.primary-button:hover:not(:disabled),
 .nav-button:hover {
   background: #523b8c;
+}
+
+.primary-button:disabled {
+  border-color: #aaa49c;
+  background: #d6d1ca;
+  color: #6f6a65;
+  cursor: not-allowed;
 }
 
 .lesson {
