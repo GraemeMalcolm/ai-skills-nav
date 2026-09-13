@@ -637,6 +637,13 @@ function experienceTypeName(item, type) {
   return "Learning Experience";
 }
 
+function cardRating(item) {
+  if (typeof item.rating !== "number") return "";
+  const rating = Math.max(0, Math.min(5, item.rating));
+  const stars = "&#9733;&#9733;&#9733;&#9733;&#9733;";
+  return `<span class="card-rating" role="img" aria-label="${rating.toFixed(1)} out of 5 stars"><span class="card-rating-stars" aria-hidden="true"><span>${stars}</span><span class="card-rating-fill" style="width: ${(rating / 5) * 100}%">${stars}</span></span><span class="card-rating-value">${rating.toFixed(1)}</span></span>`;
+}
+
 function card(outputFile, item, type, defaultHidden = false) {
   const target = type === "playlists"
     ? playlistEntryTarget(path.join(outputRoot, "playlists"), item)
@@ -653,7 +660,7 @@ function card(outputFile, item, type, defaultHidden = false) {
   const experienceType = `<span>${escapeHtml(experienceTypeName(item, type))}</span>`;
   const cardLink = `<a class="content-card" href="${relativeUrl(outputFile, target)}"${describedBy}>
     <span class="card-image">${thumbnail(outputFile, item, type)}</span>
-    <span class="card-body"><strong>${escapeHtml(item.title)}</strong>${experienceType}<span>${metadataLine(item)}</span></span>
+    <span class="card-body"><strong>${escapeHtml(item.title)}</strong>${experienceType}<span class="card-meta-row"><span>${metadataLine(item)}</span>${cardRating(item)}</span></span>
     ${tooltip}
   </a>`;
   if (type !== "modules") return cardLink.replace('class="content-card"', `class="content-card"${searchData}${filterData}${defaultVisibility}`);
@@ -661,6 +668,25 @@ function card(outputFile, item, type, defaultHidden = false) {
     ${cardLink}
     <button class="card-playlist-add" type="button" aria-label="Add ${escapeHtml(item.title)} to a personal playlist" title="Add to personal playlist" data-personal-playlist-open data-module-name="${escapeHtml(item.title)}" data-module-path="modules/${escapeHtml(item.slug)}/index.html">${icon("plus")}</button>
   </div>`;
+}
+
+function homepageItems(items, recentCount, ratingCount) {
+  const byTitle = (left, right) => left.title.localeCompare(right.title);
+  const recent = [...items]
+    .sort((left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0) || byTitle(left, right))
+    .slice(0, recentCount);
+  const selected = new Set(recent);
+  const rated = [...items]
+    .filter((item) => !selected.has(item))
+    .sort((left, right) => right.rating - left.rating
+      || Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0)
+      || byTitle(left, right))
+    .slice(0, ratingCount);
+  rated.forEach((item) => selected.add(item));
+  return {
+    featuredCount: selected.size,
+    items: [...recent, ...rated, ...items.filter((item) => !selected.has(item))],
+  };
 }
 
 function catalogSearch(inputId, label, placeholder) {
@@ -1155,6 +1181,9 @@ async function build() {
     "Secure cloud resources with Microsoft Defender",
     "Connect agents to MCP tools",
   ]));
+  const homeCourses = homepageItems(courses, 2, 2);
+  const homePlaylists = homepageItems(playlists, 2, 2);
+  const homeModules = homepageItems(modules, 4, 4);
   const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p class="home-hero-summary">Choose a curated path or jump straight into a learning experience.</p>
       <form class="hero-search" role="search" data-site-search data-animated-search data-search-hints="${heroSearchHints}">
         <label for="hero-search-input">What do you want to learn how to do?</label>
@@ -1162,9 +1191,9 @@ async function build() {
         <button class="search-clear" type="button" data-search-clear hidden>Clear</button>
       </form>
     </section>
-    <section class="catalog-section" data-course-catalog><div class="section-heading-row"><div class="section-heading"><p class="kicker">Build skills for success</p><h2>Courses</h2></div><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><div class="card-grid">${courses.map((item, index) => card(homeFile, item, "courses", index >= 4)).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, coursesFile)}">See all courses</a></div></section>
-    <section class="catalog-section alt" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning we think you'll like</p><h2>Skilling playlists</h2></div><div class="card-grid">${playlists.map((item, index) => card(homeFile, item, "playlists", index >= 4)).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, personalPlaylistsFile)}" data-auth-only>Personal playlists</a><a class="filter-trigger" href="${relativeUrl(homeFile, playlistsFile)}">See all playlists</a></div></section>
-    <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${modules.map((item, index) => card(homeFile, item, "modules", index >= 8)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>
+    <section class="catalog-section" data-course-catalog><div class="section-heading-row"><div class="section-heading"><p class="kicker">Build skills for success</p><h2>Courses</h2></div><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><div class="card-grid">${homeCourses.items.map((item, index) => card(homeFile, item, "courses", index >= homeCourses.featuredCount)).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, coursesFile)}">See all courses</a></div></section>
+    <section class="catalog-section alt" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning we think you'll like</p><h2>Skilling playlists</h2></div><div class="card-grid">${homePlaylists.items.map((item, index) => card(homeFile, item, "playlists", index >= homePlaylists.featuredCount)).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, personalPlaylistsFile)}" data-auth-only>Personal playlists</a><a class="filter-trigger" href="${relativeUrl(homeFile, playlistsFile)}">See all playlists</a></div></section>
+    <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${homeModules.items.map((item, index) => card(homeFile, item, "modules", index >= homeModules.featuredCount)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>
     ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "modalities"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
 

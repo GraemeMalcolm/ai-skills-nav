@@ -764,6 +764,46 @@ img {
   font-size: .86rem;
 }
 
+.card-body .card-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin-top: auto;
+}
+
+.card-body .card-rating {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 5px;
+}
+
+.card-body .card-rating-stars {
+  position: relative;
+  display: inline-block;
+  color: #c7c0b7;
+  font-size: .9rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.card-body .card-rating-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  color: #b55b00;
+  line-height: inherit;
+  white-space: nowrap;
+}
+
+.card-body .card-rating-value {
+  color: var(--ink);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
 .card-tooltip {
   position: absolute;
   z-index: 2;
