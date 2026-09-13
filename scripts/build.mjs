@@ -840,7 +840,7 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
   if (pages.length === 1) {
     const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`, module.avatarData || defaultAvatar);
     const navigation = pageNavigation(indexFile, navigationContext.previousTarget, navigationContext.nextTarget, { previous: true, next: true });
-    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, restrictedTo: routeRestrictions, content: `${learningDetails(module)}${articleContent(module, pages[0], rendered.html, navigation)}` }));
+    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, restrictedTo: routeRestrictions, content: articleContent(module, pages[0], rendered.html, navigation) }));
     return;
   }
 
