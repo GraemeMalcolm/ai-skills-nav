@@ -545,7 +545,7 @@ function learningDetails(item) {
   }).join("");
   return `<div class="learning-details">
     <section aria-labelledby="prerequisites-${escapeHtml(item.slug)}"><h2 id="prerequisites-${escapeHtml(item.slug)}">Prerequisites</h2><ul>${item.prerequisites.map((prerequisite) => `<li>${escapeHtml(prerequisite)}</li>`).join("")}</ul></section>
-    <section aria-labelledby="outcomes-${escapeHtml(item.slug)}"><h2 id="outcomes-${escapeHtml(item.slug)}">Learning outcomes</h2><ol>${outcomes}</ol></section>
+    <section aria-labelledby="outcomes-${escapeHtml(item.slug)}"><h2 id="outcomes-${escapeHtml(item.slug)}">Learning outcomes</h2><ul>${outcomes}</ul></section>
   </div>`;
 }
 
