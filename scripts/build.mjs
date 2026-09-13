@@ -495,6 +495,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const favicon = relativeUrl(outputFile, path.join(outputRoot, "favicon.ico"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
+  const officialCurriculum = relativeUrl(outputFile, path.join(outputRoot, "official-curriculum", "index.html"));
   const credentials = relativeUrl(outputFile, path.join(outputRoot, "credentials", "index.html"));
   const isLearningPage = bodyClass.split(/\s+/).includes("learning-page");
   const share = isLearningPage ? shareDialog(false, false) : "";
@@ -513,7 +514,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
 <body class="${escapeHtml(bodyClass)}"${module ? ` data-module-slug="${escapeHtml(module.slug)}"` : ""} data-restricted-to="${escapeHtml(JSON.stringify(restrictedTo))}">
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
-    <div class="primary-navigation"><a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a><a class="filter-trigger" href="${credentials}">Credentials</a></div>
+    <div class="primary-navigation"><a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a><a class="filter-trigger" href="${officialCurriculum}">Official Curriculum</a><a class="filter-trigger" href="${credentials}">Credentials</a></div>
     ${headerExtra}${signInDialog(outputFile)}
   </header>
   ${breadcrumbs(outputFile, breadcrumbItems)}
@@ -961,6 +962,7 @@ async function build() {
   }
 
   const homeFile = path.join(outputRoot, "index.html");
+  const officialCurriculumFile = path.join(outputRoot, "official-curriculum", "index.html");
   const credentialsFile = path.join(outputRoot, "credentials", "index.html");
   const coursesFile = path.join(outputRoot, "courses", "index.html");
   const playlistsFile = path.join(outputRoot, "playlists", "index.html");
@@ -986,6 +988,25 @@ async function build() {
     <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${modules.map((item, index) => card(homeFile, item, "modules", index >= 8)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>
     ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "modalities"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
+
+  const officialCurriculumType = "Microsoft Official Curriculum";
+  const officialCourses = courses.filter((item) => item.experience_type === officialCurriculumType);
+  const officialPlaylists = playlists.filter((item) => item.experience_type === officialCurriculumType);
+  const officialModules = modules.filter((item) => item.experience_type === officialCurriculumType);
+  const officialItems = [...officialCourses, ...officialPlaylists, ...officialModules];
+  const officialSearch = catalogSearch("official-curriculum-search-input", "Search official curriculum", "Search official curriculum");
+  const officialTools = `<div class="catalog-section-tools">${officialSearch}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
+  const trainingPartnersDialog = `<dialog class="filter-dialog training-partners-dialog" data-training-partners-dialog aria-labelledby="training-partners-title">
+    <header class="filter-dialog-header"><div><p class="kicker">Training Services Partners</p><h2 id="training-partners-title">Build skills with trusted experts</h2></div><button class="icon-button" type="button" aria-label="Close training partners" data-training-partners-close>${icon("close")}</button></header>
+    <div class="filter-dialog-body training-partners-body"><p>Microsoft Training Services Partners deliver trusted, high&#8209;quality learning experiences designed to support your specific learning and business goals. From instructor&#8209;led and virtual classrooms to flexible blended learning models powered by digital platforms, our partners offer a range of training options aligned to your needs. Explore a global network of Training Services Partners who offer and deliver the latest Microsoft&#8209;developed curriculum and custom-tailored content today.</p></div>
+    <footer class="filter-dialog-actions"><button class="text-button" type="button" data-training-partners-close>Close</button><a class="primary-button" href="https://aiskillsnavigator.microsoft.com/training-partners" target="_blank" rel="noopener noreferrer">Find a training partner</a></footer>
+  </dialog>`;
+  const officialCurriculumContent = `<section class="catalog-intro"><p class="kicker">Microsoft training</p><h1>Official Curriculum</h1><p>Microsoft Official Curriculum training is designed to teach real-world technical skills with Microsoft technologies and prepare you for Microsoft credentials.</p><div class="catalog-intro-action"><a class="filter-trigger" href="#training-partners" data-training-partners-open>Training Services Partners</a></div></section>
+    <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Comprehensive training</p><h2>Courses</h2></div>${officialTools}</div><div class="card-grid">${officialCourses.map((item) => card(officialCurriculumFile, item, "courses")).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p></section>
+    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Skilling playlists</h2></div><div class="card-grid">${officialPlaylists.map((item) => card(officialCurriculumFile, item, "playlists")).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search and filters.</p></section>
+    <section class="catalog-section"><div class="section-heading"><p class="kicker">Build your skills</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${officialModules.map((item) => card(officialCurriculumFile, item, "modules")).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p></section>
+    ${catalogFilterDialog(officialItems, ["audience", "level", "modalities"], "official curriculum")}${trainingPartnersDialog}`;
+  await writePage(officialCurriculumFile, shell({ outputFile: officialCurriculumFile, title: "Official Curriculum", breadcrumbs: [{ label: "Official Curriculum" }], avatar: defaultAvatar, content: officialCurriculumContent, bodyClass: "catalog-page", hasModuleCards: true }));
 
   const credentialSearch = catalogSearch("credential-search-input", "Search credentials", "Search credentials");
   const credentialTools = `<div class="catalog-section-tools">${credentialSearch}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;

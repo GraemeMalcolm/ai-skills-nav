@@ -1180,6 +1180,9 @@ const catalogFilterStorageKey = "ai-skills-nav:catalog-filters";
 const filterFields = ["audience", "experience_type", "credential_type", "level", "modalities"];
 const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
+const activeFilterFields = filterDialog
+  ? filterDialog.dataset.filterFields.split(",").filter(Boolean)
+  : filterFields;
 const catalogCards = [...document.querySelectorAll("[data-catalog-card]")];
 const filterCards = [...document.querySelectorAll("[data-filter-card]")];
 const searchForms = [...document.querySelectorAll("[data-site-search]")];
@@ -1209,7 +1212,7 @@ let appliedModalitiesMode = persistedFilterState.modalitiesMode;
 let searchTerms = [];
 let searchActive = false;
 const updateFilterCounts = () => {
-  const selectedCount = Object.values(appliedFilters).reduce((total, values) => total + values.length, 0);
+  const selectedCount = activeFilterFields.reduce((total, field) => total + appliedFilters[field].length, 0);
   document.querySelectorAll("[data-filter-count]").forEach((count) => {
     count.textContent = String(selectedCount);
     count.hidden = selectedCount === 0;
@@ -1244,7 +1247,7 @@ const applyCatalogVisibility = () => {
     if (matches && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
       // Parent cards include distinct metadata values inherited from children.
-      matches = filterFields.every((field) => {
+      matches = activeFilterFields.every((field) => {
         if (field === "modalities" && appliedModalitiesMode === "containing" && !appliedFilters[field].length) return false;
         if (!appliedFilters[field].length) return true;
         const values = JSON.parse(card.dataset[field] || "[]");
@@ -2113,5 +2116,23 @@ if (agent) {
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && agent.classList.contains("open")) setAgentOpen(false);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Training Services Partners information
+// ---------------------------------------------------------------------------
+const trainingPartnersDialog = document.querySelector("[data-training-partners-dialog]");
+
+if (trainingPartnersDialog) {
+  document.querySelector("[data-training-partners-open]")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    trainingPartnersDialog.showModal();
+  });
+  trainingPartnersDialog.querySelectorAll("[data-training-partners-close]").forEach((button) => {
+    button.addEventListener("click", () => trainingPartnersDialog.close());
+  });
+  trainingPartnersDialog.addEventListener("click", (event) => {
+    if (event.target === trainingPartnersDialog) trainingPartnersDialog.close();
   });
 }
