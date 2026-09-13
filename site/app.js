@@ -132,6 +132,23 @@ const profileForm = profileDialog?.querySelector("[data-profile-form]");
 const profileEmail = profileDialog?.querySelector("[data-profile-email]");
 const profileRole = profileDialog?.querySelector("[data-profile-role]");
 let pendingPersonalPlaylistTrigger = null;
+const openProfileAfterReloadKey = "ai-skills-nav:open-profile-after-sign-in";
+const rememberProfileAfterReload = () => {
+  try {
+    sessionStorage.setItem(openProfileAfterReloadKey, "true");
+  } catch {
+    // The profile can still open after sign-in on pages that do not reload.
+  }
+};
+const consumeProfileAfterReload = () => {
+  try {
+    const shouldOpen = sessionStorage.getItem(openProfileAfterReloadKey) === "true";
+    sessionStorage.removeItem(openProfileAfterReloadKey);
+    return shouldOpen;
+  } catch {
+    return false;
+  }
+};
 const profileStorageKey = () => currentAuth
   ? `ai-skills-nav:profile:${encodeURIComponent(currentAuth.email)}`
   : null;
@@ -251,12 +268,11 @@ if (authLink && signInDialog && signInForm && signInEmail && signInPassword && s
     signInDialog.close();
     refreshAuthorization();
     if (document.querySelector("[data-personal-playlists], [data-personalized-plan]")) {
+      rememberProfileAfterReload();
       window.location.reload();
       return;
     }
-    const pendingTrigger = pendingPersonalPlaylistTrigger;
-    pendingPersonalPlaylistTrigger = null;
-    pendingTrigger?.click();
+    profileLink?.click();
   });
 }
 updateAuthLink();
@@ -284,12 +300,18 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole) 
   profileDialog.addEventListener("click", (event) => {
     if (event.target === profileDialog) profileDialog.close();
   });
+  profileDialog.addEventListener("close", () => {
+    const pendingTrigger = pendingPersonalPlaylistTrigger;
+    pendingPersonalPlaylistTrigger = null;
+    pendingTrigger?.click();
+  });
   profileRole.addEventListener("change", () => writeProfile(isAvailableProfileRole() ? profileRole.value : ""));
   profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!profileForm.reportValidity() || !isAvailableProfileRole() || !writeProfile(profileRole.value)) return;
     window.location.assign(profileForm.dataset.personalizedPlanUrl);
   });
+  if (consumeProfileAfterReload()) profileLink.click();
 }
 
 // Personal playlists deliberately live in browser storage: the proof of
