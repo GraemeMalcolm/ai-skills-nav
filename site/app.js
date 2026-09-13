@@ -579,6 +579,24 @@ if (shareDialog) {
 }
 
 // ---------------------------------------------------------------------------
+// Single-page module overview
+// ---------------------------------------------------------------------------
+const contentOverviewDialog = document.querySelector("[data-content-overview-dialog]");
+
+if (contentOverviewDialog) {
+  document.querySelector("[data-content-overview-open]")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    contentOverviewDialog.showModal();
+    contentOverviewDialog.querySelector("[data-content-overview-close]")?.focus();
+  });
+
+  contentOverviewDialog.querySelector("[data-content-overview-close]")?.addEventListener("click", () => contentOverviewDialog.close());
+  contentOverviewDialog.addEventListener("click", (event) => {
+    if (event.target === contentOverviewDialog) contentOverviewDialog.close();
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Module zone pivots and page selection
 // ---------------------------------------------------------------------------
 const moduleSlug = document.body.dataset.moduleSlug;

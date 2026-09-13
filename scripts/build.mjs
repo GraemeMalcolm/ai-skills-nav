@@ -448,6 +448,13 @@ function shareDialog(hidden = false, includeTrigger = true) {
   </dialog>`;
 }
 
+function contentOverviewDialog(outputFile, module) {
+  return `<dialog class="content-overview-dialog" id="content-overview-dialog" data-content-overview-dialog aria-labelledby="content-overview-title">
+    <button class="icon-button content-overview-close" type="button" aria-label="Close" data-content-overview-close>${icon("close")}</button>
+    ${overview(outputFile, module, "modules", "", "", "", "content-overview-title")}
+  </dialog>`;
+}
+
 function signInDialog(outputFile) {
   const logo = relativeUrl(outputFile, path.join(outputRoot, "assets", "microsoft-logo.svg"));
   const playlistsUrl = relativeUrl(outputFile, path.join(outputRoot, "my-playlists", "index.html"));
@@ -490,7 +497,7 @@ function breadcrumbs(outputFile, items = []) {
   }).join("")}</ol></nav>`;
 }
 
-function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, agentOptions = {}, bodyClass = "", module = null, hasModuleCards = false, restrictedTo = [] }) {
+function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, agentOptions = {}, bodyClass = "", module = null, hasModuleCards = false, restrictedTo = [], showContentOverview = false }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const favicon = relativeUrl(outputFile, path.join(outputRoot, "favicon.ico"));
@@ -499,7 +506,15 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   const credentials = relativeUrl(outputFile, path.join(outputRoot, "credentials", "index.html"));
   const isLearningPage = bodyClass.split(/\s+/).includes("learning-page");
   const share = isLearningPage ? shareDialog(false, false) : "";
-  const pageActions = isLearningPage ? `<div class="page-actions">${module ? personalPlaylistTrigger() : ""}${shareTrigger(false, "filter-trigger")}</div>` : "";
+  const learningPageActions = `${module ? personalPlaylistTrigger() : ""}${shareTrigger(false, "filter-trigger")}`;
+  const pageActions = isLearningPage
+    ? showContentOverview
+      ? `<div class="page-actions page-actions-split"><a class="filter-trigger" href="#content-overview-dialog" data-content-overview-open>About this content</a><div class="page-actions-end">${learningPageActions}</div></div>`
+      : `<div class="page-actions">${learningPageActions}</div>`
+    : "";
+  const contentOverview = showContentOverview
+    ? contentOverviewDialog(outputFile, module)
+    : "";
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -521,7 +536,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   <div class="site-frame${sidebar ? " has-sidebar" : ""}">
     ${sidebar}
     ${sidebar ? `<button class="icon-button nav-reveal" type="button" aria-label="Show navigation" aria-expanded="false" data-menu-reveal>${icon("menu")}</button>` : ""}
-    <main id="main-content" class="main-content">${pageActions}${share}${module || hasModuleCards ? personalPlaylistDialog(outputFile, module) : ""}${content}</main>
+    <main id="main-content" class="main-content">${contentOverview}${pageActions}${share}${module || hasModuleCards ? personalPlaylistDialog(outputFile, module) : ""}${content}</main>
   </div>
   ${agentFlyout(outputFile, avatar, agentOptions)}
 </body>
@@ -638,13 +653,13 @@ function catalogFilterDialog(items, fields, subject) {
   </dialog>`;
 }
 
-function overview(outputFile, item, type, action = "", imageDetails = "", footer = "") {
+function overview(outputFile, item, type, action = "", imageDetails = "", footer = "", titleId = "") {
   const isCollection = type === "playlists" || type === "courses";
   return `<article class="overview${isCollection ? " overview-collection" : ""}">
     <div class="overview-media"><div class="overview-image">${thumbnail(outputFile, item, type)}</div>${imageDetails}</div>
     <div class="overview-copy">
       <p class="kicker">${escapeHtml(experienceTypeName(item, type))}</p>
-      <h1>${escapeHtml(item.title)}</h1>
+      <h1${titleId ? ` id="${escapeHtml(titleId)}"` : ""}>${escapeHtml(item.title)}</h1>
       <p class="lede">${escapeHtml(item.description || "")}</p>
       ${metadataLine(item) ? `<p class="metadata">${metadataLine(item)}</p>` : ""}
       ${learningDetails(item)}
@@ -840,7 +855,7 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
   if (pages.length === 1) {
     const rendered = await renderMarkdownPage(pages[0].sourceFile, indexFile, `${module.slug}-${pages[0].slug}`, module.avatarData || defaultAvatar);
     const navigation = pageNavigation(indexFile, navigationContext.previousTarget, navigationContext.nextTarget, { previous: true, next: true });
-    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, restrictedTo: routeRestrictions, content: articleContent(module, pages[0], rendered.html, navigation) }));
+    await writePage(indexFile, shell({ outputFile: indexFile, title: rendered.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page single-page-module", module, restrictedTo: routeRestrictions, showContentOverview: true, content: articleContent(module, pages[0], rendered.html, navigation) }));
     return;
   }
 
