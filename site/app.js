@@ -136,6 +136,29 @@ const profilePlanLink = profileDialog?.querySelector("[data-profile-plan]");
 let pendingPersonalPlaylistTrigger = null;
 let openProfileDialog = () => {};
 const openProfileAfterReloadKey = "ai-skills-nav:open-profile-after-sign-in";
+const pendingPersonalPlaylistKey = "ai-skills-nav:pending-personal-playlist";
+const rememberPendingPersonalPlaylist = () => {
+  if (!currentAuth || !pendingPersonalPlaylistTrigger) return;
+  const dialog = document.querySelector("[data-personal-playlist-dialog]");
+  const moduleName = pendingPersonalPlaylistTrigger.dataset.moduleName || dialog?.dataset.moduleName;
+  const modulePath = pendingPersonalPlaylistTrigger.dataset.modulePath || dialog?.dataset.modulePath;
+  if (!moduleName || !modulePath) return;
+  try {
+    sessionStorage.setItem(pendingPersonalPlaylistKey, JSON.stringify({ email: currentAuth.email, moduleName, modulePath }));
+  } catch {
+    // The user can still add the module by returning to its page.
+  }
+};
+const consumePendingPersonalPlaylist = () => {
+  try {
+    const pending = JSON.parse(sessionStorage.getItem(pendingPersonalPlaylistKey) || "null");
+    sessionStorage.removeItem(pendingPersonalPlaylistKey);
+    if (!currentAuth || pending?.email !== currentAuth.email || typeof pending.moduleName !== "string" || typeof pending.modulePath !== "string") return null;
+    return { moduleName: pending.moduleName, modulePath: pending.modulePath };
+  } catch {
+    return null;
+  }
+};
 const rememberProfileAfterReload = () => {
   try {
     sessionStorage.setItem(openProfileAfterReloadKey, "true");
@@ -235,6 +258,7 @@ if (authLink && signInDialog && signInForm && signInEmail && signInPassword && s
     event.preventDefault();
     if (currentAuth) {
       localStorage.removeItem(authStorageKey);
+      sessionStorage.removeItem(pendingPersonalPlaylistKey);
       currentAuth = null;
       pendingPersonalPlaylistTrigger = null;
       const homeUrl = document.querySelector(".brand")?.href;
@@ -335,6 +359,7 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     initialProfileRole = profileRole.value;
     isNewProfile = false;
     updateProfileSubmit();
+    rememberPendingPersonalPlaylist();
   });
   profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -756,6 +781,16 @@ if (personalPlaylistDialog) {
     goLink.hidden = true;
   };
 
+  const openPersonalPlaylistDialog = (moduleName = "", modulePath = "") => {
+    if (moduleName && modulePath) {
+      personalPlaylistDialog.dataset.moduleName = moduleName;
+      personalPlaylistDialog.dataset.modulePath = modulePath;
+    }
+    resetDialog();
+    populatePlaylists();
+    personalPlaylistDialog.showModal();
+  };
+
   document.querySelectorAll("[data-personal-playlist-open]").forEach((trigger) => trigger.addEventListener("click", (event) => {
     event.preventDefault();
     if (!currentAuth) {
@@ -765,14 +800,10 @@ if (personalPlaylistDialog) {
     }
     // Card buttons identify their module at runtime. The module-page link uses
     // the defaults embedded directly on the shared dialog by the build.
-    if (trigger.dataset.moduleName && trigger.dataset.modulePath) {
-      personalPlaylistDialog.dataset.moduleName = trigger.dataset.moduleName;
-      personalPlaylistDialog.dataset.modulePath = trigger.dataset.modulePath;
-    }
-    resetDialog();
-    populatePlaylists();
-    personalPlaylistDialog.showModal();
+    openPersonalPlaylistDialog(trigger.dataset.moduleName, trigger.dataset.modulePath);
   }));
+  const pendingModule = consumePendingPersonalPlaylist();
+  if (pendingModule) openPersonalPlaylistDialog(pendingModule.moduleName, pendingModule.modulePath);
   select.addEventListener("change", showNewPlaylistFields);
   personalPlaylistDialog.querySelectorAll("[data-personal-playlist-close]").forEach((button) => button.addEventListener("click", () => personalPlaylistDialog.close()));
   personalPlaylistDialog.addEventListener("click", (event) => {
