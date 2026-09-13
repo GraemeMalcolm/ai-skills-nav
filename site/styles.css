@@ -109,6 +109,12 @@ img {
   font-weight: 700;
 }
 
+.primary-navigation {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
 .brand-mark {
   display: grid;
   grid-template-columns: repeat(2, 9px);
@@ -132,13 +138,6 @@ img {
 
 .brand-mark i:nth-child(4) {
   background: #ffba22;
-}
-
-.header-link {
-  color: var(--ink);
-  font-weight: 700;
-  text-decoration-color: var(--violet);
-  text-underline-offset: 4px;
 }
 
 .account-links {
@@ -644,6 +643,10 @@ img {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 24px;
+}
+
+.credential-card-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 300px));
 }
 
 .content-card {
@@ -2180,6 +2183,18 @@ body.access-denied>[data-agent] {
 
 @media (max-width: 600px) {
 
+  .site-header {
+    height: auto;
+    min-height: 68px;
+    padding-block: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .primary-navigation {
+    gap: 16px;
+  }
+
   .catalog-page .catalog-section .section-heading-row {
     align-items: stretch;
     flex-direction: column;
@@ -2191,15 +2206,6 @@ body.access-denied>[data-agent] {
 
   .catalog-page .catalog-search {
     min-width: 0;
-  }
-
-  .home-page .site-header,
-  .catalog-page .site-header {
-    height: auto;
-    min-height: 68px;
-    padding-block: 12px;
-    flex-wrap: wrap;
-    gap: 10px;
   }
 
   .home-page .site-search,

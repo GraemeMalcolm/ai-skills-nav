@@ -8,6 +8,7 @@ duration: 4 days
 experience_type: Microsoft Official Curriculum
 topics:
   - Microsoft Fabric
+  - Data analysis
 audience:
   - Data Analyst
   - Data Engineer

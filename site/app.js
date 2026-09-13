@@ -1177,7 +1177,7 @@ if (personalizedPlanPage && currentAuth) {
 // Home owns the filter dialog; all catalog pages consume the same persisted
 // state so navigation does not reset the user's catalog view.
 const catalogFilterStorageKey = "ai-skills-nav:catalog-filters";
-const filterFields = ["audience", "experience_type", "level", "modalities"];
+const filterFields = ["audience", "experience_type", "credential_type", "level", "modalities"];
 const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
 const catalogCards = [...document.querySelectorAll("[data-catalog-card]")];
@@ -1282,7 +1282,7 @@ const persistFilters = () => {
 function updateAccessAwareFilterOptions() {
   if (!filterForm) return;
   let selectionChanged = false;
-  ["experience_type", "audience"].forEach((field) => {
+  ["experience_type", "credential_type", "audience"].forEach((field) => {
     const accessibleValues = new Set(filterCards
       .filter((card) => canAccess(card.dataset.restrictedTo))
       .flatMap((card) => JSON.parse(card.dataset[field] || "[]"))

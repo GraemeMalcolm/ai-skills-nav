@@ -14,6 +14,7 @@ const contentRoots = [
   { name: "modules", directory: path.join(sourceRoot, "modules") },
   { name: "playlists", directory: path.join(sourceRoot, "playlists") },
   { name: "courses", directory: path.join(sourceRoot, "courses") },
+  { name: "credentials", directory: path.join(sourceRoot, "credentials") },
   { name: "MicrosoftLearning", directory: path.join(root, "MicrosoftLearning") },
   { name: "avatars", directory: path.join(root, "avatars") },
 ];
@@ -494,6 +495,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const favicon = relativeUrl(outputFile, path.join(outputRoot, "favicon.ico"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
+  const credentials = relativeUrl(outputFile, path.join(outputRoot, "credentials", "index.html"));
   const isLearningPage = bodyClass.split(/\s+/).includes("learning-page");
   const share = isLearningPage ? shareDialog(false, false) : "";
   const pageActions = isLearningPage ? `<div class="page-actions">${module ? personalPlaylistTrigger() : ""}${shareTrigger(false, "filter-trigger")}</div>` : "";
@@ -511,7 +513,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
 <body class="${escapeHtml(bodyClass)}"${module ? ` data-module-slug="${escapeHtml(module.slug)}"` : ""} data-restricted-to="${escapeHtml(JSON.stringify(restrictedTo))}">
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a>
+    <div class="primary-navigation"><a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a><a class="filter-trigger" href="${credentials}">Credentials</a></div>
     ${headerExtra}${signInDialog(outputFile)}
   </header>
   ${breadcrumbs(outputFile, breadcrumbItems)}
@@ -552,6 +554,7 @@ function thumbnail(outputFile, item, type) {
 }
 
 function experienceTypeName(item, type) {
+  if (type === "credentials") return item.credential_type || "Credential";
   if (item.experience_type) return item.experience_type;
   if (type === "courses") return "Course";
   if (type === "playlists") return "Skilling Playlist";
@@ -565,7 +568,7 @@ function card(outputFile, item, type, defaultHidden = false) {
   const tooltipId = `${type}-${item.slug}-description`;
   const searchText = item.searchContext.text;
   const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}" data-restricted-to="${escapeHtml(JSON.stringify(item.restricted_to || []))}"`;
-  const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.searchContext.filters.modalities))}" data-level="${escapeHtml(JSON.stringify(item.searchContext.filters.level))}" data-experience_type="${escapeHtml(JSON.stringify(item.searchContext.filters.experience_type))}" data-audience="${escapeHtml(JSON.stringify(item.searchContext.filters.audience))}"`;
+  const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.searchContext.filters.modalities))}" data-level="${escapeHtml(JSON.stringify(item.searchContext.filters.level))}" data-experience_type="${escapeHtml(JSON.stringify(item.searchContext.filters.experience_type))}" data-credential_type="${escapeHtml(JSON.stringify(item.searchContext.filters.credential_type))}" data-audience="${escapeHtml(JSON.stringify(item.searchContext.filters.audience))}"`;
   // Home includes every catalog item so its search can truly search all
   // content, but only the featured subset is visible before a search begins.
   const defaultVisibility = defaultHidden ? " data-default-hidden hidden" : "";
@@ -607,9 +610,10 @@ function catalogFilterDialog(items, fields, subject) {
     modalities: (item) => Array.isArray(item.modalities) ? item.modalities : [],
     level: (item) => [item.level],
     experience_type: (item) => [item.experience_type],
+    credential_type: (item) => [item.credential_type],
     audience: (item) => Array.isArray(item.audience) ? item.audience : [item.audience],
   };
-  const labels = { level: "Level", experience_type: "Experience type", audience: "Audience" };
+  const labels = { level: "Level", experience_type: "Experience type", credential_type: "Credential type", audience: "Audience" };
   return `<dialog class="filter-dialog" id="catalog-filter" data-filter-dialog data-filter-fields="${escapeHtml(fields.join(","))}" aria-labelledby="filter-title">
     <form method="dialog" data-filter-form>
       <header class="filter-dialog-header"><div><p class="kicker">Refine ${escapeHtml(subject)}</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
@@ -664,6 +668,20 @@ function courseOverview(outputFile, course, playlists) {
     ? playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), firstPlaylist)
     : null;
   return overview(outputFile, course, "courses", credentialSection, playlistList, pageNavigation(outputFile, null, nextTarget));
+}
+
+function credentialOverview(outputFile, credential, courses, playlists) {
+  const practiceUrl = credential.practice || credential.pratice;
+  const preparationItems = [
+    ...courses.map((course) => `<li><a href="${relativeUrl(outputFile, path.join(outputRoot, "courses", course.slug, "index.html"))}">Course ${escapeHtml(course.course_number)}: ${escapeHtml(course.title)}</a></li>`),
+    ...playlists.map((playlist) => `<li><a href="${relativeUrl(outputFile, path.join(outputRoot, "playlists", playlist.slug, "index.html"))}">Skilling playlist: ${escapeHtml(playlist.title)}</a></li>`),
+    ...(practiceUrl ? [`<li><a href="${escapeHtml(practiceUrl)}" target="_blank" rel="noopener noreferrer">Practice assessment</a></li>`] : []),
+  ];
+  const preparation = preparationItems.length
+    ? `<ul>${preparationItems.join("")}</ul>`
+    : "<p>No preparation resources are specified.</p>";
+  const details = `<section class="credential"><h2>Prepare for this credential</h2>${preparation}</section>`;
+  return overview(outputFile, credential, "credentials", details);
 }
 
 function pageNavigation(outputFile, previousTarget = null, nextTarget = null, boundaries = {}) {
@@ -771,7 +789,7 @@ async function getModulePages(module) {
   }));
 }
 
-const catalogFilterFields = ["audience", "experience_type", "level", "modalities"];
+const catalogFilterFields = ["audience", "experience_type", "credential_type", "level", "modalities"];
 
 function catalogMetadataValues(item, field) {
   const value = item[field];
@@ -781,7 +799,7 @@ function catalogMetadataValues(item, field) {
 }
 
 function buildSearchContext(item, children = []) {
-  const ownText = [item.title, item.description, item.course_number, item.experience_type, ...catalogMetadataValues(item, "topics")];
+  const ownText = [item.title, item.description, item.course_number, item.experience_type, item.credential_type, ...catalogMetadataValues(item, "topics")];
   item.searchContext = {
     text: [ownText.filter(Boolean).join(" "), ...children.map((child) => child.searchContext.text)]
       .filter(Boolean)
@@ -833,10 +851,11 @@ async function build() {
   await rm(outputRoot, { recursive: true, force: true });
   await mkdir(outputRoot, { recursive: true });
 
-  const [modules, playlists, courses] = await Promise.all([
+  const [modules, playlists, courses, credentials] = await Promise.all([
     loadCollection("modules", "module.yml"),
     loadCollection("playlists", "playlist.yml"),
     loadCollection("courses", "course.yml"),
+    loadCollection("credentials", "credential.yml"),
   ]);
   const avatars = new Map((await loadCollection("avatars", "avatar.yml", root)).map((avatar) => [avatar.slug, avatar]));
   const validatedAvatars = new Set();
@@ -864,7 +883,7 @@ async function build() {
   const defaultAvatar = avatars.get("default");
   if (!defaultAvatar) throw new Error("Missing default avatar");
   await validateAvatar(defaultAvatar, false);
-  for (const [type, items] of [["Module", modules], ["Playlist", playlists], ["Course", courses]]) {
+  for (const [type, items] of [["Module", modules], ["Playlist", playlists], ["Course", courses], ["Credential", credentials]]) {
     for (const item of items) {
       if (item.restricted_to !== undefined && (!Array.isArray(item.restricted_to) || item.restricted_to.length === 0 || item.restricted_to.some((domain) => typeof domain !== "string" || !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i.test(domain)))) {
         throw new Error(`${type} ${item.slug} has invalid restricted_to domains`);
@@ -880,6 +899,7 @@ async function build() {
   modules.sort((a, b) => a.title.localeCompare(b.title));
   playlists.sort((a, b) => a.title.localeCompare(b.title));
   courses.sort((a, b) => a.title.localeCompare(b.title));
+  credentials.sort((a, b) => a.title.localeCompare(b.title));
   const audienceAccess = new Map();
   for (const item of [...courses, ...playlists, ...modules]) {
     for (const audience of Array.isArray(item.audience) ? item.audience : [item.audience]) {
@@ -895,6 +915,7 @@ async function build() {
     .sort((left, right) => left.name.localeCompare(right.name));
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));
   const playlistMap = new Map(playlists.map((playlist) => [playlist.slug, playlist]));
+  const courseMap = new Map(courses.map((course) => [course.slug, course]));
   modules.forEach((module) => buildSearchContext(module));
   for (const playlist of playlists) {
     if (!Array.isArray(playlist.modules)) throw new Error(`Playlist ${playlist.slug} must define modules`);
@@ -914,6 +935,21 @@ async function build() {
     });
     buildSearchContext(course, childPlaylists);
   }
+  for (const credential of credentials) {
+    if (credential.courses !== undefined && !Array.isArray(credential.courses)) throw new Error(`Credential ${credential.slug} courses must be a list`);
+    if (credential.playlists !== undefined && !Array.isArray(credential.playlists)) throw new Error(`Credential ${credential.slug} playlists must be a list`);
+    const childCourses = (credential.courses || []).map((slug) => {
+      const course = courseMap.get(slug);
+      if (!course) throw new Error(`Credential ${credential.slug} references missing course ${slug}`);
+      return course;
+    });
+    const childPlaylists = (credential.playlists || []).map((slug) => {
+      const playlist = playlistMap.get(slug);
+      if (!playlist) throw new Error(`Credential ${credential.slug} references missing playlist ${slug}`);
+      return playlist;
+    });
+    buildSearchContext(credential, [...childCourses, ...childPlaylists]);
+  }
   await Promise.all(modules.map(async (module) => {
     module.pages = await getModulePages(module);
   }));
@@ -925,6 +961,7 @@ async function build() {
   }
 
   const homeFile = path.join(outputRoot, "index.html");
+  const credentialsFile = path.join(outputRoot, "credentials", "index.html");
   const coursesFile = path.join(outputRoot, "courses", "index.html");
   const playlistsFile = path.join(outputRoot, "playlists", "index.html");
   const skillingContentFile = path.join(outputRoot, "skilling-content", "index.html");
@@ -949,6 +986,13 @@ async function build() {
     <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${modules.map((item, index) => card(homeFile, item, "modules", index >= 8)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>
     ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "modalities"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
+
+  const credentialSearch = catalogSearch("credential-search-input", "Search credentials", "Search credentials");
+  const credentialTools = `<div class="catalog-section-tools">${credentialSearch}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
+  const credentialsContent = `<section class="catalog-intro"><p class="kicker">Validate your skills</p><h1>Credentials</h1><p>Verified, high-value credentials that employers trust. Bridging the gap for both technical and business audiences.</p></section>
+    <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Explore the catalog</p><h2>Available credentials</h2></div>${credentialTools}</div><div class="card-grid credential-card-grid">${credentials.map((item) => card(credentialsFile, item, "credentials")).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No credentials match your search and filters.</p></section>
+    ${catalogFilterDialog(credentials, ["credential_type", "audience"], "credentials")}`;
+  await writePage(credentialsFile, shell({ outputFile: credentialsFile, title: "Credentials", breadcrumbs: [{ label: "Credentials" }], avatar: defaultAvatar, content: credentialsContent, bodyClass: "catalog-page" }));
 
   const courseSearch = catalogSearch("course-search-input", "Search courses", "Search courses");
   const courseTools = `<div class="catalog-section-tools">${courseSearch}<a class="filter-trigger" href="${relativeUrl(coursesFile, homeFile)}#catalog-filter">Filter<span class="filter-count" data-filter-count hidden></span></a></div>`;
@@ -1016,6 +1060,14 @@ async function build() {
     <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Saved by you</p><h2>My playlists</h2></div><div class="card-grid" data-plan-playlist-grid></div><p class="filter-empty" data-plan-playlist-empty hidden>You have not created any personal playlists yet.</p></section>
   </div>`;
   await writePage(personalizedPlanFile, shell({ outputFile: personalizedPlanFile, title: "My skilling plan", breadcrumbs: [{ label: "My skilling plan" }], avatar: defaultAvatar, content: personalizedPlanContent, bodyClass: "catalog-page personalized-page", hasModuleCards: true }));
+
+  for (const credential of credentials) {
+    const credentialCourses = (credential.courses || []).map((slug) => courseMap.get(slug));
+    const credentialPlaylists = (credential.playlists || []).map((slug) => playlistMap.get(slug));
+    const credentialFile = path.join(outputRoot, "credentials", credential.slug, "index.html");
+    const credentialBreadcrumbs = [{ label: "Credentials", target: credentialsFile }, { label: credential.title }];
+    await writePage(credentialFile, shell({ outputFile: credentialFile, title: credential.title, breadcrumbs: credentialBreadcrumbs, avatar: defaultAvatar, bodyClass: "learning-page", restrictedTo: credential.restricted_to, content: credentialOverview(credentialFile, credential, credentialCourses, credentialPlaylists) }));
+  }
 
   for (const module of modules) {
     const sidebarFactory = module.pages.length > 1 ? (outputFile, activePage) => moduleSidebar(outputFile, module, module.pages, activePage) : null;
@@ -1129,7 +1181,7 @@ async function build() {
     cp(path.join(root, "templates", "media"), path.join(outputRoot, "content", "templates", "media"), { recursive: true }),
     writeFile(path.join(outputRoot, ".nojekyll"), "", "utf8"),
   ]);
-  console.log(`Built ${modules.length} modules, ${playlists.length} playlists, and ${courses.length} courses in dist/`);
+  console.log(`Built ${modules.length} modules, ${playlists.length} playlists, ${courses.length} courses, and ${credentials.length} credentials in dist/`);
 }
 
 await build();
