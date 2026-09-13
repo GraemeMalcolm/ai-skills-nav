@@ -30,6 +30,8 @@ Catalog source is stored under **[source](./source/)**:
 - Markdown files in each module folder provide page content.
 - `thumbnail.png` and optional `media` folders provide visual assets.
 
+Each build also writes a version-controlled `catalog.json` at the repository root for reporting and other non-HTML consumers, plus an identical `dist/catalog.json` for deployment. The JSON artifact contains the normalized courses, playlists, modules, credentials, relationships, module pages, canonical URLs, aggregate filter values, and the same computed search/filter context embedded in catalog cards. Its `links` section indexes video, lab steps, lab host, and simulation URLs with the module slugs that reference each URL. Course, playlist, and module records include a `last_updated` ISO 8601 timestamp derived from the most recent Git commit affecting a file in that item's source folder; CI checks out full history so these dates remain accurate.
+
 Additionally, reusable lab content and media are stored under `MicrosoftLearning` as a proxy for the current separate MicrosoftLearning GitHub repository for single-source labs. Labs are included in pages via an `INCLUDE` reference.
 
 ## Site experience

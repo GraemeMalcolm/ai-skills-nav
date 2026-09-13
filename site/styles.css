@@ -1497,6 +1497,31 @@ body.access-denied>[data-agent] {
   font-size: .9rem;
 }
 
+.overview-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  margin: 24px 0;
+}
+
+.overview-facts>div {
+  display: grid;
+  gap: 3px;
+}
+
+.overview-facts dt {
+  color: var(--muted);
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.overview-facts dd {
+  margin: 0;
+  font-size: .95rem;
+  font-weight: 650;
+}
+
 .learning-details {
   display: grid;
   gap: 24px;

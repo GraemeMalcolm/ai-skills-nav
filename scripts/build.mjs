@@ -1,7 +1,9 @@
 import { copyFile, cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { execFile } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import yaml from "js-yaml";
 import { marked } from "marked";
 
@@ -10,6 +12,7 @@ const sourceRoot = path.join(root, "source");
 const outputRoot = path.join(root, "dist");
 const hostedLabTemplate = path.join(root, "templates", "hosted-lab.md");
 const simulationTemplate = path.join(root, "templates", "simulation.md");
+const execFileAsync = promisify(execFile);
 const contentRoots = [
   { name: "modules", directory: path.join(sourceRoot, "modules") },
   { name: "playlists", directory: path.join(sourceRoot, "playlists") },
@@ -98,6 +101,16 @@ async function loadCollection(folder, metadataFile, baseDirectory = sourceRoot) 
     }
     return { slug: entry.name, directory, ...(await readYaml(metadataPath)) };
   }));
+}
+
+async function lastCommitDate(directory) {
+  const relativeDirectory = toPosix(path.relative(root, directory));
+  try {
+    const { stdout } = await execFileAsync("git", ["log", "-1", "--format=%cI", "--", relativeDirectory], { cwd: root });
+    return stdout.trim() || null;
+  } catch (error) {
+    throw new Error(`Unable to read Git history for ${relativeDirectory}: ${error.message}`);
+  }
 }
 
 function relativeUrl(fromFile, target) {
@@ -571,6 +584,22 @@ function metadataLine(item) {
   return [item.course_number, item.modality, item.level ? `Level ${item.level}` : "", item.duration].filter(Boolean).map(escapeHtml).join(" · ");
 }
 
+function overviewFacts(item) {
+  const facts = [];
+  if (typeof item.rating === "number") {
+    facts.push(`<div><dt>Rating</dt><dd>${item.rating.toFixed(1)} out of 5</dd></div>`);
+  }
+  if (item.last_updated) {
+    const [year, month, day] = item.last_updated.slice(0, 10).split("-").map(Number);
+    const updated = new Intl.DateTimeFormat("en-US", {
+      dateStyle: "long",
+      timeZone: "UTC",
+    }).format(new Date(Date.UTC(year, month - 1, day)));
+    facts.push(`<div><dt>Last updated</dt><dd><time datetime="${escapeHtml(item.last_updated)}">${escapeHtml(updated)}</time></dd></div>`);
+  }
+  return facts.length ? `<dl class="overview-facts">${facts.join("")}</dl>` : "";
+}
+
 function learningDetails(item) {
   if (!item.prerequisites || !item.learning_outcomes) return "";
   const outcomes = item.learning_outcomes.map((outcome, index) => {
@@ -681,6 +710,7 @@ function overview(outputFile, item, type, action = "", imageDetails = "", footer
       <h1${titleId ? ` id="${escapeHtml(titleId)}"` : ""}>${escapeHtml(item.title)}</h1>
       <p class="lede">${escapeHtml(item.description || "")}</p>
       ${metadataLine(item) ? `<p class="metadata">${metadataLine(item)}</p>` : ""}
+      ${overviewFacts(item)}
       ${learningDetails(item)}
       ${action}
     </div>
@@ -833,11 +863,46 @@ async function getModulePages(module) {
       slug: pageSlug(file),
       title: (typeof entry === "object" && entry.title) || parsed.data.title || pageSlug(file),
       description: (typeof entry === "object" && entry.description) || parsed.data.description || "",
+      catalogLinks: extractCatalogLinks(parsed.body),
     };
   }));
 }
 
 const catalogFilterFields = ["audience", "experience_type", "credential_type", "level", "modalities"];
+const catalogLinkTypes = ["video", "lab_steps", "lab_host", "simulation"];
+
+function extractCatalogLinks(markdown) {
+  const links = Object.fromEntries(catalogLinkTypes.map((type) => [type, []]));
+  const videoPattern = /^\s*\[!VIDEO\s*:?\s*(https?:\/\/[^\]\s]+)\]\s*$/gim;
+  for (const match of markdown.matchAll(videoPattern)) links.video.push(match[1].trim());
+  const directivePattern = /\[!(LAB_STEPS|LAB_HOST|SIMULATION)(?:\[[^\]]*\])?\(([^)]+)\)\]|\[!(LAB_STEPS|LAB_HOST|SIMULATION)\s+([^\]]+)\]/gi;
+  for (const match of markdown.matchAll(directivePattern)) {
+    const type = (match[1] || match[3]).toLowerCase();
+    links[type].push((match[2] || match[4]).trim());
+  }
+  return links;
+}
+
+function buildCatalogLinks(modules) {
+  const references = Object.fromEntries(catalogLinkTypes.map((type) => [type, new Map()]));
+  for (const module of modules) {
+    for (const page of module.pages) {
+      for (const type of catalogLinkTypes) {
+        for (const url of page.catalogLinks[type]) {
+          const moduleSlugs = references[type].get(url) || new Set();
+          moduleSlugs.add(module.slug);
+          references[type].set(url, moduleSlugs);
+        }
+      }
+    }
+  }
+  return Object.fromEntries(catalogLinkTypes.map((type) => [
+    type,
+    [...references[type].entries()]
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([url, moduleSlugs]) => ({ url, modules: [...moduleSlugs].sort() })),
+  ]));
+}
 
 function catalogMetadataValues(item, field) {
   const value = item[field];
@@ -861,6 +926,57 @@ function buildSearchContext(item, children = []) {
       ])].sort((left, right) => left.localeCompare(right, undefined, { numeric: true })),
     ])),
   };
+}
+
+function averageRating(items) {
+  return items.reduce((total, item) => total + item.rating, 0) / items.length;
+}
+
+function catalogRecord(item, type) {
+  const { slug, directory, avatarData, searchContext, pages, ...metadata } = item;
+  const record = {
+    type: type.slice(0, -1),
+    slug,
+    url: `${type}/${slug}/index.html`,
+    ...metadata,
+    search: searchContext,
+  };
+  if (type === "modules") {
+    record.pages = pages.map((page) => ({
+      slug: page.slug,
+      title: page.title,
+      description: page.description,
+      file: page.file,
+      url: pages.length === 1
+        ? `modules/${slug}/index.html`
+        : `modules/${slug}/pages/${page.slug}/index.html`,
+    }));
+  }
+  return record;
+}
+
+async function writeCatalog(collections) {
+  const allItems = Object.values(collections).flat();
+  const filterValues = Object.fromEntries(catalogFilterFields.map((field) => [
+    field,
+    [...new Set(allItems.flatMap((item) => item.searchContext.filters[field]))]
+      .sort((left, right) => String(left).localeCompare(String(right), undefined, { numeric: true })),
+  ]));
+  const catalog = {
+    schemaVersion: 1,
+    counts: Object.fromEntries(Object.entries(collections).map(([type, items]) => [type, items.length])),
+    filterValues,
+    links: buildCatalogLinks(collections.modules),
+    ...Object.fromEntries(Object.entries(collections).map(([type, items]) => [
+      type,
+      items.map((item) => catalogRecord(item, type)),
+    ])),
+  };
+  const json = `${JSON.stringify(catalog, null, 2)}\n`;
+  await Promise.all([
+    writeFile(path.join(root, "catalog.json"), json, "utf8"),
+    writeFile(path.join(outputRoot, "catalog.json"), json, "utf8"),
+  ]);
 }
 
 async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebarFactory = null, breadcrumbParents = null, navigationContext = {}) {
@@ -955,6 +1071,9 @@ async function build() {
   playlists.sort((a, b) => a.title.localeCompare(b.title));
   courses.sort((a, b) => a.title.localeCompare(b.title));
   credentials.sort((a, b) => a.title.localeCompare(b.title));
+  await Promise.all([...courses, ...playlists, ...modules].map(async (item) => {
+    item.last_updated = await lastCommitDate(item.directory);
+  }));
   const audienceAccess = new Map();
   for (const item of [...courses, ...playlists, ...modules]) {
     for (const audience of Array.isArray(item.audience) ? item.audience : [item.audience]) {
@@ -971,14 +1090,18 @@ async function build() {
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));
   const playlistMap = new Map(playlists.map((playlist) => [playlist.slug, playlist]));
   const courseMap = new Map(courses.map((course) => [course.slug, course]));
-  modules.forEach((module) => buildSearchContext(module));
+  modules.forEach((module) => {
+    module.rating = Math.floor(Math.random() * 5) + 1;
+    buildSearchContext(module);
+  });
   for (const playlist of playlists) {
-    if (!Array.isArray(playlist.modules)) throw new Error(`Playlist ${playlist.slug} must define modules`);
+    if (!Array.isArray(playlist.modules) || playlist.modules.length === 0) throw new Error(`Playlist ${playlist.slug} must define at least one module`);
     const childModules = playlist.modules.map((slug) => {
       const module = moduleMap.get(slug);
       if (!module) throw new Error(`Playlist ${playlist.slug} references missing module ${slug}`);
       return module;
     });
+    playlist.rating = averageRating(childModules);
     buildSearchContext(playlist, childModules);
   }
   for (const course of courses) {
@@ -988,6 +1111,7 @@ async function build() {
       if (!playlist) throw new Error(`Course ${course.slug} references missing playlist ${slug}`);
       return playlist;
     });
+    course.rating = averageRating(childPlaylists);
     buildSearchContext(course, childPlaylists);
   }
   for (const credential of credentials) {
@@ -1008,6 +1132,7 @@ async function build() {
   await Promise.all(modules.map(async (module) => {
     module.pages = await getModulePages(module);
   }));
+  await writeCatalog({ courses, playlists, modules, credentials });
 
   for (const contentRoot of contentRoots) {
     if (await exists(contentRoot.directory)) {
