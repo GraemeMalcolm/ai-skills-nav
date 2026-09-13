@@ -29,7 +29,7 @@ const searchStopWords = new Set([
 
   // Generic words used to frame a search request rather than describe its topic.
   "describe", "explain", "find", "get", "getting", "give", "help", "information",
-  "know", "learn", "learning", "look", "looking", "need", "please", "search", "show", "tell", "use", "using",
+  "know", "learn", "learning", "look", "looking", "need", "please", "show", "tell", "use", "using",
   "want",
 ]);
 const normalizeSearchTerms = (value) => value
