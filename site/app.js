@@ -132,6 +132,7 @@ const profileForm = profileDialog?.querySelector("[data-profile-form]");
 const profileEmail = profileDialog?.querySelector("[data-profile-email]");
 const profileRole = profileDialog?.querySelector("[data-profile-role]");
 const profileSubmit = profileDialog?.querySelector("[data-profile-submit]");
+const profilePlanLink = profileDialog?.querySelector("[data-profile-plan]");
 let pendingPersonalPlaylistTrigger = null;
 const openProfileAfterReloadKey = "ai-skills-nav:open-profile-after-sign-in";
 const rememberProfileAfterReload = () => {
@@ -282,13 +283,14 @@ updateAuthOnlyElements();
 updateRestrictedElements();
 updatePageAccess();
 
-if (profileLink && profileDialog && profileForm && profileEmail && profileRole && profileSubmit) {
+if (profileLink && profileDialog && profileForm && profileEmail && profileRole && profileSubmit && profilePlanLink) {
   let initialProfileRole = "";
   let isNewProfile = false;
   const isAvailableProfileRole = () => Array.from(profileRole.options)
     .some((option) => option.value && option.value === profileRole.value);
   const updateProfileSubmit = () => {
     profileSubmit.disabled = !isNewProfile && profileRole.value === initialProfileRole;
+    profilePlanLink.hidden = !isAvailableProfileRole();
   };
   const closeProfileDialog = () => {
     profileDialog.close();
@@ -321,6 +323,15 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     closeProfileDialog();
   });
   profileRole.addEventListener("change", updateProfileSubmit);
+  profilePlanLink.addEventListener("click", (event) => {
+    if (!isAvailableProfileRole() || !writeProfile(profileRole.value)) {
+      event.preventDefault();
+      return;
+    }
+    initialProfileRole = profileRole.value;
+    isNewProfile = false;
+    updateProfileSubmit();
+  });
   profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!profileForm.reportValidity() || !isAvailableProfileRole() || !writeProfile(profileRole.value)) return;

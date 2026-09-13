@@ -477,7 +477,7 @@ function signInDialog(outputFile) {
       <div class="filter-dialog-body profile-fields">
         <div><span>Email address</span><strong data-profile-email></strong></div>
         <label><span>My role</span><select data-profile-role data-profile-audiences="${audienceOptions}" required><option value="">Select a role</option></select></label>
-        <a href="${escapeHtml(personalizedPlanUrl)}">Personalized skilling plan</a>
+        <a href="${escapeHtml(personalizedPlanUrl)}" data-profile-plan hidden>Personalized skilling plan</a>
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-profile-close>Cancel</button><button class="primary-button" type="submit" data-profile-submit disabled>OK</button></footer>
     </form>
