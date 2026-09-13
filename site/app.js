@@ -181,12 +181,11 @@ const profileStorageKey = () => currentAuth
 const readProfile = () => {
   try {
     const storageKey = profileStorageKey();
-    if (!storageKey) return { role: "", exists: false };
-    const storedProfile = localStorage.getItem(storageKey);
-    const profile = JSON.parse(storedProfile || "null");
-    return { role: typeof profile?.role === "string" ? profile.role : "", exists: storedProfile !== null };
+    if (!storageKey) return { role: "" };
+    const profile = JSON.parse(localStorage.getItem(storageKey) || "null");
+    return { role: typeof profile?.role === "string" ? profile.role : "" };
   } catch {
-    return { role: "", exists: false };
+    return { role: "" };
   }
 };
 const writeProfile = (role) => {
@@ -309,13 +308,12 @@ updateRestrictedElements();
 updatePageAccess();
 
 if (profileLink && profileDialog && profileForm && profileEmail && profileRole && profileSubmit && profilePlanLink) {
-  let initialProfileRole = "";
-  let isNewProfile = false;
   const isAvailableProfileRole = () => Array.from(profileRole.options)
     .some((option) => option.value && option.value === profileRole.value);
   const updateProfileSubmit = () => {
-    profileSubmit.disabled = !isNewProfile && profileRole.value === initialProfileRole;
-    profilePlanLink.hidden = !isAvailableProfileRole();
+    const hasRole = isAvailableProfileRole();
+    profileSubmit.disabled = !hasRole;
+    profilePlanLink.hidden = !hasRole;
   };
   const closeProfileDialog = () => {
     profileDialog.close();
@@ -332,8 +330,6 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
       .filter((audience) => audience.unrestricted || audience.domains.includes(currentAuth.domain));
     profileRole.replaceChildren(new Option("Select a role", ""), ...audienceOptions.map((audience) => new Option(audience.name, audience.name)));
     profileRole.value = audienceOptions.some((audience) => audience.name === savedRole) ? savedRole : "";
-    initialProfileRole = profileRole.value;
-    isNewProfile = !profile.exists || Boolean(savedRole && !profileRole.value);
     updateProfileSubmit();
     profileDialog.showModal();
     profileRole.focus();
@@ -356,16 +352,12 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
       event.preventDefault();
       return;
     }
-    initialProfileRole = profileRole.value;
-    isNewProfile = false;
     updateProfileSubmit();
     rememberPendingPersonalPlaylist();
   });
   profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!profileForm.reportValidity() || !isAvailableProfileRole() || !writeProfile(profileRole.value)) return;
-    initialProfileRole = profileRole.value;
-    isNewProfile = false;
     updateProfileSubmit();
     closeProfileDialog();
   });
