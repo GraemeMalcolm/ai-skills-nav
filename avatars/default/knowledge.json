@@ -6,11 +6,12 @@
                 "id": 0,
                 "title": "Content Architecture",
                 "keywords": [
-                    "organization",
+                    "content organization",
                     "architecture",
                     "structure",
                     "hierarchy",
-                    "structured"
+                    "structured",
+                    "catalog"
                 ],
                 "content": "The content on this website is organized into a hierarchy of courses, playlists, and modules. Courses are Microsoft Official Curriculum that group one or more ordered curated playlists. A curated playlist is an ordered collection of related modules selected to help you build skills in a focused sequence. A module is an individual learning experience made up of one or more ordered pages. Modules can include articles, videos, labs, and other learning activities. You can add modules to personal playlists, which are stored only in your current browser and device."
             },
@@ -36,26 +37,38 @@
             },
             {
                 "id": 3,
-                "title": "Personal Playlist",
-                "keywords": [
-                    "personal playlist",
-                    "personal playlists",
-                    "add a module",
-                    "create a playlist",
-                    "custom playlist",
-                    "custom playlists"
-                ],
-                "content": "To add a module to a personal playlist, use the \"+\" button on its card or open it and select the option to add it to a playlist. You can create a new personal playlist or add the module to an existing one. Personal playlists are stored only in your current browser and device, so they are not synchronized to an account or backend service."
-            },
-            {
-                "id": 4,
                 "title": "Course",
                 "keywords": [
                     "course",
                     "courses",
                     "instructor-led"
                 ],
-                "content": "A course is Microsoft Official Curriculum that groups one or more ordered curated playlists. A course can be completed through the linked self-paced learning experiences or delivered as instructor-led training by Microsoft and Microsoft Learning Partners. A course may also identify a related credential."
+                "content": "A course is role-based learning experience that groups one or more ordered curated playlists. A course can be completed through the linked self-paced learning experiences or delivered as instructor-led training. A course may also identify a related credential."
+            },
+            {
+                "id": 4,
+                "title": "Home page layout",
+                "keywords": [
+                    "home page",
+                    "listed content",
+                    "content list",
+                    "cards",
+                    "tiles"
+                ],
+                "content": "The home page shows a subset of courses, playlists, and modules as lists of cards. The content shown on the home page is based on a combination of the most recently updated content and the highest rated content."
+            },
+            {
+                "id": 5,
+                "title": "Search and filter",
+                "keywords": [
+                    "search",
+                    "filter",
+                    "searching",
+                    "filtering",
+                    "finding",
+                    "find"
+                ],
+                "content": "You can search for content using the search box or by asking the 'Nav' avatar to 'find', 'search', 'help me learn ...'. You can also apply filters based on factors like role, level, experience type, and the kinds of content the skilling contains."
             }
         ]
     },
@@ -63,16 +76,23 @@
         "category": "AI agents",
         "documents": [
             {
-                "id": 5,
+                "id": 6,
                 "title": "Curriculum-specialist avatars",
                 "keywords": [
-                    "AI help",
+                    "ai help",
+                    "chatbot",
+                    "ai chat",
                     "learning assistant",
                     "Ask button",
                     "avatar",
-                    "avatars"
+                    "avatars",
+                    "nav",
+                    "anton",
+                    "alex",
+                    "matt",
+                    "inna"
                 ],
-                "content": "Selected courses, curated playlists, and modules include a curriculum-specialist avatar. Use the fixed Ask button to open its learning-assistant chat and ask questions about the relevant subject. These assistants retrieve prepared answers from their curriculum knowledge rather than generating new answers with a language model."
+                "content": "'Nav' is the default AI assistant for the platform. Additionally, selected courses, curated playlists, and modules include a curriculum-specialist avatar. Use the fixed Ask button to open its learning-assistant chat and ask questions about the relevant subject. These assistants retrieve prepared answers from their curriculum knowledge rather than generating new answers with a language model."
             }
         ]
     },
@@ -81,18 +101,16 @@
         "link": "https://aiskillsnavigator.microsoft.com/credentials",
         "documents": [
             {
-                "id": 6,
+                "id": 7,
                 "title": "Credentials",
                 "keywords": [
                     "credential",
-                    "credentials",
-                    "applied skills",
-                    "applied skill"
+                    "credentials"
                 ],
                 "content": "A credential validates skills or expertise. Course pages show credential-preparation information when the course is aligned to a credential. The learning content can help you prepare, but completing content on this website does not itself award the credential."
             },
             {
-                "id": 7,
+                "id": 8,
                 "title": "Certifications",
                 "keywords": [
                     "certification",
@@ -101,6 +119,15 @@
                     "exam"
                 ],
                 "content": "A Microsoft Certification demonstrates expertise associated with a job role or technology and normally has requirements outside this website, such as passing an assessment or exam. Relevant courses and learning experiences can support certification preparation, but completing them does not automatically make you certified."
+            },
+            {
+                "id": 9,
+                "title": "Applied Skills",
+                "keywords": [
+                    "applied skill",
+                    "applied skills"
+                ],
+                "content": "Applied skills are based on completing specific learning content or demonstrating particular skills."
             }
         ]
     },
@@ -108,7 +135,7 @@
         "category": "Instructional Design",
         "documents": [
             {
-                "id": 8,
+                "id": 10,
                 "title": "Audience",
                 "keywords": [
                     "audience",
@@ -119,21 +146,31 @@
                 "content": "Content in this site is designed for specific audiences, reflecting the skills people need to succeed in a given job role. Use the provided filters to find content that is relevant to your role or the role you want to prepare for."
             },
             {
-                "id": 9,
+                "id": 11,
                 "title": "Levels",
                 "keywords": [
                     "level",
                     "levels"
                 ],
                 "content": "Levels indicate the complexity or depth of a learning experience. They help you understand what prior knowledge or skills are expected and what you can expect to gain. Levels span from 100 (novice) to 500 (expert). The level of a course is determined by the levels of its included playlists and modules."
+            },
+            {
+                "id": 12,
+                "title": "Ratings",
+                "keywords": [
+                    "rating",
+                    "ratings",
+                    "stars"
+                ],
+                "content": "Ratings allow signed-in users to provide feedback on the quality and usefulness of learning content. In this proof-of-concept, random ratings are assigned to all learning content when the catalog is built."
             }
         ]
     },
     {
-        "category": "Content Series",
+        "category": "Learning experience",
         "documents": [
             {
-                "id": 10,
+                "id": 13,
                 "title": "Microsoft Official Curriculum",
                 "keywords": [
                     "Microsoft Official Curriculum",
@@ -142,33 +179,90 @@
                 "content": "Microsoft Official Curriculum (MOC) is a series of training materials and courses developed by Microsoft to help individuals gain skills and knowledge in specific Microsoft technologies. MOC courses are often used for certification preparation and are available in various formats, including instructor-led training and online learning. MOC includes a mix of content modalities, including text and graphics, videos, labs, and assessments. MOC courses are designed to provide a comprehensive learning experience and are often updated to reflect the latest Microsoft technologies and best practices."
             },
             {
-                "id": 11,
+                "id": 14,
                 "title": "Microsoft Short Form Skilling",
                 "keywords": [
-                    "Short Form",
-                    "Short Form"
+                    "short-form",
+                    "short form"
                 ],
                 "content": "Microsoft Short Form Skilling is a series of short, focused learning experiences designed to help individuals quickly gain skills and knowledge about relevant topics. These experiences are typically shorter than traditional courses and are designed to provide a quick and efficient way for individuals to learn new skills and stay up-to-date with the latest Microsoft technologies and trends."
             },
             {
-                "id": 12,
-                "title": "Microsoft Labs",
+                "id": 15,
+                "title": "Microsoft Hands-On Skilling",
                 "keywords": [
                     "lab",
                     "labs",
                     "hands-on",
-                    "practice",
-                    "exercises"
+                    "hands on"
                 ],
-                "content": "Microsoft Labs is a series of learning experiences designed to help individuals gain skills and knowledge through hands-on practice, with minimal time spent on conceptual background and theory."
+                "content": "Microsoft Hands-On Skilling is a series of learning experiences designed to help individuals gain skills and knowledge through hands-on practice, with minimal time spent on conceptual background and theory. Other skilling experiences may contain labs combined with other types of content; but Microsoft Hands-On Skilling focuses primarily on practical, hands-on exercises."
             },
             {
-                "id": 13,
-                "title": "Series",
+                "id": 16,
+                "title": "Learning experiences",
                 "keywords": [
-                    "series"
+                    "learning experience",
+                    "learning experiences",
+                    "skilling experience",
+                    "skilling experiences"
                 ],
-                "content": "This site includes content from multiple sources and in a variety of styles. Some specific series are identified on the course, playlist, and module pages. Series can help you find content that is designed to be consumed together or that shares a common style or approach. Common series include Microsoft Official Curriculum, Microsoft Short Form Skilling, and Microsoft Labs."
+                "content": "This site includes content from multiple sources and in a variety of styles. Some specific experiences are identified on the course, playlist, and module pages. Learning experiences can help you find content that is designed to be consumed together or that shares a common style or approach. Common learning experiences include Microsoft Official Curriculum, Microsoft Short Form Skilling, and Microsoft Hands-On Skilling."
+            }
+        ]
+    },
+    {
+        "category": "Personalization",
+        "documents": [
+            {
+                "id": 17,
+                "title": "Authentication",
+                "keywords": [
+                    "sign-in",
+                    "sign in",
+                    "login",
+                    "log in",
+                    "authentication",
+                    "authenticate",
+                    "password"
+                ],
+                "content": "Some functionality requires users to sign-in. In this proof-of-concept app, you can sign in using any email address and any password. No actual authentication takes place, but your sign-in and profile details are persisted in local browser storage."
+            },
+            {
+                "id": 18,
+                "title": "Profile",
+                "keywords": [
+                    "profile",
+                    "user profile",
+                    "account settings",
+                    "preferences"
+                ],
+                "content": "Signed-in users can manage their profile information, which includes their role. The user's role and organizational email domain are used to personalize content recommendations."
+            },
+            {
+                "id": 19,
+                "title": "Personal Playlist",
+                "keywords": [
+                    "personal playlist",
+                    "personal playlists",
+                    "add a module",
+                    "create a playlist",
+                    "custom playlist",
+                    "custom playlists"
+                ],
+                "content": "Signed-in usesr can save their favorite modules in personal playlists. To add a module to a personal playlist, use the \"+\" button on its card or open it and select the option to add it to a playlist. You can create a new personal playlist or add the module to an existing one. Personal playlists are stored only in your current browser and device, so they are not synchronized to an account or backend service."
+            },
+            {
+                "id": 20,
+                "title": "Personal skilling plan",
+                "keywords": [
+                    "personal skilling plan",
+                    "personal skilling plans",
+                    "recommended",
+                    "personalized skilling plan",
+                    "personalized skilling plans"
+                ],
+                "content": "Signed-in users can view a personal skilling plan that includes content that is restricted to their organization (based on their email domain), content that is recommended based on their role, and their personal playlists."
             }
         ]
     }
