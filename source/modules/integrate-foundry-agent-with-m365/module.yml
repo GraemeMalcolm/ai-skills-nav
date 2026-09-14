@@ -5,11 +5,6 @@ modalities:
   - Lab
 level: 200
 duration: 60 minutes
-topics:
-  - Microsoft 365
-  - Microsoft Foundry
-  - Work IQ
-  - AI agents
 audience:
   - Developer
 avatar: anton

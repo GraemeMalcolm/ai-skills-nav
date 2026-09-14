@@ -5,9 +5,6 @@ modalities:
 level: 100
 duration: 15 minutes
 experience_type: Microsoft Short Form Skilling
-topics:
-  - Artificial Intelligence
-  - Microsoft Foundry
 audience:
   - AI Engineer
   - Developer

@@ -5,8 +5,6 @@ modalities:
 level: 100
 duration: 120 minutes
 experience_type: Microsoft Hands-On Skilling
-topics:
-  - Artificial Intelligence
 audience:
   - Developer
 avatar: anton

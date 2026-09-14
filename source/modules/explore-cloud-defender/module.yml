@@ -5,8 +5,6 @@ modalities:
 level: 200
 duration: 30 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Microsoft Defender for Cloud
 audience:
   - Security administrator
 prerequisites:

@@ -6,9 +6,6 @@ description: This course provides a foundational understanding of artificial int
 level: 200
 duration: 1 day
 experience_type: Microsoft Official Curriculum
-topics:
-  - Artificial Intelligence
-  - Microsoft Foundry
 audience:
   - Developer
   - AI Engineer

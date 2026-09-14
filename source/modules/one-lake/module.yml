@@ -3,8 +3,6 @@ description: Browse and connect to data using Microsoft OneLake's unified storag
 level: 400
 duration: 60 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Microsoft Fabric
 audience:
   - Data Analyst
   - Data Engineer

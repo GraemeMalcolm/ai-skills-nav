@@ -5,8 +5,6 @@ duration: 10 minutes
 experience_type: Learning Bite
 restricted_to:
   - microsoft.com
-topics:
-  - Azure
 audience:
   - Technical Sales Specialist
 prerequisites:

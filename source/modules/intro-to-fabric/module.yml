@@ -3,8 +3,6 @@ description: Discover how Microsoft Fabric can meet your enterprise's analytics 
 level: 200
 duration: 60 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Microsoft Fabric
 audience:
   - Data Analyst
   - Data Engineer

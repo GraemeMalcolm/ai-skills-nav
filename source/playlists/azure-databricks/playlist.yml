@@ -3,8 +3,6 @@ description: In this playlist, you'll learn how to get started with Azure Databr
 level: 200
 duration: 40 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Azure Databricks
 audience:
   - Developer
   - Data Scientist

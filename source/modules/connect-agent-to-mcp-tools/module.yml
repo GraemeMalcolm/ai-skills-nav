@@ -6,10 +6,6 @@ modalities:
 level: 200
 duration: 60 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Model Control Protocol (MCP)
-  - Microsoft Foundry
-  - AI agents
 audience:
   - Developer
 avatar: anton

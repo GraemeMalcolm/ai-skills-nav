@@ -3,8 +3,6 @@ description: Learn how Microsoft Fabric unifies analytics storage through OneLak
 level: 400
 duration: 400 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Microsoft Fabric
 audience:
   - Data Analyst
   - Data Engineer

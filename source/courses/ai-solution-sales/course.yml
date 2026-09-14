@@ -5,10 +5,6 @@ duration: 1 day
 restricted_to:
   - microsoft.com
 experience_type: Technical Workshop
-topics:
-  - Microsoft Copilot
-  - Azure
-  - AI Agents
 audience:
   - Technical Sales Specialist
 prerequisites:

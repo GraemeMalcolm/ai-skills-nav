@@ -5,8 +5,6 @@ modalities:
 level: 100
 duration: 30 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Microsoft Copilot
 audience:
   - Business User
 avatar: matt

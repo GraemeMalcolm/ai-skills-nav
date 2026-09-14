@@ -6,8 +6,6 @@ modalities:
 level: 200
 duration: 40 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Azure Databricks
 audience:
   - Developer
   - Data Scientist

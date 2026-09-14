@@ -3,9 +3,6 @@ description: Learn the fundamentals of artificial intelligence (AI) and how to a
 level: 200
 duration: 240 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Microsoft Foundry
-  - AI agents
 audience:
   - Developer
   - AI Engineer

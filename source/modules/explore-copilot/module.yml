@@ -5,9 +5,6 @@ modalities:
 level: 100
 duration: 30 minutes
 experience_type: Microsoft Hands-On Skilling
-topics:
-  - Artificial Intelligence
-  - Microsoft Copilot
 audience:
   - Business User
 avatar: matt

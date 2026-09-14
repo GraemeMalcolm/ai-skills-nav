@@ -3,8 +3,6 @@ description: Evaluate lakehouse, warehouse, and eventhouse options to select the
 level: 300
 duration: 60 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Microsoft Fabric
 audience:
   - Data Analyst
   - Data Engineer

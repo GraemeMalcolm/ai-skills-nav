@@ -5,9 +5,6 @@ modalities:
 level: 100
 duration: 30 minutes
 experience_type: Microsoft Hands-On Skilling
-topics:
-  - Artificial Intelligence
-  - Microsoft AI models
 audience:
   - Business User
 prerequisites:

@@ -4,8 +4,6 @@ level: 200
 duration: 60 minutes
 restricted_to:
   - microsoft.com
-topics:
-  - Azure
 audience:
   - Technical Sales Specialist
 prerequisites:

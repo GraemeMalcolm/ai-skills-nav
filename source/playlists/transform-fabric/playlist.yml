@@ -3,8 +3,6 @@ description: Design dimensional models and apply transformations using dataflows
 level: 400
 duration: 350 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Microsoft Fabric
 audience:
   - Data Analyst
   - Data Engineer

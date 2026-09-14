@@ -6,10 +6,6 @@ modalities:
 level: 200
 duration: 30 minutes
 experience_type: Microsoft Official Curriculum
-topics:
-  - Microsoft Foundry
-  - AI agents
-  - Foundry IQ
 audience:
   - Developer
 avatar: anton
