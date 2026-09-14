@@ -6,8 +6,8 @@ level: 100
 duration: 15 minutes
 experience_type: Microsoft Short Form Skilling
 audience:
-  - AI Engineer
   - Developer
+  - Data Scientist
   - Solution Architect
 prerequisites:
   - Basic familiarity with generative AI and Microsoft AI products

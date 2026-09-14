@@ -8,7 +8,6 @@ duration: 120 minutes
 experience_type: Microsoft Official Curriculum
 audience:
   - Developer
-  - AI Engineer
 avatar: anton
 prerequisites:
   - Foundational cloud computing knowledge and familiarity with Azure concepts

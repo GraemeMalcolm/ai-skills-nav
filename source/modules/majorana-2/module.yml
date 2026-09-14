@@ -6,7 +6,6 @@ level: 100
 duration: 2 minutes
 experience_type: Microsoft Short Form Skilling
 audience:
-  - AI Engineer
   - Developer
   - Solution Architect
 prerequisites:
