@@ -938,7 +938,7 @@ function catalogMetadataValues(item, field) {
 }
 
 function buildSearchContext(item, children = []) {
-  const ownText = [item.title, item.description, item.course_number, item.experience_type, item.credential_type, ...catalogMetadataValues(item, "topics")];
+  const ownText = [item.title, item.description, item.course_number, item.experience_type, item.credential_type, ...catalogMetadataValues(item, "learning_outcomes")];
   item.searchContext = {
     text: [ownText.filter(Boolean).join(" "), ...children.map((child) => child.searchContext.text)]
       .filter(Boolean)
