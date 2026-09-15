@@ -4,9 +4,11 @@ level: 200
 duration: 30 minutes
 assigned_to:
   - microsoft.com
+  - github.com
 role:
   - Developer
   - Solution Architect
+  - Administrator
 prerequisites:
   - General awareness of current Microsoft technology and an interest in Microsoft Build announcements
 learning_outcomes:
