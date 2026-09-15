@@ -1277,7 +1277,7 @@ async function build() {
     </section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><div class="card-grid">${spotlightPlaylists.map((item, index) => card(homeFile, item, "playlists", index >= 4)).join("")}</div></section>
     <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>New and highly rated</h2></div><div class="card-grid" data-module-grid>${homeModules.items.slice(0, homeModules.featuredCount).map((item) => card(homeFile, item, "modules")).join("")}</div><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div></section>
-    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "modalities", "duration"], "the catalog")}`;
+    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
 
   const catalogItems = [
@@ -1289,7 +1289,7 @@ async function build() {
   const catalogTools = `<div class="catalog-section-tools">${catalogSearchForm}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
   const catalogContent = `<section class="catalog-intro"><p class="kicker">Explore all learning</p><h1>Catalog</h1><p>Browse courses, skilling playlists, and individual learning experiences.</p></section>
     <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">All skilling</p><h2>Learning catalog</h2></div>${catalogTools}</div><div class="card-grid catalog-card-grid" data-paged-catalog>${catalogItems.map(({ item, type }) => card(catalogFile, item, type)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No skilling matches your search and filters.</p><nav class="catalog-pagination" aria-label="Catalog pages" data-catalog-pagination></nav></section>
-    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "modalities", "duration"], "the catalog")}`;
+    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
   await writePage(catalogFile, shell({ outputFile: catalogFile, title: "Catalog", breadcrumbs: [{ label: "Catalog" }], avatar: defaultAvatar, content: catalogContent, bodyClass: "catalog-page unified-catalog-page", hasModuleCards: true }));
 
   const officialCurriculumType = "Microsoft Official Curriculum";
@@ -1303,7 +1303,7 @@ async function build() {
   </dialog>`;
   const officialCurriculumContent = `<section class="catalog-intro"><p class="kicker">Microsoft training</p><h1>Official Curriculum</h1><p>Microsoft Official Curriculum training is designed to teach real-world technical skills with Microsoft technologies and prepare you for Microsoft credentials.</p><div class="catalog-intro-action"><a class="filter-trigger" href="#training-partners" data-training-partners-open>Training Services Partners</a></div></section>
     <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Comprehensive training</p><h2>Courses</h2></div>${officialTools}</div><div class="card-grid">${officialCourses.map((item) => card(officialCurriculumFile, item, "courses")).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p></section>
-    ${catalogFilterDialog(officialCourses, ["audience", "level", "modalities", "duration"], "official curriculum")}${trainingPartnersDialog}`;
+    ${catalogFilterDialog(officialCourses, ["audience", "level", "duration", "modalities"], "official curriculum")}${trainingPartnersDialog}`;
   await writePage(officialCurriculumFile, shell({ outputFile: officialCurriculumFile, title: "Official Curriculum", breadcrumbs: [{ label: "Official Curriculum" }], avatar: defaultAvatar, content: officialCurriculumContent, bodyClass: "catalog-page" }));
 
   const credentialSearch = catalogSearch("credential-search-input", "Search credentials", "Search credentials");
