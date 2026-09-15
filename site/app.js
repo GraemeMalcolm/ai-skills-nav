@@ -144,7 +144,6 @@ const profileSubmit = profileDialog?.querySelector("[data-profile-submit]");
 const profilePlanLink = profileDialog?.querySelector("[data-profile-plan]");
 let pendingPersonalPlaylistTrigger = null;
 let openProfileDialog = () => { };
-const openProfileAfterReloadKey = "ai-skills-nav:open-profile-after-sign-in";
 const pendingPersonalPlaylistKey = "ai-skills-nav:pending-personal-playlist";
 const rememberPendingPersonalPlaylist = () => {
   if (!currentAuth || !pendingPersonalPlaylistTrigger) return;
@@ -166,22 +165,6 @@ const consumePendingPersonalPlaylist = () => {
     return { moduleName: pending.moduleName, modulePath: pending.modulePath };
   } catch {
     return null;
-  }
-};
-const rememberProfileAfterReload = () => {
-  try {
-    sessionStorage.setItem(openProfileAfterReloadKey, "true");
-  } catch {
-    // The profile can still open after sign-in on pages that do not reload.
-  }
-};
-const consumeProfileAfterReload = () => {
-  try {
-    const shouldOpen = sessionStorage.getItem(openProfileAfterReloadKey) === "true";
-    sessionStorage.removeItem(openProfileAfterReloadKey);
-    return shouldOpen;
-  } catch {
-    return false;
   }
 };
 const profileStorageKey = () => currentAuth
@@ -315,9 +298,14 @@ if (authLink && signInDialog && signInForm && signInEmail && signInPassword && s
     signInPassword.value = "";
     signInDialog.close();
     refreshAuthorization();
-    if (document.querySelector("[data-personal-playlists], [data-personalized-plan]")) {
-      rememberProfileAfterReload();
-      window.location.reload();
+    if (pendingPersonalPlaylistTrigger) {
+      const trigger = pendingPersonalPlaylistTrigger;
+      pendingPersonalPlaylistTrigger = null;
+      trigger.click();
+      return;
+    }
+    if (readProfile().role && profilePlanLink?.href) {
+      window.location.assign(profilePlanLink.href);
       return;
     }
     openProfileDialog();
@@ -451,7 +439,6 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     closeProfileDialog();
     if (document.querySelector("[data-personalized-plan]")) window.location.reload();
   });
-  if (consumeProfileAfterReload()) openProfileDialog();
 }
 
 // Personal playlists deliberately live in browser storage: the proof of
