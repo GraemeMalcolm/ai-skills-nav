@@ -523,6 +523,7 @@ const createPersonalPlaylistCard = (playlist, href, thumbnailSource) => {
   description.textContent = playlist.description || "A personal playlist.";
   body.append(title, description);
   card.append(imageContainer, body);
+  card.dataset.searchText = normalizeSearchTerms([playlist.name, playlist.description, ...playlist.modules.map((module) => module.name)].join(" ")).join(" ");
   return card;
 };
 
@@ -1405,12 +1406,6 @@ const paginatePlanGrid = (grid, requestedPage = planGridPages.get(grid) || 1) =>
   const pagination = grid.parentElement.querySelector("[data-plan-pagination]");
   if (!pagination) return;
   const cards = [...grid.children].filter((card) => card.matches("[data-catalog-card], .content-card"));
-  cards.forEach((card) => {
-    if (card.dataset.planPageHidden === "true") {
-      card.hidden = false;
-      delete card.dataset.planPageHidden;
-    }
-  });
   const eligibleCards = cards.filter((card) => !card.hidden);
   const pageCount = Math.ceil(eligibleCards.length / planPageSize);
   const page = Math.min(Math.max(1, requestedPage), Math.max(1, pageCount));
@@ -1443,6 +1438,10 @@ const paginatePlanGrid = (grid, requestedPage = planGridPages.get(grid) || 1) =>
 
 const paginatePlanGrids = () => {
   personalizedPlanPage?.querySelectorAll("[data-plan-paged-grid]").forEach((grid) => paginatePlanGrid(grid));
+};
+
+const resetPlanGridPages = () => {
+  personalizedPlanPage?.querySelectorAll("[data-plan-paged-grid]").forEach((grid) => planGridPages.set(grid, 1));
 };
 
 if (personalizedPlanPage && !currentAuth) {
@@ -1503,6 +1502,7 @@ const catalogEmptyState = document.querySelector("[data-catalog-empty]");
 const roleSkillingEmptyState = document.querySelector("[data-role-skilling-empty]");
 const otherRoleSkillingEmptyState = document.querySelector("[data-other-role-skilling-empty]");
 const organizationSkillingEmptyState = document.querySelector("[data-organization-skilling-empty]");
+const planPlaylistEmptyState = document.querySelector("[data-plan-playlist-empty]");
 const emptyFilters = () => Object.fromEntries(filterFields.map((field) => [field, []]));
 const readPersistedFilters = () => {
   try {
@@ -1602,7 +1602,14 @@ const applyCatalogVisibility = () => {
   let visibleRoleItems = 0;
   let visibleOtherRoleItems = 0;
   let visibleOrganizationItems = 0;
+  let visiblePlanPlaylists = 0;
   const matchingPagedCards = [];
+  if (isPersonalizedPage) {
+    personalizedPlanPage.querySelectorAll('[data-plan-page-hidden="true"]').forEach((card) => {
+      card.hidden = false;
+      delete card.dataset.planPageHidden;
+    });
+  }
   catalogCards.forEach((card) => {
     let matches = canAccess(card.dataset.restrictedTo) && matchesSearch(card);
     if (matches && isPersonalizedPage) {
@@ -1652,6 +1659,13 @@ const applyCatalogVisibility = () => {
     if (matches && card.closest("[data-organization-skilling-grid]")) visibleOrganizationItems++;
     if (matches) visibleCatalogItems++;
   });
+  if (isPersonalizedPage) {
+    personalizedPlanPage.querySelectorAll("[data-plan-playlist-grid] > .content-card").forEach((card) => {
+      const matches = matchesCatalogTerms(card, searchTerms);
+      card.hidden = !matches;
+      if (matches) visiblePlanPlaylists++;
+    });
+  }
   renderCatalogPagination(matchingPagedCards);
   if (moduleEmptyState) moduleEmptyState.hidden = visibleModules !== 0;
   if (playlistEmptyState) playlistEmptyState.hidden = visiblePlaylists !== 0;
@@ -1660,6 +1674,12 @@ const applyCatalogVisibility = () => {
   if (roleSkillingEmptyState) roleSkillingEmptyState.hidden = visibleRoleItems !== 0;
   if (otherRoleSkillingEmptyState) otherRoleSkillingEmptyState.hidden = visibleOtherRoleItems !== 0;
   if (organizationSkillingEmptyState) organizationSkillingEmptyState.hidden = visibleOrganizationItems !== 0;
+  if (planPlaylistEmptyState) {
+    planPlaylistEmptyState.textContent = searchActive
+      ? "No personal playlists match your search."
+      : "You have not created any personal playlists yet.";
+    planPlaylistEmptyState.hidden = visiblePlanPlaylists !== 0;
+  }
   if (isPersonalizedPage) paginatePlanGrids();
 };
 
@@ -1708,6 +1728,7 @@ if (searchForms.length && catalogCards.length) {
       form.querySelector("[data-search-clear]").hidden = !searchActive;
     });
     currentCatalogPage = 1;
+    resetPlanGridPages();
     applyCatalogVisibility();
   };
 
@@ -1850,6 +1871,7 @@ if (filterDialog && filterForm && filterCards.length) {
       return;
     }
     currentCatalogPage = 1;
+    resetPlanGridPages();
     applyCatalogVisibility();
   };
 
