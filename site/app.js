@@ -1385,9 +1385,16 @@ if (personalPlaylistsPage) {
 
   const playlists = importSharedPlaylist(readPersonalPlaylists());
   const selectedPlaylist = playlists.find((playlist) => playlist.id === playlistId);
-  // An absent or stale query-string ID intentionally falls back to the list.
-  if (playlistId && selectedPlaylist) renderPlaylist(selectedPlaylist, playlists);
-  else renderCollection();
+  if (playlistId && selectedPlaylist) {
+    personalPlaylistsPage.hidden = false;
+    document.querySelector("[data-personalized-plan]")?.setAttribute("hidden", "");
+    renderPlaylist(selectedPlaylist, playlists);
+  } else {
+    personalPlaylistsPage.closest(".site-frame").classList.remove("has-sidebar");
+    document.querySelector("[data-sidebar]")?.remove();
+    document.querySelector("[data-menu-reveal]")?.remove();
+    document.querySelector("[data-menu-close]")?.remove();
+  }
 }
 
 const personalizedPlanPage = document.querySelector("[data-personalized-plan]");

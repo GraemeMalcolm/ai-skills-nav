@@ -1310,7 +1310,35 @@ async function build() {
     ${catalogFilterDialog(credentials, ["credential_type", "audience"], "credentials")}`;
   await writePage(credentialsFile, shell({ outputFile: credentialsFile, title: "Credentials", breadcrumbs: [{ label: "Credentials" }], avatar: defaultAvatar, content: credentialsContent, bodyClass: "catalog-page" }));
 
-  const personalizedPlanContent = `<div data-personalized-plan data-auth-only data-playlists-url="${relativeUrl(personalizedPlanFile, personalizedPlanFile)}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}">
+  const moduleCatalog = modules.map((module) => ({
+    id: module.slug,
+    name: module.title,
+    description: module.description || "",
+    restrictedTo: module.restricted_to,
+    path: `modules/${module.slug}/index.html`,
+    pages: (module.pages.length > 1 ? module.pages : []).map((page) => ({
+      name: page.title,
+      path: `modules/${module.slug}/pages/${page.slug}/index.html`,
+    })),
+    thumbnail: relativeUrl(personalizedPlanFile, path.join(outputRoot, "content", "modules", module.slug, "thumbnail.png")),
+  }));
+  const personalPlaylistDetail = `<div class="page-actions">${shareTrigger(true, "filter-trigger")}</div>${shareDialog(true, false)}
+  <div data-personal-playlists data-auth-only data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}" hidden></div>
+  <dialog class="filter-dialog personal-playlist-dialog" data-new-personal-playlist-dialog aria-labelledby="new-personal-playlist-title">
+    <form data-new-personal-playlist-form>
+      <header class="filter-dialog-header"><div><p class="kicker">Personal collection</p><h2 id="new-personal-playlist-title">New personal playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-new-personal-playlist-close>${icon("close")}</button></header>
+      <div class="filter-dialog-body personal-playlist-fields"><label><span>Name</span><input type="text" maxlength="80" data-new-personal-playlist-name></label><label><span>Description</span><textarea rows="3" maxlength="300" data-new-personal-playlist-description></textarea></label><p class="personal-playlist-status" data-new-personal-playlist-status role="status" aria-live="polite" hidden></p></div>
+      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-new-personal-playlist-close>Cancel</button><button class="primary-button" type="submit">Create playlist</button></footer>
+    </form>
+  </dialog>
+  <dialog class="filter-dialog personal-playlist-dialog" data-edit-personal-playlist-dialog aria-labelledby="edit-personal-playlist-title">
+    <form data-edit-personal-playlist-form>
+      <header class="filter-dialog-header"><div><p class="kicker">Personal collection</p><h2 id="edit-personal-playlist-title">Edit playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-edit-personal-playlist-close>${icon("close")}</button></header>
+      <div class="filter-dialog-body personal-playlist-fields"><label><span>Name</span><input type="text" maxlength="80" data-edit-personal-playlist-name></label><label><span>Description</span><textarea rows="3" maxlength="300" data-edit-personal-playlist-description></textarea></label><p class="personal-playlist-status" data-edit-personal-playlist-status role="status" aria-live="polite" hidden></p></div>
+      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-edit-personal-playlist-close>Cancel</button><button class="primary-button" type="submit">Save changes</button></footer>
+    </form>
+  </dialog>`;
+  const personalizedPlanContent = `${personalPlaylistDetail}<div data-personalized-plan data-auth-only data-playlists-url="${relativeUrl(personalizedPlanFile, personalizedPlanFile)}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}">
     <section class="catalog-intro"><p class="kicker">Personalized learning</p><h1>My skilling plan</h1><p data-personalized-summary>Your recommendations are based on the role selected in your profile.</p></section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Recommended learning</p><h2>Skilling for my role</h2></div><div class="card-grid" data-plan-paged-grid data-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-role-skilling-empty hidden>No skilling items match your selected role.</p><nav class="catalog-pagination" aria-label="Skilling for my role pages" data-plan-pagination></nav></section>
     <section class="catalog-section alt" data-other-role-skilling-section hidden><div class="section-heading"><p class="kicker">Explore related paths</p><h2>Skilling for other roles of interest</h2></div><div class="card-grid" data-plan-paged-grid data-other-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-other-role-skilling-empty hidden>No skilling items match your other roles of interest.</p><nav class="catalog-pagination" aria-label="Skilling for other roles pages" data-plan-pagination></nav></section>
@@ -1321,7 +1349,8 @@ async function build() {
     ].join("")}</div><p class="filter-empty" data-organization-skilling-empty hidden>No skilling items are assigned to your organization.</p><nav class="catalog-pagination" aria-label="Skilling for my organization pages" data-plan-pagination></nav></section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Saved by you</p><h2>My playlists</h2></div><div class="card-grid" data-plan-paged-grid data-plan-playlist-grid></div><p class="filter-empty" data-plan-playlist-empty hidden>You have not created any personal playlists yet.</p><nav class="catalog-pagination" aria-label="My playlists pages" data-plan-pagination></nav></section>
   </div>`;
-  await writePage(personalizedPlanFile, shell({ outputFile: personalizedPlanFile, title: "My skilling plan", breadcrumbs: [{ label: "My skilling plan" }], avatar: defaultAvatar, content: personalizedPlanContent, bodyClass: "catalog-page personalized-page", hasModuleCards: true }));
+  const personalPlaylistSidebar = `<aside class="sidebar" data-sidebar><div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div><nav aria-label="Playlist" data-personal-playlist-navigation></nav></aside><div class="sidebar-scrim" data-menu-close></div>`;
+  await writePage(personalizedPlanFile, shell({ outputFile: personalizedPlanFile, title: "My skilling plan", breadcrumbs: [{ label: "My skilling plan" }], sidebar: personalPlaylistSidebar, avatar: defaultAvatar, content: personalizedPlanContent, bodyClass: "catalog-page personalized-page", hasModuleCards: true }));
 
   for (const credential of credentials) {
     const credentialCourses = (credential.courses || []).map((slug) => courseMap.get(slug));
