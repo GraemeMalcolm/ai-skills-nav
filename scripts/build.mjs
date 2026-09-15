@@ -716,10 +716,6 @@ function homepageItems(items, recentCount, ratingCount) {
   };
 }
 
-function randomItems(items, count) {
-  return [...items].sort(() => Math.random() - 0.5).slice(0, count);
-}
-
 function catalogSearch(inputId, label, placeholder) {
   return `<form class="site-search catalog-search" role="search" data-site-search><label class="sr-only" for="${escapeHtml(inputId)}">${escapeHtml(label)}</label><input id="${escapeHtml(inputId)}" type="search" name="query" placeholder="${escapeHtml(placeholder)}" autocomplete="off"><button type="submit">Search</button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></form>`;
 }
@@ -1252,7 +1248,9 @@ async function build() {
     "Secure cloud resources with Microsoft Defender",
     "Connect agents to MCP tools",
   ]));
-  const spotlightPlaylists = randomItems(playlists, 4);
+  const spotlightPlaylists = [...playlists]
+    .sort((left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0) || left.title.localeCompare(right.title))
+    .slice(0, 4);
   const homeModules = homepageItems(modules, 4, 4);
   const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p class="home-hero-summary">Choose a curated path or jump straight into a learning experience.</p>
       <form class="hero-search" role="search" data-site-search data-catalog-url="${relativeUrl(homeFile, catalogFile)}" data-animated-search data-search-hints="${heroSearchHints}">
