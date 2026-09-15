@@ -607,6 +607,13 @@ img {
   margin-top: 28px;
 }
 
+.home-catalog-link {
+  display: flex;
+  justify-content: center;
+  padding: 0 max(6vw, 28px) 84px;
+  background: var(--surface-soft);
+}
+
 .filter-trigger {
   display: inline-flex;
   align-items: center;
@@ -648,6 +655,47 @@ img {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 24px;
+}
+
+.catalog-card-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.catalog-pagination {
+  min-height: 36px;
+  margin-top: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.catalog-pagination[hidden] {
+  visibility: hidden;
+}
+
+.catalog-pagination button {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  font: 700 .8rem "Manrope", sans-serif;
+  cursor: pointer;
+}
+
+.catalog-pagination button[aria-current="page"] {
+  border-color: var(--violet);
+  background: var(--violet);
+  color: white;
+}
+
+.catalog-pagination button:disabled {
+  opacity: .45;
+  cursor: default;
 }
 
 .credential-card-grid {
@@ -2540,6 +2588,10 @@ body.access-denied>[data-agent] {
 }
 
 @media (max-width: 1180px) and (min-width: 861px) {
+  .catalog-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .site-frame.has-sidebar .overview {
     grid-template-columns: 1fr;
     min-height: 0;
@@ -2552,6 +2604,10 @@ body.access-denied>[data-agent] {
 }
 
 @media (max-width: 860px) {
+  .catalog-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .site-header {
     padding: 0 18px;
   }
@@ -2632,6 +2688,10 @@ body.access-denied>[data-agent] {
 }
 
 @media (max-width: 600px) {
+
+  .catalog-card-grid {
+    grid-template-columns: 1fr;
+  }
 
   .site-header {
     height: auto;

@@ -1439,6 +1439,10 @@ const activeFilterFields = filterDialog
 const catalogCards = [...document.querySelectorAll("[data-catalog-card]")];
 const filterCards = [...document.querySelectorAll("[data-filter-card]")];
 const searchForms = [...document.querySelectorAll("[data-site-search]")];
+const pagedCatalog = document.querySelector("[data-paged-catalog]");
+const catalogPagination = document.querySelector("[data-catalog-pagination]");
+const catalogPageSize = 12;
+let currentCatalogPage = Math.max(1, Number.parseInt(new URLSearchParams(location.search).get("page") || "1", 10) || 1);
 const courseEmptyState = document.querySelector("[data-course-empty]");
 const moduleEmptyState = document.querySelector("[data-module-empty]");
 const playlistEmptyState = document.querySelector("[data-playlist-empty]");
@@ -1483,6 +1487,53 @@ const matchesCatalogTerms = (card, terms) => {
 };
 const matchesSearch = (card) => matchesCatalogTerms(card, searchTerms);
 
+const updateCatalogUrl = () => {
+  if (!pagedCatalog) return;
+  const url = new URL(location.href);
+  const query = searchForms[0]?.querySelector('input[type="search"]')?.value.trim() || "";
+  if (query) url.searchParams.set("q", query);
+  else url.searchParams.delete("q");
+  if (currentCatalogPage > 1) url.searchParams.set("page", String(currentCatalogPage));
+  else url.searchParams.delete("page");
+  history.replaceState(null, "", url);
+};
+
+const renderCatalogPagination = (matchingCards) => {
+  if (!pagedCatalog || !catalogPagination) return;
+  const pageCount = Math.ceil(matchingCards.length / catalogPageSize);
+  currentCatalogPage = Math.min(Math.max(1, currentCatalogPage), Math.max(1, pageCount));
+  const pageStart = (currentCatalogPage - 1) * catalogPageSize;
+  matchingCards.forEach((card, index) => {
+    card.hidden = index < pageStart || index >= pageStart + catalogPageSize;
+  });
+  catalogPagination.replaceChildren();
+  catalogPagination.hidden = pageCount <= 1;
+  if (pageCount <= 1) {
+    updateCatalogUrl();
+    return;
+  }
+  const addButton = (label, page, options = {}) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = label;
+    button.disabled = options.disabled || false;
+    if (options.current) button.setAttribute("aria-current", "page");
+    if (options.label) button.setAttribute("aria-label", options.label);
+    button.addEventListener("click", () => {
+      currentCatalogPage = page;
+      applyCatalogVisibility();
+      pagedCatalog.closest(".catalog-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    catalogPagination.append(button);
+  };
+  addButton("Previous", currentCatalogPage - 1, { disabled: currentCatalogPage === 1 });
+  for (let page = 1; page <= pageCount; page++) {
+    addButton(String(page), page, { current: page === currentCatalogPage, label: `Page ${page}` });
+  }
+  addButton("Next", currentCatalogPage + 1, { disabled: currentCatalogPage === pageCount });
+  updateCatalogUrl();
+};
+
 const applyCatalogVisibility = () => {
   const homeLimits = { courses: 4, playlists: 4, modules: 8 };
   const homeVisible = { courses: 0, playlists: 0, modules: 0 };
@@ -1498,6 +1549,7 @@ const applyCatalogVisibility = () => {
   let visibleRoleItems = 0;
   let visibleOtherRoleItems = 0;
   let visibleOrganizationItems = 0;
+  const matchingPagedCards = [];
   catalogCards.forEach((card) => {
     let matches = canAccess(card.dataset.restrictedTo) && matchesSearch(card);
     if (matches && isPersonalizedPage) {
@@ -1538,6 +1590,7 @@ const applyCatalogVisibility = () => {
       if (matches) homeVisible[type]++;
     }
     card.hidden = !matches;
+    if (matches && card.closest("[data-paged-catalog]")) matchingPagedCards.push(card);
     if (matches && card.dataset.catalogType === "modules") visibleModules++;
     if (matches && card.dataset.catalogType === "playlists") visiblePlaylists++;
     if (matches && card.dataset.catalogType === "courses") visibleCourses++;
@@ -1546,6 +1599,7 @@ const applyCatalogVisibility = () => {
     if (matches && card.closest("[data-organization-skilling-grid]")) visibleOrganizationItems++;
     if (matches) visibleCatalogItems++;
   });
+  renderCatalogPagination(matchingPagedCards);
   if (moduleEmptyState) moduleEmptyState.hidden = visibleModules !== 0;
   if (playlistEmptyState) playlistEmptyState.hidden = visiblePlaylists !== 0;
   if (courseEmptyState) courseEmptyState.hidden = visibleCourses !== 0;
@@ -1600,6 +1654,7 @@ if (searchForms.length && catalogCards.length) {
       form.querySelector('input[type="search"]').value = value;
       form.querySelector("[data-search-clear]").hidden = !searchActive;
     });
+    currentCatalogPage = 1;
     applyCatalogVisibility();
   };
 
@@ -1609,6 +1664,12 @@ if (searchForms.length && catalogCards.length) {
     if (!input || !clear) return;
     form.addEventListener("submit", (event) => {
       event.preventDefault();
+      if (form.dataset.catalogUrl) {
+        const catalogUrl = new URL(form.dataset.catalogUrl, location.href);
+        if (input.value.trim()) catalogUrl.searchParams.set("q", input.value.trim());
+        location.assign(catalogUrl);
+        return;
+      }
       setSearch(input.value);
     });
     clear.addEventListener("click", () => {
@@ -1616,6 +1677,8 @@ if (searchForms.length && catalogCards.length) {
       input.focus();
     });
   });
+  const initialQuery = pagedCatalog ? new URLSearchParams(location.search).get("q") || "" : "";
+  if (initialQuery) setSearch(initialQuery);
 }
 
 const animatedSearch = document.querySelector("[data-animated-search]");
@@ -1724,6 +1787,7 @@ if (filterDialog && filterForm && filterCards.length) {
     persistFilters();
     syncModalitiesControls();
     updateFilterCounts();
+    currentCatalogPage = 1;
     applyCatalogVisibility();
   };
 
