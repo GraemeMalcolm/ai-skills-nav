@@ -131,10 +131,19 @@ const profileDialog = document.querySelector("[data-profile-dialog]");
 const profileForm = profileDialog?.querySelector("[data-profile-form]");
 const profileEmail = profileDialog?.querySelector("[data-profile-email]");
 const profileRole = profileDialog?.querySelector("[data-profile-role]");
+const profileOtherRoles = profileDialog?.querySelector("[data-profile-other-roles]");
+const profileOtherRolesTrigger = profileOtherRoles?.querySelector("[data-profile-other-roles-trigger]");
+const profileOtherRolesSummary = profileOtherRoles?.querySelector("[data-profile-other-roles-summary]");
+const profileOtherRolesOptions = profileOtherRoles?.querySelector("[data-profile-other-roles-options]");
+const profileRangeControl = profileDialog?.querySelector("[data-profile-range-control]");
+const profileLevelMin = profileDialog?.querySelector("[data-profile-level-min]");
+const profileLevelMax = profileDialog?.querySelector("[data-profile-level-max]");
+const profileLevelMinOutput = profileDialog?.querySelector("[data-profile-level-min-output]");
+const profileLevelMaxOutput = profileDialog?.querySelector("[data-profile-level-max-output]");
 const profileSubmit = profileDialog?.querySelector("[data-profile-submit]");
 const profilePlanLink = profileDialog?.querySelector("[data-profile-plan]");
 let pendingPersonalPlaylistTrigger = null;
-let openProfileDialog = () => {};
+let openProfileDialog = () => { };
 const openProfileAfterReloadKey = "ai-skills-nav:open-profile-after-sign-in";
 const pendingPersonalPlaylistKey = "ai-skills-nav:pending-personal-playlist";
 const rememberPendingPersonalPlaylist = () => {
@@ -178,21 +187,33 @@ const consumeProfileAfterReload = () => {
 const profileStorageKey = () => currentAuth
   ? `ai-skills-nav:profile:${encodeURIComponent(currentAuth.email)}`
   : null;
+const proficiencyLevels = [100, 200, 300, 400, 500];
+const validProficiencyLevel = (value, fallback) => {
+  const level = Number(value);
+  return proficiencyLevels.includes(level) ? level : fallback;
+};
 const readProfile = () => {
   try {
     const storageKey = profileStorageKey();
-    if (!storageKey) return { role: "" };
+    if (!storageKey) return { role: "", otherRoles: [], levelMin: 100, levelMax: 500 };
     const profile = JSON.parse(localStorage.getItem(storageKey) || "null");
-    return { role: typeof profile?.role === "string" ? profile.role : "" };
+    const savedMin = validProficiencyLevel(profile?.levelMin, 100);
+    const savedMax = validProficiencyLevel(profile?.levelMax, 500);
+    return {
+      role: typeof profile?.role === "string" ? profile.role : "",
+      otherRoles: Array.isArray(profile?.otherRoles) ? profile.otherRoles.filter((role) => typeof role === "string") : [],
+      levelMin: Math.min(savedMin, savedMax),
+      levelMax: Math.max(savedMin, savedMax),
+    };
   } catch {
-    return { role: "" };
+    return { role: "", otherRoles: [], levelMin: 100, levelMax: 500 };
   }
 };
-const writeProfile = (role) => {
+const writeProfile = (role, otherRoles = [], levelMin = 100, levelMax = 500) => {
   try {
     const storageKey = profileStorageKey();
     if (!storageKey) return false;
-    localStorage.setItem(storageKey, JSON.stringify({ role }));
+    localStorage.setItem(storageKey, JSON.stringify({ role, otherRoles, levelMin, levelMax }));
     return true;
   } catch {
     return false;
@@ -307,9 +328,51 @@ updateAuthOnlyElements();
 updateRestrictedElements();
 updatePageAccess();
 
-if (profileLink && profileDialog && profileForm && profileEmail && profileRole && profileSubmit && profilePlanLink) {
+if (profileLink && profileDialog && profileForm && profileEmail && profileRole && profileOtherRoles && profileOtherRolesTrigger && profileOtherRolesSummary && profileOtherRolesOptions && profileRangeControl && profileLevelMin && profileLevelMax && profileLevelMinOutput && profileLevelMaxOutput && profileSubmit && profilePlanLink) {
   const isAvailableProfileRole = () => Array.from(profileRole.options)
     .some((option) => option.value && option.value === profileRole.value);
+  const selectedOtherRoles = () => [...profileOtherRolesOptions.querySelectorAll('input[type="checkbox"]:checked')]
+    .map((input) => input.value);
+  const closeOtherRoles = () => {
+    profileOtherRolesOptions.hidden = true;
+    profileOtherRolesTrigger.setAttribute("aria-expanded", "false");
+  };
+  const updateOtherRolesSummary = () => {
+    const selectedCount = selectedOtherRoles().length;
+    profileOtherRolesSummary.textContent = selectedCount
+      ? `${selectedCount} role${selectedCount === 1 ? "" : "s"} selected`
+      : "Select roles";
+  };
+  const updateOtherRoleOptions = (audienceOptions, selectedRoles = selectedOtherRoles()) => {
+    profileOtherRolesOptions.replaceChildren(...audienceOptions
+      .filter((audience) => audience.name !== profileRole.value)
+      .map((audience) => {
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+        const text = document.createElement("span");
+        input.type = "checkbox";
+        input.value = audience.name;
+        input.checked = selectedRoles.includes(audience.name);
+        text.textContent = audience.name;
+        label.append(input, text);
+        return label;
+      }));
+    profileOtherRolesTrigger.disabled = !isAvailableProfileRole();
+    closeOtherRoles();
+    updateOtherRolesSummary();
+  };
+  const updateProficiencyRange = (changedInput) => {
+    if (changedInput === profileLevelMin && Number(profileLevelMin.value) > Number(profileLevelMax.value)) {
+      profileLevelMax.value = profileLevelMin.value;
+    }
+    if (changedInput === profileLevelMax && Number(profileLevelMax.value) < Number(profileLevelMin.value)) {
+      profileLevelMin.value = profileLevelMax.value;
+    }
+    profileLevelMinOutput.value = profileLevelMin.value;
+    profileLevelMaxOutput.value = profileLevelMax.value;
+    profileRangeControl.style.setProperty("--range-start", `${(Number(profileLevelMin.value) - 100) / 4}%`);
+    profileRangeControl.style.setProperty("--range-end", `${(500 - Number(profileLevelMax.value)) / 4}%`);
+  };
   const updateProfileSubmit = () => {
     const hasRole = isAvailableProfileRole();
     profileSubmit.disabled = !hasRole;
@@ -330,6 +393,10 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
       .filter((audience) => audience.unrestricted || audience.domains.includes(currentAuth.domain));
     profileRole.replaceChildren(new Option("Select a role", ""), ...audienceOptions.map((audience) => new Option(audience.name, audience.name)));
     profileRole.value = audienceOptions.some((audience) => audience.name === savedRole) ? savedRole : "";
+    updateOtherRoleOptions(audienceOptions, profile.otherRoles);
+    profileLevelMin.value = String(profile.levelMin);
+    profileLevelMax.value = String(profile.levelMax);
+    updateProficiencyRange();
     updateProfileSubmit();
     profileDialog.showModal();
     profileRole.focus();
@@ -346,9 +413,31 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     event.preventDefault();
     closeProfileDialog();
   });
-  profileRole.addEventListener("change", updateProfileSubmit);
+  profileOtherRolesTrigger.addEventListener("click", () => {
+    const open = profileOtherRolesOptions.hidden;
+    profileOtherRolesOptions.hidden = !open;
+    profileOtherRolesTrigger.setAttribute("aria-expanded", String(open));
+  });
+  profileOtherRolesOptions.addEventListener("change", updateOtherRolesSummary);
+  profileDialog.addEventListener("click", (event) => {
+    if (!profileOtherRoles.contains(event.target)) closeOtherRoles();
+  });
+  profileOtherRoles.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || profileOtherRolesOptions.hidden) return;
+    event.preventDefault();
+    closeOtherRoles();
+    profileOtherRolesTrigger.focus();
+  });
+  profileLevelMin.addEventListener("input", () => updateProficiencyRange(profileLevelMin));
+  profileLevelMax.addEventListener("input", () => updateProficiencyRange(profileLevelMax));
+  profileRole.addEventListener("change", () => {
+    const audienceOptions = JSON.parse(profileRole.dataset.profileAudiences || "[]")
+      .filter((audience) => audience.unrestricted || audience.domains.includes(currentAuth.domain));
+    updateOtherRoleOptions(audienceOptions);
+    updateProfileSubmit();
+  });
   profilePlanLink.addEventListener("click", (event) => {
-    if (!isAvailableProfileRole() || !writeProfile(profileRole.value)) {
+    if (!isAvailableProfileRole() || !writeProfile(profileRole.value, selectedOtherRoles(), Number(profileLevelMin.value), Number(profileLevelMax.value))) {
       event.preventDefault();
       return;
     }
@@ -357,9 +446,10 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
   });
   profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    if (!profileForm.reportValidity() || !isAvailableProfileRole() || !writeProfile(profileRole.value)) return;
+    if (!profileForm.reportValidity() || !isAvailableProfileRole() || !writeProfile(profileRole.value, selectedOtherRoles(), Number(profileLevelMin.value), Number(profileLevelMax.value))) return;
     updateProfileSubmit();
     closeProfileDialog();
+    if (document.querySelector("[data-personalized-plan]")) window.location.reload();
   });
   if (consumeProfileAfterReload()) openProfileDialog();
 }
@@ -1307,14 +1397,18 @@ if (personalizedPlanPage && !currentAuth) {
 }
 
 if (personalizedPlanPage && currentAuth) {
-  let role = readProfile().role;
+  const profile = readProfile();
+  let role = profile.role;
+  let otherRoles = profile.otherRoles;
   const accessibleRoles = new Set([...personalizedPlanPage.querySelectorAll("[data-role-skilling-grid] [data-catalog-card]")]
     .filter((card) => canAccess(card.dataset.restrictedTo))
     .flatMap((card) => JSON.parse(card.dataset.audience || "[]")));
   if (role && !accessibleRoles.has(role)) {
     role = "";
-    writeProfile("");
   }
+  otherRoles = otherRoles.filter((otherRole) => otherRole !== role && accessibleRoles.has(otherRole));
+  writeProfile(role, otherRoles, profile.levelMin, profile.levelMax);
+  personalizedPlanPage.querySelector("[data-other-role-skilling-section]").hidden = otherRoles.length === 0;
   const summary = personalizedPlanPage.querySelector("[data-personalized-summary]");
   summary.textContent = role
     ? `Recommendations for your role: ${role}.`
@@ -1350,6 +1444,7 @@ const moduleEmptyState = document.querySelector("[data-module-empty]");
 const playlistEmptyState = document.querySelector("[data-playlist-empty]");
 const catalogEmptyState = document.querySelector("[data-catalog-empty]");
 const roleSkillingEmptyState = document.querySelector("[data-role-skilling-empty]");
+const otherRoleSkillingEmptyState = document.querySelector("[data-other-role-skilling-empty]");
 const organizationSkillingEmptyState = document.querySelector("[data-organization-skilling-empty]");
 const emptyFilters = () => Object.fromEntries(filterFields.map((field) => [field, []]));
 const readPersistedFilters = () => {
@@ -1393,12 +1488,15 @@ const applyCatalogVisibility = () => {
   const homeVisible = { courses: 0, playlists: 0, modules: 0 };
   const isHomePage = document.body.classList.contains("home-page");
   const isPersonalizedPage = document.body.classList.contains("personalized-page");
-  const selectedRole = isPersonalizedPage ? readProfile().role : "";
+  const profile = isPersonalizedPage ? readProfile() : { role: "", otherRoles: [], levelMin: 100, levelMax: 500 };
+  const selectedRole = profile.role;
+  const selectedOtherRoles = profile.otherRoles;
   let visibleModules = 0;
   let visiblePlaylists = 0;
   let visibleCourses = 0;
   let visibleCatalogItems = 0;
   let visibleRoleItems = 0;
+  let visibleOtherRoleItems = 0;
   let visibleOrganizationItems = 0;
   catalogCards.forEach((card) => {
     let matches = canAccess(card.dataset.restrictedTo) && matchesSearch(card);
@@ -1408,7 +1506,13 @@ const applyCatalogVisibility = () => {
         matches = Boolean(currentAuth && domains.includes(currentAuth.domain));
       } else {
         const audiences = JSON.parse(card.dataset.audience || "[]");
-        matches = Boolean(selectedRole) && audiences.includes(selectedRole);
+        matches = card.closest("[data-other-role-skilling-grid]")
+          ? selectedOtherRoles.some((role) => audiences.includes(role))
+          : Boolean(selectedRole) && audiences.includes(selectedRole);
+      }
+      if (matches) {
+        const level = Number(card.dataset.contentLevel);
+        matches = level >= profile.levelMin && level <= profile.levelMax;
       }
     }
     if (matches && card.matches("[data-filter-card]")) {
@@ -1433,6 +1537,7 @@ const applyCatalogVisibility = () => {
     if (matches && card.dataset.catalogType === "playlists") visiblePlaylists++;
     if (matches && card.dataset.catalogType === "courses") visibleCourses++;
     if (matches && card.closest("[data-role-skilling-grid]")) visibleRoleItems++;
+    if (matches && card.closest("[data-other-role-skilling-grid]")) visibleOtherRoleItems++;
     if (matches && card.closest("[data-organization-skilling-grid]")) visibleOrganizationItems++;
     if (matches) visibleCatalogItems++;
   });
@@ -1441,6 +1546,7 @@ const applyCatalogVisibility = () => {
   if (courseEmptyState) courseEmptyState.hidden = visibleCourses !== 0;
   if (catalogEmptyState) catalogEmptyState.hidden = visibleCatalogItems !== 0;
   if (roleSkillingEmptyState) roleSkillingEmptyState.hidden = visibleRoleItems !== 0;
+  if (otherRoleSkillingEmptyState) otherRoleSkillingEmptyState.hidden = visibleOtherRoleItems !== 0;
   if (organizationSkillingEmptyState) organizationSkillingEmptyState.hidden = visibleOrganizationItems !== 0;
 };
 

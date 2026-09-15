@@ -508,6 +508,21 @@ function signInDialog(outputFile) {
       <div class="filter-dialog-body profile-fields">
         <div><span>Email address</span><strong data-profile-email></strong></div>
         <label><span>My role</span><select data-profile-role data-profile-audiences="${audienceOptions}" required><option value="">Select a role</option></select></label>
+        <div class="profile-multiselect" data-profile-other-roles>
+          <span id="profile-other-roles-label">Other roles I'm interested in</span>
+          <button class="profile-multiselect-trigger" type="button" aria-labelledby="profile-other-roles-label profile-other-roles-summary" aria-expanded="false" data-profile-other-roles-trigger disabled><span id="profile-other-roles-summary" data-profile-other-roles-summary>Select roles</span></button>
+          <div class="profile-multiselect-options" role="group" aria-labelledby="profile-other-roles-label" data-profile-other-roles-options hidden></div>
+        </div>
+        <fieldset class="profile-proficiency" data-profile-proficiency>
+          <legend>Proficiency level</legend>
+          <div class="profile-proficiency-values"><span>Minimum <output for="profile-level-min" data-profile-level-min-output>100</output></span><span>Maximum <output for="profile-level-max" data-profile-level-max-output>500</output></span></div>
+          <div class="profile-range-control" data-profile-range-control>
+            <div class="profile-range-track" aria-hidden="true"></div>
+            <input id="profile-level-min" type="range" min="100" max="500" step="100" value="100" aria-label="Minimum proficiency level" data-profile-level-min>
+            <input id="profile-level-max" type="range" min="100" max="500" step="100" value="500" aria-label="Maximum proficiency level" data-profile-level-max>
+          </div>
+          <div class="profile-range-ticks" aria-hidden="true"><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span></div>
+        </fieldset>
         <a href="${escapeHtml(personalizedPlanUrl)}" data-profile-plan hidden>Personalized skilling plan</a>
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-profile-close>Cancel</button><button class="primary-button" type="submit" data-profile-submit disabled>OK</button></footer>
@@ -650,7 +665,7 @@ function card(outputFile, item, type, defaultHidden = false, instance = "") {
     : path.join(outputRoot, type, item.slug, "index.html");
   const tooltipId = `${type}-${item.slug}${instance ? `-${instance}` : ""}-description`;
   const searchText = item.searchContext.text;
-  const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}" data-restricted-to="${escapeHtml(JSON.stringify(item.restricted_to || []))}"`;
+  const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}" data-restricted-to="${escapeHtml(JSON.stringify(item.restricted_to || []))}" data-content-level="${escapeHtml(item.level)}"`;
   const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.searchContext.filters.modalities))}" data-level="${escapeHtml(JSON.stringify(item.searchContext.filters.level))}" data-experience_type="${escapeHtml(JSON.stringify(item.searchContext.filters.experience_type))}" data-credential_type="${escapeHtml(JSON.stringify(item.searchContext.filters.credential_type))}" data-audience="${escapeHtml(JSON.stringify(item.searchContext.filters.audience))}"`;
   // Home includes every catalog item so its search can truly search all
   // content, but only the featured subset is visible before a search begins.
@@ -1286,6 +1301,7 @@ async function build() {
   const personalizedPlanContent = `<div data-personalized-plan data-auth-only data-playlists-url="${relativeUrl(personalizedPlanFile, personalPlaylistsFile)}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}">
     <section class="catalog-intro"><p class="kicker">Personalized learning</p><h1>My skilling plan</h1><p data-personalized-summary>Your recommendations are based on the role selected in your profile.</p></section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Recommended learning</p><h2>Skilling for my role</h2></div><div class="card-grid" data-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-role-skilling-empty hidden>No skilling items match your selected role.</p></section>
+    <section class="catalog-section alt" data-other-role-skilling-section hidden><div class="section-heading"><p class="kicker">Explore related paths</p><h2>Skilling for other roles of interest</h2></div><div class="card-grid" data-other-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-other-role-skilling-empty hidden>No skilling items match your other roles of interest.</p></section>
     <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Available to your organization</p><h2>Skilling for my organization</h2></div><div class="card-grid" data-organization-skilling-grid>${[
       ...courses.filter((item) => item.restricted_to.length).map((item) => card(personalizedPlanFile, item, "courses", false, "organization")),
       ...playlists.filter((item) => item.restricted_to.length).map((item) => card(personalizedPlanFile, item, "playlists", false, "organization")),

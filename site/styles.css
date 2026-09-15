@@ -1131,6 +1131,181 @@ body.access-denied>[data-agent] {
   color: var(--ink);
 }
 
+.profile-multiselect {
+  position: relative;
+}
+
+.profile-multiselect-trigger {
+  position: relative;
+  min-height: 42px;
+  padding: 8px 38px 8px 10px;
+  border: 1px solid #9d9892;
+  border-radius: 3px;
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.profile-multiselect-trigger::after {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  content: "";
+  transform: translateY(-70%) rotate(45deg);
+}
+
+.profile-multiselect-trigger:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.profile-multiselect-options {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  display: grid;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid #9d9892;
+  border-radius: 3px;
+  background: var(--surface);
+  box-shadow: 0 8px 22px rgb(0 0 0 / 14%);
+}
+
+.profile-multiselect-options[hidden] {
+  display: none;
+}
+
+.profile-multiselect-options label {
+  display: flex;
+  grid-template-columns: none;
+  align-items: center;
+  gap: 9px;
+  min-height: 36px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.profile-multiselect-options label:hover {
+  background: #f2f0eb;
+}
+
+.profile-multiselect-options input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--violet);
+}
+
+.profile-proficiency {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.profile-proficiency legend {
+  margin-bottom: 8px;
+  padding: 0;
+  font-weight: 700;
+}
+
+.profile-proficiency-values,
+.profile-range-ticks {
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-proficiency-values span {
+  color: var(--muted);
+  font-size: .875rem;
+  font-weight: 400;
+}
+
+.profile-proficiency-values output {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.profile-range-control {
+  --range-start: 0%;
+  --range-end: 0%;
+  position: relative;
+  height: 28px;
+}
+
+.profile-range-track {
+  position: absolute;
+  top: 12px;
+  right: 0;
+  left: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #c8c3bc var(--range-start), var(--violet) var(--range-start), var(--violet) calc(100% - var(--range-end)), #c8c3bc calc(100% - var(--range-end)));
+}
+
+.profile-range-control input[type="range"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.profile-range-control input[type="range"]::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  appearance: none;
+  background: var(--violet);
+  box-shadow: 0 0 0 1px var(--violet);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.profile-range-control input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  background: var(--violet);
+  box-shadow: 0 0 0 1px var(--violet);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.profile-range-ticks {
+  color: var(--muted);
+  font-size: .75rem;
+}
+
+.profile-range-ticks span {
+  width: 32px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.profile-range-ticks span:first-child {
+  text-align: left;
+}
+
+.profile-range-ticks span:last-child {
+  text-align: right;
+}
+
 .rating-fields {
   display: grid;
   gap: 24px;
