@@ -1567,7 +1567,7 @@ const applyCatalogVisibility = () => {
         matches = level >= profile.levelMin && level <= profile.levelMax;
       }
     }
-    if (matches && card.matches("[data-filter-card]")) {
+    if (matches && !isHomePage && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
       // Parent cards include distinct metadata values inherited from children.
       matches = activeFilterFields.every((field) => {

@@ -1249,8 +1249,7 @@ async function build() {
     "Connect agents to MCP tools",
   ]));
   const spotlightPlaylists = [...playlists]
-    .sort((left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0) || left.title.localeCompare(right.title))
-    .slice(0, 4);
+    .sort((left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0) || left.title.localeCompare(right.title));
   const homeModules = homepageItems(modules, 4, 4);
   const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p class="home-hero-summary">Choose a curated path or jump straight into a learning experience.</p>
       <form class="hero-search" role="search" data-site-search data-catalog-url="${relativeUrl(homeFile, catalogFile)}" data-animated-search data-search-hints="${heroSearchHints}">
@@ -1259,7 +1258,7 @@ async function build() {
         <button class="search-clear" type="button" data-search-clear hidden>Clear</button>
       </form>
     </section>
-    <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}#catalog-filter">Filter</a></div><div class="card-grid">${spotlightPlaylists.map((item) => card(homeFile, item, "playlists")).join("")}</div></section>
+    <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}#catalog-filter">Filter</a></div><div class="card-grid">${spotlightPlaylists.map((item, index) => card(homeFile, item, "playlists", index >= 4)).join("")}</div></section>
     <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>New and Highly rated</h2></div><div class="card-grid" data-module-grid>${homeModules.items.slice(0, homeModules.featuredCount).map((item) => card(homeFile, item, "modules")).join("")}</div></section>
     <div class="home-catalog-link"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div>`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
