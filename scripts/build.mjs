@@ -730,7 +730,7 @@ function catalogFilterDialog(items, fields, subject) {
     credential_type: (item) => [item.credential_type],
     audience: (item) => Array.isArray(item.audience) ? item.audience : [item.audience],
   };
-  const labels = { level: "Level", experience_type: "Experience type", credential_type: "Credential type", audience: "Audience" };
+  const labels = { level: "Level", experience_type: "Experience type", credential_type: "Credential type", audience: "Role" };
   return `<dialog class="filter-dialog" id="catalog-filter" data-filter-dialog data-filter-fields="${escapeHtml(fields.join(","))}" aria-labelledby="filter-title">
     <form method="dialog" data-filter-form>
       <header class="filter-dialog-header"><div><p class="kicker">Refine ${escapeHtml(subject)}</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
