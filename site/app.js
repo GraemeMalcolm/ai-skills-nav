@@ -1619,6 +1619,7 @@ const persistFilters = () => {
 
 function updateAccessAwareFilterOptions() {
   if (!filterForm) return;
+  if (document.body.classList.contains("home-page")) return;
   let selectionChanged = false;
   ["experience_type", "credential_type", "audience"].forEach((field) => {
     const accessibleValues = new Set(filterCards
@@ -1782,11 +1783,20 @@ if (filterDialog && filterForm && filterCards.length) {
   };
 
   const applyFilters = () => {
-    appliedModalitiesMode = modalitiesMode() || "all";
-    appliedFilters = readFilters();
+    const nextModalitiesMode = modalitiesMode() || "all";
+    const nextFilters = readFilters();
+    const changed = appliedModalitiesMode !== nextModalitiesMode
+      || filterFields.some((field) => JSON.stringify(appliedFilters[field]) !== JSON.stringify(nextFilters[field]));
+    appliedModalitiesMode = nextModalitiesMode;
+    appliedFilters = nextFilters;
     persistFilters();
     syncModalitiesControls();
     updateFilterCounts();
+    const homeCatalogUrl = document.querySelector("[data-filter-open][data-catalog-url]")?.dataset.catalogUrl;
+    if (changed && homeCatalogUrl) {
+      location.assign(new URL(homeCatalogUrl, location.href));
+      return;
+    }
     currentCatalogPage = 1;
     applyCatalogVisibility();
   };
