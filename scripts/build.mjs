@@ -720,8 +720,8 @@ function catalogSearch(inputId, label, placeholder) {
   return `<form class="site-search catalog-search" role="search" data-site-search><label class="sr-only" for="${escapeHtml(inputId)}">${escapeHtml(label)}</label><input id="${escapeHtml(inputId)}" type="search" name="query" placeholder="${escapeHtml(placeholder)}" autocomplete="off"><button type="submit">Search</button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></form>`;
 }
 
-function filterOptions(name, values, label) {
-  return `<fieldset class="filter-group"><legend>${escapeHtml(label)}</legend><div class="filter-options">${values.map((value) => `<label><input type="checkbox" name="${escapeHtml(name)}" value="${escapeHtml(value)}"><span>${escapeHtml(value)}</span></label>`).join("")}</div></fieldset>`;
+function filterOptions(name, values, label, accessByValue = new Map()) {
+  return `<fieldset class="filter-group"><legend>${escapeHtml(label)}</legend><div class="filter-options">${values.map((value) => `<label data-option-access-domains="${escapeHtml(JSON.stringify(accessByValue.get(value) || []))}"><input type="checkbox" name="${escapeHtml(name)}" value="${escapeHtml(value)}"><span>${escapeHtml(value)}</span></label>`).join("")}</div></fieldset>`;
 }
 
 function modalityFilterOptions(values) {
@@ -763,11 +763,21 @@ function catalogFilterDialog(items, fields, subject) {
     audience: (item) => Array.isArray(item.audience) ? item.audience : [item.audience],
   };
   const labels = { level: "Level", experience_type: "Experience type", credential_type: "Credential type", audience: "Role" };
+  const optionAccess = (field, values) => new Map(values.map((value) => {
+    const owners = items.filter((item) => catalogMetadataValues(item, field).includes(value));
+    const unrestricted = owners.some((item) => !item.restricted_to.length);
+    const domains = unrestricted ? [] : [...new Set(owners.flatMap((item) => item.restricted_to))].sort();
+    return [value, domains];
+  }));
   return `<dialog class="filter-dialog" id="catalog-filter" data-filter-dialog data-filter-fields="${escapeHtml(fields.join(","))}" aria-labelledby="filter-title">
     <form method="dialog" data-filter-form>
       <header class="filter-dialog-header"><div><p class="kicker">Refine ${escapeHtml(subject)}</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
       <div class="filter-dialog-body">
-        ${fields.map((field) => field === "modalities" ? modalityFilterOptions(uniqueValues(selectors[field]).map(String)) : field === "duration" ? durationFilterOptions() : field === "level" ? levelFilterOptions() : filterOptions(field, uniqueValues(selectors[field]).map(String), labels[field])).join("")}
+        ${fields.map((field) => {
+          if (field === "duration") return durationFilterOptions();
+          const values = uniqueValues(selectors[field]).map(String);
+          return field === "modalities" ? modalityFilterOptions(values) : field === "level" ? levelFilterOptions() : filterOptions(field, values, labels[field], optionAccess(field, values));
+        }).join("")}
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-filter-clear>Clear all</button><button class="primary-button" type="submit" value="apply">Apply filters</button></footer>
     </form>

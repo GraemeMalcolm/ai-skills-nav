@@ -1619,16 +1619,14 @@ const persistFilters = () => {
 
 function updateAccessAwareFilterOptions() {
   if (!filterForm) return;
-  if (document.body.classList.contains("home-page")) return;
   let selectionChanged = false;
   ["experience_type", "credential_type", "audience"].forEach((field) => {
-    const accessibleValues = new Set(filterCards
-      .filter((card) => canAccess(card.dataset.restrictedTo))
-      .flatMap((card) => JSON.parse(card.dataset[field] || "[]"))
-      .filter(Boolean));
+    const accessibleValues = new Set();
     filterForm.querySelectorAll(`input[name="${field}"]`).forEach((input) => {
-      const available = accessibleValues.has(input.value);
-      input.closest("label").hidden = !available;
+      const label = input.closest("label");
+      const available = canAccess(label.dataset.optionAccessDomains);
+      label.hidden = !available;
+      if (available) accessibleValues.add(input.value);
       if (!available && input.checked) {
         input.checked = false;
         selectionChanged = true;
