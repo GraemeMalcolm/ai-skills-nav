@@ -1393,7 +1393,11 @@ const paginatePlanGrid = (grid, requestedPage = planGridPages.get(grid) || 1) =>
   const pagination = grid.parentElement.querySelector("[data-plan-pagination]");
   if (!pagination) return;
   const cards = [...grid.children].filter((card) => card.matches("[data-catalog-card], .content-card"));
-  const eligibleCards = cards.filter((card) => !card.hidden);
+  const eligibleCards = cards.filter((card) => !card.hidden || card.dataset.planPageHidden === "true");
+  eligibleCards.forEach((card) => {
+    card.hidden = false;
+    delete card.dataset.planPageHidden;
+  });
   const pageCount = Math.ceil(eligibleCards.length / planPageSize);
   const page = Math.min(Math.max(1, requestedPage), Math.max(1, pageCount));
   planGridPages.set(grid, page);
