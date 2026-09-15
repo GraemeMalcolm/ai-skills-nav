@@ -5,7 +5,7 @@ modalities:
 level: 100
 duration: 12 minutes
 experience_type: Video-based training
-audience:
+role:
   - Developer
   - Solution Architect
 prerequisites:

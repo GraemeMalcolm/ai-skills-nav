@@ -379,17 +379,17 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
       ? `${selectedCount} role${selectedCount === 1 ? "" : "s"} selected`
       : "Select roles";
   };
-  const updateOtherRoleOptions = (audienceOptions, selectedRoles = selectedOtherRoles()) => {
-    profileOtherRolesOptions.replaceChildren(...audienceOptions
-      .filter((audience) => audience.name !== profileRole.value)
-      .map((audience) => {
+  const updateOtherRoleOptions = (roleOptions, selectedRoles = selectedOtherRoles()) => {
+    profileOtherRolesOptions.replaceChildren(...roleOptions
+      .filter((role) => role.name !== profileRole.value)
+      .map((role) => {
         const label = document.createElement("label");
         const input = document.createElement("input");
         const text = document.createElement("span");
         input.type = "checkbox";
-        input.value = audience.name;
-        input.checked = selectedRoles.includes(audience.name);
-        text.textContent = audience.name;
+        input.value = role.name;
+        input.checked = selectedRoles.includes(role.name);
+        text.textContent = role.name;
         label.append(input, text);
         return label;
       }));
@@ -413,11 +413,11 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     profileEmail.textContent = currentAuth.email;
     const profile = readProfile();
     const savedRole = profile.role;
-    const audienceOptions = JSON.parse(profileRole.dataset.profileAudiences || "[]")
-      .filter((audience) => audience.unrestricted || audience.domains.includes(currentAuth.domain));
-    profileRole.replaceChildren(new Option("Select a role", ""), ...audienceOptions.map((audience) => new Option(audience.name, audience.name)));
-    profileRole.value = audienceOptions.some((audience) => audience.name === savedRole) ? savedRole : "";
-    updateOtherRoleOptions(audienceOptions, profile.otherRoles);
+    const roleOptions = JSON.parse(profileRole.dataset.profileRoles || "[]")
+      .filter((role) => role.unrestricted || role.domains.includes(currentAuth.domain));
+    profileRole.replaceChildren(new Option("Select a role", ""), ...roleOptions.map((role) => new Option(role.name, role.name)));
+    profileRole.value = roleOptions.some((role) => role.name === savedRole) ? savedRole : "";
+    updateOtherRoleOptions(roleOptions, profile.otherRoles);
     updateProfileSubmit();
     profileDialog.showModal();
     profileRole.focus();
@@ -450,9 +450,9 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     profileOtherRolesTrigger.focus();
   });
   profileRole.addEventListener("change", () => {
-    const audienceOptions = JSON.parse(profileRole.dataset.profileAudiences || "[]")
-      .filter((audience) => audience.unrestricted || audience.domains.includes(currentAuth.domain));
-    updateOtherRoleOptions(audienceOptions);
+    const roleOptions = JSON.parse(profileRole.dataset.profileRoles || "[]")
+      .filter((role) => role.unrestricted || role.domains.includes(currentAuth.domain));
+    updateOtherRoleOptions(roleOptions);
     updateProfileSubmit();
   });
   profilePlanLink.addEventListener("click", (event) => {
@@ -1476,7 +1476,7 @@ if (personalizedPlanPage && currentAuth) {
   let otherRoles = profile.otherRoles;
   const accessibleRoles = new Set([...personalizedPlanPage.querySelectorAll("[data-role-skilling-grid] [data-catalog-card]")]
     .filter((card) => canAccess(card.dataset.restrictedTo))
-    .flatMap((card) => JSON.parse(card.dataset.audience || "[]")));
+    .flatMap((card) => JSON.parse(card.dataset.role || "[]")));
   if (role && !accessibleRoles.has(role)) {
     role = "";
   }
@@ -1504,7 +1504,7 @@ if (personalizedPlanPage && currentAuth) {
 // Home owns the filter dialog; all catalog pages consume the same persisted
 // state so navigation does not reset the user's catalog view.
 const catalogFilterStorageKey = "ai-skills-nav:catalog-filters";
-const filterFields = ["audience", "experience_type", "credential_type", "level", "modalities", "duration"];
+const filterFields = ["role", "experience_type", "credential_type", "level", "modalities", "duration"];
 const durationLabels = ["Minutes", "Hours", "Days"];
 const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
@@ -1644,10 +1644,10 @@ const applyCatalogVisibility = () => {
       if (card.closest("[data-organization-skilling-grid]")) {
         matches = isAssignedToCurrentOrganization(card);
       } else {
-        const audiences = JSON.parse(card.dataset.audience || "[]");
+        const roles = JSON.parse(card.dataset.role || "[]");
         matches = card.closest("[data-other-role-skilling-grid]")
-          ? selectedOtherRoles.some((role) => audiences.includes(role))
-          : Boolean(selectedRole) && audiences.includes(selectedRole);
+          ? selectedOtherRoles.some((role) => roles.includes(role))
+          : Boolean(selectedRole) && roles.includes(selectedRole);
       }
     }
     if (matches && !isHomePage && card.matches("[data-filter-card]")) {
@@ -1725,7 +1725,7 @@ const persistFilters = () => {
 function updateAccessAwareFilterOptions() {
   if (!filterForm) return;
   let selectionChanged = false;
-  ["experience_type", "credential_type", "audience"].forEach((field) => {
+  ["experience_type", "credential_type", "role"].forEach((field) => {
     const accessibleValues = new Set();
     filterForm.querySelectorAll(`input[name="${field}"]`).forEach((input) => {
       const label = input.closest("label");

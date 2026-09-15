@@ -19,7 +19,7 @@ Content is organized into the following hierarchy:
 
 - **Courses**: Microsoft Official Curricula that can be completed as self-paced learning or delivered as instructor-led training. A course includes one or more playlists and can be aligned to multiple credentials.
   - **Playlists**: Ordered, curated collections containing one or more modules (equivalent of *Learning Paths* in Microsoft Learn). Learners can also create *personal* playlists containing modules of their choice.
-    - **Modules**: The core learning assets. Metadata describes each module's modality, level, duration, topics, audience, pages, and optional avatar.
+    - **Modules**: The core learning assets. Metadata describes each module's modality, level, duration, topics, role, pages, and optional avatar.
       - **Pages**: Discrete topics that can combine text, images, video, labs, and other content (known as *units* in Microsoft Learn).
 
 Catalog source is stored under **[source](./source/)**:
@@ -52,7 +52,7 @@ The catalog includes a mix of module types and subject areas, enabling explorati
 - The home banner provides an animated natural-language search prompt across all catalog items; the five example prompts run once per page load and settle on “Build the skills you need.”
 - Dedicated catalog pages place Search and Filter controls above the card grid. Search clear actions appear beneath the right edge of their search fields.
 - Keyword search covers titles, descriptions, topics, course numbers, and experience types where applicable, using case-insensitive AND matching after conversational stop words are removed.
-- Filters cover audience, experience type, level, and modality. Playlist and course modalities are derived from their modules.
+- Filters cover role, experience type, level, and modality. Playlist and course modalities are derived from their modules.
 - Catalog cards expose descriptions as tooltips.
 - Breadcrumbs provide context throughout the generated site.
 - Curated playlists include a collapsible navigation pane listing their modules in the defined order.
@@ -63,7 +63,7 @@ The catalog includes a mix of module types and subject areas, enabling explorati
 
 The static proof of concept simulates sign-in by accepting a syntactically valid email address and a non-empty password. Only the email address is retained in browser `localStorage`; the password is discarded. Content with `restricted_to` metadata is visible only when the signed-in email domain matches an allowed domain. This client-side behavior demonstrates the experience and is not a security boundary for confidential content.
 
-Signed-in users can open **Profile** to view their email address, choose a role from audiences represented by content they can access, open their personal playlists, and launch a personalized skilling plan. The plan contains all accessible courses, curated playlists, and modules whose audience includes the selected role, followed by the user's personal playlists.
+Signed-in users can open **Profile** to view their email address, choose a role represented by content they can access, open their personal playlists, and launch a personalized skilling plan. The plan contains all accessible courses, curated playlists, and modules whose role includes the selected value, followed by the user's personal playlists.
 
 ### Personal playlists
 

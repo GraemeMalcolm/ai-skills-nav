@@ -5,7 +5,7 @@ duration: 1 day
 restricted_to:
   - microsoft.com
 experience_type: Technical Workshop
-audience:
+role:
   - Technical Sales Specialist
 prerequisites:
   - Technical sales experience and foundational familiarity with cloud computing, AI, and Microsoft 365

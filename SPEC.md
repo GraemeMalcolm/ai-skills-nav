@@ -87,8 +87,8 @@ duration: 1 day
 experience_type: Microsoft Official Curriculum
 topics:
   - Topic
-audience:
-  - Audience
+role:
+  - Role
 prerequisites:
   - Required prior knowledge or experience
 learning_outcomes:
@@ -102,7 +102,7 @@ playlists:
 
 Rules:
 
-- `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `playlists` SHOULD be present.
+- `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `role`, and `playlists` SHOULD be present.
 - `course_number` is optional. When supplied, it MUST be a string.
 - `playlists` MUST be a non-empty array of existing playlist slugs.
 - `prerequisites` and `learning_outcomes` MUST each be a non-empty array of strings.
@@ -125,8 +125,8 @@ duration: 120 minutes
 experience_type: Microsoft Official Curriculum
 topics:
   - Topic
-audience:
-  - Audience
+role:
+  - Role
 prerequisites:
   - Required prior knowledge or experience
 learning_outcomes:
@@ -140,7 +140,7 @@ modules:
 
 Rules:
 
-- `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `modules` SHOULD be present.
+- `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `role`, and `modules` SHOULD be present.
 - `modules` MUST be an array of existing module slugs.
 - `prerequisites` and `learning_outcomes` MUST each be a non-empty array of strings.
 - For a playlist with multiple modules, `learning_outcomes` MUST contain each child module's overall outcome in module order, followed by one overall playlist outcome.
@@ -162,8 +162,8 @@ duration: 40 minutes
 experience_type: Microsoft Official Curriculum
 topics:
   - Topic
-audience:
-  - Audience
+role:
+  - Role
 prerequisites:
   - Required prior knowledge or experience
 learning_outcomes:
@@ -180,7 +180,7 @@ pages:
 
 Rules:
 
-- `title`, `description`, `modality`, `level`, `duration`, `experience_type`, `topics`, `audience`, and `pages` SHOULD be present.
+- `title`, `description`, `modality`, `level`, `duration`, `experience_type`, `topics`, `role`, and `pages` SHOULD be present.
 - `pages` MUST be a non-empty array.
 - `prerequisites` and `learning_outcomes` MUST each be a non-empty array of strings.
 - For a module with multiple pages, `learning_outcomes` MUST contain one outcome per page in page order, followed by one overall module outcome.
@@ -190,7 +190,7 @@ Rules:
 - Page order MUST follow the YAML array.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
-- Modality and audience values are content-defined, not hard-coded enums. Current modalities are `Lab`, `Multimodal`, and `Video`.
+- Modality and role values are content-defined, not hard-coded enums. Current modalities are `Lab`, `Multimodal`, and `Video`.
 
 Course, playlist, and module home pages MUST list prerequisites and learning outcomes. When an item has multiple learning outcomes, the final value MUST be bold and prefixed with `Overall outcome:`. A single learning objective MUST be displayed without that prefix.
 
@@ -374,7 +374,7 @@ The home page MUST include:
 - A search form at the bottom of the hero covering the complete course, playlist, and module catalogs. Non-featured cards MUST be present but hidden until a search is active, then matching cards MAY be revealed.
 - A left-aligned “What do you want to learn how to do?” label and a Clear action beneath the search field's right edge.
 - Five example search prompts typed once in sequence, followed by the persistent text “Build the skills you need.” Reduced-motion mode MUST show the final text immediately.
-- A single catalog filter control at the top right of the Courses card section. Its dialog MUST include audience, experience type, level, and modality choices generated from metadata across all three catalogs.
+- A single catalog filter control at the top right of the Courses card section. Its dialog MUST include role, experience type, level, and modality choices generated from metadata across all three catalogs.
 - The default-avatar learning assistant described in section 10.
 
 When filters are active, each Home section MUST show the first matching items in catalog order, up to its normal four-course, four-playlist, or eight-module limit. This backfills filtered featured items with later matching items when available. An active search MAY reveal all matching items. Clearing Home search MUST restore the filtered featured subsets. The “New and popular” module label does not indicate ranking; initial selection is alphabetical.
@@ -418,11 +418,11 @@ your yours yourself yourselves
 3. Compose with currently applied filters.
 4. Provide a clear action that resets results and focuses the input.
 
-The Home filter choices MUST be generated from unique values in current metadata and sorted with locale-aware numeric ordering. Experience type and audience choices MUST include only values assigned to content the current user can access, and an active choice that becomes inaccessible MUST be cleared. Applied filters MUST persist in local storage and remain active on the Home, Courses, Playlists, and Modules pages.
+The Home filter choices MUST be generated from unique values in current metadata and sorted with locale-aware numeric ordering. Experience type and role choices MUST include only values assigned to content the current user can access, and an active choice that becomes inaccessible MUST be cleared. Applied filters MUST persist in local storage and remain active on the Home, Courses, Playlists, and Modules pages.
 
 Required filter fields:
 
-- All content: audience, experience type, level, and modality.
+- All content: role, experience type, level, and modality.
 
 A module's modality values come directly from its metadata. A curated playlist MUST inherit the sorted, unique union of modalities declared by its modules. A course MUST inherit the sorted, unique union of modalities from all modules in its playlists. Modality filtering MUST apply to courses and playlists using these inherited values.
 
@@ -446,7 +446,7 @@ Above 860 px, a playlist sidebar MUST be sticky and collapsible. At or below 860
 
 ### 7.6 Profile and personalized plan
 
-Profile MUST display the normalized signed-in email address, a role selector, a link to personal playlists, and an action to open the personalized plan. The available roles MUST be generated from content audiences and limited to roles backed by unrestricted content or restricted content authorized for the current email domain. A saved role that is no longer available MUST be cleared.
+Profile MUST display the normalized signed-in email address, a role selector, a link to personal playlists, and an action to open the personalized plan. The available roles MUST be generated from content role values and limited to roles backed by unrestricted content or restricted content authorized for the current email domain. A saved role that is no longer available MUST be cleared.
 
 Store each user's selected role under:
 
@@ -454,7 +454,7 @@ Store each user's selected role under:
 ai-skills-nav:profile:<encoded-normalized-email>
 ```
 
-The personalized-plan route MUST require sign-in and a valid role. Its **Skilling for my role** section MUST show accessible courses, curated playlists, and modules whose audience exactly includes the selected role. Its **My playlists** section MUST render the signed-in user's personal playlists. Profile and plan state MUST remain isolated between signed-in email addresses.
+The personalized-plan route MUST require sign-in and a valid role. Its **Skilling for my role** section MUST show accessible courses, curated playlists, and modules whose role exactly includes the selected value. Its **My playlists** section MUST render the signed-in user's personal playlists. Profile and plan state MUST remain isolated between signed-in email addresses.
 
 ## 8. Personal playlists
 
@@ -793,7 +793,7 @@ A conforming implementation MUST satisfy the following checks.
 
 - Profile displays the signed-in email and only roles supported by content accessible to that email domain.
 - A valid saved role restores the personalized plan; an inaccessible or stale role is cleared.
-- The role section contains only accessible cards with an exact matching audience, and the playlist section contains the current user's personal playlists.
+- The role section contains only accessible cards with an exact matching role value, and the playlist section contains the current user's personal playlists.
 - Sign-out from any route clears the active identity and returns to Home.
 
 ### Content rendering

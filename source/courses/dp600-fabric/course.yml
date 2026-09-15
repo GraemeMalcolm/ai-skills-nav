@@ -6,7 +6,7 @@ description: This course covers how to prepare, enrich, and serve data for analy
 level: 400
 duration: 4 days
 experience_type: Microsoft Official Curriculum
-audience:
+role:
   - Data Analyst
   - Data Engineer
 avatar: inna

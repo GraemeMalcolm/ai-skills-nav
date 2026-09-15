@@ -4,7 +4,7 @@ level: 200
 duration: 60 minutes
 restricted_to:
   - microsoft.com
-audience:
+role:
   - Technical Sales Specialist
 prerequisites:
   - Technical sales experience and foundational knowledge of cloud computing

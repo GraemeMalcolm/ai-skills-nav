@@ -3,7 +3,7 @@ description: Discover how Microsoft Fabric can meet your enterprise's analytics 
 level: 200
 duration: 60 minutes
 experience_type: Training module
-audience:
+role:
   - Data Analyst
   - Data Engineer
 avatar: inna

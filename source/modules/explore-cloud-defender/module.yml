@@ -5,7 +5,7 @@ modalities:
 level: 200
 duration: 30 minutes
 experience_type: Training module
-audience:
+role:
   - Security administrator
 prerequisites:
   - Basic cloud security knowledge and familiarity with Azure administration

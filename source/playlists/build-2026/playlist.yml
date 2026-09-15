@@ -4,7 +4,7 @@ level: 200
 duration: 30 minutes
 assigned_to:
   - microsoft.com
-audience:
+role:
   - Developer
   - Solution Architect
 prerequisites:

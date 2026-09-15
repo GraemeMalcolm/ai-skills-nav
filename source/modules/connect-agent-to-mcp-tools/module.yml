@@ -6,7 +6,7 @@ modalities:
 level: 200
 duration: 60 minutes
 experience_type: Training module
-audience:
+role:
   - Developer
 avatar: anton
 prerequisites:

@@ -6,7 +6,7 @@ description: In this course, you'll learn how to analyze data with Azure Databri
 level: 200
 duration: 2 days
 experience_type: Microsoft Official Curriculum
-audience:
+role:
   - Data Analyst
 avatar: alex
 prerequisites:

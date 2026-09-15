@@ -3,7 +3,7 @@ description: Browse and connect to data using Microsoft OneLake's unified storag
 level: 400
 duration: 60 minutes
 experience_type: Training module
-audience:
+role:
   - Data Analyst
   - Data Engineer
 avatar: inna

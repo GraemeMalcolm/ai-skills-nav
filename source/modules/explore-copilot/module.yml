@@ -5,7 +5,7 @@ modalities:
 level: 100
 duration: 30 minutes
 experience_type: Hands-on lab
-audience:
+role:
   - Business User
 avatar: matt
 prerequisites:

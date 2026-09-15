@@ -6,7 +6,7 @@ description: This course provides a foundational understanding of artificial int
 level: 200
 duration: 1 day
 experience_type: Microsoft Official Curriculum
-audience:
+role:
   - Developer
 avatar: anton
 prerequisites:

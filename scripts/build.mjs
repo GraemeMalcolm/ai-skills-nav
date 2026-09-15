@@ -23,7 +23,7 @@ const contentRoots = [
 ];
 // Build-time role access summary used to limit Profile choices to roles backed
 // by public content or content authorized for the signed-in email domain.
-let profileAudienceOptions = [];
+let profileRoleOptions = [];
 
 marked.setOptions({ gfm: true });
 
@@ -489,7 +489,7 @@ function contentOverviewDialog(outputFile, module) {
 function signInDialog(outputFile) {
   const logo = relativeUrl(outputFile, path.join(outputRoot, "assets", "microsoft-logo.svg"));
   const personalizedPlanUrl = relativeUrl(outputFile, path.join(outputRoot, "personalized-plan", "index.html"));
-  const audienceOptions = escapeHtml(JSON.stringify(profileAudienceOptions));
+  const roleOptions = escapeHtml(JSON.stringify(profileRoleOptions));
   return `<div class="account-links"><a class="filter-trigger" href="#profile" data-profile-open data-auth-only hidden>Profile</a><a class="filter-trigger auth-link" href="#sign-in" data-auth-open>Sign-in</a></div>
   <dialog class="filter-dialog sign-in-dialog" data-sign-in-dialog aria-labelledby="sign-in-title">
     <form data-sign-in-form novalidate>
@@ -507,7 +507,7 @@ function signInDialog(outputFile) {
       <header class="filter-dialog-header"><div><p class="kicker">Your account</p><h2 id="profile-title">Profile</h2></div><button class="icon-button" type="button" aria-label="Close profile" data-profile-close>${icon("close")}</button></header>
       <div class="filter-dialog-body profile-fields">
         <div><span>Email address</span><strong data-profile-email></strong></div>
-        <label><span>My role</span><select data-profile-role data-profile-audiences="${audienceOptions}" required><option value="">Select a role</option></select></label>
+        <label><span>My role</span><select data-profile-role data-profile-roles="${roleOptions}" required><option value="">Select a role</option></select></label>
         <div class="profile-multiselect" data-profile-other-roles>
           <span id="profile-other-roles-label">Other roles I'm interested in</span>
           <button class="profile-multiselect-trigger" type="button" aria-labelledby="profile-other-roles-label profile-other-roles-summary" aria-expanded="false" data-profile-other-roles-trigger disabled><span id="profile-other-roles-summary" data-profile-other-roles-summary>Select roles</span></button>
@@ -673,7 +673,7 @@ function card(outputFile, item, type, defaultHidden = false, instance = "") {
   const tooltipId = `${type}-${item.slug}${instance ? `-${instance}` : ""}-description`;
   const searchText = item.searchContext.text;
   const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}" data-restricted-to="${escapeHtml(JSON.stringify(item.restricted_to || []))}" data-assigned-to="${escapeHtml(JSON.stringify(item.assigned_to || []))}" data-content-level="${escapeHtml(item.level)}"`;
-  const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.searchContext.filters.modalities))}" data-level="${escapeHtml(JSON.stringify(item.searchContext.filters.level))}" data-experience_type="${escapeHtml(JSON.stringify(item.searchContext.filters.experience_type))}" data-credential_type="${escapeHtml(JSON.stringify(item.searchContext.filters.credential_type))}" data-audience="${escapeHtml(JSON.stringify(item.searchContext.filters.audience))}" data-duration="${escapeHtml(JSON.stringify(catalogMetadataValues(item, "duration")))}"`;
+  const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.searchContext.filters.modalities))}" data-level="${escapeHtml(JSON.stringify(item.searchContext.filters.level))}" data-experience_type="${escapeHtml(JSON.stringify(item.searchContext.filters.experience_type))}" data-credential_type="${escapeHtml(JSON.stringify(item.searchContext.filters.credential_type))}" data-role="${escapeHtml(JSON.stringify(item.searchContext.filters.role))}" data-duration="${escapeHtml(JSON.stringify(catalogMetadataValues(item, "duration")))}"`;
   // Home includes every catalog item so its search can truly search all
   // content, but only the featured subset is visible before a search begins.
   const defaultVisibility = defaultHidden ? " data-default-hidden hidden" : "";
@@ -759,9 +759,9 @@ function catalogFilterDialog(items, fields, subject) {
     level: (item) => [item.level],
     experience_type: (item) => catalogMetadataValues(item, "experience_type"),
     credential_type: (item) => [item.credential_type],
-    audience: (item) => Array.isArray(item.audience) ? item.audience : [item.audience],
+    role: (item) => Array.isArray(item.role) ? item.role : [item.role],
   };
-  const labels = { level: "Level", experience_type: "Experience type", credential_type: "Credential type", audience: "Role" };
+  const labels = { level: "Level", experience_type: "Experience type", credential_type: "Credential type", role: "Role" };
   const optionAccess = (field, values) => new Map(values.map((value) => {
     const owners = items.filter((item) => catalogMetadataValues(item, field).includes(value));
     const unrestricted = owners.some((item) => !item.restricted_to.length);
@@ -949,7 +949,7 @@ async function getModulePages(module) {
   }));
 }
 
-const catalogFilterFields = ["audience", "experience_type", "credential_type", "level", "modalities", "duration"];
+const catalogFilterFields = ["role", "experience_type", "credential_type", "level", "modalities", "duration"];
 const catalogLinkTypes = ["video", "lab_steps", "lab_host", "simulation"];
 
 function extractCatalogLinks(markdown) {
@@ -1172,17 +1172,17 @@ async function build() {
   await Promise.all([...courses, ...playlists, ...modules].map(async (item) => {
     item.last_updated = await lastCommitDate(item.directory);
   }));
-  const audienceAccess = new Map();
+  const roleAccess = new Map();
   for (const item of [...courses, ...playlists, ...modules]) {
-    for (const audience of Array.isArray(item.audience) ? item.audience : [item.audience]) {
-      if (!audience) continue;
-      const access = audienceAccess.get(audience) || { name: audience, unrestricted: false, domains: new Set() };
+    for (const role of Array.isArray(item.role) ? item.role : [item.role]) {
+      if (!role) continue;
+      const access = roleAccess.get(role) || { name: role, unrestricted: false, domains: new Set() };
       if (item.restricted_to.length === 0) access.unrestricted = true;
       item.restricted_to.forEach((domain) => access.domains.add(domain));
-      audienceAccess.set(audience, access);
+      roleAccess.set(role, access);
     }
   }
-  profileAudienceOptions = [...audienceAccess.values()]
+  profileRoleOptions = [...roleAccess.values()]
     .map((access) => ({ name: access.name, unrestricted: access.unrestricted, domains: [...access.domains].sort() }))
     .sort((left, right) => left.name.localeCompare(right.name));
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));
@@ -1281,7 +1281,7 @@ async function build() {
     </section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><div class="card-grid">${spotlightPlaylists.map((item, index) => card(homeFile, item, "playlists", index >= 4)).join("")}</div></section>
     <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>New and highly rated</h2></div><div class="card-grid" data-module-grid>${homeModules.items.slice(0, homeModules.featuredCount).map((item) => card(homeFile, item, "modules")).join("")}</div><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div></section>
-    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
+    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["role", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
 
   const catalogItems = [
@@ -1293,7 +1293,7 @@ async function build() {
   const catalogTools = `<div class="catalog-section-tools">${catalogSearchForm}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
   const catalogContent = `<section class="catalog-intro"><p class="kicker">Explore all learning</p><h1>Catalog</h1><p>Browse courses, skilling playlists, and individual learning experiences.</p></section>
     <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">All skilling</p><h2>Learning catalog</h2></div>${catalogTools}</div><div class="card-grid catalog-card-grid" data-paged-catalog>${catalogItems.map(({ item, type }) => card(catalogFile, item, type)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No skilling matches your search and filters.</p><nav class="catalog-pagination" aria-label="Catalog pages" data-catalog-pagination></nav></section>
-    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
+    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["role", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
   await writePage(catalogFile, shell({ outputFile: catalogFile, title: "Catalog", breadcrumbs: [{ label: "Catalog" }], avatar: defaultAvatar, content: catalogContent, bodyClass: "catalog-page unified-catalog-page", hasModuleCards: true }));
 
   const officialCurriculumType = "Microsoft Official Curriculum";
@@ -1307,14 +1307,14 @@ async function build() {
   </dialog>`;
   const officialCurriculumContent = `<section class="catalog-intro"><p class="kicker">Microsoft training</p><h1>Official Curriculum</h1><p>Microsoft Official Curriculum training is designed to teach real-world technical skills with Microsoft technologies and prepare you for Microsoft credentials.</p><div class="catalog-intro-action"><a class="filter-trigger" href="#training-partners" data-training-partners-open>Training Services Partners</a></div></section>
     <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Comprehensive training</p><h2>Courses</h2></div>${officialTools}</div><div class="card-grid catalog-card-grid" data-paged-catalog>${officialCourses.map((item) => card(officialCurriculumFile, item, "courses")).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p><nav class="catalog-pagination" aria-label="Official curriculum pages" data-catalog-pagination></nav></section>
-    ${catalogFilterDialog(officialCourses, ["audience", "level", "duration", "modalities"], "official curriculum")}${trainingPartnersDialog}`;
+    ${catalogFilterDialog(officialCourses, ["role", "level", "duration", "modalities"], "official curriculum")}${trainingPartnersDialog}`;
   await writePage(officialCurriculumFile, shell({ outputFile: officialCurriculumFile, title: "Official Curriculum", breadcrumbs: [{ label: "Official Curriculum" }], avatar: defaultAvatar, content: officialCurriculumContent, bodyClass: "catalog-page" }));
 
   const credentialSearch = catalogSearch("credential-search-input", "Search credentials", "Search credentials");
   const credentialTools = `<div class="catalog-section-tools">${credentialSearch}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
   const credentialsContent = `<section class="catalog-intro"><p class="kicker">Validate your skills</p><h1>Credentials</h1><p>Verified, high-value credentials that employers trust. Bridging the gap for both technical and business audiences.</p></section>
     <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Explore the catalog</p><h2>Available credentials</h2></div>${credentialTools}</div><div class="card-grid catalog-card-grid" data-paged-catalog>${credentials.map((item) => card(credentialsFile, item, "credentials")).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No credentials match your search and filters.</p><nav class="catalog-pagination" aria-label="Credential pages" data-catalog-pagination></nav></section>
-    ${catalogFilterDialog(credentials, ["credential_type", "audience"], "credentials")}`;
+    ${catalogFilterDialog(credentials, ["credential_type", "role"], "credentials")}`;
   await writePage(credentialsFile, shell({ outputFile: credentialsFile, title: "Credentials", breadcrumbs: [{ label: "Credentials" }], avatar: defaultAvatar, content: credentialsContent, bodyClass: "catalog-page" }));
 
   const moduleCatalog = modules.map((module) => ({
@@ -1359,7 +1359,7 @@ async function build() {
       ...modules.filter((item) => item.restricted_to.length || item.assigned_to.length).map((item) => card(personalizedPlanFile, item, "modules", false, "organization")),
     ].join("")}</div><p class="filter-empty" data-organization-skilling-empty hidden>No skilling items are assigned to your organization.</p><nav class="catalog-pagination" aria-label="Skilling for my organization pages" data-plan-pagination></nav></section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Saved by you</p><h2>My playlists</h2></div><div class="card-grid" data-plan-paged-grid data-plan-playlist-grid></div><p class="filter-empty" data-plan-playlist-empty hidden>You have not created any personal playlists yet.</p><nav class="catalog-pagination" aria-label="My playlists pages" data-plan-pagination></nav></section>
-    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "duration", "modalities"], "your skilling plan")}
+    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["role", "experience_type", "level", "duration", "modalities"], "your skilling plan")}
   </div>`;
   const personalPlaylistSidebar = `<aside class="sidebar" data-sidebar><div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div><nav aria-label="Playlist" data-personal-playlist-navigation></nav></aside><div class="sidebar-scrim" data-menu-close></div>`;
   await writePage(personalizedPlanFile, shell({ outputFile: personalizedPlanFile, title: "My skilling plan", breadcrumbs: [{ label: "My skilling plan" }], sidebar: personalPlaylistSidebar, avatar: defaultAvatar, content: personalizedPlanContent, bodyClass: "catalog-page personalized-page", hasModuleCards: true }));

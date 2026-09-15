@@ -5,7 +5,7 @@ duration: 10 minutes
 experience_type: Learning Bite
 restricted_to:
   - microsoft.com
-audience:
+role:
   - Technical Sales Specialist
 prerequisites:
   - Familiarity with enterprise applications and an interest in AI-native solution patterns

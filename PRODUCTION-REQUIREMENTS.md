@@ -131,7 +131,7 @@ Course metadata uses the following source contract:
 | `duration` | One string | Yes | Human-readable estimated completion time. The production model should additionally support a normalized duration for sorting and analytics. |
 | `experience_type` | One string | Yes | Displayed experience type and catalog filter value. |
 | `topics` | List of strings | Yes | Search terms, topic presentation, recommendations, and future topic browsing. At least one value is required. |
-| `audience` | List of strings | Yes | Intended learner roles shown in metadata and used as catalog filter values. At least one value is required. |
+| `role` | List of strings | Yes | Intended learner roles shown in metadata and used as catalog filter values. At least one value is required. |
 | `restricted_to` | List of domain strings | No | Limits simulated browsing and discovery to signed-in email addresses whose domain matches one listed value. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the course. The reference must resolve when supplied. |
 | `playlists` | Ordered list of playlist identifiers | Yes | Defines course membership and the complete course learning sequence. At least one valid reference is required. |
@@ -152,7 +152,7 @@ experience_type: Microsoft Official Curriculum
 topics:
      - Microsoft Foundry
      - AI agents
-audience:
+role:
      - Developer
 avatar: anton
 playlists:
@@ -160,7 +160,7 @@ playlists:
      - microsoft-iq
 ```
 
-**FR-COURSE-001** A course detail page must present its title, description, image, level, duration, experience type, audiences, topics, credentials, and ordered playlists. It must present the course number when one is supplied.
+**FR-COURSE-001** A course detail page must present its title, description, image, level, duration, experience type, roles, topics, credentials, and ordered playlists. It must present the course number when one is supplied.
 
 **FR-COURSE-002** A learner must be able to begin or continue the course from its first effective learning step.
 
@@ -183,7 +183,7 @@ Playlist metadata uses the following source contract:
 | `duration` | One string | Yes | Human-readable estimated completion time. A normalized value should also be available in the production model. |
 | `experience_type` | One string | No | Experience type and catalog filter value to reflect the source or type of skilling - for example "Microsoft Official Curriculum", "Microsoft Short-Form Skilling", "Microsoft Labs", "LinkedIn Training", et.c. |
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
-| `audience` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
+| `role` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
 | `restricted_to` | List of domain strings | No | Limits simulated browsing and discovery to signed-in email addresses whose domain matches one listed value. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the playlist. |
 | `modules` | Ordered list of module identifiers | Yes | Defines playlist membership, sidebar order, and cross-module Previous/Next navigation. At least one valid reference is required. |
@@ -202,7 +202,7 @@ experience_type: Microsoft Official Curriculum
 topics:
      - Microsoft Foundry
      - AI agents
-audience:
+role:
      - Developer
 avatar: anton
 modules:
@@ -234,7 +234,7 @@ Module metadata uses the following source contract:
 | `duration` | One string | Yes | Human-readable estimated completion time. A normalized value should also be available in the production model. |
 | `experience_type` | One string | Yes | Displayed experience type and catalog filter value. |
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
-| `audience` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
+| `role` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
 | `restricted_to` | List of domain strings | No | Limits simulated browsing and discovery to signed-in email addresses whose domain matches one listed value. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the module. |
 | `pages` | Ordered list of page entries | Yes | Defines the module structure, overview page list, sidebar, and Previous/Next sequence. At least one entry is required. |
@@ -255,7 +255,7 @@ duration: 120 minutes
 experience_type: Microsoft Official Curriculum
 topics:
      - Artificial Intelligence
-audience:
+role:
      - Developer
 avatar: anton
 pages:
@@ -368,11 +368,11 @@ Search and Filter controls must appear with the result collection heading rather
 
 **FR-CATALOG-003** Module results must provide an action to add the module to a personal playlist without requiring the learner to open it first.
 
-**FR-CATALOG-004** General catalog search must use published `title`, `description`, `topics`, and experience type, plus course number for courses. It must not search audience, level, duration, modality, hierarchy labels, stable identifiers, page body text, assistant metadata, or other fields.
+**FR-CATALOG-004** General catalog search must use published `title`, `description`, `topics`, and experience type, plus course number for courses. It must not search role, level, duration, modality, hierarchy labels, stable identifiers, page body text, assistant metadata, or other fields.
 
 **FR-CATALOG-005** Search must be case-insensitive, tolerate punctuation and common conversational words, and require all meaningful query terms to match.
 
-**FR-CATALOG-006** Filters must include audience, experience type, level, and modality where those values apply.
+**FR-CATALOG-006** Filters must include role, experience type, level, and modality where those values apply.
 
 **FR-CATALOG-007** Playlist modality must be derived from its modules. Course modality must be derived from all modules in its playlists.
 
@@ -388,7 +388,7 @@ Search and Filter controls must appear with the result collection heading rather
 
 **FR-CATALOG-013** Client-side simulated access control must not be treated as protection for confidential source or generated content; production authorization requires server-side enforcement.
 
-**FR-CATALOG-014** Experience type and audience filter choices must include only values assigned to content accessible to the current learner. If an access change makes an active value inaccessible, the filter must clear that selection.
+**FR-CATALOG-014** Experience type and role filter choices must include only values assigned to content accessible to the current learner. If an access change makes an active value inaccessible, the filter must clear that selection.
 
 **FR-CATALOG-015** Signed-in headers must replace Sign-in with Profile and Sign-out. Sign-out must clear the active identity and return the learner to Home from any route.
 
@@ -398,7 +398,7 @@ Search and Filter controls must appear with the result collection heading rather
 
 **FR-PROFILE-001** Signed-in learners must be able to open Profile from the global header and view the email address associated with the current session.
 
-**FR-PROFILE-002** Profile must provide a role selector populated from published audience values. A role may be offered only when at least one item for that role is public or accessible to the learner's email domain.
+**FR-PROFILE-002** Profile must provide a role selector populated from published role values. A role may be offered only when at least one item for that role is public or accessible to the learner's email domain.
 
 **FR-PROFILE-003** A selected role must be persisted per learner identity. A saved role that becomes unavailable must be cleared rather than used to expose inaccessible recommendations.
 
@@ -418,9 +418,9 @@ Search is a free-text discovery mechanism, not a substitute for filtering and no
 
 | Content type | Searchable fields | Explicitly excluded examples |
 | --- | --- | --- |
-| Course | `title`, `course_number`, `description`, `topics`, `experience_type` or its fallback | `credentials`, `level`, `duration`, `audience`, `avatar`, playlist references |
-| Curated playlist | `title`, `description`, `topics`, `experience_type` or its fallback | `level`, `duration`, `audience`, derived modality, `avatar`, module references |
-| Module | `title`, `description`, `topics`, `experience_type` or its fallback | `modalities`, `level`, `duration`, `audience`, `avatar`, page references and page body text |
+| Course | `title`, `course_number`, `description`, `topics`, `experience_type` or its fallback | `credentials`, `level`, `duration`, `role`, `avatar`, playlist references |
+| Curated playlist | `title`, `description`, `topics`, `experience_type` or its fallback | `level`, `duration`, `role`, derived modality, `avatar`, module references |
+| Module | `title`, `description`, `topics`, `experience_type` or its fallback | `modalities`, `level`, `duration`, `role`, `avatar`, page references and page body text |
 
 For example, a module with this metadata:
 
@@ -429,7 +429,7 @@ title: Get started with Azure Databricks
 description: Explore lakehouse architecture, Apache Spark, Delta Lake, Unity Catalog, data engineering, analytics, and machine learning.
 topics:
      - Azure Databricks
-audience:
+role:
      - Data Engineer
 modalities:
      - Video
@@ -469,7 +469,7 @@ Filters provide structured refinement using the existing small set of stable cat
 
 | Filter | Authored or derived source | Applies to |
 | --- | --- | --- |
-| Audience | Authored `audience` | Courses, playlists, and modules |
+| Role | Authored `role` | Courses, playlists, and modules |
 | Experience type | Authored `experience_type` | Courses, playlists, and modules |
 | Level | Authored `level` | Courses, playlists, and modules |
 | Modality | Module `modalities`; derived union for playlists and courses | Courses, playlists, and modules |
@@ -480,9 +480,9 @@ Duration, topics, credentials, course number, assistant association, and hierarc
 
 **FR-FILTER-002** A module's modality filter values must come from its authored `modalities`. A playlist's values must be the unique union of its modules' modalities. A course's values must be the unique union of all modules in its playlists.
 
-**FR-FILTER-003** Selecting multiple values within one filter uses OR semantics. For example, selecting `Developer` and `Data Engineer` matches content intended for either audience.
+**FR-FILTER-003** Selecting multiple values within one filter uses OR semantics. For example, selecting `Developer` and `Data Engineer` matches content intended for either role.
 
-**FR-FILTER-004** Different filters use AND semantics. For example, `Audience: Developer` and `Modality: Lab` matches only content satisfying both constraints.
+**FR-FILTER-004** Different filters use AND semantics. For example, `Role: Developer` and `Modality: Lab` matches only content satisfying both constraints.
 
 **FR-FILTER-005** Search and filters use AND semantics. An item must satisfy every active filter and every meaningful search term.
 
@@ -610,7 +610,7 @@ A multi-page module is a skilling experience whose `pages` metadata contains two
 
 **FR-MULTIPAGE-001** Opening a multi-page module must first present a module overview.
 
-**FR-MULTIPAGE-002** The overview must present the module title, description, thumbnail, duration, level, modalities, audience, topics where appropriate, and the ordered list of pages.
+**FR-MULTIPAGE-002** The overview must present the module title, description, thumbnail, duration, level, modalities, role, topics where appropriate, and the ordered list of pages.
 
 **FR-MULTIPAGE-003** The overview must provide a clear Next or equivalent begin action whose destination is the first authored page.
 
@@ -1043,8 +1043,8 @@ The production implementation must demonstrate at least the following end-to-end
 3. A playlist ordered as single-page Module A, multi-page Module B, and single-page Module C produces the effective sequence Playlist overview, Page A1, Module B overview, all Module B pages, and Page C1. Previous and Next traverse that exact sequence in both directions while all three modules remain visible in hierarchy navigation.
 4. A single-module playlist omits a redundant playlist overview and opens the module's effective first step while retaining playlist context.
 5. The same module opens independently and within different playlists without duplicated source content or incorrect navigation context.
-6. A catalog item matches terms present in its title, description, topics, or displayed experience type, and a course also matches its course number. The same item does not match a term found only in its audience, level, modality, duration, identifier, hierarchy references, or page body.
-7. Audience, experience type, level, and modality values refine results through filters. Multiple values in one filter use OR; different filters use AND; and active search terms combine with all filters using AND.
+6. A catalog item matches terms present in its title, description, topics, or displayed experience type, and a course also matches its course number. The same item does not match a term found only in its role, level, modality, duration, identifier, hierarchy references, or page body.
+7. Role, experience type, level, and modality values refine results through filters. Multiple values in one filter use OR; different filters use AND; and active search terms combine with all filters using AND.
 8. Clearing search retains active filters, clearing filters retains an active search, active constraints are visible, and an empty combined result produces accessible feedback.
 9. A page renders Markdown, local and root-relative includes, an external `[!LAB_STEPS]` source, `[!LAB_HOST]` and `[!SIMULATION]` launchers with their full URLs and template-relative images, relative images, video, and keyboard-operable choice pivots.
 10. Invalid metadata, broken hierarchy references, recursive includes, and inaccessible required external content prevent publication with actionable errors.
