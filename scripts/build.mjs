@@ -513,16 +513,6 @@ function signInDialog(outputFile) {
           <button class="profile-multiselect-trigger" type="button" aria-labelledby="profile-other-roles-label profile-other-roles-summary" aria-expanded="false" data-profile-other-roles-trigger disabled><span id="profile-other-roles-summary" data-profile-other-roles-summary>Select roles</span></button>
           <div class="profile-multiselect-options" role="group" aria-labelledby="profile-other-roles-label" data-profile-other-roles-options hidden></div>
         </div>
-        <fieldset class="profile-proficiency" data-profile-proficiency>
-          <legend>Proficiency level</legend>
-          <div class="profile-proficiency-values"><span>Minimum <output for="profile-level-min" data-profile-level-min-output>100</output></span><span>Maximum <output for="profile-level-max" data-profile-level-max-output>500</output></span></div>
-          <div class="profile-range-control" data-profile-range-control>
-            <div class="profile-range-track" aria-hidden="true"></div>
-            <input id="profile-level-min" type="range" min="100" max="500" step="100" value="100" aria-label="Minimum proficiency level" data-profile-level-min>
-            <input id="profile-level-max" type="range" min="100" max="500" step="100" value="500" aria-label="Maximum proficiency level" data-profile-level-max>
-          </div>
-          <div class="profile-range-ticks" aria-hidden="true"><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span></div>
-        </fieldset>
         <a href="${escapeHtml(personalizedPlanUrl)}" data-profile-plan hidden>Personalized skilling plan</a>
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-profile-close>Cancel</button><button class="primary-button" type="submit" data-profile-submit disabled>OK</button></footer>
@@ -739,9 +729,13 @@ function modalityFilterOptions(values) {
 
 function durationFilterOptions() {
   return `<fieldset class="filter-group duration-filter" data-duration-filter><legend>Duration</legend>
-    <input class="duration-slider" type="range" name="duration" min="0" max="2" step="1" value="0" aria-label="Duration" aria-describedby="duration-filter-value" data-duration-slider data-active="false">
+    <div class="profile-proficiency-values"><span>Minimum <output for="filter-duration-min" data-filter-duration-min-output>Minutes</output></span><span>Maximum <output for="filter-duration-max" data-filter-duration-max-output>Days</output></span></div>
+    <div class="profile-range-control" data-filter-duration-range>
+      <div class="profile-range-track" aria-hidden="true"></div>
+      <input id="filter-duration-min" type="range" min="0" max="2" step="1" value="0" aria-label="Minimum duration" data-filter-duration-min>
+      <input id="filter-duration-max" type="range" min="0" max="2" step="1" value="2" aria-label="Maximum duration" data-filter-duration-max>
+    </div>
     <div class="duration-stops" aria-hidden="true"><span>Minutes</span><span>Hours</span><span>Days</span></div>
-    <output class="sr-only" id="duration-filter-value" for="duration">Any duration</output>
   </fieldset>`;
 }
 
@@ -779,10 +773,10 @@ function catalogFilterDialog(items, fields, subject) {
       <header class="filter-dialog-header"><div><p class="kicker">Refine ${escapeHtml(subject)}</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
       <div class="filter-dialog-body">
         ${fields.map((field) => {
-          if (field === "duration") return durationFilterOptions();
-          const values = uniqueValues(selectors[field]).map(String);
-          return field === "modalities" ? modalityFilterOptions(values) : field === "level" ? levelFilterOptions() : filterOptions(field, values, labels[field], optionAccess(field, values));
-        }).join("")}
+    if (field === "duration") return durationFilterOptions();
+    const values = uniqueValues(selectors[field]).map(String);
+    return field === "modalities" ? modalityFilterOptions(values) : field === "level" ? levelFilterOptions() : filterOptions(field, values, labels[field], optionAccess(field, values));
+  }).join("")}
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-filter-clear>Clear all</button><button class="primary-button" type="submit" value="apply">Apply filters</button></footer>
     </form>

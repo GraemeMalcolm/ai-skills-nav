@@ -135,11 +135,6 @@ const profileOtherRoles = profileDialog?.querySelector("[data-profile-other-role
 const profileOtherRolesTrigger = profileOtherRoles?.querySelector("[data-profile-other-roles-trigger]");
 const profileOtherRolesSummary = profileOtherRoles?.querySelector("[data-profile-other-roles-summary]");
 const profileOtherRolesOptions = profileOtherRoles?.querySelector("[data-profile-other-roles-options]");
-const profileRangeControl = profileDialog?.querySelector("[data-profile-range-control]");
-const profileLevelMin = profileDialog?.querySelector("[data-profile-level-min]");
-const profileLevelMax = profileDialog?.querySelector("[data-profile-level-max]");
-const profileLevelMinOutput = profileDialog?.querySelector("[data-profile-level-min-output]");
-const profileLevelMaxOutput = profileDialog?.querySelector("[data-profile-level-max-output]");
 const profileSubmit = profileDialog?.querySelector("[data-profile-submit]");
 const profilePlanLink = profileDialog?.querySelector("[data-profile-plan]");
 let pendingPersonalPlaylistTrigger = null;
@@ -170,33 +165,24 @@ const consumePendingPersonalPlaylist = () => {
 const profileStorageKey = () => currentAuth
   ? `ai-skills-nav:profile:${encodeURIComponent(currentAuth.email)}`
   : null;
-const proficiencyLevels = [100, 200, 300, 400, 500];
-const validProficiencyLevel = (value, fallback) => {
-  const level = Number(value);
-  return proficiencyLevels.includes(level) ? level : fallback;
-};
 const readProfile = () => {
   try {
     const storageKey = profileStorageKey();
-    if (!storageKey) return { role: "", otherRoles: [], levelMin: 100, levelMax: 500 };
+    if (!storageKey) return { role: "", otherRoles: [] };
     const profile = JSON.parse(localStorage.getItem(storageKey) || "null");
-    const savedMin = validProficiencyLevel(profile?.levelMin, 100);
-    const savedMax = validProficiencyLevel(profile?.levelMax, 500);
     return {
       role: typeof profile?.role === "string" ? profile.role : "",
       otherRoles: Array.isArray(profile?.otherRoles) ? profile.otherRoles.filter((role) => typeof role === "string") : [],
-      levelMin: Math.min(savedMin, savedMax),
-      levelMax: Math.max(savedMin, savedMax),
     };
   } catch {
-    return { role: "", otherRoles: [], levelMin: 100, levelMax: 500 };
+    return { role: "", otherRoles: [] };
   }
 };
-const writeProfile = (role, otherRoles = [], levelMin = 100, levelMax = 500) => {
+const writeProfile = (role, otherRoles = []) => {
   try {
     const storageKey = profileStorageKey();
     if (!storageKey) return false;
-    localStorage.setItem(storageKey, JSON.stringify({ role, otherRoles, levelMin, levelMax }));
+    localStorage.setItem(storageKey, JSON.stringify({ role, otherRoles }));
     return true;
   } catch {
     return false;
@@ -316,7 +302,7 @@ updateAuthOnlyElements();
 updateRestrictedElements();
 updatePageAccess();
 
-if (profileLink && profileDialog && profileForm && profileEmail && profileRole && profileOtherRoles && profileOtherRolesTrigger && profileOtherRolesSummary && profileOtherRolesOptions && profileRangeControl && profileLevelMin && profileLevelMax && profileLevelMinOutput && profileLevelMaxOutput && profileSubmit && profilePlanLink) {
+if (profileLink && profileDialog && profileForm && profileEmail && profileRole && profileOtherRoles && profileOtherRolesTrigger && profileOtherRolesSummary && profileOtherRolesOptions && profileSubmit && profilePlanLink) {
   const isAvailableProfileRole = () => Array.from(profileRole.options)
     .some((option) => option.value && option.value === profileRole.value);
   const selectedOtherRoles = () => [...profileOtherRolesOptions.querySelectorAll('input[type="checkbox"]:checked')]
@@ -349,18 +335,6 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     closeOtherRoles();
     updateOtherRolesSummary();
   };
-  const updateProficiencyRange = (changedInput) => {
-    if (changedInput === profileLevelMin && Number(profileLevelMin.value) > Number(profileLevelMax.value)) {
-      profileLevelMax.value = profileLevelMin.value;
-    }
-    if (changedInput === profileLevelMax && Number(profileLevelMax.value) < Number(profileLevelMin.value)) {
-      profileLevelMin.value = profileLevelMax.value;
-    }
-    profileLevelMinOutput.value = profileLevelMin.value;
-    profileLevelMaxOutput.value = profileLevelMax.value;
-    profileRangeControl.style.setProperty("--range-start", `${(Number(profileLevelMin.value) - 100) / 4}%`);
-    profileRangeControl.style.setProperty("--range-end", `${(500 - Number(profileLevelMax.value)) / 4}%`);
-  };
   const updateProfileSubmit = () => {
     const hasRole = isAvailableProfileRole();
     profileSubmit.disabled = !hasRole;
@@ -382,9 +356,6 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     profileRole.replaceChildren(new Option("Select a role", ""), ...audienceOptions.map((audience) => new Option(audience.name, audience.name)));
     profileRole.value = audienceOptions.some((audience) => audience.name === savedRole) ? savedRole : "";
     updateOtherRoleOptions(audienceOptions, profile.otherRoles);
-    profileLevelMin.value = String(profile.levelMin);
-    profileLevelMax.value = String(profile.levelMax);
-    updateProficiencyRange();
     updateProfileSubmit();
     profileDialog.showModal();
     profileRole.focus();
@@ -416,8 +387,6 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     closeOtherRoles();
     profileOtherRolesTrigger.focus();
   });
-  profileLevelMin.addEventListener("input", () => updateProficiencyRange(profileLevelMin));
-  profileLevelMax.addEventListener("input", () => updateProficiencyRange(profileLevelMax));
   profileRole.addEventListener("change", () => {
     const audienceOptions = JSON.parse(profileRole.dataset.profileAudiences || "[]")
       .filter((audience) => audience.unrestricted || audience.domains.includes(currentAuth.domain));
@@ -425,7 +394,7 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     updateProfileSubmit();
   });
   profilePlanLink.addEventListener("click", (event) => {
-    if (!isAvailableProfileRole() || !writeProfile(profileRole.value, selectedOtherRoles(), Number(profileLevelMin.value), Number(profileLevelMax.value))) {
+    if (!isAvailableProfileRole() || !writeProfile(profileRole.value, selectedOtherRoles())) {
       event.preventDefault();
       return;
     }
@@ -434,7 +403,7 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
   });
   profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    if (!profileForm.reportValidity() || !isAvailableProfileRole() || !writeProfile(profileRole.value, selectedOtherRoles(), Number(profileLevelMin.value), Number(profileLevelMax.value))) return;
+    if (!profileForm.reportValidity() || !isAvailableProfileRole() || !writeProfile(profileRole.value, selectedOtherRoles())) return;
     updateProfileSubmit();
     closeProfileDialog();
     if (document.querySelector("[data-personalized-plan]")) window.location.reload();
@@ -1450,7 +1419,7 @@ if (personalizedPlanPage && currentAuth) {
     role = "";
   }
   otherRoles = otherRoles.filter((otherRole) => otherRole !== role && accessibleRoles.has(otherRole));
-  writeProfile(role, otherRoles, profile.levelMin, profile.levelMax);
+  writeProfile(role, otherRoles);
   personalizedPlanPage.querySelector("[data-other-role-skilling-section]").hidden = otherRoles.length === 0;
   const summary = personalizedPlanPage.querySelector("[data-personalized-summary]");
   summary.textContent = role
@@ -1474,6 +1443,7 @@ if (personalizedPlanPage && currentAuth) {
 // state so navigation does not reset the user's catalog view.
 const catalogFilterStorageKey = "ai-skills-nav:catalog-filters";
 const filterFields = ["audience", "experience_type", "credential_type", "level", "modalities", "duration"];
+const durationLabels = ["Minutes", "Hours", "Days"];
 const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
 const activeFilterFields = filterDialog
@@ -1516,7 +1486,7 @@ let appliedModalitiesMode = persistedFilterState.modalitiesMode;
 let searchTerms = [];
 let searchActive = false;
 const updateFilterCounts = () => {
-  const selectedCount = activeFilterFields.reduce((total, field) => total + (field === "level" ? Number(appliedFilters[field].length > 0) : appliedFilters[field].length), 0);
+  const selectedCount = activeFilterFields.reduce((total, field) => total + (["level", "duration"].includes(field) ? Number(appliedFilters[field].length > 0) : appliedFilters[field].length), 0);
   document.querySelectorAll("[data-filter-count]").forEach((count) => {
     count.textContent = String(selectedCount);
     count.hidden = selectedCount === 0;
@@ -1584,7 +1554,7 @@ const applyCatalogVisibility = () => {
   const homeVisible = { courses: 0, playlists: 0, modules: 0 };
   const isHomePage = document.body.classList.contains("home-page");
   const isPersonalizedPage = document.body.classList.contains("personalized-page");
-  const profile = isPersonalizedPage ? readProfile() : { role: "", otherRoles: [], levelMin: 100, levelMax: 500 };
+  const profile = isPersonalizedPage ? readProfile() : { role: "", otherRoles: [] };
   const selectedRole = profile.role;
   const selectedOtherRoles = profile.otherRoles;
   let visibleModules = 0;
@@ -1625,10 +1595,6 @@ const applyCatalogVisibility = () => {
           ? selectedOtherRoles.some((role) => audiences.includes(role))
           : Boolean(selectedRole) && audiences.includes(selectedRole);
       }
-      if (matches) {
-        const level = Number(card.dataset.contentLevel);
-        matches = level >= profile.levelMin && level <= profile.levelMax;
-      }
     }
     if (matches && !isHomePage && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
@@ -1641,6 +1607,13 @@ const applyCatalogVisibility = () => {
           const levels = values.map(Number);
           const [minimum, maximum = minimum] = appliedFilters.level.map(Number);
           return levels.some((level) => level >= minimum && level <= maximum);
+        }
+        if (field === "duration") {
+          const [minimum, maximum = minimum] = appliedFilters.duration.map((duration) => durationLabels.indexOf(duration));
+          return values.some((duration) => {
+            const index = durationLabels.indexOf(duration);
+            return index >= minimum && index <= maximum;
+          });
         }
         return appliedFilters[field].some((selected) => values.includes(selected));
       });
@@ -1796,9 +1769,11 @@ if (filterDialog && filterForm && filterCards.length) {
   const filterLevelMax = filterForm.querySelector("[data-filter-level-max]");
   const filterLevelMinOutput = filterForm.querySelector("[data-filter-level-min-output]");
   const filterLevelMaxOutput = filterForm.querySelector("[data-filter-level-max-output]");
-  const durationLabels = ["Minutes", "Hours", "Days"];
-  const durationSlider = filterForm.querySelector("[data-duration-slider]");
-  const durationOutput = durationSlider ? filterForm.querySelector(`#${durationSlider.getAttribute("aria-describedby")}`) : null;
+  const filterDurationRange = filterForm.querySelector("[data-filter-duration-range]");
+  const filterDurationMin = filterForm.querySelector("[data-filter-duration-min]");
+  const filterDurationMax = filterForm.querySelector("[data-filter-duration-max]");
+  const filterDurationMinOutput = filterForm.querySelector("[data-filter-duration-min-output]");
+  const filterDurationMaxOutput = filterForm.querySelector("[data-filter-duration-max-output]");
   const modalitiesMode = () => filterForm.querySelector('input[name="modalities-mode"]:checked')?.value;
   const syncModalitiesControls = () => {
     const disabled = modalitiesMode() !== "containing";
@@ -1812,18 +1787,20 @@ if (filterDialog && filterForm && filterCards.length) {
     name === "level"
       ? filterLevelMin && filterLevelMax && (filterLevelMin.value !== "100" || filterLevelMax.value !== "500") ? [filterLevelMin.value, filterLevelMax.value] : []
       : name === "duration"
-      ? durationSlider?.dataset.active === "true" ? [durationLabels[Number(durationSlider.value)]] : []
-      : name === "modalities" && modalitiesMode() !== "containing"
-      ? []
-      : [...filterForm.querySelectorAll(`input[name="${name}"]:checked`)].map((input) => input.value),
+        ? filterDurationMin && filterDurationMax && (filterDurationMin.value !== "0" || filterDurationMax.value !== "2") ? [durationLabels[Number(filterDurationMin.value)], durationLabels[Number(filterDurationMax.value)]] : []
+        : name === "modalities" && modalitiesMode() !== "containing"
+          ? []
+          : [...filterForm.querySelectorAll(`input[name="${name}"]:checked`)].map((input) => input.value),
   ]));
 
-  const syncDurationControl = (selection = appliedFilters.duration[0]) => {
-    if (!durationSlider || !durationOutput) return;
-    const selectedIndex = durationLabels.indexOf(selection);
-    durationSlider.value = String(Math.max(0, selectedIndex));
-    durationSlider.dataset.active = String(selectedIndex >= 0);
-    durationOutput.textContent = selectedIndex >= 0 ? `${selection} selected` : "Any duration";
+  const syncDurationRange = (changedInput) => {
+    if (!filterDurationRange || !filterDurationMin || !filterDurationMax || !filterDurationMinOutput || !filterDurationMaxOutput) return;
+    if (changedInput === filterDurationMin && Number(filterDurationMin.value) > Number(filterDurationMax.value)) filterDurationMax.value = filterDurationMin.value;
+    if (changedInput === filterDurationMax && Number(filterDurationMax.value) < Number(filterDurationMin.value)) filterDurationMin.value = filterDurationMax.value;
+    filterDurationMinOutput.value = durationLabels[Number(filterDurationMin.value)];
+    filterDurationMaxOutput.value = durationLabels[Number(filterDurationMax.value)];
+    filterDurationRange.style.setProperty("--range-start", `${Number(filterDurationMin.value) * 50}%`);
+    filterDurationRange.style.setProperty("--range-end", `${(2 - Number(filterDurationMax.value)) * 50}%`);
   };
 
   const syncLevelRange = (changedInput) => {
@@ -1844,6 +1821,14 @@ if (filterDialog && filterForm && filterCards.length) {
     syncLevelRange();
   };
 
+  const restoreDurationRange = () => {
+    if (!filterDurationMin || !filterDurationMax) return;
+    const savedDurations = appliedFilters.duration.map((duration) => durationLabels.indexOf(duration)).filter((index) => index >= 0);
+    filterDurationMin.value = String(savedDurations.length ? Math.min(...savedDurations) : 0);
+    filterDurationMax.value = String(savedDurations.length ? Math.max(...savedDurations) : 2);
+    syncDurationRange();
+  };
+
   const restoreAppliedFilters = () => {
     // Closing/cancelling is transactional: discard checkbox edits that were
     // made after the dialog opened but were never explicitly applied.
@@ -1856,7 +1841,7 @@ if (filterDialog && filterForm && filterCards.length) {
     if (mode) mode.checked = true;
     syncModalitiesControls();
     restoreLevelRange();
-    syncDurationControl();
+    restoreDurationRange();
   };
 
   const applyFilters = () => {
@@ -1882,7 +1867,8 @@ if (filterDialog && filterForm && filterCards.length) {
   filterForm.querySelectorAll('input[name="modalities-mode"]').forEach((input) => input.addEventListener("change", syncModalitiesControls));
   filterLevelMin?.addEventListener("input", () => syncLevelRange(filterLevelMin));
   filterLevelMax?.addEventListener("input", () => syncLevelRange(filterLevelMax));
-  durationSlider?.addEventListener("input", () => syncDurationControl(durationLabels[Number(durationSlider.value)]));
+  filterDurationMin?.addEventListener("input", () => syncDurationRange(filterDurationMin));
+  filterDurationMax?.addEventListener("input", () => syncDurationRange(filterDurationMax));
   restoreAppliedFilters();
   document.querySelector("[data-filter-open]")?.addEventListener("click", () => filterDialog.showModal());
   filterDialog.querySelector("[data-filter-close]")?.addEventListener("click", () => {
@@ -1903,7 +1889,7 @@ if (filterDialog && filterForm && filterCards.length) {
   filterDialog.querySelector("[data-filter-clear]")?.addEventListener("click", () => {
     filterForm.reset();
     syncLevelRange();
-    syncDurationControl("");
+    syncDurationRange();
     applyFilters();
     filterDialog.close();
   });
