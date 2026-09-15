@@ -165,29 +165,88 @@ const consumePendingPersonalPlaylist = () => {
 const profileStorageKey = () => currentAuth
   ? `ai-skills-nav:profile:${encodeURIComponent(currentAuth.email)}`
   : null;
+const normalizeRecentPage = (recentPage) => recentPage
+  && typeof recentPage.moduleSlug === "string"
+  && typeof recentPage.path === "string"
+  && typeof recentPage.viewedAt === "string"
+  ? { moduleSlug: recentPage.moduleSlug, path: recentPage.path, viewedAt: recentPage.viewedAt }
+  : null;
 const readProfile = () => {
   try {
     const storageKey = profileStorageKey();
-    if (!storageKey) return { role: "", otherRoles: [] };
+    if (!storageKey) return { role: "", otherRoles: [], recentPage: null };
     const profile = JSON.parse(localStorage.getItem(storageKey) || "null");
     return {
       role: typeof profile?.role === "string" ? profile.role : "",
       otherRoles: Array.isArray(profile?.otherRoles) ? profile.otherRoles.filter((role) => typeof role === "string") : [],
+      recentPage: normalizeRecentPage(profile?.recentPage),
     };
   } catch {
-    return { role: "", otherRoles: [] };
+    return { role: "", otherRoles: [], recentPage: null };
   }
 };
-const writeProfile = (role, otherRoles = []) => {
+const writeProfileRecord = (profile) => {
   try {
     const storageKey = profileStorageKey();
     if (!storageKey) return false;
-    localStorage.setItem(storageKey, JSON.stringify({ role, otherRoles }));
+    localStorage.setItem(storageKey, JSON.stringify(profile));
     return true;
   } catch {
     return false;
   }
 };
+const writeProfile = (role, otherRoles = []) => {
+  const profile = readProfile();
+  return writeProfileRecord({ role, otherRoles, recentPage: profile.recentPage });
+};
+const siteRootUrl = () => profilePlanLink ? new URL("../", profilePlanLink.href) : null;
+const currentSitePath = () => {
+  const root = siteRootUrl();
+  if (!root || root.origin !== window.location.origin || !window.location.pathname.startsWith(root.pathname)) return null;
+  return `${window.location.pathname.slice(root.pathname.length)}${window.location.search}${window.location.hash}`;
+};
+const trackRecentLearningPage = () => {
+  const moduleSlug = document.body.dataset.moduleSlug;
+  const path = currentSitePath();
+  if (!currentAuth || !moduleSlug || !document.body.classList.contains("learning-page") || !path) return;
+  const profile = readProfile();
+  writeProfileRecord({ ...profile, recentPage: { moduleSlug, path, viewedAt: new Date().toISOString() } });
+};
+trackRecentLearningPage();
+
+const hydrateContinueSection = () => {
+  const section = document.querySelector("[data-continue-section]");
+  const grid = section?.querySelector("[data-continue-grid]");
+  const tools = document.querySelector("[data-personalized-plan] .personalized-plan-tools");
+  const roleHeading = document.querySelector("[data-role-skilling-heading]");
+  if (!section || !grid || !tools || !roleHeading) return;
+  const recentPage = currentAuth ? readProfile().recentPage : null;
+  const template = recentPage
+    ? [...section.querySelectorAll("[data-continue-module-template]")].find((item) => item.dataset.moduleSlug === recentPage.moduleSlug)
+    : null;
+  const card = template?.content.firstElementChild?.cloneNode(true);
+  const root = siteRootUrl();
+  const target = root && recentPage ? new URL(recentPage.path, root) : null;
+  const isLocalTarget = target && target.origin === window.location.origin && target.pathname.startsWith(root.pathname);
+  const isAccessible = card && canAccess(card.dataset.restrictedTo);
+  if (!card || !isLocalTarget || !isAccessible) {
+    roleHeading.append(tools);
+    return;
+  }
+  card.removeAttribute("data-catalog-card");
+  card.removeAttribute("data-filter-card");
+  card.removeAttribute("data-default-hidden");
+  card.hidden = false;
+  const link = card.matches("a") ? card : card.querySelector("a.content-card");
+  if (!link) {
+    roleHeading.append(tools);
+    return;
+  }
+  link.href = target.href;
+  grid.replaceChildren(card);
+  section.hidden = false;
+};
+hydrateContinueSection();
 const updateAuthLink = () => {
   if (!authLink) return;
   authLink.textContent = currentAuth ? "Sign-out" : "Sign-in";
@@ -281,6 +340,7 @@ if (authLink && signInDialog && signInForm && signInEmail && signInPassword && s
     } catch {
       // The signed-in state still works for this page when storage is unavailable.
     }
+    trackRecentLearningPage();
     signInPassword.value = "";
     signInDialog.close();
     refreshAuthorization();
