@@ -1255,12 +1255,11 @@ async function build() {
       <form class="hero-search" role="search" data-site-search data-catalog-url="${relativeUrl(homeFile, catalogFile)}" data-animated-search data-search-hints="${heroSearchHints}">
         <label for="hero-search-input">What do you want to learn how to do?</label>
         <span class="hero-search-controls"><input id="hero-search-input" type="search" name="query" autocomplete="off"><button type="submit" aria-label="Search">${icon("arrow")}</button></span>
-        <button class="search-clear" type="button" data-search-clear hidden>Clear</button>
+        <span class="hero-search-actions"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}#catalog-filter">Filter</a><button class="search-clear" type="button" data-search-clear hidden>Clear</button></span>
       </form>
     </section>
-    <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}#catalog-filter">Filter</a></div><div class="card-grid">${spotlightPlaylists.map((item, index) => card(homeFile, item, "playlists", index >= 4)).join("")}</div></section>
-    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>New and Highly rated</h2></div><div class="card-grid" data-module-grid>${homeModules.items.slice(0, homeModules.featuredCount).map((item) => card(homeFile, item, "modules")).join("")}</div></section>
-    <div class="home-catalog-link"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div>`;
+    <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><div class="card-grid">${spotlightPlaylists.map((item, index) => card(homeFile, item, "playlists", index >= 4)).join("")}</div></section>
+    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>New and highly rated</h2></div><div class="card-grid" data-module-grid>${homeModules.items.slice(0, homeModules.featuredCount).map((item) => card(homeFile, item, "modules")).join("")}</div><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div></section>`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
 
   const catalogItems = [
