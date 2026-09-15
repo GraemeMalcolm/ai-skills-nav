@@ -1488,6 +1488,7 @@ const playlistEmptyState = document.querySelector("[data-playlist-empty]");
 const catalogEmptyState = document.querySelector("[data-catalog-empty]");
 const roleSkillingEmptyState = document.querySelector("[data-role-skilling-empty]");
 const otherRoleSkillingEmptyState = document.querySelector("[data-other-role-skilling-empty]");
+const organizationSkillingSection = document.querySelector("[data-organization-skilling-section]");
 const organizationSkillingEmptyState = document.querySelector("[data-organization-skilling-empty]");
 const planPlaylistEmptyState = document.querySelector("[data-plan-playlist-empty]");
 const emptyFilters = () => Object.fromEntries(filterFields.map((field) => [field, []]));
@@ -1588,6 +1589,7 @@ const applyCatalogVisibility = () => {
   let visibleCatalogItems = 0;
   let visibleRoleItems = 0;
   let visibleOtherRoleItems = 0;
+  let availableOrganizationItems = 0;
   let visibleOrganizationItems = 0;
   let visiblePlanPlaylists = 0;
   const matchingPagedCards = [];
@@ -1598,6 +1600,10 @@ const applyCatalogVisibility = () => {
     });
   }
   catalogCards.forEach((card) => {
+    if (isPersonalizedPage && card.closest("[data-organization-skilling-grid]")) {
+      const domains = parseRestrictedDomains(card.dataset.restrictedTo);
+      if (currentAuth && domains.includes(currentAuth.domain)) availableOrganizationItems++;
+    }
     let matches = canAccess(card.dataset.restrictedTo) && matchesSearch(card);
     if (matches && isPersonalizedPage) {
       if (card.closest("[data-organization-skilling-grid]")) {
@@ -1660,6 +1666,7 @@ const applyCatalogVisibility = () => {
   if (catalogEmptyState) catalogEmptyState.hidden = visibleCatalogItems !== 0;
   if (roleSkillingEmptyState) roleSkillingEmptyState.hidden = visibleRoleItems !== 0;
   if (otherRoleSkillingEmptyState) otherRoleSkillingEmptyState.hidden = visibleOtherRoleItems !== 0;
+  if (organizationSkillingSection) organizationSkillingSection.hidden = availableOrganizationItems === 0;
   if (organizationSkillingEmptyState) organizationSkillingEmptyState.hidden = visibleOrganizationItems !== 0;
   if (planPlaylistEmptyState) {
     planPlaylistEmptyState.textContent = searchActive
