@@ -682,7 +682,7 @@ function card(outputFile, item, type, defaultHidden = false, instance = "") {
     : path.join(outputRoot, type, item.slug, "index.html");
   const tooltipId = `${type}-${item.slug}${instance ? `-${instance}` : ""}-description`;
   const searchText = item.searchContext.text;
-  const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}" data-restricted-to="${escapeHtml(JSON.stringify(item.restricted_to || []))}" data-content-level="${escapeHtml(item.level)}"`;
+  const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}" data-restricted-to="${escapeHtml(JSON.stringify(item.restricted_to || []))}" data-assigned-to="${escapeHtml(JSON.stringify(item.assigned_to || []))}" data-content-level="${escapeHtml(item.level)}"`;
   const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.searchContext.filters.modalities))}" data-level="${escapeHtml(JSON.stringify(item.searchContext.filters.level))}" data-experience_type="${escapeHtml(JSON.stringify(item.searchContext.filters.experience_type))}" data-credential_type="${escapeHtml(JSON.stringify(item.searchContext.filters.credential_type))}" data-audience="${escapeHtml(JSON.stringify(item.searchContext.filters.audience))}" data-duration="${escapeHtml(JSON.stringify(item.searchContext.filters.duration))}"`;
   // Home includes every catalog item so its search can truly search all
   // content, but only the featured subset is visible before a search begins.
@@ -1160,6 +1160,11 @@ async function build() {
         throw new Error(`${type} ${item.slug} has invalid restricted_to domains`);
       }
       item.restricted_to = (item.restricted_to || []).map((domain) => domain.toLocaleLowerCase());
+      const assignedDomains = typeof item.assigned_to === "string" ? [item.assigned_to] : item.assigned_to || [];
+      if (!Array.isArray(assignedDomains) || assignedDomains.some((domain) => typeof domain !== "string" || !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i.test(domain))) {
+        throw new Error(`${type} ${item.slug} has invalid assigned_to domains`);
+      }
+      item.assigned_to = assignedDomains.map((domain) => domain.toLocaleLowerCase());
       if (!item.avatar) continue;
       const avatar = avatars.get(item.avatar);
       if (!avatar) throw new Error(`${type} ${item.slug} references unknown avatar ${item.avatar}`);
@@ -1346,9 +1351,9 @@ async function build() {
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Recommended learning</p><h2>Skilling for my role</h2></div><div class="card-grid" data-plan-paged-grid data-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-role-skilling-empty hidden>No skilling items match your selected role.</p><nav class="catalog-pagination" aria-label="Skilling for my role pages" data-plan-pagination></nav></section>
     <section class="catalog-section alt" data-other-role-skilling-section hidden><div class="section-heading"><p class="kicker">Explore related paths</p><h2>Skilling for other roles of interest</h2></div><div class="card-grid" data-plan-paged-grid data-other-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-other-role-skilling-empty hidden>No skilling items match your other roles of interest.</p><nav class="catalog-pagination" aria-label="Skilling for other roles pages" data-plan-pagination></nav></section>
     <section class="catalog-section alt" data-organization-skilling-section><div class="section-heading"><p class="kicker">Available to your organization</p><h2>Skilling for my organization</h2></div><div class="card-grid" data-plan-paged-grid data-organization-skilling-grid>${[
-      ...courses.filter((item) => item.restricted_to.length).map((item) => card(personalizedPlanFile, item, "courses", false, "organization")),
-      ...playlists.filter((item) => item.restricted_to.length).map((item) => card(personalizedPlanFile, item, "playlists", false, "organization")),
-      ...modules.filter((item) => item.restricted_to.length).map((item) => card(personalizedPlanFile, item, "modules", false, "organization")),
+      ...courses.filter((item) => item.restricted_to.length || item.assigned_to.length).map((item) => card(personalizedPlanFile, item, "courses", false, "organization")),
+      ...playlists.filter((item) => item.restricted_to.length || item.assigned_to.length).map((item) => card(personalizedPlanFile, item, "playlists", false, "organization")),
+      ...modules.filter((item) => item.restricted_to.length || item.assigned_to.length).map((item) => card(personalizedPlanFile, item, "modules", false, "organization")),
     ].join("")}</div><p class="filter-empty" data-organization-skilling-empty hidden>No skilling items are assigned to your organization.</p><nav class="catalog-pagination" aria-label="Skilling for my organization pages" data-plan-pagination></nav></section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Saved by you</p><h2>My playlists</h2></div><div class="card-grid" data-plan-paged-grid data-plan-playlist-grid></div><p class="filter-empty" data-plan-playlist-empty hidden>You have not created any personal playlists yet.</p><nav class="catalog-pagination" aria-label="My playlists pages" data-plan-pagination></nav></section>
     ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "duration", "modalities"], "your skilling plan")}

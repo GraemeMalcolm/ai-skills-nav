@@ -1605,13 +1605,19 @@ const applyCatalogVisibility = () => {
   }
   catalogCards.forEach((card) => {
     if (isPersonalizedPage && card.closest("[data-organization-skilling-grid]")) {
-      const domains = parseRestrictedDomains(card.dataset.restrictedTo);
+      const domains = [
+        ...parseRestrictedDomains(card.dataset.restrictedTo),
+        ...parseRestrictedDomains(card.dataset.assignedTo),
+      ];
       if (currentAuth && domains.includes(currentAuth.domain)) availableOrganizationItems++;
     }
     let matches = canAccess(card.dataset.restrictedTo) && matchesSearch(card);
     if (matches && isPersonalizedPage) {
       if (card.closest("[data-organization-skilling-grid]")) {
-        const domains = parseRestrictedDomains(card.dataset.restrictedTo);
+        const domains = [
+          ...parseRestrictedDomains(card.dataset.restrictedTo),
+          ...parseRestrictedDomains(card.dataset.assignedTo),
+        ];
         matches = Boolean(currentAuth && domains.includes(currentAuth.domain));
       } else {
         const audiences = JSON.parse(card.dataset.audience || "[]");
