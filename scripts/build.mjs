@@ -666,7 +666,7 @@ function card(outputFile, item, type, defaultHidden = false, instance = "") {
   const tooltipId = `${type}-${item.slug}${instance ? `-${instance}` : ""}-description`;
   const searchText = item.searchContext.text;
   const searchData = ` data-catalog-card data-catalog-type="${escapeHtml(type)}" data-search-text="${escapeHtml(searchText)}" data-restricted-to="${escapeHtml(JSON.stringify(item.restricted_to || []))}" data-content-level="${escapeHtml(item.level)}"`;
-  const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.searchContext.filters.modalities))}" data-level="${escapeHtml(JSON.stringify(item.searchContext.filters.level))}" data-experience_type="${escapeHtml(JSON.stringify(item.searchContext.filters.experience_type))}" data-credential_type="${escapeHtml(JSON.stringify(item.searchContext.filters.credential_type))}" data-audience="${escapeHtml(JSON.stringify(item.searchContext.filters.audience))}"`;
+  const filterData = ` data-filter-card data-modalities="${escapeHtml(JSON.stringify(item.searchContext.filters.modalities))}" data-level="${escapeHtml(JSON.stringify(item.searchContext.filters.level))}" data-experience_type="${escapeHtml(JSON.stringify(item.searchContext.filters.experience_type))}" data-credential_type="${escapeHtml(JSON.stringify(item.searchContext.filters.credential_type))}" data-audience="${escapeHtml(JSON.stringify(item.searchContext.filters.audience))}" data-duration="${escapeHtml(JSON.stringify(item.searchContext.filters.duration))}"`;
   // Home includes every catalog item so its search can truly search all
   // content, but only the featured subset is visible before a search begins.
   const defaultVisibility = defaultHidden ? " data-default-hidden hidden" : "";
@@ -720,6 +720,14 @@ function modalityFilterOptions(values) {
   </fieldset>`;
 }
 
+function durationFilterOptions() {
+  return `<fieldset class="filter-group duration-filter" data-duration-filter><legend>Duration</legend>
+    <input class="duration-slider" type="range" name="duration" min="0" max="2" step="1" value="0" aria-label="Duration" aria-describedby="duration-filter-value" data-duration-slider data-active="false">
+    <div class="duration-stops" aria-hidden="true"><span>Minutes</span><span>Hours</span><span>Days</span></div>
+    <output class="sr-only" id="duration-filter-value" for="duration">Any duration</output>
+  </fieldset>`;
+}
+
 function catalogFilterDialog(items, fields, subject) {
   const uniqueValues = (selector) => [...new Set(items.flatMap(selector).filter((value) => value !== undefined && value !== null && value !== ""))]
     .sort((left, right) => String(left).localeCompare(String(right), undefined, { numeric: true }));
@@ -735,7 +743,7 @@ function catalogFilterDialog(items, fields, subject) {
     <form method="dialog" data-filter-form>
       <header class="filter-dialog-header"><div><p class="kicker">Refine ${escapeHtml(subject)}</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
       <div class="filter-dialog-body">
-        ${fields.map((field) => field === "modalities" ? modalityFilterOptions(uniqueValues(selectors[field]).map(String)) : filterOptions(field, uniqueValues(selectors[field]).map(String), labels[field])).join("")}
+        ${fields.map((field) => field === "modalities" ? modalityFilterOptions(uniqueValues(selectors[field]).map(String)) : field === "duration" ? durationFilterOptions() : filterOptions(field, uniqueValues(selectors[field]).map(String), labels[field])).join("")}
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-filter-clear>Clear all</button><button class="primary-button" type="submit" value="apply">Apply filters</button></footer>
     </form>
@@ -909,7 +917,7 @@ async function getModulePages(module) {
   }));
 }
 
-const catalogFilterFields = ["audience", "experience_type", "credential_type", "level", "modalities"];
+const catalogFilterFields = ["audience", "experience_type", "credential_type", "level", "modalities", "duration"];
 const catalogLinkTypes = ["video", "lab_steps", "lab_host", "simulation"];
 
 function extractCatalogLinks(markdown) {
@@ -946,6 +954,15 @@ function buildCatalogLinks(modules) {
 }
 
 function catalogMetadataValues(item, field) {
+  if (field === "duration") {
+    const duration = String(item.duration || "").trim().toLocaleLowerCase();
+    if (/\bdays?\b/.test(duration)) return ["Days"];
+    const minuteMatch = duration.match(/^(\d+(?:\.\d+)?)\s*(?:minutes?|mins?)\b/);
+    if (minuteMatch) return [Number(minuteMatch[1]) <= 60 ? "Minutes" : "Hours"];
+    const hourMatch = duration.match(/^(\d+(?:\.\d+)?)\s*(?:hours?|hrs?)\b/);
+    if (hourMatch) return ["Hours"];
+    return [];
+  }
   const value = item[field];
   return (Array.isArray(value) ? value : [value])
     .filter((entry) => entry !== undefined && entry !== null && entry !== "")
@@ -1209,7 +1226,7 @@ async function build() {
     <section class="catalog-section" data-course-catalog><div class="section-heading-row"><div class="section-heading"><p class="kicker">Build skills for success</p><h2>Courses</h2></div><button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div><div class="card-grid">${homeCourses.items.map((item, index) => card(homeFile, item, "courses", index >= homeCourses.featuredCount)).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, coursesFile)}">See all courses</a></div></section>
     <section class="catalog-section alt" data-playlist-catalog><div class="section-heading"><p class="kicker">Curated learning we think you'll like</p><h2>Skilling playlists</h2></div><div class="card-grid">${homePlaylists.items.map((item, index) => card(homeFile, item, "playlists", index >= homePlaylists.featuredCount)).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, personalPlaylistsFile)}" data-auth-only>Personal playlists</a><a class="filter-trigger" href="${relativeUrl(homeFile, playlistsFile)}">See all playlists</a></div></section>
     <section class="catalog-section" data-module-catalog><div class="section-heading"><p class="kicker">New and popular</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${homeModules.items.map((item, index) => card(homeFile, item, "modules", index >= homeModules.featuredCount)).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, skillingContentFile)}">See all skilling content</a></div></section>
-    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "modalities"], "the catalog")}`;
+    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["audience", "experience_type", "level", "modalities", "duration"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
 
   const officialCurriculumType = "Microsoft Official Curriculum";
@@ -1228,7 +1245,7 @@ async function build() {
     <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Comprehensive training</p><h2>Courses</h2></div>${officialTools}</div><div class="card-grid">${officialCourses.map((item) => card(officialCurriculumFile, item, "courses")).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p></section>
     <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Skilling playlists</h2></div><div class="card-grid">${officialPlaylists.map((item) => card(officialCurriculumFile, item, "playlists")).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search and filters.</p></section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Build your skills</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${officialModules.map((item) => card(officialCurriculumFile, item, "modules")).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p></section>
-    ${catalogFilterDialog(officialItems, ["audience", "level", "modalities"], "official curriculum")}${trainingPartnersDialog}`;
+    ${catalogFilterDialog(officialItems, ["audience", "level", "modalities", "duration"], "official curriculum")}${trainingPartnersDialog}`;
   await writePage(officialCurriculumFile, shell({ outputFile: officialCurriculumFile, title: "Official Curriculum", breadcrumbs: [{ label: "Official Curriculum" }], avatar: defaultAvatar, content: officialCurriculumContent, bodyClass: "catalog-page", hasModuleCards: true }));
 
   const credentialSearch = catalogSearch("credential-search-input", "Search credentials", "Search credentials");

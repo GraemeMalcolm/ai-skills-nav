@@ -1430,7 +1430,7 @@ if (personalizedPlanPage && currentAuth) {
 // Home owns the filter dialog; all catalog pages consume the same persisted
 // state so navigation does not reset the user's catalog view.
 const catalogFilterStorageKey = "ai-skills-nav:catalog-filters";
-const filterFields = ["audience", "experience_type", "credential_type", "level", "modalities"];
+const filterFields = ["audience", "experience_type", "credential_type", "level", "modalities", "duration"];
 const filterDialog = document.querySelector("[data-filter-dialog]");
 const filterForm = filterDialog?.querySelector("[data-filter-form]");
 const activeFilterFields = filterDialog
@@ -1645,6 +1645,9 @@ if (animatedSearch && animatedSearchInput) {
 }
 
 if (filterDialog && filterForm && filterCards.length) {
+  const durationLabels = ["Minutes", "Hours", "Days"];
+  const durationSlider = filterForm.querySelector("[data-duration-slider]");
+  const durationOutput = durationSlider ? filterForm.querySelector(`#${durationSlider.getAttribute("aria-describedby")}`) : null;
   const modalitiesMode = () => filterForm.querySelector('input[name="modalities-mode"]:checked')?.value;
   const syncModalitiesControls = () => {
     const disabled = modalitiesMode() !== "containing";
@@ -1655,10 +1658,20 @@ if (filterDialog && filterForm && filterCards.length) {
 
   const readFilters = () => Object.fromEntries(filterFields.map((name) => [
     name,
-    name === "modalities" && modalitiesMode() !== "containing"
+    name === "duration"
+      ? durationSlider?.dataset.active === "true" ? [durationLabels[Number(durationSlider.value)]] : []
+      : name === "modalities" && modalitiesMode() !== "containing"
       ? []
       : [...filterForm.querySelectorAll(`input[name="${name}"]:checked`)].map((input) => input.value),
   ]));
+
+  const syncDurationControl = (selection = appliedFilters.duration[0]) => {
+    if (!durationSlider || !durationOutput) return;
+    const selectedIndex = durationLabels.indexOf(selection);
+    durationSlider.value = String(Math.max(0, selectedIndex));
+    durationSlider.dataset.active = String(selectedIndex >= 0);
+    durationOutput.textContent = selectedIndex >= 0 ? `${selection} selected` : "Any duration";
+  };
 
   const restoreAppliedFilters = () => {
     // Closing/cancelling is transactional: discard checkbox edits that were
@@ -1671,6 +1684,7 @@ if (filterDialog && filterForm && filterCards.length) {
     const mode = filterForm.querySelector(`input[name="modalities-mode"][value="${appliedModalitiesMode}"]`);
     if (mode) mode.checked = true;
     syncModalitiesControls();
+    syncDurationControl();
   };
 
   const applyFilters = () => {
@@ -1683,6 +1697,7 @@ if (filterDialog && filterForm && filterCards.length) {
   };
 
   filterForm.querySelectorAll('input[name="modalities-mode"]').forEach((input) => input.addEventListener("change", syncModalitiesControls));
+  durationSlider?.addEventListener("input", () => syncDurationControl(durationLabels[Number(durationSlider.value)]));
   restoreAppliedFilters();
   document.querySelector("[data-filter-open]")?.addEventListener("click", () => filterDialog.showModal());
   filterDialog.querySelector("[data-filter-close]")?.addEventListener("click", () => {
@@ -1702,6 +1717,7 @@ if (filterDialog && filterForm && filterCards.length) {
   });
   filterDialog.querySelector("[data-filter-clear]")?.addEventListener("click", () => {
     filterForm.reset();
+    syncDurationControl("");
     applyFilters();
     filterDialog.close();
   });
