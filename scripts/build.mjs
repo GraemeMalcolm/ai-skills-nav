@@ -815,12 +815,11 @@ function overviewContents(outputFile, items, type, heading, targetForItem) {
   </section>`;
 }
 
-function courseOverview(outputFile, course, playlists) {
+function courseOverview(outputFile, course, playlists, credentials) {
   const playlistList = overviewContents(outputFile, playlists, "playlists", "In this course:", (playlist) =>
     playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), playlist));
-  const credentials = Array.isArray(course.credentials) ? course.credentials.filter(Boolean) : [];
   const credentialContent = credentials.length
-    ? `<ul>${credentials.map((credential) => `<li>${escapeHtml(credential)}</li>`).join("")}</ul>`
+    ? `<ul>${credentials.map((credential) => `<li${accessData(credential)}><a href="${relativeUrl(outputFile, path.join(outputRoot, "credentials", credential.slug, "index.html"))}">${escapeHtml(credential.title)}</a></li>`).join("")}</ul>`
     : "<p>No associated credential is specified.</p>";
   const credentialSection = `<section class="credential"><h2>Credential preparation</h2>${credentialContent}</section>`;
   const firstPlaylist = playlists.find((playlist) => playlist.modules.length);
@@ -1189,6 +1188,7 @@ async function build() {
   const moduleMap = new Map(modules.map((module) => [module.slug, module]));
   const playlistMap = new Map(playlists.map((playlist) => [playlist.slug, playlist]));
   const courseMap = new Map(courses.map((course) => [course.slug, course]));
+  const credentialMap = new Map(credentials.map((credential) => [credential.slug, credential]));
   modules.forEach((module) => {
     module.rating = Math.floor(Math.random() * 5) + 1;
     buildSearchContext(module);
@@ -1205,6 +1205,14 @@ async function build() {
   }
   for (const course of courses) {
     if (!Array.isArray(course.playlists) || course.playlists.length === 0) throw new Error(`Course ${course.slug} must define at least one playlist`);
+    if (course.credentials !== undefined && !Array.isArray(course.credentials)) throw new Error(`Course ${course.slug} credentials must be a list`);
+    Object.defineProperty(course, "credentialMemberships", {
+      value: (course.credentials || []).map((slug) => {
+        const credential = credentialMap.get(slug);
+        if (!credential) throw new Error(`Course ${course.slug} references missing credential ${slug}`);
+        return credential;
+      }),
+    });
     const childPlaylists = course.playlists.map((slug) => {
       const playlist = playlistMap.get(slug);
       if (!playlist) throw new Error(`Course ${course.slug} references missing playlist ${slug}`);
@@ -1420,7 +1428,7 @@ async function build() {
     });
     const courseFile = path.join(outputRoot, "courses", course.slug, "index.html");
     const courseBreadcrumbs = [{ label: "Catalog", target: catalogFile }, { label: course.title }];
-    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, sidebar: courseSidebar(courseFile, course, coursePlaylists), avatar: course.avatarData, bodyClass: "learning-page", restrictedTo: course.restricted_to, content: courseOverview(courseFile, course, coursePlaylists) }));
+    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, sidebar: courseSidebar(courseFile, course, coursePlaylists), avatar: course.avatarData, bodyClass: "learning-page", restrictedTo: course.restricted_to, content: courseOverview(courseFile, course, coursePlaylists, course.credentialMemberships) }));
 
     const coursePlaylistsRoot = path.join(outputRoot, "courses", course.slug, "playlists");
     for (const [playlistIndex, playlist] of coursePlaylists.entries()) {

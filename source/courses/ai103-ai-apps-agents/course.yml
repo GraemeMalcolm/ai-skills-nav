@@ -1,0 +1,21 @@
+title: Develop AI apps and agents on Microsoft Azure
+course_number: AI-103
+credentials:
+  - ai-103
+description: In this course, you'll learn how to develop artificial intelligence (AI) apps and agents on Microsoft Azure. The course explores the capabilities of Microsoft Foundry and how to use it to create AI solutions that can perform tasks, interact with users, and integrate with other systems. You'll gain hands-on experience in building, testing, and deploying AI apps and agents, as well as best practices for designing effective interactions.
+level: 200
+duration: 4 days
+experience_type: Microsoft Official Curriculum
+audience:
+  - Developer
+avatar: anton
+prerequisites:
+  - Software development experience and foundational knowledge of generative AI, APIs, and Microsoft 365
+learning_outcomes:
+  - Develop generative AI solutions with Microsoft Foundry
+  - Develop agents with Microsoft Foundry
+  - Develop speech and natural language processing (NLP) solutions with Microsoft Foundry
+  - Develop computer vision and information extraction solutions with Microsoft Foundry
+playlists:
+  - agent-developer
+  - microsoft-iq

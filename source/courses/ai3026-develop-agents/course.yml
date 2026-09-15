@@ -1,8 +1,8 @@
 title: Develop AI agents with Microsoft Foundry
 course_number: AI-3026
 credentials:
-  - Microsoft Applied Skill - Develop AI agents with Microsoft Foundry
-  - Microsoft Certified - Azure AI Apps and Agents Developer Associate
+  - ai-3026
+  - ai-103
 description: In this course, you'll learn how to develop an artificial intelligence (AI) agent with Microsoft Foundry. The course explores the capabilities of Microsoft Foundry and how to use it to create AI agents that can perform tasks, interact with users, and integrate with other systems. You'll gain hands-on experience in building, testing, and deploying AI agents, as well as best practices for designing effective agent interactions.
 level: 200
 duration: 1 day
@@ -14,8 +14,5 @@ prerequisites:
   - Software development experience and foundational knowledge of generative AI, APIs, and Microsoft 365
 learning_outcomes:
   - Develop and deploy AI agents with Microsoft Foundry and integrated MCP tool ecosystems.
-  - Extend AI agents with enterprise knowledge and publish them into Microsoft 365 experiences.
-  - Develop, deploy, ground, and integrate production AI agents with Microsoft Foundry, MCP, and Microsoft 365.
 playlists:
   - agent-developer
-  - microsoft-iq
