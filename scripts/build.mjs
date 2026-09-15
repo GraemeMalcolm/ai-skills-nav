@@ -615,7 +615,17 @@ function overviewFacts(item) {
   return facts.length ? `<dl class="overview-facts">${facts.join("")}</dl>` : "";
 }
 
-function learningDetails(item) {
+function componentMemberships(outputFile, item, type) {
+  const memberships = type === "modules" ? item.playlistMemberships : type === "playlists" ? item.courseMemberships : [];
+  if (!memberships?.length) return "";
+  const membershipType = type === "modules" ? "playlists" : "courses";
+  return `<section aria-labelledby="memberships-${escapeHtml(item.slug)}"><h2 id="memberships-${escapeHtml(item.slug)}">This skilling is a component of:</h2><ul>${memberships.map((membership) => {
+    const target = path.join(outputRoot, membershipType, membership.slug, "index.html");
+    return `<li${accessData(membership)}><a href="${relativeUrl(outputFile, target)}">${escapeHtml(membership.title)}</a></li>`;
+  }).join("")}</ul></section>`;
+}
+
+function learningDetails(outputFile, item, type) {
   if (!item.prerequisites || !item.learning_outcomes) return "";
   const outcomes = item.learning_outcomes.map((outcome, index) => {
     const isOverall = item.learning_outcomes.length > 1 && index === item.learning_outcomes.length - 1;
@@ -624,6 +634,7 @@ function learningDetails(item) {
   return `<div class="learning-details">
     <section aria-labelledby="prerequisites-${escapeHtml(item.slug)}"><h2 id="prerequisites-${escapeHtml(item.slug)}">Prerequisites</h2><ul>${item.prerequisites.map((prerequisite) => `<li>${escapeHtml(prerequisite)}</li>`).join("")}</ul></section>
     <section aria-labelledby="outcomes-${escapeHtml(item.slug)}"><h2 id="outcomes-${escapeHtml(item.slug)}">Learning outcomes</h2><ul>${outcomes}</ul></section>
+    ${componentMemberships(outputFile, item, type)}
   </div>`;
 }
 
@@ -772,7 +783,7 @@ function overview(outputFile, item, type, action = "", imageDetails = "", footer
       <p class="lede">${escapeHtml(item.description || "")}</p>
       ${metadataLine(item) ? `<p class="metadata">${metadataLine(item)}</p>` : ""}
       ${overviewFacts(item)}
-      ${learningDetails(item)}
+      ${learningDetails(outputFile, item, type)}
       ${action}
     </div>
     ${footer}
@@ -1183,6 +1194,16 @@ async function build() {
     });
     course.rating = averageRating(childPlaylists);
     buildSearchContext(course, childPlaylists);
+  }
+  for (const module of modules) {
+    Object.defineProperty(module, "playlistMemberships", {
+      value: playlists.filter((playlist) => playlist.modules.includes(module.slug)),
+    });
+  }
+  for (const playlist of playlists) {
+    Object.defineProperty(playlist, "courseMemberships", {
+      value: courses.filter((course) => course.playlists.includes(playlist.slug)),
+    });
   }
   for (const credential of credentials) {
     if (credential.courses !== undefined && !Array.isArray(credential.courses)) throw new Error(`Credential ${credential.slug} courses must be a list`);
