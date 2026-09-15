@@ -421,7 +421,7 @@ function agentFlyout(outputFile, avatar, options = {}) {
 }
 
 function personalPlaylistDialog(outputFile, module) {
-  const playlistsUrl = relativeUrl(outputFile, path.join(outputRoot, "my-playlists", "index.html"));
+  const playlistsUrl = relativeUrl(outputFile, path.join(outputRoot, "personalized-plan", "index.html"));
   const moduleName = module?.title || "";
   const modulePath = module ? `modules/${module.slug}/index.html` : "";
   return `<dialog class="filter-dialog personal-playlist-dialog" id="personal-playlist-dialog" data-personal-playlist-dialog data-module-name="${escapeHtml(moduleName)}" data-module-path="${escapeHtml(modulePath)}" data-playlists-url="${escapeHtml(playlistsUrl)}" aria-labelledby="personal-playlist-title">
@@ -1083,7 +1083,7 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
   const indexFile = path.join(routeRoot, "index.html");
   const pageTargets = pages.map((page) => path.join(routeRoot, "pages", page.slug, "index.html"));
   const sidebar = sidebarFactory ? sidebarFactory(indexFile) : "";
-  const parents = breadcrumbParents || [{ label: "Skilling content", target: path.join(outputRoot, "skilling-content", "index.html") }];
+  const parents = breadcrumbParents || [{ label: "Catalog", target: path.join(outputRoot, "catalog", "index.html") }];
   const moduleBreadcrumbs = [...parents, { label: module.title }];
   const routeRestrictions = combinedRestrictions(navigationContext.restrictedTo, module.restricted_to);
 
@@ -1254,10 +1254,6 @@ async function build() {
   const catalogFile = path.join(outputRoot, "catalog", "index.html");
   const officialCurriculumFile = path.join(outputRoot, "official-curriculum", "index.html");
   const credentialsFile = path.join(outputRoot, "credentials", "index.html");
-  const coursesFile = path.join(outputRoot, "courses", "index.html");
-  const playlistsFile = path.join(outputRoot, "playlists", "index.html");
-  const skillingContentFile = path.join(outputRoot, "skilling-content", "index.html");
-  const personalPlaylistsFile = path.join(outputRoot, "my-playlists", "index.html");
   const personalizedPlanFile = path.join(outputRoot, "personalized-plan", "index.html");
   const heroSearchHints = escapeHtml(JSON.stringify([
     "Develop agents with Microsoft Foundry",
@@ -1314,67 +1310,7 @@ async function build() {
     ${catalogFilterDialog(credentials, ["credential_type", "audience"], "credentials")}`;
   await writePage(credentialsFile, shell({ outputFile: credentialsFile, title: "Credentials", breadcrumbs: [{ label: "Credentials" }], avatar: defaultAvatar, content: credentialsContent, bodyClass: "catalog-page" }));
 
-  const courseSearch = catalogSearch("course-search-input", "Search courses", "Search courses");
-  const courseTools = `<div class="catalog-section-tools">${courseSearch}<a class="filter-trigger" href="${relativeUrl(coursesFile, catalogFile)}#catalog-filter">Filter<span class="filter-count" data-filter-count hidden></span></a></div>`;
-  const coursesContent = `<section class="catalog-intro"><p class="kicker">Comprehensive training</p><h1>Courses</h1><p>Structured, multi-topic learning experiences that can be completed online as self-paced learning, or delivered as instructor-led training</p></section>
-    <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Explore the catalog</p><h2>Available courses</h2></div>${courseTools}</div><div class="card-grid">${courses.map((item) => card(coursesFile, item, "courses")).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p></section>`;
-  await writePage(coursesFile, shell({ outputFile: coursesFile, title: "Courses", breadcrumbs: [{ label: "Courses" }], avatar: defaultAvatar, content: coursesContent, bodyClass: "catalog-page" }));
-
-  const playlistSearch = catalogSearch("playlist-search-input", "Search playlists", "Search playlists");
-  const playlistTools = `<div class="catalog-section-tools">${playlistSearch}<a class="filter-trigger" href="${relativeUrl(playlistsFile, catalogFile)}#catalog-filter">Filter<span class="filter-count" data-filter-count hidden></span></a></div>`;
-  const playlistsContent = `<section class="catalog-intro"><p class="kicker">Curated learning</p><h1>Skilling playlists</h1><p>Explore curated collections of related learning experiences that help you build skills in a focused sequence.</p></section>
-    <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Explore the catalog</p><h2>Available playlists</h2></div>${playlistTools}</div><div class="card-grid">${playlists.map((item) => card(playlistsFile, item, "playlists")).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No playlists match your search and filters.</p></section>`;
-  await writePage(playlistsFile, shell({ outputFile: playlistsFile, title: "Skilling playlists", breadcrumbs: [{ label: "Skilling playlists" }], avatar: defaultAvatar, content: playlistsContent, bodyClass: "catalog-page" }));
-
-  const moduleSearch = catalogSearch("module-search-input", "Search skilling content", "Search skilling content");
-  const moduleTools = `<div class="catalog-section-tools">${moduleSearch}<a class="filter-trigger" href="${relativeUrl(skillingContentFile, catalogFile)}#catalog-filter">Filter<span class="filter-count" data-filter-count hidden></span></a></div>`;
-  const skillingContent = `<section class="catalog-intro"><p class="kicker">Build your skills</p><h1>Skilling content</h1><p>Explore all learning experiences and find content by topic, modality, level, or audience.</p></section>
-    <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Explore the catalog</p><h2>Available learning experiences</h2></div>${moduleTools}</div><div class="card-grid" data-module-grid>${modules.map((item) => card(skillingContentFile, item, "modules")).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No skilling content match your search and filters.</p></section>`;
-  await writePage(skillingContentFile, shell({ outputFile: skillingContentFile, title: "Skilling content", breadcrumbs: [{ label: "Skilling content" }], avatar: defaultAvatar, content: skillingContent, bodyClass: "catalog-page", hasModuleCards: true }));
-
-  const moduleCatalog = modules.map((module) => ({
-    id: module.slug,
-    name: module.title,
-    description: module.description || "",
-    restrictedTo: module.restricted_to,
-    path: `modules/${module.slug}/index.html`,
-    pages: (module.pages.length > 1 ? module.pages : []).map((page) => ({
-      name: page.title,
-      path: `modules/${module.slug}/pages/${page.slug}/index.html`,
-    })),
-    thumbnail: relativeUrl(personalPlaylistsFile, path.join(outputRoot, "content", "modules", module.slug, "thumbnail.png")),
-  }));
-  const personalPlaylistsContent = `<div class="page-actions">${shareTrigger(true, "filter-trigger")}</div>${shareDialog(true, false)}
-  <div data-personal-playlists data-auth-only data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalPlaylistsFile, path.join(outputRoot, "assets", "playlist.png"))}">
-    <section class="catalog-intro"><p class="kicker">Personal collection</p><h1>My Playlists</h1><p>Create playlists from any learning experience and return here to continue learning.</p></section>
-    <section class="catalog-section"><div class="section-heading"><div class="section-heading-row"><p class="kicker">Your collections</p><button class="filter-trigger" type="button" data-new-personal-playlist-open>New personal playlist</button></div><h2>Personal playlists</h2></div><div class="card-grid" data-personal-playlist-grid></div><p class="filter-empty" data-personal-playlist-empty hidden>You have not created any personal playlists yet.</p></section>
-  </div>
-  <dialog class="filter-dialog personal-playlist-dialog" data-new-personal-playlist-dialog aria-labelledby="new-personal-playlist-title">
-    <form data-new-personal-playlist-form>
-      <header class="filter-dialog-header"><div><p class="kicker">Personal collection</p><h2 id="new-personal-playlist-title">New personal playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-new-personal-playlist-close>${icon("close")}</button></header>
-      <div class="filter-dialog-body personal-playlist-fields">
-        <label><span>Name</span><input type="text" maxlength="80" data-new-personal-playlist-name></label>
-        <label><span>Description</span><textarea rows="3" maxlength="300" data-new-personal-playlist-description></textarea></label>
-        <p class="personal-playlist-status" data-new-personal-playlist-status role="status" aria-live="polite" hidden></p>
-      </div>
-      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-new-personal-playlist-close>Cancel</button><button class="primary-button" type="submit">Create playlist</button></footer>
-    </form>
-  </dialog>
-  <dialog class="filter-dialog personal-playlist-dialog" data-edit-personal-playlist-dialog aria-labelledby="edit-personal-playlist-title">
-    <form data-edit-personal-playlist-form>
-      <header class="filter-dialog-header"><div><p class="kicker">Personal collection</p><h2 id="edit-personal-playlist-title">Edit playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-edit-personal-playlist-close>${icon("close")}</button></header>
-      <div class="filter-dialog-body personal-playlist-fields">
-        <label><span>Name</span><input type="text" maxlength="80" data-edit-personal-playlist-name></label>
-        <label><span>Description</span><textarea rows="3" maxlength="300" data-edit-personal-playlist-description></textarea></label>
-        <p class="personal-playlist-status" data-edit-personal-playlist-status role="status" aria-live="polite" hidden></p>
-      </div>
-      <footer class="filter-dialog-actions"><button class="text-button" type="button" data-edit-personal-playlist-close>Cancel</button><button class="primary-button" type="submit">Save changes</button></footer>
-    </form>
-  </dialog>`;
-  const personalPlaylistSidebar = `<aside class="sidebar" data-sidebar><div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div><nav aria-label="Playlist" data-personal-playlist-navigation></nav></aside><div class="sidebar-scrim" data-menu-close></div>`;
-  await writePage(personalPlaylistsFile, shell({ outputFile: personalPlaylistsFile, title: "My Playlists", breadcrumbs: [{ label: "Personal playlists" }], sidebar: personalPlaylistSidebar, avatar: defaultAvatar, content: personalPlaylistsContent, bodyClass: "catalog-page" }));
-
-  const personalizedPlanContent = `<div data-personalized-plan data-auth-only data-playlists-url="${relativeUrl(personalizedPlanFile, personalPlaylistsFile)}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}">
+  const personalizedPlanContent = `<div data-personalized-plan data-auth-only data-playlists-url="${relativeUrl(personalizedPlanFile, personalizedPlanFile)}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}">
     <section class="catalog-intro"><p class="kicker">Personalized learning</p><h1>My skilling plan</h1><p data-personalized-summary>Your recommendations are based on the role selected in your profile.</p></section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Recommended learning</p><h2>Skilling for my role</h2></div><div class="card-grid" data-plan-paged-grid data-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-role-skilling-empty hidden>No skilling items match your selected role.</p><nav class="catalog-pagination" aria-label="Skilling for my role pages" data-plan-pagination></nav></section>
     <section class="catalog-section alt" data-other-role-skilling-section hidden><div class="section-heading"><p class="kicker">Explore related paths</p><h2>Skilling for other roles of interest</h2></div><div class="card-grid" data-plan-paged-grid data-other-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-other-role-skilling-empty hidden>No skilling items match your other roles of interest.</p><nav class="catalog-pagination" aria-label="Skilling for other roles pages" data-plan-pagination></nav></section>
@@ -1409,7 +1345,7 @@ async function build() {
     });
     const playlistFile = path.join(outputRoot, "playlists", playlist.slug, "index.html");
     const sidebar = playlistSidebar(playlistFile, playlist, playlistModules);
-    const playlistBreadcrumbs = [{ label: "Skilling playlists", target: playlistsFile }, { label: playlist.title }];
+    const playlistBreadcrumbs = [{ label: "Catalog", target: catalogFile }, { label: playlist.title }];
     const firstModuleTarget = playlistModules.length
       ? path.join(outputRoot, "playlists", playlist.slug, "modules", playlistModules[0].slug, "index.html")
       : null;
@@ -1422,7 +1358,7 @@ async function build() {
       const routeRoot = path.join(outputRoot, "playlists", playlist.slug, "modules", module.slug);
       const sidebarFactory = (outputFile, activePage) => playlistSidebar(outputFile, playlist, playlistModules, module.slug, activePage);
       const breadcrumbParents = [
-        { label: "Skilling playlists", target: playlistsFile },
+        { label: "Catalog", target: catalogFile },
         ...(playlistModules.length > 1 ? [{ label: playlist.title, target: playlistFile }] : []),
       ];
       const previousTarget = moduleIndex > 0
@@ -1450,14 +1386,14 @@ async function build() {
       };
     });
     const courseFile = path.join(outputRoot, "courses", course.slug, "index.html");
-    const courseBreadcrumbs = [{ label: "Courses", target: coursesFile }, { label: course.title }];
+    const courseBreadcrumbs = [{ label: "Catalog", target: catalogFile }, { label: course.title }];
     await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, sidebar: courseSidebar(courseFile, course, coursePlaylists), avatar: course.avatarData, bodyClass: "learning-page", restrictedTo: course.restricted_to, content: courseOverview(courseFile, course, coursePlaylists) }));
 
     const coursePlaylistsRoot = path.join(outputRoot, "courses", course.slug, "playlists");
     for (const [playlistIndex, playlist] of coursePlaylists.entries()) {
       const playlistFile = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "index.html");
       const playlistBreadcrumbs = [
-        { label: "Courses", target: coursesFile },
+        { label: "Catalog", target: catalogFile },
         { label: course.title, target: courseFile },
         { label: playlist.title },
       ];
@@ -1481,7 +1417,7 @@ async function build() {
         const routeRoot = path.join(outputRoot, "courses", course.slug, "playlists", playlist.slug, "modules", module.slug);
         const sidebarFactory = (outputFile, activePage) => courseSidebar(outputFile, course, coursePlaylists, playlist.slug, module.slug, activePage);
         const breadcrumbParents = [
-          { label: "Courses", target: coursesFile },
+          { label: "Catalog", target: catalogFile },
           { label: course.title, target: courseFile },
           ...(playlist.modules.length > 1 ? [{ label: playlist.title, target: playlistFile }] : []),
         ];
