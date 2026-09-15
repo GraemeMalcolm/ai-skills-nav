@@ -1294,9 +1294,6 @@ async function build() {
 
   const officialCurriculumType = "Microsoft Official Curriculum";
   const officialCourses = courses.filter((item) => item.experience_type === officialCurriculumType);
-  const officialPlaylists = playlists.filter((item) => item.experience_type === officialCurriculumType);
-  const officialModules = modules.filter((item) => item.experience_type === officialCurriculumType);
-  const officialItems = [...officialCourses, ...officialPlaylists, ...officialModules];
   const officialSearch = catalogSearch("official-curriculum-search-input", "Search official curriculum", "Search official curriculum");
   const officialTools = `<div class="catalog-section-tools">${officialSearch}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
   const trainingPartnersDialog = `<dialog class="filter-dialog training-partners-dialog" data-training-partners-dialog aria-labelledby="training-partners-title">
@@ -1306,10 +1303,8 @@ async function build() {
   </dialog>`;
   const officialCurriculumContent = `<section class="catalog-intro"><p class="kicker">Microsoft training</p><h1>Official Curriculum</h1><p>Microsoft Official Curriculum training is designed to teach real-world technical skills with Microsoft technologies and prepare you for Microsoft credentials.</p><div class="catalog-intro-action"><a class="filter-trigger" href="#training-partners" data-training-partners-open>Training Services Partners</a></div></section>
     <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">Comprehensive training</p><h2>Courses</h2></div>${officialTools}</div><div class="card-grid">${officialCourses.map((item) => card(officialCurriculumFile, item, "courses")).join("")}</div><p class="filter-empty" data-course-empty role="status" aria-live="polite" hidden>No courses match your search and filters.</p></section>
-    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Skilling playlists</h2></div><div class="card-grid">${officialPlaylists.map((item) => card(officialCurriculumFile, item, "playlists")).join("")}</div><p class="filter-empty" data-playlist-empty role="status" aria-live="polite" hidden>No playlists match your search and filters.</p></section>
-    <section class="catalog-section"><div class="section-heading"><p class="kicker">Build your skills</p><h2>Skilling content</h2></div><div class="card-grid" data-module-grid>${officialModules.map((item) => card(officialCurriculumFile, item, "modules")).join("")}</div><p class="filter-empty" data-module-empty role="status" aria-live="polite" hidden>No skilling content matches your search and filters.</p></section>
-    ${catalogFilterDialog(officialItems, ["audience", "level", "modalities", "duration"], "official curriculum")}${trainingPartnersDialog}`;
-  await writePage(officialCurriculumFile, shell({ outputFile: officialCurriculumFile, title: "Official Curriculum", breadcrumbs: [{ label: "Official Curriculum" }], avatar: defaultAvatar, content: officialCurriculumContent, bodyClass: "catalog-page", hasModuleCards: true }));
+    ${catalogFilterDialog(officialCourses, ["audience", "level", "modalities", "duration"], "official curriculum")}${trainingPartnersDialog}`;
+  await writePage(officialCurriculumFile, shell({ outputFile: officialCurriculumFile, title: "Official Curriculum", breadcrumbs: [{ label: "Official Curriculum" }], avatar: defaultAvatar, content: officialCurriculumContent, bodyClass: "catalog-page" }));
 
   const credentialSearch = catalogSearch("credential-search-input", "Search credentials", "Search credentials");
   const credentialTools = `<div class="catalog-section-tools">${credentialSearch}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
