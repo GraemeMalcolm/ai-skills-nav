@@ -547,6 +547,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
   const favicon = relativeUrl(outputFile, path.join(outputRoot, "favicon.ico"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
+  const personalizedPlan = relativeUrl(outputFile, path.join(outputRoot, "personalized-plan", "index.html"));
   const catalog = relativeUrl(outputFile, path.join(outputRoot, "catalog", "index.html"));
   const officialCurriculum = relativeUrl(outputFile, path.join(outputRoot, "official-curriculum", "index.html"));
   const credentials = relativeUrl(outputFile, path.join(outputRoot, "credentials", "index.html"));
@@ -577,7 +578,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
 <body class="${escapeHtml(bodyClass)}"${module ? ` data-module-slug="${escapeHtml(module.slug)}"` : ""} data-restricted-to="${escapeHtml(JSON.stringify(restrictedTo))}">
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
-    <div class="primary-navigation"><a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a><a class="filter-trigger" href="${catalog}">Catalog</a><a class="filter-trigger" href="${officialCurriculum}">Official Curriculum</a><a class="filter-trigger" href="${credentials}">Credentials</a></div>
+    <div class="primary-navigation"><a class="brand" href="${home}"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>${escapeHtml(eyebrow)}</span></a><a class="filter-trigger" href="${personalizedPlan}" data-auth-only hidden>My Skilling</a><a class="filter-trigger" href="${catalog}">Catalog</a><a class="filter-trigger" href="${officialCurriculum}">Official Curriculum</a><a class="filter-trigger" href="${credentials}">Credentials</a></div>
     ${headerExtra}${signInDialog(outputFile)}
   </header>
   ${breadcrumbs(outputFile, breadcrumbItems)}
