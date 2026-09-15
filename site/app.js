@@ -119,6 +119,8 @@ const canAccess = (restrictedTo) => {
   const domains = Array.isArray(restrictedTo) ? restrictedTo : parseRestrictedDomains(restrictedTo);
   return domains.length === 0 || Boolean(currentAuth && domains.includes(currentAuth.domain));
 };
+const isAssignedToCurrentOrganization = (card) => Boolean(currentAuth
+  && parseRestrictedDomains(card.dataset.assignedTo).includes(currentAuth.domain));
 
 const authLink = document.querySelector("[data-auth-open]");
 const signInDialog = document.querySelector("[data-sign-in-dialog]");
@@ -1635,20 +1637,12 @@ const applyCatalogVisibility = () => {
   }
   catalogCards.forEach((card) => {
     if (isPersonalizedPage && card.closest("[data-organization-skilling-grid]")) {
-      const domains = [
-        ...parseRestrictedDomains(card.dataset.restrictedTo),
-        ...parseRestrictedDomains(card.dataset.assignedTo),
-      ];
-      if (currentAuth && domains.includes(currentAuth.domain)) availableOrganizationItems++;
+      if (isAssignedToCurrentOrganization(card) && canAccess(card.dataset.restrictedTo)) availableOrganizationItems++;
     }
     let matches = canAccess(card.dataset.restrictedTo) && matchesSearch(card);
     if (matches && isPersonalizedPage) {
       if (card.closest("[data-organization-skilling-grid]")) {
-        const domains = [
-          ...parseRestrictedDomains(card.dataset.restrictedTo),
-          ...parseRestrictedDomains(card.dataset.assignedTo),
-        ];
-        matches = Boolean(currentAuth && domains.includes(currentAuth.domain));
+        matches = isAssignedToCurrentOrganization(card);
       } else {
         const audiences = JSON.parse(card.dataset.audience || "[]");
         matches = card.closest("[data-other-role-skilling-grid]")

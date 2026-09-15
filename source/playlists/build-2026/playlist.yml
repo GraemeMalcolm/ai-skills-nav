@@ -2,7 +2,8 @@ title: Build 2026 Highlights
 description: Microsoft Build is the annual developer conference hosted by Microsoft, where the latest technologies and innovations are showcased. Catch up on the major announcements at Microsoft Build 2026.
 level: 200
 duration: 30 minutes
-assigned_to: microsoft.com
+assigned_to:
+  - microsoft.com
 audience:
   - Developer
   - Solution Architect
@@ -16,4 +17,4 @@ learning_outcomes:
 modules:
   - majorana-2
   - mai-model-announcement
-  - satya_-jenson
+  - satya-jenson

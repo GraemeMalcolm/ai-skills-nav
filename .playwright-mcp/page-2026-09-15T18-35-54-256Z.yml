@@ -1,0 +1,45 @@
+- generic [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "AI Skills Nav" [ref=e5] [cursor=pointer]:
+        - /url: ../index.html
+      - link "Catalog" [ref=e12] [cursor=pointer]:
+        - /url: ../catalog/index.html
+      - link "Official Curriculum" [ref=e13] [cursor=pointer]:
+        - /url: ../official-curriculum/index.html
+      - link "Credentials" [ref=e14] [cursor=pointer]:
+        - /url: ../credentials/index.html
+    - link "Sign-in" [ref=e16] [cursor=pointer]:
+      - /url: "#sign-in"
+    - dialog [ref=e17]:
+      - generic [ref=e18]:
+        - banner [ref=e19]:
+          - generic [ref=e20]:
+            - img "Microsoft" [ref=e21]
+            - heading "Sign-in" [level=2] [ref=e22]
+          - button "Close sign-in" [ref=e23] [cursor=pointer]
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - generic [ref=e28]: Email address
+            - textbox "Email address" [active] [ref=e29]
+          - generic [ref=e30]:
+            - generic [ref=e31]: Password
+            - textbox "Password" [ref=e32]
+          - status [ref=e33]: Sign in to view your personalized skilling plan.
+        - contentinfo [ref=e34]:
+          - button "Cancel" [ref=e35] [cursor=pointer]
+          - button "Sign-in" [ref=e36]
+  - navigation "Breadcrumb" [ref=e37]:
+    - list [ref=e38]:
+      - listitem [ref=e39]:
+        - link "Home" [ref=e40] [cursor=pointer]:
+          - /url: ../index.html
+      - listitem [ref=e41]:
+        - text: /
+        - generic [ref=e42]: My skilling plan
+  - generic [ref=e43]:
+    - main
+  - button "Chat with Nav" [ref=e45] [cursor=pointer]:
+    - generic [ref=e46]: Ask Nav
