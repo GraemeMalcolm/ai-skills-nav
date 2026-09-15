@@ -1467,7 +1467,7 @@ let appliedModalitiesMode = persistedFilterState.modalitiesMode;
 let searchTerms = [];
 let searchActive = false;
 const updateFilterCounts = () => {
-  const selectedCount = activeFilterFields.reduce((total, field) => total + appliedFilters[field].length, 0);
+  const selectedCount = activeFilterFields.reduce((total, field) => total + (field === "level" ? Number(appliedFilters[field].length > 0) : appliedFilters[field].length), 0);
   document.querySelectorAll("[data-filter-count]").forEach((count) => {
     count.textContent = String(selectedCount);
     count.hidden = selectedCount === 0;
@@ -1522,6 +1522,11 @@ const applyCatalogVisibility = () => {
         if (field === "modalities" && appliedModalitiesMode === "containing" && !appliedFilters[field].length) return false;
         if (!appliedFilters[field].length) return true;
         const values = JSON.parse(card.dataset[field] || "[]");
+        if (field === "level") {
+          const levels = values.map(Number);
+          const [minimum, maximum = minimum] = appliedFilters.level.map(Number);
+          return levels.some((level) => level >= minimum && level <= maximum);
+        }
         return appliedFilters[field].some((selected) => values.includes(selected));
       });
     }
@@ -1645,6 +1650,11 @@ if (animatedSearch && animatedSearchInput) {
 }
 
 if (filterDialog && filterForm && filterCards.length) {
+  const filterLevelRange = filterForm.querySelector("[data-filter-level-range]");
+  const filterLevelMin = filterForm.querySelector("[data-filter-level-min]");
+  const filterLevelMax = filterForm.querySelector("[data-filter-level-max]");
+  const filterLevelMinOutput = filterForm.querySelector("[data-filter-level-min-output]");
+  const filterLevelMaxOutput = filterForm.querySelector("[data-filter-level-max-output]");
   const durationLabels = ["Minutes", "Hours", "Days"];
   const durationSlider = filterForm.querySelector("[data-duration-slider]");
   const durationOutput = durationSlider ? filterForm.querySelector(`#${durationSlider.getAttribute("aria-describedby")}`) : null;
@@ -1658,7 +1668,9 @@ if (filterDialog && filterForm && filterCards.length) {
 
   const readFilters = () => Object.fromEntries(filterFields.map((name) => [
     name,
-    name === "duration"
+    name === "level"
+      ? filterLevelMin && filterLevelMax && (filterLevelMin.value !== "100" || filterLevelMax.value !== "500") ? [filterLevelMin.value, filterLevelMax.value] : []
+      : name === "duration"
       ? durationSlider?.dataset.active === "true" ? [durationLabels[Number(durationSlider.value)]] : []
       : name === "modalities" && modalitiesMode() !== "containing"
       ? []
@@ -1673,6 +1685,24 @@ if (filterDialog && filterForm && filterCards.length) {
     durationOutput.textContent = selectedIndex >= 0 ? `${selection} selected` : "Any duration";
   };
 
+  const syncLevelRange = (changedInput) => {
+    if (!filterLevelRange || !filterLevelMin || !filterLevelMax || !filterLevelMinOutput || !filterLevelMaxOutput) return;
+    if (changedInput === filterLevelMin && Number(filterLevelMin.value) > Number(filterLevelMax.value)) filterLevelMax.value = filterLevelMin.value;
+    if (changedInput === filterLevelMax && Number(filterLevelMax.value) < Number(filterLevelMin.value)) filterLevelMin.value = filterLevelMax.value;
+    filterLevelMinOutput.value = filterLevelMin.value;
+    filterLevelMaxOutput.value = filterLevelMax.value;
+    filterLevelRange.style.setProperty("--range-start", `${(Number(filterLevelMin.value) - 100) / 4}%`);
+    filterLevelRange.style.setProperty("--range-end", `${(500 - Number(filterLevelMax.value)) / 4}%`);
+  };
+
+  const restoreLevelRange = () => {
+    if (!filterLevelMin || !filterLevelMax) return;
+    const savedLevels = appliedFilters.level.map(Number).filter((level) => proficiencyLevels.includes(level));
+    filterLevelMin.value = String(savedLevels.length ? Math.min(...savedLevels) : 100);
+    filterLevelMax.value = String(savedLevels.length ? Math.max(...savedLevels) : 500);
+    syncLevelRange();
+  };
+
   const restoreAppliedFilters = () => {
     // Closing/cancelling is transactional: discard checkbox edits that were
     // made after the dialog opened but were never explicitly applied.
@@ -1684,6 +1714,7 @@ if (filterDialog && filterForm && filterCards.length) {
     const mode = filterForm.querySelector(`input[name="modalities-mode"][value="${appliedModalitiesMode}"]`);
     if (mode) mode.checked = true;
     syncModalitiesControls();
+    restoreLevelRange();
     syncDurationControl();
   };
 
@@ -1697,6 +1728,8 @@ if (filterDialog && filterForm && filterCards.length) {
   };
 
   filterForm.querySelectorAll('input[name="modalities-mode"]').forEach((input) => input.addEventListener("change", syncModalitiesControls));
+  filterLevelMin?.addEventListener("input", () => syncLevelRange(filterLevelMin));
+  filterLevelMax?.addEventListener("input", () => syncLevelRange(filterLevelMax));
   durationSlider?.addEventListener("input", () => syncDurationControl(durationLabels[Number(durationSlider.value)]));
   restoreAppliedFilters();
   document.querySelector("[data-filter-open]")?.addEventListener("click", () => filterDialog.showModal());
@@ -1717,6 +1750,7 @@ if (filterDialog && filterForm && filterCards.length) {
   });
   filterDialog.querySelector("[data-filter-clear]")?.addEventListener("click", () => {
     filterForm.reset();
+    syncLevelRange();
     syncDurationControl("");
     applyFilters();
     filterDialog.close();

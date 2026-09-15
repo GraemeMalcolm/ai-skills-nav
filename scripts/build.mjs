@@ -728,6 +728,18 @@ function durationFilterOptions() {
   </fieldset>`;
 }
 
+function levelFilterOptions() {
+  return `<fieldset class="filter-group" data-level-filter><legend>Level</legend>
+    <div class="profile-proficiency-values"><span>Minimum <output for="filter-level-min" data-filter-level-min-output>100</output></span><span>Maximum <output for="filter-level-max" data-filter-level-max-output>500</output></span></div>
+    <div class="profile-range-control" data-filter-level-range>
+      <div class="profile-range-track" aria-hidden="true"></div>
+      <input id="filter-level-min" type="range" min="100" max="500" step="100" value="100" aria-label="Minimum level" data-filter-level-min>
+      <input id="filter-level-max" type="range" min="100" max="500" step="100" value="500" aria-label="Maximum level" data-filter-level-max>
+    </div>
+    <div class="profile-range-ticks" aria-hidden="true"><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span></div>
+  </fieldset>`;
+}
+
 function catalogFilterDialog(items, fields, subject) {
   const uniqueValues = (selector) => [...new Set(items.flatMap(selector).filter((value) => value !== undefined && value !== null && value !== ""))]
     .sort((left, right) => String(left).localeCompare(String(right), undefined, { numeric: true }));
@@ -743,7 +755,7 @@ function catalogFilterDialog(items, fields, subject) {
     <form method="dialog" data-filter-form>
       <header class="filter-dialog-header"><div><p class="kicker">Refine ${escapeHtml(subject)}</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
       <div class="filter-dialog-body">
-        ${fields.map((field) => field === "modalities" ? modalityFilterOptions(uniqueValues(selectors[field]).map(String)) : field === "duration" ? durationFilterOptions() : filterOptions(field, uniqueValues(selectors[field]).map(String), labels[field])).join("")}
+        ${fields.map((field) => field === "modalities" ? modalityFilterOptions(uniqueValues(selectors[field]).map(String)) : field === "duration" ? durationFilterOptions() : field === "level" ? levelFilterOptions() : filterOptions(field, uniqueValues(selectors[field]).map(String), labels[field])).join("")}
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-filter-clear>Clear all</button><button class="primary-button" type="submit" value="apply">Apply filters</button></footer>
     </form>
