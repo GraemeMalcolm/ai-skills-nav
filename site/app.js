@@ -1391,6 +1391,52 @@ if (personalPlaylistsPage) {
 }
 
 const personalizedPlanPage = document.querySelector("[data-personalized-plan]");
+const planPageSize = 4;
+const planGridPages = new WeakMap();
+
+const paginatePlanGrid = (grid, requestedPage = planGridPages.get(grid) || 1) => {
+  const pagination = grid.parentElement.querySelector("[data-plan-pagination]");
+  if (!pagination) return;
+  const cards = [...grid.children].filter((card) => card.matches("[data-catalog-card], .content-card"));
+  cards.forEach((card) => {
+    if (card.dataset.planPageHidden === "true") {
+      card.hidden = false;
+      delete card.dataset.planPageHidden;
+    }
+  });
+  const eligibleCards = cards.filter((card) => !card.hidden);
+  const pageCount = Math.ceil(eligibleCards.length / planPageSize);
+  const page = Math.min(Math.max(1, requestedPage), Math.max(1, pageCount));
+  planGridPages.set(grid, page);
+  const pageStart = (page - 1) * planPageSize;
+  eligibleCards.forEach((card, index) => {
+    const pageHidden = index < pageStart || index >= pageStart + planPageSize;
+    card.hidden = pageHidden;
+    if (pageHidden) card.dataset.planPageHidden = "true";
+  });
+  pagination.replaceChildren();
+  pagination.hidden = pageCount <= 1;
+  if (pageCount <= 1) return;
+  const addButton = (label, targetPage, options = {}) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = label;
+    button.disabled = options.disabled || false;
+    if (options.current) button.setAttribute("aria-current", "page");
+    if (options.label) button.setAttribute("aria-label", options.label);
+    button.addEventListener("click", () => paginatePlanGrid(grid, targetPage));
+    pagination.append(button);
+  };
+  addButton("Previous", page - 1, { disabled: page === 1 });
+  for (let pageNumber = 1; pageNumber <= pageCount; pageNumber++) {
+    addButton(String(pageNumber), pageNumber, { current: pageNumber === page, label: `Page ${pageNumber}` });
+  }
+  addButton("Next", page + 1, { disabled: page === pageCount });
+};
+
+const paginatePlanGrids = () => {
+  personalizedPlanPage?.querySelectorAll("[data-plan-paged-grid]").forEach((grid) => paginatePlanGrid(grid));
+};
 
 if (personalizedPlanPage && !currentAuth) {
   openSignInDialog("Sign in to view your personalized skilling plan.");
@@ -1607,6 +1653,7 @@ const applyCatalogVisibility = () => {
   if (roleSkillingEmptyState) roleSkillingEmptyState.hidden = visibleRoleItems !== 0;
   if (otherRoleSkillingEmptyState) otherRoleSkillingEmptyState.hidden = visibleOtherRoleItems !== 0;
   if (organizationSkillingEmptyState) organizationSkillingEmptyState.hidden = visibleOrganizationItems !== 0;
+  if (isPersonalizedPage) paginatePlanGrids();
 };
 
 const persistFilters = () => {
