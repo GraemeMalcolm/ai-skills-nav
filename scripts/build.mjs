@@ -664,6 +664,10 @@ function experienceTypeName(item, type) {
   return "Learning Experience";
 }
 
+function itemCollectionType(item) {
+  return path.basename(path.dirname(item.directory));
+}
+
 function cardRating(item) {
   if (typeof item.rating !== "number") return "";
   const rating = Math.max(0, Math.min(5, item.rating));
@@ -758,7 +762,7 @@ function catalogFilterDialog(items, fields, subject) {
   const selectors = {
     modalities: (item) => Array.isArray(item.modalities) ? item.modalities : [],
     level: (item) => [item.level],
-    experience_type: (item) => [item.experience_type],
+    experience_type: (item) => catalogMetadataValues(item, "experience_type"),
     credential_type: (item) => [item.credential_type],
     audience: (item) => Array.isArray(item.audience) ? item.audience : [item.audience],
   };
@@ -988,6 +992,9 @@ function buildCatalogLinks(modules) {
 }
 
 function catalogMetadataValues(item, field) {
+  if (field === "experience_type") {
+    return [experienceTypeName(item, itemCollectionType(item))];
+  }
   if (field === "duration") {
     const duration = String(item.duration || "").trim().toLocaleLowerCase();
     if (/\bdays?\b/.test(duration)) return ["Days"];
