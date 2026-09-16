@@ -7,7 +7,7 @@ title: Exercise - Explore computer vision
 ::: zone pivot="Use a hosted lab environment"
 
 <!-- Use standard Skillable lab launcher template -->
-[!LAB_HOST[](https://www.skillable.com/login?lab_id=00004)]
+[!LAB_HOST[](../../../labhost/skillable.html?lab_id=00004)]
 
 ::: zone-end
 

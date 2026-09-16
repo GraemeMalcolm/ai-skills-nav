@@ -7,7 +7,7 @@ title: Exercise - Get started with Microsoft Foundry
 ::: zone pivot="Use a hosted lab environment"
 
 <!-- Use standard Skillable lab launcher template -->
-[!LAB_HOST[](https://www.skillable.com/login?lab_id=10000)]
+[!LAB_HOST[](../../../labhost/skillable.html?lab_id=10000)]
 
 ::: zone-end
 

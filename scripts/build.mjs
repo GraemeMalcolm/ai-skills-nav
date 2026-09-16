@@ -182,11 +182,11 @@ async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
     const includeReference = (match[2] || match[4]).trim();
     const remoteReference = /^https?:\/\//i.test(includeReference);
     if (directive === "LAB_HOST") {
-      if (!remoteReference) {
-        throw new Error(`LAB_HOST must reference a fully-qualified HTTP(S) URL in ${sourceFile}`);
-      }
+      const labUrl = remoteReference
+        ? includeReference
+        : `${relativeUrl(outputFile, path.join(outputRoot, "labhost", "skillable.html"))}${includeReference.includes("?") ? `?${includeReference.split("?").slice(1).join("?")}` : ""}`;
       const template = await readFile(hostedLabTemplate, "utf8");
-      const hostedLabMarkdown = template.replaceAll("{LAB_URL}", includeReference);
+      const hostedLabMarkdown = template.replaceAll("{LAB_URL}", labUrl);
       result += await expandIncludes(hostedLabMarkdown, hostedLabTemplate, outputFile, [...stack, hostedLabTemplate]);
       cursor = match.index + match[0].length;
       continue;
@@ -1482,6 +1482,7 @@ async function build() {
     copyFile(path.join(root, "site", "media", "playlist.png"), path.join(outputRoot, "assets", "playlist.png")),
     copyFile(path.join(root, "site", "media", "favicon.ico"), path.join(outputRoot, "favicon.ico")),
     cp(path.join(root, "templates", "media"), path.join(outputRoot, "content", "templates", "media"), { recursive: true }),
+    cp(path.join(root, "skillable"), path.join(outputRoot, "labhost"), { recursive: true }),
     writeFile(path.join(outputRoot, ".nojekyll"), "", "utf8"),
   ]);
   console.log(`Built ${modules.length} modules, ${playlists.length} playlists, ${courses.length} courses, and ${credentials.length} credentials in dist/`);

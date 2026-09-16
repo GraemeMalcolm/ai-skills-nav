@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hosted Lab</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <img id="lab-screen" src="media/startup.png" alt="Hosted lab starting">
+    <script>
+        window.setTimeout(() => {
+            const labScreen = document.getElementById("lab-screen");
+            labScreen.src = "media/lab.png";
+            labScreen.alt = "Hosted lab environment";
+        }, 5000);
+    </script>
+</body>
+
+</html>
