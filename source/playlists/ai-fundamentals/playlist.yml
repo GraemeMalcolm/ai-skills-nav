@@ -5,6 +5,7 @@ duration: 240 minutes
 experience_type: Learning Path
 role:
   - Developer
+  - Student
 avatar: anton
 prerequisites:
   - Basic familiarity with digital technology and an interest in artificial intelligence
