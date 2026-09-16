@@ -589,5 +589,23 @@
                 "content": "Fabric prepares, stores, processes, and governs data while Power BI models and presents it. Shared workspaces, security, lineage, and OneLake connect the experiences."
             }
         ]
+    },
+    {
+        "category":"Fabric and AI",
+        "link": "https://aiskillsnavigator.microsoft.com/explore/search/module-1d53ed252e037bb619a6605cbb57424cb6b4a7556511b90c45a53d815b60f91a",
+        "documents": [
+            {
+                "id": 52,
+                "title": "What is Fabric IQ?",
+                "keywords": [
+                    "fabric iq",
+                    "fabric agent",
+                    "agent knowledge",
+                    "ontology"
+                ],
+                "content": "Microsoft Fabric IQ is part of Microsoft IQ, an enterprise intelligence layer that elevates business data into shared concepts usable by people and AI agents. Ontology modeling in Fabric IQ defines business concepts independent of specific analytical use cases."
+            }
+
+        ]
     }
 ]
