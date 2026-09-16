@@ -6,7 +6,7 @@ title: Use a vision-capable model in the Microsoft Foundry portal
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=2b2fd243-f958-4b8c-a816-ec21648eefe9]
 
-> **TIP**: See the **Text and images** tab for more details!
+> **TIP**: See the *Text* tab for more details!
 
 ::: zone-end
 

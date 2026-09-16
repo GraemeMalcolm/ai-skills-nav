@@ -6,7 +6,7 @@ title: Use a Claude model in code
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=5ba3ca51-e8d5-458f-8448-055e01fe3ddc]
 
-> **NOTE**: See the **Text and images** tab for more details
+> **NOTE**: See the *Text* tab for more details
 
 ::: zone-end
 

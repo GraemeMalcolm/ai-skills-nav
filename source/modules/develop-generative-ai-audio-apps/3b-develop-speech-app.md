@@ -6,7 +6,7 @@ title: Synthesize speech
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=ac3a71ed-0175-494b-a53b-e7e8f04bb55b]
 
-> **TIP**: See the **Text and images** tab for more details!
+> **TIP**: See the *Text* tab for more details!
 
 ::: zone-end
 

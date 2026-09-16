@@ -6,7 +6,7 @@ title: Summary
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=f7aa666c-7ccd-4cbf-8076-20b3c4816ad8]
 
-> **NOTE**: See the **Text and images** tab for more details
+> **NOTE**: See the *Text* tab for more details
 
 ::: zone-end
 

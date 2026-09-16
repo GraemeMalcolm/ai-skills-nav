@@ -6,7 +6,7 @@ title: Claude models in Microsoft Foundry
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=dd37563e-edc6-48fe-9c81-159c328723ee]
 
-> **NOTE**: See the **Text and images** tab for more details
+> **NOTE**: See the *Text* tab for more details
 
 ::: zone-end
 

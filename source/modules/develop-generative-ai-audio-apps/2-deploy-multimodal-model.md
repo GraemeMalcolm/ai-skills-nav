@@ -6,7 +6,7 @@ title: Choose a speech-capable model
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=9714b6a8-1785-46eb-b4ff-4d0026dcaac4]
 
-> **TIP**: See the **Text and images** tab for more details!
+> **TIP**: See the *Text* tab for more details!
 
 ::: zone-end
 

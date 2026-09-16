@@ -6,7 +6,7 @@ title: Develop a vision-based chat app
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=db98b7e8-a274-4b55-a274-1573a905b917]
 
-> **TIP**: See the **Text and images** tab for more details!
+> **TIP**: See the *Text* tab for more details!
 
 ::: zone-end
 

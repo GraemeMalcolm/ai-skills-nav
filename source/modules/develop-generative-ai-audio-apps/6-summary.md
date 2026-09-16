@@ -6,7 +6,7 @@ title: Summary
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=d744c0ed-614d-4452-a201-0653ba67df3f]
 
-> **TIP**: See the **Text and images** tab for more details!
+> **TIP**: See the *Text* tab for more details!
 
 ::: zone-end
 
@@ -18,4 +18,3 @@ In this module, you learned about speech-capable AI models, and how you can use 
 - Synthesize speech from text.
 
 ::: zone-end
-
