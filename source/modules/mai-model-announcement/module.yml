@@ -4,7 +4,7 @@ modalities:
   - Video
 level: 100
 duration: 15 minutes
-experience_type: Video-based training
+experience_type: Video
 role:
   - Developer
   - Data Scientist

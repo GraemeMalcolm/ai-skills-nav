@@ -1,0 +1,17 @@
+title: Develop AI apps with Microsoft Foundry
+description: In this playlist, you'll learn how to develop AI applications using Microsoft Foundry.
+level: 200
+duration: 90 minutes
+experience_type: Learning Path
+role:
+  - Developer
+avatar: anton
+prerequisites:
+  - Software development experience and foundational knowledge of generative AI
+learning_outcomes:
+  - Create computer speech solutions with Microsoft Foundry..
+  - Create computer vision solutions with Microsoft Foundry.
+  - Create AI apps with Microsoft Foundry.
+modules:
+  - develop-generative-ai-audio-apps
+  - develop-generative-ai-vision-apps

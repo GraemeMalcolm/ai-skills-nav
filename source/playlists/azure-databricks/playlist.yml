@@ -1,7 +1,7 @@
 title: Get started with Azure Databricks
 description: In this playlist, you'll learn how to get started with Azure Databricks.
 level: 200
-duration: 40 minutes
+duration: 120 minutes
 experience_type: Learning Path
 role:
   - Developer
@@ -14,3 +14,4 @@ learning_outcomes:
   - Use Azure Databricks concepts to support integrated data engineering, analytics, and machine learning workloads.
 modules:
   - start-databricks
+  - use-delta-lake-azure-databricks

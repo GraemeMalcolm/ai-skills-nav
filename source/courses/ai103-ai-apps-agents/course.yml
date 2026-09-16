@@ -17,5 +17,6 @@ learning_outcomes:
   - Develop speech and natural language processing (NLP) solutions with Microsoft Foundry
   - Develop computer vision and information extraction solutions with Microsoft Foundry
 playlists:
+  - ai-developer
   - agent-developer
-  - microsoft-iq
+
