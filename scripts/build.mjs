@@ -1015,7 +1015,7 @@ function buildSearchContext(item, children = []) {
       field,
       [...new Set([
         ...catalogMetadataValues(item, field),
-        ...children.flatMap((child) => child.searchContext.filters[field]),
+        ...(field === "experience_type" ? [] : children.flatMap((child) => child.searchContext.filters[field])),
       ])].sort((left, right) => left.localeCompare(right, undefined, { numeric: true })),
     ])),
   };

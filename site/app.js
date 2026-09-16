@@ -1652,7 +1652,8 @@ const applyCatalogVisibility = () => {
     }
     if (matches && !isHomePage && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
-      // Parent cards include distinct metadata values inherited from children.
+      // Parent cards inherit applicable child metadata, while experience type
+      // remains the parent card's own catalog classification.
       matches = activeFilterFields.every((field) => {
         if (field === "modalities" && appliedModalitiesMode === "containing" && !appliedFilters[field].length) return false;
         if (!appliedFilters[field].length) return true;
