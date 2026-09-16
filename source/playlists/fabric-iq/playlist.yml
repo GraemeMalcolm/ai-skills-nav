@@ -1,0 +1,17 @@
+title: Create knowledgable AI agents with Microsoft Fabric IQ
+description: In this playlist, you'll learn how to extend agent knowledge with Microsoft Fabric IQ.
+level: 200
+duration: 120 minutes
+experience_type: Learning Path
+role:
+  - Developer
+avatar: inna
+prerequisites:
+  - AI agent development experience and familiarity with Microsoft Fabric.
+learning_outcomes:
+  - Explain what Fabric IQ is and how ontologies define business vocabulary.
+  - Connect a Fabric IQ ontology to data sources and preview the ontology
+  - Build and ground AI agents with enterprise knowledge using Microsoft Fabric IQ.
+modules:
+  - understand-fabric-iq-fundamentals
+  - create-ontology-with-fabric-iq

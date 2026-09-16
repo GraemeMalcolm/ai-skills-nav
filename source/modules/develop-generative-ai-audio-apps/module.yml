@@ -1,0 +1,26 @@
+title: Develop a speech-capable generative AI application
+description: A voice carries meaning beyond words. Learn how to use models in Microsoft Foundry that transcribe and synthesize speech.
+modalities:
+  - Video
+  - Lab
+level: 200
+duration: 43 minutes
+experience_type: Training module
+role:
+  - AI Engineer
+avatar: anton
+prerequisites:
+  - Experience with deploying generative AI models in Microsoft Foundry.
+  - Programming experience.
+learning_outcomes:
+  - Deploy speech-capable generative AI models in Microsoft Foundry.
+  - Use a generative AI model to transcribe speech.
+  - Use a generative AI model to synthesize speech.
+pages:
+  - 1-introduction.md
+  - 2-deploy-multimodal-model.md
+  - 3-develop-audio-chat-app.md
+  - 3b-develop-speech-app.md
+  - 4-exercise.md
+  - 5-knowledge-check.md
+  - 6-summary.md

@@ -1,0 +1,27 @@
+title: Get started with Claude in Microsoft Foundry
+description: Anthropic Claude models and Microsoft Foundry create a powerful combination for developing generative AI applications
+  and agents.
+modalities:
+  - Video
+level: 200
+duration: 30 minutes
+experience_type: Training module
+role:
+  - AI Engineer
+avatar: anton
+prerequisites:
+  - Conceptual knowledge of generative AI.
+  - Programming experience.
+learning_outcomes:
+  - Describe key features of Microsoft Foundry.
+  - Describe Anthropic Claude models and their capabilities.
+  - Deploy and test Claude models in Foundry.
+  - Develop client applications that use Claude models in Foundry.
+pages:
+  - 01-introduction.md
+  - 02-foundry.md
+  - 03-claude-models.md
+  - 04-deploy-claude.md
+  - 05-code-claude.md
+  - 06-knowledge-check.md
+  - 07-summary.md

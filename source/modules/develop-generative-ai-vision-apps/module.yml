@@ -1,0 +1,26 @@
+title: Develop a vision-enabled generative AI application
+description: A picture says a thousand words, and multimodal generative AI models can interpret images to respond to visual
+  prompts. Learn how to build computer vision chat apps with Microsoft Foundry.
+modalities:
+  - Video
+  - Lab
+level: 200
+duration: 45 minutes
+experience_type: Training module
+role:
+  - AI Engineer
+avatar: anton
+prerequisites:
+  - Experience with deploying generative AI models in Microsoft Foundry.
+  - Programming experience.
+learning_outcomes:
+  - Deploy a vision-enabled generative AI model in Microsoft Foundry.
+  - Test an image-based prompt in the chat playground.
+  - Create a chat app that submits image-based prompts.
+pages:
+  - 1-introduction.md
+  - 2-deploy-multimodal-model.md
+  - 3-develop-visual-chat-app.md
+  - 4-exercise.md
+  - 5-knowledge-check.md
+  - 6-summary.md
