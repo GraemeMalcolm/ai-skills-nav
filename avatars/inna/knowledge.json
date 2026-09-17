@@ -52,6 +52,8 @@
                 "title": "Organize data in OneLake",
                 "keywords": [
                     "OneLake",
+                    "1 lake",
+                    "one lake",
                     "data organization",
                     "domains",
                     "data mesh"
@@ -63,7 +65,9 @@
                 "title": "Create lakehouses and warehouses",
                 "keywords": [
                     "lakehouse",
+                    "lake house",
                     "warehouse",
+                    "ware house",
                     "SQL analytics endpoint",
                     "Delta tables"
                 ],
@@ -591,7 +595,7 @@
         ]
     },
     {
-        "category":"Fabric and AI",
+        "category": "Fabric and AI",
         "link": "https://aiskillsnavigator.microsoft.com/explore/search/module-1d53ed252e037bb619a6605cbb57424cb6b4a7556511b90c45a53d815b60f91a",
         "documents": [
             {
@@ -605,7 +609,6 @@
                 ],
                 "content": "Microsoft Fabric IQ is part of Microsoft IQ, an enterprise intelligence layer that elevates business data into shared concepts usable by people and AI agents. Ontology modeling in Fabric IQ defines business concepts independent of specific analytical use cases."
             }
-
         ]
     }
 ]
