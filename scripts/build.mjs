@@ -267,6 +267,40 @@ async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
   return result + rewriteMarkdownAssets(markdown.slice(cursor), sourceFile, outputFile);
 }
 
+async function expandMetadataIncludes(markdown, sourceFile, stack = []) {
+  const includePattern = /\[!INCLUDE(?:\[[^\]]*\])?\(([^)]+)\)\]|\[!INCLUDE\s+([^\]]+)\]/gi;
+  let result = "";
+  let cursor = 0;
+  for (const match of markdown.matchAll(includePattern)) {
+    result += markdown.slice(cursor, match.index);
+    const includeReference = (match[1] || match[2]).trim();
+    const remoteSource = /^https?:\/\//i.test(sourceFile);
+    const remoteReference = /^https?:\/\//i.test(includeReference);
+    if (remoteReference || remoteSource) {
+      const includeUrl = new URL(includeReference, remoteSource ? sourceFile : undefined).href;
+      if (stack.includes(includeUrl)) throw new Error(`Recursive include ${includeReference} in ${sourceFile}`);
+      const response = await fetch(includeUrl);
+      if (!response.ok) throw new Error(`Could not fetch include ${includeReference}: ${response.status} ${response.statusText}`);
+      const included = parseFrontMatter(await response.text(), includeUrl);
+      result += await expandMetadataIncludes(included.body, includeUrl, [...stack, includeUrl]);
+      cursor = match.index + match[0].length;
+      continue;
+    }
+    const includePath = /^[\\/]/.test(includeReference)
+      ? path.resolve(root, includeReference.replace(/^[\\/]+/, ""))
+      : path.resolve(path.dirname(sourceFile), includeReference);
+    const includeRelative = path.relative(root, includePath);
+    if (includeRelative.startsWith("..") || path.isAbsolute(includeRelative) || stack.includes(includePath)) {
+      throw new Error(`Invalid or recursive include ${includeReference} in ${path.relative(root, sourceFile)}`);
+    }
+    if (!(await exists(includePath))) throw new Error(`Missing include ${includeReference} in ${path.relative(root, sourceFile)}`);
+    const included = parseFrontMatter(await readFile(includePath, "utf8"), includePath);
+    result += await expandMetadataIncludes(included.body, includePath, [...stack, includePath]);
+    cursor = match.index + match[0].length;
+  }
+  return result + markdown.slice(cursor);
+}
+
 function videoEmbed(url) {
   let source = url.trim();
   const shortYouTube = source.match(/^https?:\/\/youtu\.be\/([^?&#/]+)/i);
@@ -994,7 +1028,8 @@ async function getModulePages(module) {
       throw new Error(`Module ${module.slug} references missing page ${file}`);
     }
     const parsed = parseFrontMatter(await readFile(sourceFile, "utf8"), sourceFile);
-    const catalogLinks = extractCatalogLinks(parsed.body);
+    const effectiveBody = await expandMetadataIncludes(parsed.body, sourceFile, [sourceFile]);
+    const catalogLinks = extractCatalogLinks(effectiveBody);
     return {
       file,
       sourceFile,
@@ -1004,7 +1039,7 @@ async function getModulePages(module) {
       modalities: catalogModalities
         .filter(({ type }) => catalogLinks[type].length)
         .map(({ name }) => name),
-      hasKnowledgeCheck: /^::: knowledge-check\b/im.test(parsed.body),
+      hasKnowledgeCheck: /^::: knowledge-check\b/im.test(effectiveBody),
       catalogLinks,
     };
   }));

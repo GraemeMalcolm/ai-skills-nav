@@ -189,7 +189,7 @@ Rules:
 - Page order MUST follow the YAML array.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
-- Page modalities are derived from Markdown directives: `[!VIDEO]` produces `Video`, `[!LAB_STEPS]` produces `Lab`, `[!LAB_HOST]` produces `Hosted Lab`, and `[!SIMULATION]` produces `Simulation`. Module modalities are the discrete union of their page modalities.
+- Page modalities are derived from Markdown directives in the effective page content after recursively resolving `[!INCLUDE]` tags: `[!VIDEO]` produces `Video`, `[!LAB_STEPS]` produces `Lab`, `[!LAB_HOST]` produces `Hosted Lab`, and `[!SIMULATION]` produces `Simulation`. Module modalities are the discrete union of their page modalities.
 
 Course, playlist, and module home pages MUST list prerequisites and learning outcomes. When an item has multiple learning outcomes, the final value MUST be bold and prefixed with `Overall outcome:`. A single learning objective MUST be displayed without that prefix.
 
