@@ -611,6 +611,8 @@ A multi-page module is a skilling experience whose `pages` metadata contains two
 
 **FR-MULTIPAGE-003** The overview must provide a clear Next or equivalent begin action whose destination is the first authored page.
 
+**FR-MULTIPAGE-003A** The ordered page list must use the compact linked-row presentation established for playlist contents. Each row must replace the unavailable page thumbnail with an icon selected by this precedence: Video; Lab or Hosted Lab; Simulation; knowledge check; static text and graphics.
+
 **FR-MULTIPAGE-004** Every page must be directly addressable and must expose its position and current state within module navigation.
 
 **FR-MULTIPAGE-005** Previous and Next navigation must move between the overview and pages in this order:

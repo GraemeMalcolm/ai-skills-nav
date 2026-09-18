@@ -439,6 +439,8 @@ Course, curated playlist, and module home pages MUST show the authored `experien
 
 A curated playlist detail MUST show its thumbnail, title, description, metadata, and a navigation sidebar. The sidebar MUST link to the playlist overview when the playlist contains multiple modules and list modules in metadata order. The current item MUST be visibly identified.
 
+A multi-page module overview MUST present its pages using the same compact linked-row treatment as modules in a playlist overview, replacing the thumbnail with a format icon. The primary page format MUST use this precedence: `Video`; `Lab` for either Lab or Hosted Lab; `Simulation`; `Knowledge check`; then `Static text and graphics`.
+
 ### 7.5 Breadcrumbs and responsive navigation
 
 Breadcrumbs MUST represent the generated hierarchy and identify the current page with `aria-current="page"`.

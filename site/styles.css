@@ -1665,6 +1665,27 @@ body.access-denied>[data-agent] {
   background: #e8e4dd;
 }
 
+.overview-contents .page-format-icon {
+  width: 72px;
+  aspect-ratio: 16 / 9;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  background: #e8e4dd;
+  color: var(--violet);
+}
+
+.overview-contents .page-format-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .overview-contents a>span {
   display: grid;
   gap: 3px;
@@ -1681,34 +1702,9 @@ body.access-denied>[data-agent] {
   line-height: 1.4;
 }
 
-.module-page-list {
-  margin-top: 24px;
-}
-
-.module-page-list h2 {
-  margin: 0 0 12px;
-  font: 700 .9rem "Manrope", sans-serif;
-}
-
-.module-page-list ol {
-  margin: 0;
-  padding-left: 24px;
-  color: var(--muted);
-}
-
-.module-page-list li {
-  padding: 4px 0 4px 4px;
-}
-
-.module-page-list a {
-  color: var(--ink);
-  text-decoration-color: #aaa39b;
-  text-underline-offset: 3px;
-}
-
-.module-page-list a:hover {
+.overview-contents .page-format-label {
   color: var(--violet);
-  text-decoration-color: currentColor;
+  font-weight: 700;
 }
 
 .overview-copy h1 {

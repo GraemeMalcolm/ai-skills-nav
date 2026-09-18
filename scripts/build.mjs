@@ -418,6 +418,11 @@ function icon(name) {
     mic: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg>',
     plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
     star: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z"/></svg>',
+    video: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>',
+    lab: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3M8 14h8"/></svg>',
+    simulation: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h4v4H7zM15 8h2M15 12h2M7 16h10"/></svg>',
+    knowledge: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 3.2 2.4c-.8.3-.8 1.1-.8 1.6M12 17h.01"/></svg>',
+    document: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6zM14 3v4h4M9 11h6M9 15h6"/></svg>',
   };
   return icons[name];
 }
@@ -846,6 +851,26 @@ function overviewContents(outputFile, items, type, heading, targetForItem) {
   </section>`;
 }
 
+function pageOverviewContents(outputFile, pages, heading, targetForPage) {
+  const pageFormat = (page) => {
+    if (page.modalities.includes("Video")) return { icon: "video", label: "Video" };
+    if (page.modalities.includes("Lab") || page.modalities.includes("Hosted Lab")) return { icon: "lab", label: "Lab" };
+    if (page.modalities.includes("Simulation")) return { icon: "simulation", label: "Simulation" };
+    if (page.hasKnowledgeCheck) return { icon: "knowledge", label: "Knowledge check" };
+    return { icon: "document", label: "Static text and graphics" };
+  };
+  return `<section class="overview-contents" aria-labelledby="module-pages-title">
+    <h2 id="module-pages-title">${escapeHtml(heading)}</h2>
+    <ol>${pages.map((page) => {
+    const format = pageFormat(page);
+    return `<li><a href="${relativeUrl(outputFile, targetForPage(page))}"${page.description ? ` title="${escapeHtml(page.description)}"` : ""}>
+        <span class="page-format-icon" aria-hidden="true">${icon(format.icon)}</span>
+        <span><strong>${escapeHtml(page.title)}</strong>${page.description ? `<small>${escapeHtml(page.description)}</small>` : ""}<small class="page-format-label">${escapeHtml(format.label)}</small></span>
+      </a></li>`;
+  }).join("")}</ol>
+  </section>`;
+}
+
 function courseOverview(outputFile, course, playlists, credentials) {
   const playlistList = overviewContents(outputFile, playlists, "playlists", "In this course:", (playlist) =>
     playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), playlist));
@@ -979,6 +1004,7 @@ async function getModulePages(module) {
       modalities: catalogModalities
         .filter(({ type }) => catalogLinks[type].length)
         .map(({ name }) => name),
+      hasKnowledgeCheck: /^::: knowledge-check\b/im.test(parsed.body),
       catalogLinks,
     };
   }));
@@ -1130,7 +1156,7 @@ async function buildModuleRoute(module, pages, routeRoot, defaultAvatar, sidebar
   }
 
   const startTarget = pageTargets[0];
-  const pageList = `<section class="module-page-list" aria-labelledby="module-pages-title"><h2 id="module-pages-title">In this learning experience</h2><ol>${pages.map((page, index) => `<li><a href="${relativeUrl(indexFile, pageTargets[index])}">${escapeHtml(page.title)}</a></li>`).join("")}</ol></section>`;
+  const pageList = pageOverviewContents(indexFile, pages, "In this learning experience", (page) => pageTargets[pages.indexOf(page)]);
   const overviewNavigation = pageNavigation(indexFile, navigationContext.previousTarget, startTarget, { previous: true });
   await writePage(indexFile, shell({ outputFile: indexFile, title: module.title, breadcrumbs: moduleBreadcrumbs, sidebar, avatar: module.avatarData, bodyClass: "learning-page", module, restrictedTo: routeRestrictions, content: overview(indexFile, module, "modules", "", pageList, overviewNavigation) }));
 
