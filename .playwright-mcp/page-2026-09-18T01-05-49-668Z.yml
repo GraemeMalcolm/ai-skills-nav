@@ -1,0 +1,143 @@
+- generic [active] [ref=f2e1]:
+  - link "Skip to content" [ref=f2e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f2e3]:
+    - generic [ref=f2e4]:
+      - link "AI Skills Nav" [ref=f2e5] [cursor=pointer]:
+        - /url: ../../../../index.html
+      - link "Catalog" [ref=f2e12] [cursor=pointer]:
+        - /url: ../../../../catalog/index.html
+      - link "Official Curriculum" [ref=f2e13] [cursor=pointer]:
+        - /url: ../../../../official-curriculum/index.html
+      - link "Credentials" [ref=f2e14] [cursor=pointer]:
+        - /url: ../../../../credentials/index.html
+    - link "Sign-in" [ref=f2e16] [cursor=pointer]:
+      - /url: "#sign-in"
+  - navigation "Breadcrumb" [ref=f2e17]:
+    - list [ref=f2e18]:
+      - listitem [ref=f2e19]:
+        - link "Home" [ref=f2e20] [cursor=pointer]:
+          - /url: ../../../../index.html
+      - listitem [ref=f2e21]:
+        - text: /
+        - link "Catalog" [ref=f2e22] [cursor=pointer]:
+          - /url: ../../../../catalog/index.html
+      - listitem [ref=f2e23]:
+        - text: /
+        - link "Copilot Quickstart" [ref=f2e24] [cursor=pointer]:
+          - /url: ../../index.html
+      - listitem [ref=f2e25]:
+        - text: /
+        - generic [ref=f2e26]: What is Copilot
+  - generic [ref=f2e27]:
+    - complementary [ref=f2e28]:
+      - generic [ref=f2e29]:
+        - button "Hide navigation" [expanded] [ref=f2e30] [cursor=pointer]
+        - generic [ref=f2e33]: Navigation
+      - navigation "Learning experience" [ref=f2e34]:
+        - link "Copilot Quickstart" [ref=f2e35] [cursor=pointer]:
+          - /url: ../../index.html
+        - list [ref=f2e36]:
+          - listitem [ref=f2e37]:
+            - link "What is Copilot" [ref=f2e38] [cursor=pointer]:
+              - /url: index.html
+          - listitem [ref=f2e39]:
+            - link "Exercise - Explore Copilot" [ref=f2e40] [cursor=pointer]:
+              - /url: ../02-exercise/index.html
+          - listitem [ref=f2e41]:
+            - link "Copilot Comparison" [ref=f2e42] [cursor=pointer]:
+              - /url: ../03-copilot-pdf/index.html
+    - main [ref=f2e43]:
+      - generic [ref=f2e44]:
+        - link "Add to personal playlist" [ref=f2e45] [cursor=pointer]:
+          - /url: "#personal-playlist-dialog"
+        - link "Share" [ref=f2e46] [cursor=pointer]:
+          - /url: "#share-dialog"
+      - article [ref=f2e47]:
+        - generic [ref=f2e48]:
+          - paragraph [ref=f2e49]: Copilot Quickstart
+          - heading "What is Copilot" [level=1] [ref=f2e50]
+        - generic [ref=f2e51]:
+          - blockquote [ref=f2e52]:
+            - paragraph [ref=f2e53]:
+              - text: This content is an extract from
+              - link "Get ready to work with Microsoft Copilot" [ref=f2e54] [cursor=pointer]:
+                - /url: ../../../get-started-with-copilot/pages/2-how-copilot-works/index.html
+              - text: .
+          - paragraph [ref=f2e55]: Microsoft Copilot is an AI assistant embedded in the apps you already use, including Word, PowerPoint, Excel, Teams, Outlook, and Copilot Chat. It works alongside you as you draft content, analyze data, summarize information, and manage tasks throughout your workday.
+          - paragraph [ref=f2e56]: What sets Copilot apart from general-purpose AI tools is how it uses your organizational data. While public AI tools rely on broadly available information, Copilot combines its trained knowledge with the emails, meetings, chats, and files you already have access to. This produces responses that reflect your actual work context, not just generic outputs.
+          - paragraph [ref=f2e57]: This capability is powered by Work IQ.
+          - paragraph [ref=f2e58]: How Work IQ grounds your Copilot experience Work IQ helps Copilot understand your work in context. It connects your emails, files, meetings, and conversations, allowing Copilot to identify relationships between them and surface what's most relevant.
+          - paragraph [ref=f2e59]: Instead of relying on exact keyword matches, Copilot understands meaning. For example, if you ask about "budget concerns for the product launch," it may surface a document titled "Q3 Revenue Risk Analysis" because it recognizes the connection between those topics.
+          - paragraph [ref=f2e60]:
+            - img "Diagram of Work IQ." [ref=f2e61]
+          - paragraph [ref=f2e62]: You don't need to remember specific file names or search terms. You can ask in plain language and still get relevant results.
+          - paragraph [ref=f2e63]: Copilot also reflects your work patterns over time, considering the projects you're involved in and the people you collaborate with most often.
+          - paragraph [ref=f2e64]: "One important boundary: Copilot only accesses content you already have permission to view. It never expands your access to other data."
+          - paragraph [ref=f2e65]: Go beyond your organizational data with web-grounded responses Not every question can be answered using internal data alone. You may need current market trends, industry benchmarks, or external research.
+          - paragraph [ref=f2e66]: Copilot can use both your organizational data and the public web, depending on your request.
+          - paragraph [ref=f2e67]: Ask about a recent meeting → Copilot uses your work data Ask about industry trends → Copilot uses web data Ask how your company compares to industry benchmarks → Copilot can combine both This allows you to gather internal and external insights in a single response, without switching between tools.
+          - heading "Extend Copilot with agents" [level=2] [ref=f2e68]
+          - paragraph [ref=f2e69]: Copilot can go beyond single prompts. Agents are specialized assistants designed to help with more complex or multi-step work.
+          - paragraph [ref=f2e70]: Instead of manually gathering information and structuring prompts, you can use agents tailored to specific tasks.
+          - paragraph [ref=f2e71]: "For example:"
+          - list [ref=f2e72]:
+            - listitem [ref=f2e73]: Use Researcher to explore a topic across multiple sources
+            - listitem [ref=f2e74]: Use Analyst to compare and analyze data across files
+            - listitem [ref=f2e75]: Use Idea Coach to plan a presentation
+            - listitem [ref=f2e76]: Use Writing Coach to refine tone and clarity
+            - listitem [ref=f2e77]: Agents help you structure your approach, work across multiple inputs, and complete tasks more efficiently.
+          - heading "Where Copilot appears in your apps" [level=2] [ref=f2e78]
+          - paragraph [ref=f2e79]: You use Copilot in different ways depending on the app, but the core experience stays consistent.
+          - paragraph [ref=f2e80]: In Word, PowerPoint, and Excel, Copilot appears directly in your workspace so you can work alongside your content. In Outlook and Teams, Copilot appears in a side pane, giving you a chat experience alongside your messages and meetings. Copilot Chat is the broader, cross‑app experience. You find it in the Microsoft Copilot app, and in Outlook and Teams. It's where you can ask questions across your work data or the web, create content, and use agents to complete more complex tasks. Once you learn how to work with Copilot in one place, the same patterns carry across the others.
+          - paragraph [ref=f2e81]: Because Copilot works across multiple experiences, knowing where to start can make your workflows more efficient.
+          - heading "Choose the best place to start" [level=2] [ref=f2e82]
+          - paragraph [ref=f2e83]: Copilot works across chat, apps, and agents. The best place to start depends on what you're trying to do. Use this quick guide to choose the right starting point.
+          - paragraph [ref=f2e84]:
+            - img "Diagram of a decision path." [ref=f2e85]
+          - heading "Start in Copilot Chat when you need to think or explore" [level=2] [ref=f2e86]
+          - paragraph [ref=f2e87]: "Use Chat when you're:"
+          - list [ref=f2e88]:
+            - listitem [ref=f2e89]: Researching a topic
+            - listitem [ref=f2e90]: Comparing information across files or sources
+            - listitem [ref=f2e91]: Asking questions about emails, meetings, or documents
+            - listitem [ref=f2e92]: Figuring out what to do next
+          - heading "Example" [level=3] [ref=f2e93]
+          - code [ref=f2e95]: Summarize the key risks from last week's client meeting.
+          - paragraph [ref=f2e96]: Chat helps you gather context before you create or act.
+          - heading "Start in an app when you're ready to create or take action" [level=2] [ref=f2e97]
+          - paragraph [ref=f2e98]: "Use apps like Word, PowerPoint, Excel, or Outlook when you:"
+          - list [ref=f2e99]:
+            - listitem [ref=f2e100]: Have a clear goal
+            - listitem [ref=f2e101]: Want to create or edit something directly
+          - heading "Examples" [level=3] [ref=f2e102]
+          - list [ref=f2e103]:
+            - listitem [ref=f2e104]: Draft a client email in Outlook
+            - listitem [ref=f2e105]: Build a presentation in PowerPoint
+            - listitem [ref=f2e106]: Analyze data in Excel
+            - listitem [ref=f2e107]: Apps help you move from idea to output.
+          - heading "Use agents when the task requires planning or multiple steps" [level=2] [ref=f2e108]
+          - paragraph [ref=f2e109]: "Use agents when you need help:"
+          - list [ref=f2e110]:
+            - listitem [ref=f2e111]: Structuring your approach
+            - listitem [ref=f2e112]: Working across multiple sources
+            - listitem [ref=f2e113]: Managing multi-step workflows
+          - heading "Examples" [level=3] [ref=f2e114]
+          - list [ref=f2e115]:
+            - listitem [ref=f2e116]: Use Idea Coach to plan a presentation
+            - listitem [ref=f2e117]: Use Analyst to compare multiple datasets
+            - listitem [ref=f2e118]: Use Facilitator to manage a meeting
+            - listitem [ref=f2e119]: Agents help you organize and guide your work.
+          - heading "A simple way to think about it" [level=2] [ref=f2e120]
+          - list [ref=f2e121]:
+            - listitem [ref=f2e122]: Exploring or researching? → Start in Chat
+            - listitem [ref=f2e123]: Creating something? → Start in an app
+            - listitem [ref=f2e124]: Planning or analyzing? → Use an agent
+          - paragraph [ref=f2e125]: With this approach, you can quickly choose where to start and use Copilot more effectively as you move through your work.
+        - navigation "Learning experience pages" [ref=f2e126]:
+          - link "Previous" [ref=f2e127] [cursor=pointer]:
+            - /url: ../../index.html
+          - link "Next" [ref=f2e128] [cursor=pointer]:
+            - /url: ../02-exercise/index.html
+  - button "Chat with Matt" [ref=f2e132] [cursor=pointer]:
+    - generic [ref=f2e133]: Ask Matt

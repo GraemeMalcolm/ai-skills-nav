@@ -599,6 +599,8 @@ A single-page module is a compact skilling experience whose `pages` metadata con
 
 **FR-SINGLEPAGE-006** A direct link to the underlying page must produce the same content and effective navigation as entry through the module.
 
+**FR-INCLUDE-001** Markdown includes must support an optional source-attribution flag. When enabled, the rendered extract must identify and link to the included page in its original published context; when omitted, no attribution notice is added.
+
 ### 9.4 Multi-page module rendering
 
 A multi-page module is a skilling experience whose `pages` metadata contains two or more ordered entries.

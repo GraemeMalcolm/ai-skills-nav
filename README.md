@@ -76,7 +76,7 @@ Personal playlists are saved in browser `localStorage` under a key containing th
 The static-site generator supports:
 
 - GitHub Flavored Markdown.
-- Recursive Markdown includes using `[!INCLUDE ...]` to enable page reuse across multiple modules, including correct rewriting of relative image paths.
+- Recursive Markdown includes using `[!INCLUDE[](<path>)]` to enable page reuse across multiple modules, including correct rewriting of relative image paths. Use `[!INCLUDE[source](<path>)]` to add a notice linking to the page in its original module.
 - Responsive embedded video using `[!VIDEO: <url>]`, with YouTube, Synthesia, Microsoft Learn, etc. links converted to privacy-enhanced embeds.
 - Consecutive `::: zone pivot="..."` blocks rendered as accessible tabbed content for user-choice modality (video vs static, hosted lab vs BYOS, ...)
 - Remembering a learner's selected zone pivot for other matching pivots in the same module.

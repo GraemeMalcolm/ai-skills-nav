@@ -172,14 +172,43 @@ function rewriteMarkdownAssets(markdown, sourceFile, outputFile) {
       `${prefix}${rewriteAssetUrl(url, sourceFile, outputFile)}${suffix}`);
 }
 
+const escapeMarkdownLinkText = (value) => String(value).replaceAll("\\", "\\\\").replaceAll("[", "\\[").replaceAll("]", "\\]");
+
+async function includeSourceAttribution(includePath, included, outputFile) {
+  if (/^https?:\/\//i.test(includePath)) {
+    const title = included.data.title || "the original source";
+    return `> This content is an extract from [${escapeMarkdownLinkText(title)}](${includePath}).\n\n`;
+  }
+  const modulesRoot = path.join(sourceRoot, "modules");
+  const moduleRelative = path.relative(modulesRoot, includePath);
+  const [moduleSlug] = moduleRelative.split(path.sep);
+  const moduleDirectory = path.join(modulesRoot, moduleSlug || "");
+  const metadataPath = path.join(moduleDirectory, "module.yml");
+  if (moduleRelative.startsWith("..") || path.isAbsolute(moduleRelative) || !(await exists(metadataPath))) {
+    throw new Error(`INCLUDE[source] must reference a module page: ${path.relative(root, includePath)}`);
+  }
+  const module = await readYaml(metadataPath);
+  const pageEntries = Array.isArray(module.pages) ? module.pages : [];
+  const pageFiles = pageEntries.map((entry) => typeof entry === "string" ? entry : entry.file).filter(Boolean);
+  const pageIndex = pageFiles.findIndex((file) => path.resolve(moduleDirectory, file) === includePath);
+  if (pageIndex < 0) {
+    throw new Error(`INCLUDE[source] references a file not listed in ${path.relative(root, metadataPath)}`);
+  }
+  const target = pageFiles.length === 1
+    ? path.join(outputRoot, "modules", moduleSlug, "index.html")
+    : path.join(outputRoot, "modules", moduleSlug, "pages", pageSlug(pageFiles[pageIndex]), "index.html");
+  return `> This content is an extract from [${escapeMarkdownLinkText(module.title)}](${relativeUrl(outputFile, target)}).\n\n`;
+}
+
 async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
-  const includePattern = /\[!(INCLUDE|LAB_STEPS|LAB_HOST|SIMULATION)(?:\[[^\]]*\])?\(([^)]+)\)\]|\[!(INCLUDE|LAB_STEPS|LAB_HOST|SIMULATION)\s+([^\]]+)\]/gi;
+  const includePattern = /\[!(INCLUDE|LAB_STEPS|LAB_HOST|SIMULATION)(?:\[([^\]]*)\])?\(([^)]+)\)\]|\[!(INCLUDE|LAB_STEPS|LAB_HOST|SIMULATION)\s+([^\]]+)\]/gi;
   let result = "";
   let cursor = 0;
   for (const match of markdown.matchAll(includePattern)) {
     result += rewriteMarkdownAssets(markdown.slice(cursor, match.index), sourceFile, outputFile);
-    const directive = (match[1] || match[3]).toUpperCase();
-    const includeReference = (match[2] || match[4]).trim();
+    const directive = (match[1] || match[4]).toUpperCase();
+    const option = (match[2] || "").trim().toLocaleLowerCase();
+    const includeReference = (match[3] || match[5]).trim();
     const remoteReference = /^https?:\/\//i.test(includeReference);
     if (directive === "LAB_HOST") {
       const labUrl = remoteReference
@@ -215,6 +244,7 @@ async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
         throw new Error(`Could not fetch include ${includeReference}: ${response.status} ${response.statusText}`);
       }
       const included = parseFrontMatter(await response.text(), includeUrl);
+      if (directive === "INCLUDE" && option === "source") result += await includeSourceAttribution(includeUrl, included, outputFile);
       result += await expandIncludes(included.body, includeUrl, outputFile, [...stack, includeUrl]);
       cursor = match.index + match[0].length;
       continue;
@@ -230,6 +260,7 @@ async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
       throw new Error(`Missing include ${includeReference} in ${path.relative(root, sourceFile)}`);
     }
     const included = parseFrontMatter(await readFile(includePath, "utf8"), includePath);
+    if (directive === "INCLUDE" && option === "source") result += await includeSourceAttribution(includePath, included, outputFile);
     result += await expandIncludes(included.body, includePath, outputFile, [...stack, includePath]);
     cursor = match.index + match[0].length;
   }

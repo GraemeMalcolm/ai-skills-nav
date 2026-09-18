@@ -211,6 +211,8 @@ The rendered page title MUST use the first available value from:
 
 For a page-navigation label, an object entry's `title` override takes precedence over front matter. Other front-matter properties MAY be retained for future use but do not affect current rendering.
 
+Pages MAY reuse Markdown with `[!INCLUDE[](<path>)]`. Authors MAY opt into source attribution with `[!INCLUDE[source](<path>)]`; the rendered extract MUST then begin with a link to its canonical page in the original module. For a remote include, the supplied URL is the source link. Includes without the `source` option MUST render without attribution.
+
 ### 3.5 Avatar schema
 
 Each referenced avatar folder MUST contain:
