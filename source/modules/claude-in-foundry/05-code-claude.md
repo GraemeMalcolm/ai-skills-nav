@@ -1,5 +1,6 @@
 ---
 title: Use a Claude model in code
+description: Connect application code to a deployed Claude model and submit chat completion requests.
 ---
 
 ::: zone pivot="Video"

@@ -1,5 +1,6 @@
 ---
 title: Synthesize speech
+description: Generate natural-sounding spoken responses from text with a speech-capable model.
 ---
 
 ::: zone pivot="Video"

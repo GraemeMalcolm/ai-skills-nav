@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review how Foundry IQ knowledge bases ground agents in connected enterprise content.
 ---
 
 ::: zone pivot="Video"

@@ -1,5 +1,6 @@
 ---
 title: Publish an agent from Foundry portal to Teams
+description: Publish a Foundry agent to Microsoft Teams directly from the Foundry portal.
 ---
 
 ::: zone pivot="Video"

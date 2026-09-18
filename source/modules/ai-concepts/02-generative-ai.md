@@ -1,5 +1,6 @@
 ---
 title: Generative AI and agents
+description: Learn how generative AI models create content and how agents use them to complete tasks.
 ---
 
 ::: zone pivot="Video"

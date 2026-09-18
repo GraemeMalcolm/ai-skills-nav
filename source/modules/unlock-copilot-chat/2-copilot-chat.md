@@ -1,5 +1,6 @@
 ---
 title: Understand Microsoft Copilot Chat
+description: Understand how work and web grounding determine the sources Copilot Chat uses in its responses.
 ---
 
 Copilot Chat's usefulness depends on where it's grounding its responses—your organization's data, the public web, or both. Understanding this distinction is the key to directing Copilot to the right sources and getting responses you can act on.

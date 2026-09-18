@@ -1,5 +1,6 @@
 ---
 title: Generate an ontology from a Power BI semantic model
+description: Generate ontology entities and relationships from an existing Power BI semantic model.
 ---
 
 Imagine you're working at Lamna Healthcare and you already have a Power BI semantic model representing hospitals, departments, rooms, and patients—complete with relationships showing how they connect. Building an ontology manually would mean recreating all that structure from scratch. Instead, you can generate an ontology directly from the existing semantic model, getting entity types, properties, and relationship structure in minutes.

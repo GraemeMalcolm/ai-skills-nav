@@ -1,5 +1,6 @@
 ---
 title: Use your work data to get better results with Copilot Chat
+description: Ground Copilot Chat in emails, files, meetings, and chats to produce contextually relevant results.
 ---
 
 When Copilot can access your work data, it can pull from your emails, files, meetings, and chats to support your request. Instead of jumping between apps to piece information together, you describe what you need in plain language, and Copilot brings the relevant content to you.

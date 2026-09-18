@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Learn how to publish a Microsoft Foundry agent into Microsoft 365 experiences.
 ---
 
 ::: zone pivot="Video"

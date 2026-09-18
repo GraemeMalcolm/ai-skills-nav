@@ -1,5 +1,6 @@
 ---
 title: Develop a vision-based chat app
+description: Build a chat application that submits images and prompts to a multimodal model.
 ---
 
 ::: zone pivot="Video"

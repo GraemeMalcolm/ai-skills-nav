@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Begin a hands-on journey to build and deploy an AI agent with Microsoft Foundry.
 ---
 
 ::: zone pivot="Video"

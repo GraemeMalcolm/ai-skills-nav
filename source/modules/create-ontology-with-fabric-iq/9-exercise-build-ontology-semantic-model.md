@@ -1,5 +1,6 @@
 ---
 title: Exercise - Generate an ontology from a Power BI semantic model
+description: Generate and validate a healthcare ontology from a Power BI semantic model.
 ---
 
 Now you have an opportunity to build a complete ontology from a Power BI semantic model in Fabric IQ.

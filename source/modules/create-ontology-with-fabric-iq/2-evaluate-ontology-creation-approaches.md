@@ -1,5 +1,6 @@
 ---
 title: Choose an ontology creation approach
+description: Compare manual creation with semantic-model generation to choose an appropriate ontology workflow.
 ---
 
 Creating an ontology means defining business concepts (entity types), their characteristics (properties), and how they connect (relationships).

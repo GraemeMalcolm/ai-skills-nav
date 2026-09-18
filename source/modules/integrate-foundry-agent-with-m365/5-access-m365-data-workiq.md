@@ -1,5 +1,6 @@
 ---
 title: Access Microsoft 365 data with Work IQ
+description: Connect an agent to Microsoft 365 work data through Work IQ capabilities.
 ---
 
 ::: zone pivot="Video"

@@ -1,5 +1,6 @@
 ---
 title: Evaluate lakehouse capabilities
+description: Evaluate how a Fabric lakehouse combines flexible file storage with SQL analytics.
 ---
 
 A lakehouse in Microsoft Fabric combines the scalability of a data lake with the querying capabilities of a data warehouse. You store structured, semi-structured, and unstructured data in a single location, manage it with Delta Lake, and analyze it with both Apache Spark and SQL. This flexibility makes the lakehouse the most versatile of the three analytical data stores.

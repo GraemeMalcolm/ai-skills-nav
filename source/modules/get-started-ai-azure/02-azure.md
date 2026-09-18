@@ -1,5 +1,6 @@
 ---
 title: Introduction to Azure
+description: Understand Azure subscriptions, resources, and services used to build cloud solutions.
 ---
 
 ::: zone pivot="Video"

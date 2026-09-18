@@ -1,5 +1,6 @@
 ---
 title: Connect an ontology to data
+description: Bind ontology entity properties to lakehouse tables and eventhouse streams in OneLake.
 ---
 
 Whether you build your ontology manually or generate it from a semantic model, entity types need data bindings before they can be queried. If you followed the manual path, you haven't configured any bindings yet—this unit covers how to create them. If you generated from a semantic model, static bindings were configured automatically, but you still need to add time series bindings for the VitalSignsReadings eventhouse data. Both paths meet here.
@@ -24,7 +25,7 @@ Static data bindings connect entity properties to lakehouse tables. Selecting an
 
 ![Screenshot showing the Entity type configuration pane open on the Bindings tab, showing the Add data to entity type button.](media/binding-configuration.png)
 
-Selecting **Add data to entity type** opens the OneLake catalog, where you choose your data source. For static bindings, select the lakehouse. 
+Selecting **Add data to entity type** opens the OneLake catalog, where you choose your data source. For static bindings, select the lakehouse.
 
 ![Screenshot showing the OneLake catalog picker showing LamnaHealthcareLH (Lakehouse) and LamnaHealthcareEH (Eventhouse) as available data sources.](media/onelake-catalog-picker.png)
 
@@ -53,20 +54,24 @@ This requires binding the entity to two different tables: static data from a lak
 Consider vital sign monitoring equipment: the equipment itself is defined in one data source, and the readings it generates are stored in another, related to it by EquipmentId.
 
 **VitalSignEquipment.csv** (Lakehouse - Static attributes):
+
 ```
 EquipmentId | PatientId | EquipmentType      | MonitoringStartDate
 M001        | 5         | HeartRateMonitor   | 2024-01-15
 M002        | 8         | OxygenMonitor      | 2024-01-16
 ```
+
 This defines each monitor with contextual information: which patient the device monitors, what type of equipment it is, and when monitoring started. This is the VitalSignEquipment entity's stable identity.
 
 **VitalSignsReadings.csv** (Eventhouse - Streaming measurements):
+
 ```
 ReadingId | EquipmentId | Timestamp           | HeartRate | OxygenSaturation
 1         | M001        | 2024-01-15 08:00:01 | 72        | 98
 2         | M001        | 2024-01-15 08:00:06 | 74        | 97
 3         | M002        | 2024-01-15 08:00:02 | 68        | 99
 ```
+
 This contains only measurements with timestamps—no patient information, room number, or equipment type. Just the measurements and an EquipmentId linking back to the equipment entity.
 
 You need both bindings because the time-series data intentionally doesn't duplicate context—it focuses on measurements. The static binding creates the complete equipment entities (M001 is a HeartRateMonitor tracking Patient 5). The time-series binding adds continuously updating measurement properties to those entities.

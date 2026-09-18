@@ -1,5 +1,6 @@
 ---
 title: Understand MCP tool discovery
+description: Understand how agents discover the tools exposed by a Model Context Protocol server.
 ---
 
 ::: zone pivot="Video"

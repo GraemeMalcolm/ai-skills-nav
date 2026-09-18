@@ -1,5 +1,6 @@
 ---
 title: Module assessment
+description: Check your understanding of model deployment and vision-enabled application development.
 ---
 
 Test your knowledge.

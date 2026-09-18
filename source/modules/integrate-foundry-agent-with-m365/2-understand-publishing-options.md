@@ -1,5 +1,6 @@
 ---
 title: Understand Foundry agent publishing options
+description: Compare portal and developer-tool options for publishing Foundry agents to Microsoft 365.
 ---
 ::: zone pivot="Video"
 

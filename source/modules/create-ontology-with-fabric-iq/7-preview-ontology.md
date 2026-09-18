@@ -1,5 +1,6 @@
 ---
 title: Preview the ontology
+description: Preview ontology data and relationships to validate the connected business model.
 ---
 
 With entity types bound to data and relationships configured, the ontology is ready to explore. Selecting an entity type and choosing **Entity type overview** from the ribbon opens the preview experience—a dashboard showing how your bound data looks as a populated ontology.

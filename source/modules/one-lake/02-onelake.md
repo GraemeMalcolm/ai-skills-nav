@@ -1,5 +1,6 @@
 ---
 title: Understand OneLake
+description: Learn how OneLake organizes, governs, and exposes data across a Fabric tenant.
 ---
 
 Before you can discover data, you need to understand where it lives. In Microsoft Fabric, all data lives in OneLake, the single storage layer built into every Fabric tenant. OneLake eliminates the need for separate storage accounts because all Fabric workloads read from and write to the same location.

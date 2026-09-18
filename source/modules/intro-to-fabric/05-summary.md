@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review the unified analytics capabilities, roles, and experiences provided by Microsoft Fabric.
 ---
 
 Organizations need to ingest, prepare, govern, and analyze data at scale. They also need that data to be ready for AI workloads like copilots, agents, and machine learning models.

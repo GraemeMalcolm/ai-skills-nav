@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Discover how OneLake provides a unified data foundation for Microsoft Fabric workloads.
 ---
 
 When you need to build a report, create a semantic model, or transform data, the first step is finding the right data. In many organizations, data lives across multiple workspaces with different teams maintain their own lakehouses, warehouses, and streaming feeds. Without a way to discover what exists and where it lives, you waste time searching or create unnecessary copies.

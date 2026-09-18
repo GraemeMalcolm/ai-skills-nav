@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Discover Claude models and how they support AI application development in Microsoft Foundry.
 ---
 
 ::: zone pivot="Video"

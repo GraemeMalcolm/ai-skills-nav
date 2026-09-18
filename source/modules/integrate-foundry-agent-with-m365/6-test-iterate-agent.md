@@ -1,5 +1,6 @@
 ---
 title: Test and iterate your integrated agent
+description: Test agent behavior in Microsoft 365 and refine its instructions and integration.
 ---
 
 ::: zone pivot="Video"

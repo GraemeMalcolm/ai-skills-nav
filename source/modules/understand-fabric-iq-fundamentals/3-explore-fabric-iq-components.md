@@ -1,5 +1,6 @@
 ---
 title: Explore Microsoft Fabric IQ components
+description: Examine the ontology, graph, data-agent, and Power BI components that form the Fabric IQ ecosystem.
 ---
 
 Microsoft Fabric IQ brings together several components that work as an integrated ecosystem. Each component serves a specific role in how you define, query, analyze, and visualize your business data. Understanding these components helps you choose the right tool for each task and leverage their combined strengths.
@@ -63,6 +64,7 @@ This approach is significantly faster than building an ontology from scratch. In
 Consider a scenario where a data team generates an ontology from their existing semantic model with tables for hospitals, departments, rooms, and patients. This automatically creates the entity types and relationships, which they could then enhance by adding time-series vital sign data from eventhouse.
 
 After generating an ontology, you refine it by:
+
 - Verifying that entity type keys are correctly identified
 - Confirming that data bindings map to the right source columns
 - Adding additional entity types from other data sources (like eventhouse streams)

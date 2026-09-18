@@ -1,5 +1,6 @@
 ---
 title: Knowledge check
+description: Check your understanding of Azure Databricks architecture, workloads, concepts, and governance.
 ---
 
 Test your knowledge.

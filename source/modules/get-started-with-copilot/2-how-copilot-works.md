@@ -1,5 +1,6 @@
 ---
 title: Explore how Copilot works across your Microsoft 365 apps
+description: Understand how Copilot combines large language models with Microsoft Graph and application context.
 ---
 
 Microsoft Copilot is an AI assistant embedded in the apps you already use, including Word, PowerPoint, Excel, Teams, Outlook, and Copilot Chat. It works alongside you as you draft content, analyze data, summarize information, and manage tasks throughout your workday.

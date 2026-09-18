@@ -1,5 +1,6 @@
 ---
 title: Develop an AI agent in Visual Studio Code
+description: Use Visual Studio Code and the Microsoft Foundry SDK to define and manage an AI agent.
 ---
 
 ::: zone pivot="Video"

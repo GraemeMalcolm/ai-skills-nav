@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Learn how grounding and agents help you use Microsoft Copilot Chat more intentionally at work.
 ---
 
 [!VIDEO: https://learn-video.azurefd.net/vod/player?id=e19cc0bc-79ef-499b-bf7a-35213a0fc991]

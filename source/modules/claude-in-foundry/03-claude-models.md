@@ -1,5 +1,6 @@
 ---
 title: Claude models in Microsoft Foundry
+description: Compare the Claude models available in Microsoft Foundry and choose one for your scenario.
 ---
 
 ::: zone pivot="Video"

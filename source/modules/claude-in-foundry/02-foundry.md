@@ -1,5 +1,6 @@
 ---
 title: Microsoft Foundry
+description: Explore the Microsoft Foundry platform for discovering, deploying, and building with AI models.
 ---
 
 ::: zone pivot="Video"

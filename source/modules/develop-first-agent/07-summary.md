@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review the concepts and development steps used to create your first AI agent.
 ---
 
 ::: zone pivot="Video"

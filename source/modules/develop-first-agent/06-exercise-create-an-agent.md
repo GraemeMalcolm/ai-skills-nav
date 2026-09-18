@@ -1,5 +1,6 @@
 ---
 title: Exercise - Create an agent
+description: Create, configure, and test a working AI agent in a guided exercise.
 ---
 
 <!-- Import lab exercise from existing MicrosoftLearning GitHub source -->

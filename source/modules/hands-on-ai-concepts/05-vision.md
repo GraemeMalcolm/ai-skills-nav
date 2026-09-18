@@ -1,5 +1,6 @@
 ---
 title: Exercise - Explore computer vision
+description: Use computer vision to analyze images and identify visual content in a hands-on exercise.
 ---
 
 > **TIP**: A hosted environment with an online virtual machine is provided for this lab. Alternatively, you can complete the lab using your own local computer and cloud subscription.

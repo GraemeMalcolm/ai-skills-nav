@@ -1,5 +1,6 @@
 ---
 title: Choose a speech-capable model
+description: Select and deploy a model that supports audio input and speech generation in Microsoft Foundry.
 ---
 
 ::: zone pivot="Video"

@@ -1,5 +1,6 @@
 ---
 title: Deploy Claude models in Microsoft Foundry
+description: Deploy a Claude model from the Microsoft Foundry model catalog and configure its endpoint.
 ---
 
 ::: zone pivot="Video"

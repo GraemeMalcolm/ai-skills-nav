@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review how grounding, semantic indexing, and agents improve Microsoft Copilot Chat results.
 ---
 
 In this module, you explored how Microsoft Copilot Chat works and how to move beyond basic prompting to get more meaningful results. You saw that Copilot's effectiveness depends on what information it can access.

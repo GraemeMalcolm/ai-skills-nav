@@ -1,5 +1,6 @@
 ---
 title: Connect an agent to Foundry IQ
+description: Connect a Foundry agent to a knowledge base so it can return grounded responses.
 ---
 
 ::: zone pivot="Video"

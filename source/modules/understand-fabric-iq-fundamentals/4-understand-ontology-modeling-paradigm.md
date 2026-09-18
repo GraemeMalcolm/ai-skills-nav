@@ -1,5 +1,6 @@
 ---
 title: Understand the ontology modeling paradigm
+description: Compare business-centered ontology modeling with traditional use-case-driven analytical data modeling.
 ---
 
 Ontology modeling in Fabric IQ defines business concepts independent of specific analytical use cases. This unit explains how the ontology approach differs from traditional analytical data modeling.

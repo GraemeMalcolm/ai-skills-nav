@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review how to deploy and use Claude models for AI applications in Microsoft Foundry.
 ---
 
 ::: zone pivot="Video"

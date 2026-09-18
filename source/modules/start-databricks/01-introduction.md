@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Discover how Azure Databricks unifies data engineering, data science, machine learning, and analytics.
 ---
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=c959967a-8be3-42d8-a78a-a2c54ee1d1c2]
@@ -30,5 +31,5 @@ Many lakehouses follow a layered design pattern where data is gradually improved
 
 The Databricks lakehouse uses two key technologies:
 
-- **Delta Lake**: an optimized storage layer that supports ACID transactions and schema enforcement.
-- **Unity Catalog**: a unified, fine-grained governance solution for data and AI.
+* **Delta Lake**: an optimized storage layer that supports ACID transactions and schema enforcement.
+* **Unity Catalog**: a unified, fine-grained governance solution for data and AI.

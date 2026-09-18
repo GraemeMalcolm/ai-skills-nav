@@ -1,5 +1,6 @@
 ---
 title: Azure Databricks workloads
+description: Explore Databricks capabilities for data engineering, machine learning, warehousing, and streaming.
 ---
 
 Azure Databricks offers capabilities for various workloads including Machine Learning and Large Language Models (LLM), Data Science, Data Engineering, BI and Data Warehousing, and Streaming Processing.

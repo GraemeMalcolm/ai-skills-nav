@@ -1,5 +1,6 @@
 ---
 title: Get started with Azure Databricks
+description: Learn how to create an Azure Databricks workspace and access its collaborative environment.
 ---
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=d4fcf5c1-5d99-439c-8bba-157f93385e15]
@@ -67,7 +68,7 @@ Select **+ New** to:
 - **Create workspace objects** such as notebooks, queries, repos, dashboards, alerts, jobs, pipelines, experiments, models, and serving endpoints.
 - **Create compute resources** such as clusters, SQL warehouses, and ML endpoints.
 
-Use the top bar to **search** for workspace objects such as notebooks, queries, dashboards, alerts, files, folders, libraries, tables registered in Unity Catalog, jobs, and repos in a single place. You can also access recently viewed objects in the search bar. 
+Use the top bar to **search** for workspace objects such as notebooks, queries, dashboards, alerts, files, folders, libraries, tables registered in Unity Catalog, jobs, and repos in a single place. You can also access recently viewed objects in the search bar.
 
 The workspace is available in **multiple languages.** To change the workspace language, select your username in the top navigation bar, select **Settings** and go to the **Preferences** tab.
 

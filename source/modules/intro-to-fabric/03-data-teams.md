@@ -1,5 +1,6 @@
 ---
 title: Explore data teams and Microsoft Fabric
+description: Learn how different data roles collaborate through shared Microsoft Fabric workloads.
 ---
 
 Microsoft Fabric's unified data analytics platform makes it easier for data professionals to collaborate on projects. Fabric increases collaboration between data professionals by removing data silos and the need for multiple systems.

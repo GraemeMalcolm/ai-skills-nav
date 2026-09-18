@@ -1,5 +1,6 @@
 ---
 title: Get started with Delta Lake
+description: Explore Delta Lake support for ACID transactions, scalable metadata, schema controls, and time travel.
 ---
 
 Delta Lake in Azure Databricks is an advanced storage layer that brings reliability, security, and performance to big data processing. It's built on top of Apache Spark and enhances the capabilities of traditional data lakes by offering several key benefits.

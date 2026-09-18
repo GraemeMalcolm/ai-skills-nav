@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Explore how vision-capable generative AI models interpret images in multimodal applications.
 ---
 
 ::: zone pivot="Video"

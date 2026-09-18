@@ -1,5 +1,6 @@
 ---
 title: What is Foundry IQ?
+description: Explore how Foundry IQ organizes and retrieves knowledge for grounded AI experiences.
 ---
 
 ::: zone pivot="Video"
@@ -21,7 +22,7 @@ Foundry IQ is the managed knowledge layer in this environment. It connects struc
 A Foundry IQ solution is based on an Azure AI Search resource that handles the knowledge retrieval, and has three main components:
 
 | Component | Purpose |
-|---|---|
+| --- | --- |
 | **Knowledge base** | The top-level resource that identifies a collection of related knowledge sources and controls retrieval behavior. |
 | **Knowledge source** | A connection to indexed or remote content, such as Microsoft SharePoint content, Azure SQL databases, documents in Azure Storage, public web data, Microsoft 365 Copilot Work IQ, and others. |
 | **Agentic retrieval** | A retrieval process that plans searches, finds relevant content, ranks results, and returns a unified response with source references. |

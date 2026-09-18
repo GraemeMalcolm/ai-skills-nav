@@ -1,5 +1,6 @@
 ---
 title: Exercise - Explore Azure Databricks
+description: Explore an Azure Databricks workspace and use a notebook to work with data.
 ---
 
 <!-- Import lab exercise from existing MicrosoftLearning GitHub source -->

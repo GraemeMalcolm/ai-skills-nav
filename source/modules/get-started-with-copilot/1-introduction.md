@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Discover how Microsoft Copilot supports everyday work across Microsoft 365 applications.
 ---
 
 [!VIDEO: https://learn-video.azurefd.net/vod/player?id=bb85b885-908d-4440-8ae9-75b414e4a701]

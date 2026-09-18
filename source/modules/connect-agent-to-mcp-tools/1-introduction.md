@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Learn how Model Context Protocol tools extend Azure AI agents with external capabilities.
 ---
 
 ::: zone pivot="Video"

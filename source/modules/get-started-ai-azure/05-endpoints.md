@@ -1,5 +1,6 @@
 ---
 title: Foundry endpoints
+description: Understand how Microsoft Foundry endpoints provide applications with access to deployed models.
 ---
 
 ::: zone pivot="Video"

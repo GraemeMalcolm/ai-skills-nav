@@ -1,5 +1,6 @@
 ---
 title: Evaluate warehouse capabilities
+description: Evaluate Fabric warehouse capabilities for governed relational analytics and reporting.
 ---
 
 A warehouse in Microsoft Fabric is an enterprise-scale relational data store built on a data lake foundation. It provides a full T-SQL experience for creating, loading, and querying structured data with multi-table ACID transaction support. If your team works primarily with SQL and you need transactional write capabilities, the warehouse is designed for that workload.

@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review Azure AI application development concepts and the Microsoft Foundry workflow.
 ---
 
 ::: zone pivot="Video"

@@ -1,5 +1,6 @@
 ---
 title: Introduction to AI agents
+description: Learn how AI agents combine models, instructions, knowledge, and tools to pursue goals.
 ---
 
 ::: zone pivot="Video"

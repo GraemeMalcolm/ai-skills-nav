@@ -1,5 +1,6 @@
 ---
 title: Simulation - Microsoft Defender for Cloud interactive guide
+description: Explore Defender for Cloud security recommendations and controls in an interactive simulation.
 ---
 
 Now that you have an understanding of Microsoft Defender for Cloud see it in action.

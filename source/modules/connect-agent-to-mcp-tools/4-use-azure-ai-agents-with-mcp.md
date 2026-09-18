@@ -1,5 +1,6 @@
 ---
 title: Use Azure AI agents with MCP servers
+description: Connect an Azure AI agent to an MCP server and handle tool approval and execution.
 ---
 
 ::: zone pivot="Video"

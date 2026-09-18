@@ -1,5 +1,6 @@
 ---
 title: Developing AI apps on Azure
+description: Explore the services, models, and development workflow for building AI applications on Azure.
 ---
 
 ::: zone pivot="Video"

@@ -1,5 +1,6 @@
 ---
 title: Evaluate eventhouse capabilities
+description: Evaluate Fabric eventhouse capabilities for streaming, time-series, and event data analysis.
 ---
 
 An eventhouse in Microsoft Fabric is designed for real-time analytics on streaming and time-series data. It efficiently handles large volumes of events arriving continuously, and it provides fast query performance on data with a natural time component. If your workload involves telemetry, logs, IoT data, or any event-based pattern, the eventhouse is purpose-built for that scenario.

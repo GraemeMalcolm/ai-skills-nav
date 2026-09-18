@@ -1,5 +1,6 @@
 ---
-title: Exercise - Explore Microsoft Copilot
+title: Explore Microsoft Copilot
+description: Get hands-on with Microsoft Copilot as you explore its features, capabilities, and user interface in a guided lab.
 ---
 
 <!-- Import lab exercise from existing MicrosoftLearning GitHub source -->

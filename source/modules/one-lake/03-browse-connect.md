@@ -1,5 +1,6 @@
 ---
 title: Browse and connect to data in OneLake
+description: Browse OneLake data and connect to it through supported tools and endpoints.
 ---
 
 All your organization's Fabric data lives in OneLake, but you still need to find the right item. The OneLake catalog gives you a searchable view of everything you have access to. From there, you evaluate quality, choose a connection method, and start building.

@@ -1,5 +1,6 @@
 ---
 title: Module assessment
+description: Check your understanding of Delta tables, schemas, time travel, and data integrity.
 ---
 
 Test your knowledge.

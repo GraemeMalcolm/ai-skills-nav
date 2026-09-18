@@ -1,5 +1,6 @@
 ---
 title: Integrate agent tools using an MCP server and client
+description: Configure an MCP server and client so an agent can discover and invoke external tools.
 ---
 
 ::: zone pivot="Video"

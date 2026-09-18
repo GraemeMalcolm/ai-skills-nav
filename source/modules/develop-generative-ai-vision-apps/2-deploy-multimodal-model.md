@@ -1,5 +1,6 @@
 ---
 title: Use a vision-capable model in the Microsoft Foundry portal
+description: Select, deploy, and test a vision-capable model in the Microsoft Foundry portal.
 ---
 
 ::: zone pivot="Video"

@@ -1,5 +1,6 @@
 ---
 title: Knowledge check
+description: Check your understanding of the core artificial intelligence concepts covered in this module.
 ---
 
 Test your knowledge.

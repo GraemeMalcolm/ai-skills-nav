@@ -1,5 +1,6 @@
 ---
 title: Understand key concepts
+description: Understand Databricks workspaces, compute, notebooks, jobs, and other foundational platform concepts.
 ---
 
 Azure Databricks is a single service platform with multiple technologies that enable working with data at scale. When using Azure Databricks, there are some key concepts to understand.
@@ -8,13 +9,13 @@ Azure Databricks is a single service platform with multiple technologies that en
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=bd32efc6-01aa-4c6b-811c-14c5109d9a3c]
 
-A **workspace** in Azure Databricks is a secure, collaborative environment where your can access and organize all Databricks assets, such as notebooks, clusters, jobs, libraries, dashboards, and experiments. 
+A **workspace** in Azure Databricks is a secure, collaborative environment where your can access and organize all Databricks assets, such as notebooks, clusters, jobs, libraries, dashboards, and experiments.
 
 You can open an Azure Databricks Workspace from the Azure portal, by selecting **Launch Workspace**.
 
 :::image type="content" source="../media/azure-databricks-portal-launch.png" alt-text="Screenshot of the Azure portal showing the Azure Databricks Landing Page." lightbox="../media/azure-databricks-portal-launch.png":::
 
-It provides a web-based **user interface (UI)** as well as REST APIs for managing resources and workflows. Workspaces can be structured into folders to organize projects, data pipelines, or team assets, and permissions can be applied at different levels to control access. They support **collaboration** by allowing multiple users—such as data engineers, analysts, and data scientists—to work together on shared notebooks, track experiments, and manage dependencies. 
+It provides a web-based **user interface (UI)** as well as REST APIs for managing resources and workflows. Workspaces can be structured into folders to organize projects, data pipelines, or team assets, and permissions can be applied at different levels to control access. They support **collaboration** by allowing multiple users—such as data engineers, analysts, and data scientists—to work together on shared notebooks, track experiments, and manage dependencies.
 
 In addition, workspaces are tied to **Unity Catalog** (when enabled) for centralized data governance, ensuring secure access to data across the organization. Each workspace is also linked to an **underlying Azure resource group** (including a managed resource group) that holds the compute, networking, and storage resources Databricks uses behind the scenes.
 
@@ -26,7 +27,7 @@ In addition, workspaces are tied to **Unity Catalog** (when enabled) for central
 
 Notebooks are also designed for **collaboration**: multiple users can edit and run cells simultaneously, add comments, and share insights in real time. They integrate tightly with Databricks clusters, enabling users to process large datasets efficiently, and can connect to external data sources through **Unity Catalog** for governed data access. In addition, notebooks can be version-controlled, scheduled as jobs, or exported for sharing outside the platform, making them central to both **ad-hoc exploration** and **production-grade workflows**.
 
-Notebooks contain a collection of two types of cells: **code cells** and **Markdown cells**. Code cells contain runnable code. Markdown cells contain Markdown code that renders as text and graphics. You can **run** a single cell, a group of cells, or the whole notebook. 
+Notebooks contain a collection of two types of cells: **code cells** and **Markdown cells**. Code cells contain runnable code. Markdown cells contain Markdown code that renders as text and graphics. You can **run** a single cell, a group of cells, or the whole notebook.
 
 :::image type="content" source="../media/notebook.png" alt-text="Screenshot of an Azure Databricks Notebook." lightbox="../media/notebook.png":::
 
@@ -37,7 +38,7 @@ Notebooks contain a collection of two types of cells: **code cells** and **Markd
 Azure Databricks leverages a two-layer architecture:
 
 - **Control Plane**: this internal layer, managed by Microsoft, handles backend services specific to your Azure Databricks account.
-- **Compute plane**: this is the external layer that processes the data and lives in your Azure Subscription. 
+- **Compute plane**: this is the external layer that processes the data and lives in your Azure Subscription.
 
 :::image type="content" source="../media/high-level-azure-databricks-architecture.png" alt-text="Diagram showing the Azure Databricks high level architecture." lightbox="../media/high-level-azure-databricks-architecture.png":::
 
@@ -74,7 +75,7 @@ If a maintenance update is released for a runtime version you're using, you can 
 
 ![Screenshot of an Azure Databricks Jobs landing page.](./media/jobs.png)
 
-A job in Databricks is essentially a container for one or more **tasks**. Tasks define the work to be done—for example, running a notebook, executing a Spark job, calling external code, ... 
+A job in Databricks is essentially a container for one or more **tasks**. Tasks define the work to be done—for example, running a notebook, executing a Spark job, calling external code, ...
 
 Jobs can be triggered in different ways:
 

@@ -1,5 +1,6 @@
 ---
 title: Module assessment
+description: Check your understanding of deploying and using speech-capable generative AI models.
 ---
 
 Test your knowledge.

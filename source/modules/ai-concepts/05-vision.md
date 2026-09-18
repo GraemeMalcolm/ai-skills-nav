@@ -1,5 +1,6 @@
 ---
 title: Computer Vision
+description: Explore how computer vision enables AI systems to interpret images and video.
 ---
 
 ::: zone pivot="Video"

@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review how to choose among lakehouse, warehouse, and eventhouse data stores in Fabric.
 ---
 
 In this module, you built a decision framework for choosing between the three primary analytical data stores in Microsoft Fabric:

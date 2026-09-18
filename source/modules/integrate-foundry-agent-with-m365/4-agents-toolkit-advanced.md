@@ -1,5 +1,6 @@
 ---
 title: Advanced - Use Microsoft 365 Agents Toolkit
+description: Use Microsoft 365 Agents Toolkit to customize and publish an advanced agent integration.
 ---
 
 ::: zone pivot="Video"

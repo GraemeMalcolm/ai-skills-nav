@@ -1,5 +1,6 @@
 ---
 title: Create an AI agent in the Microsoft Foundry portal
+description: Create and test an AI agent interactively in the Microsoft Foundry portal.
 ---
 
 ::: zone pivot="Video"

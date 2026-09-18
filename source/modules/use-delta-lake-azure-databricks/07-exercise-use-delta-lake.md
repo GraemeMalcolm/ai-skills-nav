@@ -1,5 +1,6 @@
 ---
 title: Exercise - Use Delta Lake in Azure Databricks
+description: Create and manage Delta tables in Azure Databricks through a guided practical exercise.
 ---
 
 Now it's your chance to explore Delta Lake.

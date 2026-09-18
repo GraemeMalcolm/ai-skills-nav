@@ -1,5 +1,6 @@
 ---
 title: Enable and use Microsoft Fabric
+description: Learn how to enable Microsoft Fabric and navigate its integrated experiences and workspaces.
 ---
 
 Before you can explore the end-to-end capabilities of Microsoft Fabric, it must be enabled for your organization. You might need to work with your IT department to enable Fabric for your organization, including one of the following roles:

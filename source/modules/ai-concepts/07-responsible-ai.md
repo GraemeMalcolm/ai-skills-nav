@@ -1,5 +1,6 @@
 ---
 title: Responsible AI
+description: Examine the principles that guide fair, reliable, safe, private, inclusive, transparent, and accountable AI.
 ---
 
 ::: zone pivot="Video"

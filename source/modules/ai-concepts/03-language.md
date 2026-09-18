@@ -1,5 +1,6 @@
 ---
 title: Text and natural language
+description: Discover how AI processes and generates natural language for text-based applications.
 ---
 
 ::: zone pivot="Video"

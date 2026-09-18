@@ -1,5 +1,6 @@
 ---
 title: Knowledge check
+description: Check your understanding of Fabric analytical data stores and their appropriate use cases.
 ---
 
 ::: knowledge-check type="chat" show-answers="false" allow-retry="true"

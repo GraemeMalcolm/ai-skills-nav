@@ -1,5 +1,6 @@
 ---
 title: Write prompts that get results
+description: Write effective Copilot prompts by defining clear goals, context, sources, and expectations.
 ---
 
 Prompts are how you communicate with Copilot, telling it what you need across Microsoft 365 apps such as Word, PowerPoint, Teams, Excel, and Outlook. Think of prompting as a conversation with a knowledgeable assistant—the clearer and more specific you are, the better the response you get.

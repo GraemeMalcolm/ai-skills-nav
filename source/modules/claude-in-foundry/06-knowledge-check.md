@@ -1,5 +1,6 @@
 ---
 title: Module assessment
+description: Check your understanding of selecting, deploying, and using Claude models in Microsoft Foundry.
 ---
 
 Test your knowledge.

@@ -1,5 +1,6 @@
 ---
-title: Exercise - Explore Microsoft AI models
+title: Explore Microsoft AI models
+description: Get hands-on with Microsoft AI models as you explore reasoning, speech, transcription, and image generation in the MAI Playground.
 ---
 
 <!-- Import lab exercise from existing MicrosoftLearning source -->

@@ -1,5 +1,6 @@
 ---
 title: Module assessment
+description: Check your understanding of Fabric IQ concepts, components, and ontology modeling.
 ---
 
 Test your knowledge.

@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review how Microsoft Copilot works securely across applications and responds to well-formed prompts.
 ---
 
 In this module, you built the foundation you'll use to work effectively with Microsoft Copilot.

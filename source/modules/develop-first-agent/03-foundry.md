@@ -1,5 +1,6 @@
 ---
 title: Microsoft Foundry
+description: Explore the Microsoft Foundry services and resources used to develop AI agents.
 ---
 
 ::: zone pivot="Video"

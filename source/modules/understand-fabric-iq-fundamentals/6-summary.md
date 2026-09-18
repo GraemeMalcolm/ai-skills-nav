@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review how Fabric IQ ontologies connect business vocabulary to data for queries and graph exploration.
 ---
 
 Microsoft Fabric IQ lets you define business vocabulary once in ontologies, enabling natural language queries and graph visualization of your data. In this module, you learned what Fabric IQ is, how to access it, and how it fits within Microsoft Fabric's data platform.

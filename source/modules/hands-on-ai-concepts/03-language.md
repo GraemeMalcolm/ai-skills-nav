@@ -1,5 +1,6 @@
 ---
 title: Exercise - Explore text analytics
+description: Use text analytics to detect language, extract key phrases, and analyze sentiment.
 ---
 
 > **TIP**: A hosted environment with an online virtual machine is provided for this lab. Alternatively, you can complete the lab using your own local computer and cloud subscription.

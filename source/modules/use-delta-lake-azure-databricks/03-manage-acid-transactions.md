@@ -1,5 +1,6 @@
 ---
 title: Create Delta tables
+description: Create managed and external Delta tables that support reliable concurrent data operations.
 ---
 
 Creating a Delta table establishes a structured dataset stored in the Delta format. Tables can be **managed** (Databricks manages storage and metadata) or **external** (you provide a storage path, for example in Azure Data Lake Storage Gen2). Creating a table sets the schema, storage location, and enables ACID transactions and time travel from the start.
@@ -21,7 +22,7 @@ CREATE TABLE main.default.people_sql (id INT, name STRING) USING DELTA;
 INSERT INTO main.default.people_sql VALUES (1, 'a'), (2, 'b');
 ```
 
-An **external Delta table** is a table whose underlying data files live in a storage location you specify (for example, in Azure Data Lake Storage Gen2), rather than being managed automatically by Databricks. In this setup, Databricks only tracks the table’s metadata, while the actual storage path remains under your control. This means you can delete the table definition from Databricks without affecting the underlying data files, which can be convenient if you need the data to be shared across multiple platforms or retained independently of Databricks. 
+An **external Delta table** is a table whose underlying data files live in a storage location you specify (for example, in Azure Data Lake Storage Gen2), rather than being managed automatically by Databricks. In this setup, Databricks only tracks the table’s metadata, while the actual storage path remains under your control. This means you can delete the table definition from Databricks without affecting the underlying data files, which can be convenient if you need the data to be shared across multiple platforms or retained independently of Databricks.
 
 The consequence, however, is that you're responsible for managing that storage location—including organizing directories, handling cleanup, and enforcing retention policies—whereas a managed table would handle these aspects for you automatically.
 
@@ -37,7 +38,7 @@ df_ext = spark.createDataFrame(data_ext, ["id", "name"])
 df_ext.write.format("delta").mode("overwrite").save(external_path)
 ```
 
-The following SQL statement then registers that location as a table, so it can be queried like any other Delta table. 
+The following SQL statement then registers that location as a table, so it can be queried like any other Delta table.
 
 ```sql
 CREATE TABLE main.default.people_ext

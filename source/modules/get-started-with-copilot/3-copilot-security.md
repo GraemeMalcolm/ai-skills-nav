@@ -1,5 +1,6 @@
 ---
 title: Learn about data security in Copilot
+description: Learn how Microsoft Copilot protects organizational data while respecting existing access permissions.
 ---
 
 Using Copilot with real work content—client proposals, financial models, or confidential meeting notes—naturally raises a question: who can see what Copilot does with that data?

@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review the workflow for adding speech transcription and synthesis to generative AI applications.
 ---
 
 ::: zone pivot="Video"

@@ -1,10 +1,11 @@
 ---
 title: Data governance with Unity Catalog and Microsoft Purview
+description: Learn how Unity Catalog and Microsoft Purview provide discovery, governance, and access control for data assets.
 ---
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=ae2e4976-0a38-4e28-a6bc-0622b7d00079]
 
-Data governance is critical for ensuring that data within an organization is managed securely, efficiently, and in compliance with regulations. 
+Data governance is critical for ensuring that data within an organization is managed securely, efficiently, and in compliance with regulations.
 
 In many organizations, data is distributed across databases, data warehouses, data lakes, and even multiple catalogs. It also exists in diverse formats like Parquet, CSV, and Delta Lake. Beyond structured data in tables, there’s also unstructured data in files, along with other assets such as machine learning models, notebooks, and dashboards that require management and governance. This fragmentation creates silos across sources, formats, and asset types.
 
@@ -16,9 +17,9 @@ These governance challenges directly affect the value organizations can derive f
 
 - A lack of built-in intelligence restricts broader use of data and AI platforms, particularly for nontechnical users. This slows down innovation, delays decision-making, and prevents organizations from fully realizing the benefits of their data and AI investments.
 
-Azure Databricks, combined with Unity Catalog and Microsoft Purview, provides a robust solution for managing and governing data effectively. 
+Azure Databricks, combined with Unity Catalog and Microsoft Purview, provides a robust solution for managing and governing data effectively.
 
-## Unity Catalog 
+## Unity Catalog
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=72b4857c-6be6-421e-a53f-c672e53c5d33]
 
@@ -50,7 +51,7 @@ Exploring data assets in Unity Catalog is straightforward. You can use the **Cat
 
 Unity Catalog provides a complete picture of your data's history. It logs access, audit trails, and lineage—right down to the column level.
 
-In most accounts, Unity Catalog is enabled by default when you create a workspace. You can get started using Unity Catalog with the default settings. There are optional configurations that you might want to enable, however. 
+In most accounts, Unity Catalog is enabled by default when you create a workspace. You can get started using Unity Catalog with the default settings. There are optional configurations that you might want to enable, however.
 
 ## Microsoft Purview
 

@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review the capabilities, applications, and responsible use of artificial intelligence.
 ---
 
 ::: zone pivot="Video"

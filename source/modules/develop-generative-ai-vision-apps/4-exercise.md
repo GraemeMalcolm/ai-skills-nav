@@ -1,5 +1,6 @@
 ---
 title: Exercise - Develop a vision-enabled chat app
+description: Create and test a chat application that uses visual context to answer questions.
 ---
 
 If you have an Azure subscription, you can complete this exercise to develop a vision-enabled chat app.

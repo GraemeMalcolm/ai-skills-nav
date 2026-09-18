@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review MCP tool discovery, client-server integration, and agent tool execution.
 ---
 
 In this learning experience, you learned how to integrate external tools with Microsoft Foundry Agent Service using the Model Context Protocol (MCP).

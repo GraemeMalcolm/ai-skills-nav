@@ -1,5 +1,6 @@
 ---
 title: Speech
+description: Learn how AI recognizes spoken language and synthesizes natural-sounding speech.
 ---
 
 ::: zone pivot="Video"

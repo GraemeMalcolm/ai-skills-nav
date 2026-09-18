@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Explore core artificial intelligence capabilities and the basic principles behind how they work.
 ---
 
 ::: zone pivot="Video"

@@ -1,5 +1,6 @@
 ---
 title: Microsoft Foundry
+description: Learn how Microsoft Foundry unifies model discovery, deployment, development, and management.
 ---
 
 ::: zone pivot="Video"

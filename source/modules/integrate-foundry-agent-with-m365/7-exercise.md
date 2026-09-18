@@ -1,5 +1,6 @@
 ---
 title: Work IQ - Workplace intelligence for AI agents
+description: Explore how Work IQ gives AI agents secure access to contextual workplace intelligence.
 ---
 
 <!-- Import lab exercise from existing MicrosoftLearning GitHub source -->

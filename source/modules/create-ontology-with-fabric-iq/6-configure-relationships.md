@@ -1,5 +1,6 @@
 ---
 title: Configure ontology relationships
+description: Map relationship endpoints and keys so ontology entities connect correctly across data sources.
 ---
 
 Entity types bound to data give you facts about individual business concepts—a hospital, a department, a patient. Relationship types define the connections between them: a department *belongs to* a hospital. A patient *is admitted to* a room, equipment *monitors* a patient.

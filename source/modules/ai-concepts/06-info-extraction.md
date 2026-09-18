@@ -1,5 +1,6 @@
 ---
 title: Information extraction
+description: Learn how AI extracts structured information from documents and other unstructured content.
 ---
 
 ::: zone pivot="Video"

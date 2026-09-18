@@ -1,5 +1,6 @@
 ---
 title: Build an ontology manually
+description: Define entity types, properties, and relationships manually in a Fabric IQ ontology.
 ---
 
 Building an ontology starts with defining its fundamental building blocks. This unit focuses on ontology structure. You learn to create entity types representing business concepts and relationship types showing how they connect. Creating an ontology manually involves three steps:

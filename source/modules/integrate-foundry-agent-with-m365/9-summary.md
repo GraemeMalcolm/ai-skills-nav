@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review the options and steps for publishing and improving a Foundry agent in Microsoft 365.
 ---
 
 ::: zone pivot="Video"

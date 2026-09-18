@@ -1,5 +1,6 @@
 ---
 title: Quiz - Check your learning
+description: Check your understanding of Copilot capabilities, data security, and effective prompting.
 ---
 
 ::: knowledge-check type="quiz" show-answers="true" allow-retry="true"

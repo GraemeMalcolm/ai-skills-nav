@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review how to deploy a multimodal model and build a vision-enabled chat application.
 ---
 
 ::: zone pivot="Video"

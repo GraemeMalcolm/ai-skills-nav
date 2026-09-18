@@ -1,8 +1,9 @@
 ---
 title: Data versioning and time travel in Delta Lake
+description: Query, audit, and restore earlier Delta table versions through transaction history and time travel.
 ---
 
-Data versioning and time travel are standout features of Delta Lake that allow you to access and revert to earlier versions of your data. This capability is useful for auditing changes, reproducing experiments, rolling back errors, and maintaining historical accuracy. 
+Data versioning and time travel are standout features of Delta Lake that allow you to access and revert to earlier versions of your data. This capability is useful for auditing changes, reproducing experiments, rolling back errors, and maintaining historical accuracy.
 
 This lesson shows how to implement and use data versioning and time travel with Delta Lake in Azure Databricks.
 
@@ -36,7 +37,7 @@ VALUES (3, 'Charlie', 28);
 
 These versions are immutable, meaning the state of the table at any point in time can be revisited using features like **time travel**. Under the hood, the **transaction log** functions as a ledger, recording all changes such as newly added files, removed files, and metadata or schema updates. As a result, Delta Lake allows you to reliably reproduce the table exactly as it existed at any version, audit who made specific changes and when, and roll back or rerun computations in a fully deterministic way.
 
-The DESCRIBE HISTORY command displays a list of all the versions of the table, along with details such as the operation performed, timestamp, and user who performed the operation. 
+The DESCRIBE HISTORY command displays a list of all the versions of the table, along with details such as the operation performed, timestamp, and user who performed the operation.
 
 ```sql
 -- View table history
@@ -47,11 +48,10 @@ Here’s a simplified example output for the sequence of operations:
 
 | version | timestamp           | userName                   | operation    | operationParameters        | operationMetrics                                               |
 |---------|---------------------|----------------------------|--------------|----------------------------|----------------------------------------------------------------|
-| 3       | 2025-09-11 12:40:00 | alice@adventureworks.com   | WRITE        | mode = Append              | numFiles = 1, numOutputRows = 1                                |
-| 2       | 2025-09-11 12:35:00 | alice@adventureworks.com   | UPDATE       | predicate = (name = 'Bob') | numRemovedFiles = 1, numAddedFiles = 1, numUpdatedRows = 1     |
-| 1       | 2025-09-11 12:30:00 | alice@adventureworks.com   | WRITE        | mode = Append              | numFiles = 1, numOutputRows = 2                                |
-| 0       | 2025-09-11 12:25:00 | alice@adventureworks.com   | CREATE TABLE |                            |                                                                |
-
+| 3       | 2025-09-11 12:40:00 | <alice@adventureworks.com>   | WRITE        | mode = Append              | numFiles = 1, numOutputRows = 1                                |
+| 2       | 2025-09-11 12:35:00 | <alice@adventureworks.com>   | UPDATE       | predicate = (name = 'Bob') | numRemovedFiles = 1, numAddedFiles = 1, numUpdatedRows = 1     |
+| 1       | 2025-09-11 12:30:00 | <alice@adventureworks.com>   | WRITE        | mode = Append              | numFiles = 1, numOutputRows = 2                                |
+| 0       | 2025-09-11 12:25:00 | <alice@adventureworks.com>   | CREATE TABLE |                            |                                                                |
 
 - **Version 0** → table created (schema only).
 - **Version 1** → initial insert (Alice + Bob).

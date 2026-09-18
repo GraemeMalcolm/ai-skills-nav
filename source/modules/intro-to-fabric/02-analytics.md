@@ -1,5 +1,6 @@
 ---
 title: Explore end-to-end analytics with Microsoft Fabric
+description: Explore how Fabric supports the complete analytics process from ingestion to insights.
 ---
 
 Scalable analytics can be complex, fragmented, and expensive. Microsoft Fabric simplifies analytics solutions by providing a single, easy-to-use product that integrates various tools and services into one platform.

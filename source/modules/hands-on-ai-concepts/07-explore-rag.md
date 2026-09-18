@@ -1,5 +1,6 @@
 ---
 title: Exercise - Explore retrieval augmented generation (RAG)
+description: Ground generative AI responses in retrieved source data through a hands-on RAG exercise.
 ---
 
 > **TIP**: A hosted environment with an online virtual machine is provided for this lab. Alternatively, you can complete the lab using your own local computer and cloud subscription.

@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Discover how Microsoft Fabric unifies data engineering, analytics, and business intelligence.
 ---
 
 Organizations need to ingest, prepare, govern, and analyze data at scale, often across disconnected tools and teams. Increasingly, that same data also needs to be ready for AI workloads like machine learning models, Copilots, and intelligent agents. Managing these tasks across separate systems creates complexity, governance gaps, and duplicated effort.

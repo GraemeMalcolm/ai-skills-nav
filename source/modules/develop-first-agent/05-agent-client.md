@@ -1,5 +1,6 @@
 ---
 title: Develop a client app for an AI agent
+description: Build a client application that sends requests to an AI agent and processes its responses.
 ---
 
 ::: zone pivot="Video"

@@ -1,5 +1,6 @@
 ---
 title: Exercise - Explore AI speech
+description: Explore speech recognition and synthesis capabilities through a hands-on AI exercise.
 ---
 
 > **TIP**: A hosted environment with an online virtual machine is provided for this lab. Alternatively, you can complete the lab using your own local computer and cloud subscription.

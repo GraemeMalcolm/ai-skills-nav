@@ -1,5 +1,6 @@
 ---
 title: Exercise - Build an ontology manually
+description: Build and validate a healthcare ontology manually from OneLake data sources.
 ---
 
 Now you have an opportunity to build a complete ontology manually in Fabric IQ.

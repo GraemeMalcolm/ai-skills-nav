@@ -758,64 +758,6 @@
   "courses": [
     {
       "type": "course",
-      "slug": "dp750-azure-databricks",
-      "url": "courses/dp750-azure-databricks/index.html",
-      "title": "Analyze data with Azure Databricks",
-      "course_number": "DP-750",
-      "credentials": [
-        "dp-750"
-      ],
-      "description": "In this course, you'll learn how to analyze data with Azure Databricks. The course explores the capabilities of Azure Databricks and how to use it to process and analyze large datasets. You'll gain hands-on experience in data exploration, transformation, and visualization, as well as best practices for working with big data in the cloud.",
-      "level": 200,
-      "duration": "2 days",
-      "experience_type": "Microsoft Official Curriculum",
-      "role": [
-        "Data Analyst"
-      ],
-      "avatar": "alex",
-      "prerequisites": [
-        "Data analysis or engineering experience with basic SQL and Apache Spark familiarity"
-      ],
-      "learning_outcomes": [
-        "Use Azure Databricks concepts to support integrated data engineering, analytics, and machine learning workloads."
-      ],
-      "playlists": [
-        "azure-databricks"
-      ],
-      "restricted_to": [],
-      "assigned_to": [],
-      "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 1,
-      "search": {
-        "text": "analyze data with azure databricks in this course, you'll learn how to analyze data with azure databricks. the course explores the capabilities of azure databricks and how to use it to process and analyze large datasets. you'll gain hands-on experience in data exploration, transformation, and visualization, as well as best practices for working with big data in the cloud. dp-750 microsoft official curriculum use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. get started with azure databricks in this playlist, you'll learn how to get started with azure databricks. learning path use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. get started with azure databricks get hands-on with azure databricks as you explore lakehouse architecture, apache spark, delta lake, unity catalog, data engineering, analytics, machine learning, and genie code. training module describe the azure databricks platform and its apache spark foundation. identify common azure databricks workloads and use cases. explain lakehouse architecture, delta lake, and medallion design patterns. describe data governance with unity catalog and microsoft purview. use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. manage data with delta lake delta lake is a data management solution in azure databricks providing features including acid transactions, schema enforcement, and time travel ensuring data consistency, integrity, and versioning capabilities. training module what delta lake is how to create delta tables how to use schema versioning and time travel in delta lake how to maintain data integrity with delta lake",
-        "filters": {
-          "role": [
-            "Data Analyst",
-            "Data Engineer",
-            "Data Scientist",
-            "Developer"
-          ],
-          "experience_type": [
-            "Microsoft Official Curriculum"
-          ],
-          "credential_type": [],
-          "level": [
-            "200"
-          ],
-          "modalities": [
-            "Lab",
-            "Video"
-          ],
-          "duration": [
-            "Days",
-            "Hours",
-            "Minutes"
-          ]
-        }
-      }
-    },
-    {
-      "type": "course",
       "slug": "ai-solution-sales",
       "url": "courses/ai-solution-sales/index.html",
       "title": "Conducting a customer conversation about AI",
@@ -843,7 +785,7 @@
       ],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 3.416666666666667,
+      "rating": 3.75,
       "search": {
         "text": "conducting a customer conversation about ai this course teaches microsoft technical sales professionals how to conduct a conversation with customers about ai solutions. learn how to effectively engage with customers, understand their needs, and present frontier artificial intelligence solutions that drive business value. technical workshop conduct informed customer conversations about microsoft ai solutions, platforms, and application patterns. present and demonstrate microsoft copilot solutions to customers with practical product knowledge. conduct comprehensive customer conversations about ai and copilot solutions with technical credibility and business relevance. azure ai solution customer discussions explore how azure ai solutions can be discussed with customers, including understanding their needs, presenting ai capabilities, and demonstrating practical applications using microsoft foundry. sales skilling understand foundational ai concepts across generative ai, language, speech, vision, information extraction, and responsible ai. build a foundation for developing ai solutions with microsoft foundry on azure. explain how caldova demonstrates patterns for ai-native enterprise software. conduct informed customer conversations about microsoft ai solutions, platforms, and application patterns. introduction to ai concepts curious about artificial intelligence? want to understand what the buzz is about? this module introduces you to the world of ai. training module explain generative ai, language models, and the role of ai agents. describe natural language processing tasks such as classification, sentiment analysis, and entity extraction. explain how speech recognition and speech synthesis support conversational ai. distinguish image classification, object detection, and semantic segmentation techniques. describe how ai extracts structured information from documents and other content. apply the principles of fairness, reliability, privacy, inclusiveness, transparency, and accountability. understand foundational ai concepts across generative ai, language, speech, vision, information extraction, and responsible ai. get started with ai in azure this module introduces azure and its capabilities for building ai solutions. explore the key features and benefits of using microsoft foundry for ai development. training module describe azure tenants, subscriptions, resource groups, and resources. identify azure services used to develop and host ai solutions. explain how microsoft foundry supports ai application and agent development. locate and use deployment options and endpoints for foundry resources. build a foundation for developing ai solutions with microsoft foundry on azure. introduction to caldova learn about the caldova demo solution and how to use it to explore real-world customer scenarios for frontier ai solutions built with microsoft technologies. learning bite explain how caldova demonstrates patterns for ai-native enterprise software. microsoft copilot solution customer discussions explore how microsoft copilot solutions can be discussed with customers, including understanding their needs, presenting ai capabilities, and demonstrating practical applications using microsoft copilot. sales skilling use copilot chat effectively with grounded work data, model selection, and specialized agents. explore microsoft copilot features and apply its capabilities in a guided lab. present and demonstrate microsoft copilot solutions to customers with practical product knowledge. unlock productivity and unleash creativity with ai powered chat learn how microsoft copilot chat helps you interact with your content across files, meetings, chats, emails, people, and the web. training module explain how copilot chat uses models, web grounding, and organizational context. use work data and specialized agents in copilot chat. use copilot chat effectively with grounded work data, model selection, and specialized agents. explore microsoft copilot get hands-on with microsoft copilot as you explore its features, capabilities, and user interface in a guided lab. hands-on lab explore microsoft copilot features and apply its capabilities in a guided lab.",
         "filters": {
@@ -902,7 +844,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 3.5,
+      "rating": 3,
       "search": {
         "text": "develop ai agents with microsoft foundry in this course, you'll learn how to develop an artificial intelligence (ai) agent with microsoft foundry. the course explores the capabilities of microsoft foundry and how to use it to create ai agents that can perform tasks, interact with users, and integrate with other systems. you'll gain hands-on experience in building, testing, and deploying ai agents, as well as best practices for designing effective agent interactions. ai-3026 microsoft official curriculum develop and deploy ai agents with microsoft foundry and integrated mcp tool ecosystems. develop your first ai agent in this playlist, you'll learn how to develop ai agents using microsoft foundry. learning path create, configure, test, deploy, and consume an ai agent with microsoft foundry. build ai agents that dynamically discover and invoke tools through model context protocol servers. develop and deploy ai agents with microsoft foundry and integrated mcp tool ecosystems. develop your first agent with microsoft foundry learn how to create, configure, test, and deploy an ai agent with microsoft foundry using models, instructions, tools, tracing, endpoints, and client applications. training module explain how models, instructions, knowledge, and tools work together in generative ai agents. describe microsoft foundry capabilities for building and managing ai applications. create and configure an ai agent in microsoft foundry. select developer tools and deployment options for a foundry agent. build a client application that communicates with a deployed agent. create, configure, test, deploy, and consume an ai agent with microsoft foundry. integrate mcp tools with azure ai agents learn how to connect azure ai agents to model context protocol (mcp) servers for dynamic tool discovery and execution. training module describe mcp tool discovery, interoperability, security, and centralized management. configure an mcp server and client to expose and invoke tools. connect a microsoft foundry agent to an mcp server and manage tool approvals. build ai agents that dynamically discover and invoke tools through model context protocol servers.",
         "filters": {
@@ -960,8 +902,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 3.5,
+      "last_updated": "2026-09-15T20:52:23-07:00",
+      "rating": 2,
       "search": {
         "text": "develop ai apps and agents on microsoft azure in this course, you'll learn how to develop artificial intelligence (ai) apps and agents on microsoft azure. the course explores the capabilities of microsoft foundry and how to use it to create ai solutions that can perform tasks, interact with users, and integrate with other systems. you'll gain hands-on experience in building, testing, and deploying ai apps and agents, as well as best practices for designing effective interactions. ai-103 microsoft official curriculum develop generative ai solutions with microsoft foundry develop agents with microsoft foundry develop speech and natural language processing (nlp) solutions with microsoft foundry develop computer vision and information extraction solutions with microsoft foundry develop ai apps with microsoft foundry in this playlist, you'll learn how to develop ai applications using microsoft foundry. learning path create computer speech solutions with microsoft foundry.. create computer vision solutions with microsoft foundry. create ai apps with microsoft foundry. develop a speech-capable generative ai application a voice carries meaning beyond words. learn how to use models in microsoft foundry that transcribe and synthesize speech. training module deploy speech-capable generative ai models in microsoft foundry. use a generative ai model to transcribe speech. use a generative ai model to synthesize speech. develop a vision-enabled generative ai application a picture says a thousand words, and multimodal generative ai models can interpret images to respond to visual prompts. learn how to build computer vision chat apps with microsoft foundry. training module deploy a vision-enabled generative ai model in microsoft foundry. test an image-based prompt in the chat playground. create a chat app that submits image-based prompts. develop your first ai agent in this playlist, you'll learn how to develop ai agents using microsoft foundry. learning path create, configure, test, deploy, and consume an ai agent with microsoft foundry. build ai agents that dynamically discover and invoke tools through model context protocol servers. develop and deploy ai agents with microsoft foundry and integrated mcp tool ecosystems. develop your first agent with microsoft foundry learn how to create, configure, test, and deploy an ai agent with microsoft foundry using models, instructions, tools, tracing, endpoints, and client applications. training module explain how models, instructions, knowledge, and tools work together in generative ai agents. describe microsoft foundry capabilities for building and managing ai applications. create and configure an ai agent in microsoft foundry. select developer tools and deployment options for a foundry agent. build a client application that communicates with a deployed agent. create, configure, test, deploy, and consume an ai agent with microsoft foundry. integrate mcp tools with azure ai agents learn how to connect azure ai agents to model context protocol (mcp) servers for dynamic tool discovery and execution. training module describe mcp tool discovery, interoperability, security, and centralized management. configure an mcp server and client to expose and invoke tools. connect a microsoft foundry agent to an mcp server and manage tool approvals. build ai agents that dynamically discover and invoke tools through model context protocol servers.",
         "filters": {
@@ -1017,7 +959,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 4.5,
+      "rating": 3,
       "search": {
         "text": "draft, analyze, and present with microsoft 365 copilot this course teaches learners how to use copilot and agents to complete real-world workflows across microsoft 365 apps. the course highlights how copilot supports key business outcomes, including drafting content, analyzing data, preparing for meetings, and managing communication. learners also see how copilot chat, in‑app experiences, and agents work together to combine organizational context and user intent across everyday work. ms-4018 microsoft official curriculum use microsoft copilot across microsoft 365 applications and copilot chat to improve everyday productivity. draft, analyze, and present with microsoft copilot learn common prompt flows in microsoft 365 apps including powerpoint, word, excel, teams, and outlook. explore microsoft copilot chat and the difference between work and web grounded data. learning path use microsoft copilot effectively across microsoft 365 with grounded responses and purposeful prompts. use copilot chat effectively with grounded work data, model selection, and specialized agents. use microsoft copilot across microsoft 365 applications and copilot chat to improve everyday productivity. get ready to work with microsoft copilot explore how microsoft copilot grounds responses in your organizational data and the web across microsoft 365 apps, discover how agents handle complex multi-step tasks, understand how enterprise data protection and sensitivity labels keep your data secure, and apply a four-element prompting framework to get accurate, useful results. training module describe how copilot works across microsoft 365 applications. identify enterprise data protection and security controls for copilot. create effective prompts using context, goals, sources, and expectations. use microsoft copilot effectively across microsoft 365 with grounded responses and purposeful prompts. unlock productivity and unleash creativity with ai powered chat learn how microsoft copilot chat helps you interact with your content across files, meetings, chats, emails, people, and the web. training module explain how copilot chat uses models, web grounding, and organizational context. use work data and specialized agents in copilot chat. use copilot chat effectively with grounded work data, model selection, and specialized agents.",
         "filters": {
@@ -1032,6 +974,64 @@
             "100"
           ],
           "modalities": [
+            "Video"
+          ],
+          "duration": [
+            "Days",
+            "Hours",
+            "Minutes"
+          ]
+        }
+      }
+    },
+    {
+      "type": "course",
+      "slug": "dp750-azure-databricks",
+      "url": "courses/dp750-azure-databricks/index.html",
+      "title": "Implement a Data Analytics Solution with Azure Databricks",
+      "course_number": "DP-750",
+      "credentials": [
+        "dp-750"
+      ],
+      "description": "In this course, you'll learn how to analyze data with Azure Databricks. The course explores the capabilities of Azure Databricks and how to use it to process and analyze large datasets. You'll gain hands-on experience in data exploration, transformation, and visualization, as well as best practices for working with big data in the cloud.",
+      "level": 200,
+      "duration": "2 days",
+      "experience_type": "Microsoft Official Curriculum",
+      "role": [
+        "Data Analyst"
+      ],
+      "avatar": "alex",
+      "prerequisites": [
+        "Data analysis or engineering experience with basic SQL and Apache Spark familiarity"
+      ],
+      "learning_outcomes": [
+        "Use Azure Databricks concepts to support integrated data engineering, analytics, and machine learning workloads."
+      ],
+      "playlists": [
+        "azure-databricks"
+      ],
+      "restricted_to": [],
+      "assigned_to": [],
+      "last_updated": "2026-09-16T14:26:22-07:00",
+      "rating": 2.5,
+      "search": {
+        "text": "implement a data analytics solution with azure databricks in this course, you'll learn how to analyze data with azure databricks. the course explores the capabilities of azure databricks and how to use it to process and analyze large datasets. you'll gain hands-on experience in data exploration, transformation, and visualization, as well as best practices for working with big data in the cloud. dp-750 microsoft official curriculum use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. analyze data with azure databricks in this playlist, you'll learn how to analyze data with azure databricks. learning path use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. get started with azure databricks get hands-on with azure databricks as you explore lakehouse architecture, apache spark, delta lake, unity catalog, data engineering, analytics, machine learning, and genie code. training module describe the azure databricks platform and its apache spark foundation. identify common azure databricks workloads and use cases. explain lakehouse architecture, delta lake, and medallion design patterns. describe data governance with unity catalog and microsoft purview. use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. manage data with delta lake delta lake is a data management solution in azure databricks providing features including acid transactions, schema enforcement, and time travel ensuring data consistency, integrity, and versioning capabilities. training module what delta lake is how to create delta tables how to use schema versioning and time travel in delta lake how to maintain data integrity with delta lake",
+        "filters": {
+          "role": [
+            "Data Analyst",
+            "Data Engineer",
+            "Data Scientist",
+            "Developer"
+          ],
+          "experience_type": [
+            "Microsoft Official Curriculum"
+          ],
+          "credential_type": [],
+          "level": [
+            "200"
+          ],
+          "modalities": [
+            "Lab",
             "Video"
           ],
           "duration": [
@@ -1075,7 +1075,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 3,
+      "rating": 1.5,
       "search": {
         "text": "implement analytics solutions using microsoft fabric this course covers how to prepare, enrich, and serve data for analysis by consumers such as data analysts, report developers, and ai agents. the course focuses on designing dimensional models and transforming and analyzing data by using dataflows, notebooks, and transact-sql (t-sql) across lakehouses, warehouses, and eventhouses in microsoft fabric. you'll learn how to build and optimize semantic models, analyze data, and enforce security and governance across data assets. dp-600 microsoft official curriculum use microsoft fabric and onelake concepts to support unified analytics and data discovery. choose the appropriate fabric lakehouse, warehouse, or eventhouse for a business scenario. design analytics solutions with microsoft fabric's unified platform, onelake, and analytical data stores. explore analytics data stores in microsoft fabric learn how microsoft fabric unifies analytics storage through onelake, and evaluate when to use lakehouses, warehouses, or eventhouses to analyze data. learning path understand microsoft fabric's unified analytics platform and how it supports data and ai workloads. discover, connect to, and work with data across onelake using its catalog and shortcuts. use microsoft fabric and onelake concepts to support unified analytics and data discovery. introduction to end-to-end analytics using microsoft fabric discover how microsoft fabric can meet your enterprise's analytics needs in one platform. learn about microsoft fabric, how it works, and identify how to use it to analyze data. training module identify fabric workloads and their roles in the analytics lifecycle. describe how data roles collaborate in a fabric environment. evaluate how fabric supports analytics and ai scenarios. understand microsoft fabric's unified analytics platform and how it supports data and ai workloads. discover and connect to data in onelake browse and connect to data using microsoft onelake's unified storage. discover data across workspaces with the onelake catalog, create shortcuts to reference existing data, and explore streaming sources in real-time hub. training module describe onelake architecture and integration capabilities. discover and connect to data by using the onelake catalog and shortcuts. discover, connect to, and work with data across onelake using its catalog and shortcuts. transform analytics data in microsoft fabric design dimensional models and apply transformations using dataflows, spark notebooks, and t-sql to produce consistent, analysis-ready data in microsoft fabric. learning path choose the appropriate fabric lakehouse, warehouse, or eventhouse for a business scenario. choose data stores in microsoft fabric evaluate lakehouse, warehouse, and eventhouse options to select the appropriate analytical data store for business scenarios in microsoft fabric. training module compare lakehouse, warehouse, and eventhouse scenarios and selection criteria. evaluate lakehouse capabilities for mixed data, spark processing, and sql analytics. evaluate warehouse capabilities for structured reporting, transactions, and t-sql workloads. evaluate eventhouse capabilities for streaming, time-series data, and kql analysis. choose the appropriate fabric lakehouse, warehouse, or eventhouse for a business scenario.",
         "filters": {
@@ -1130,7 +1130,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 4,
+      "rating": 2,
       "search": {
         "text": "introduction to ai in azure this course provides a foundational understanding of artificial intelligence (ai) concepts and services available in microsoft azure. learners will explore core ai workloads, including computer vision, natural language processing, conversational ai, and responsible ai practices. the course prepares students for the ai-901 certification exam. ai-901 microsoft official curriculum develop a foundational understanding of ai concepts and azure-based ai solution development. ai fundamentals learn the fundamentals of artificial intelligence (ai) and how to apply them in real-world scenarios. this playlist covers core ai concepts, hands-on labs, and practical applications using microsoft foundry. learning path understand foundational ai concepts across generative ai, language, speech, vision, information extraction, and responsible ai. build a foundation for developing ai solutions with microsoft foundry on azure. develop a foundational understanding of ai concepts and azure-based ai solution development. introduction to ai concepts curious about artificial intelligence? want to understand what the buzz is about? this module introduces you to the world of ai. training module explain generative ai, language models, and the role of ai agents. describe natural language processing tasks such as classification, sentiment analysis, and entity extraction. explain how speech recognition and speech synthesis support conversational ai. distinguish image classification, object detection, and semantic segmentation techniques. describe how ai extracts structured information from documents and other content. apply the principles of fairness, reliability, privacy, inclusiveness, transparency, and accountability. understand foundational ai concepts across generative ai, language, speech, vision, information extraction, and responsible ai. get started with ai in azure this module introduces azure and its capabilities for building ai solutions. explore the key features and benefits of using microsoft foundry for ai development. training module describe azure tenants, subscriptions, resource groups, and resources. identify azure services used to develop and host ai solutions. explain how microsoft foundry supports ai application and agent development. locate and use deployment options and endpoints for foundry resources. build a foundation for developing ai solutions with microsoft foundry on azure.",
         "filters": {
@@ -1187,8 +1187,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:17:46-07:00",
-      "rating": 4,
+      "last_updated": "2026-09-15T21:07:43-07:00",
+      "rating": 2,
       "search": {
         "text": "ai fundamentals learn the fundamentals of artificial intelligence (ai) and how to apply them in real-world scenarios. this playlist covers core ai concepts, hands-on labs, and practical applications using microsoft foundry. learning path understand foundational ai concepts across generative ai, language, speech, vision, information extraction, and responsible ai. build a foundation for developing ai solutions with microsoft foundry on azure. develop a foundational understanding of ai concepts and azure-based ai solution development. introduction to ai concepts curious about artificial intelligence? want to understand what the buzz is about? this module introduces you to the world of ai. training module explain generative ai, language models, and the role of ai agents. describe natural language processing tasks such as classification, sentiment analysis, and entity extraction. explain how speech recognition and speech synthesis support conversational ai. distinguish image classification, object detection, and semantic segmentation techniques. describe how ai extracts structured information from documents and other content. apply the principles of fairness, reliability, privacy, inclusiveness, transparency, and accountability. understand foundational ai concepts across generative ai, language, speech, vision, information extraction, and responsible ai. get started with ai in azure this module introduces azure and its capabilities for building ai solutions. explore the key features and benefits of using microsoft foundry for ai development. training module describe azure tenants, subscriptions, resource groups, and resources. identify azure services used to develop and host ai solutions. explain how microsoft foundry supports ai application and agent development. locate and use deployment options and endpoints for foundry resources. build a foundation for developing ai solutions with microsoft foundry on azure.",
         "filters": {
@@ -1210,6 +1210,62 @@
           ],
           "duration": [
             "Hours"
+          ]
+        }
+      }
+    },
+    {
+      "type": "playlist",
+      "slug": "azure-databricks",
+      "url": "playlists/azure-databricks/index.html",
+      "title": "Analyze data with Azure Databricks",
+      "description": "In this playlist, you'll learn how to analyze data with Azure Databricks.",
+      "level": 200,
+      "duration": "120 minutes",
+      "experience_type": "Learning Path",
+      "role": [
+        "Developer",
+        "Data Scientist",
+        "Data Engineer"
+      ],
+      "avatar": "alex",
+      "prerequisites": [
+        "Data engineering fundamentals and familiarity with Apache Spark concepts"
+      ],
+      "learning_outcomes": [
+        "Use Azure Databricks concepts to support integrated data engineering, analytics, and machine learning workloads."
+      ],
+      "modules": [
+        "start-databricks",
+        "use-delta-lake-azure-databricks"
+      ],
+      "restricted_to": [],
+      "assigned_to": [],
+      "last_updated": "2026-09-16T14:26:22-07:00",
+      "rating": 2.5,
+      "search": {
+        "text": "analyze data with azure databricks in this playlist, you'll learn how to analyze data with azure databricks. learning path use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. get started with azure databricks get hands-on with azure databricks as you explore lakehouse architecture, apache spark, delta lake, unity catalog, data engineering, analytics, machine learning, and genie code. training module describe the azure databricks platform and its apache spark foundation. identify common azure databricks workloads and use cases. explain lakehouse architecture, delta lake, and medallion design patterns. describe data governance with unity catalog and microsoft purview. use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. manage data with delta lake delta lake is a data management solution in azure databricks providing features including acid transactions, schema enforcement, and time travel ensuring data consistency, integrity, and versioning capabilities. training module what delta lake is how to create delta tables how to use schema versioning and time travel in delta lake how to maintain data integrity with delta lake",
+        "filters": {
+          "role": [
+            "Data Analyst",
+            "Data Engineer",
+            "Data Scientist",
+            "Developer"
+          ],
+          "experience_type": [
+            "Learning Path"
+          ],
+          "credential_type": [],
+          "level": [
+            "200"
+          ],
+          "modalities": [
+            "Lab",
+            "Video"
+          ],
+          "duration": [
+            "Hours",
+            "Minutes"
           ]
         }
       }
@@ -1245,7 +1301,7 @@
       ],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:17:46-07:00",
-      "rating": 3.3333333333333335,
+      "rating": 3,
       "search": {
         "text": "azure ai solution customer discussions explore how azure ai solutions can be discussed with customers, including understanding their needs, presenting ai capabilities, and demonstrating practical applications using microsoft foundry. sales skilling understand foundational ai concepts across generative ai, language, speech, vision, information extraction, and responsible ai. build a foundation for developing ai solutions with microsoft foundry on azure. explain how caldova demonstrates patterns for ai-native enterprise software. conduct informed customer conversations about microsoft ai solutions, platforms, and application patterns. introduction to ai concepts curious about artificial intelligence? want to understand what the buzz is about? this module introduces you to the world of ai. training module explain generative ai, language models, and the role of ai agents. describe natural language processing tasks such as classification, sentiment analysis, and entity extraction. explain how speech recognition and speech synthesis support conversational ai. distinguish image classification, object detection, and semantic segmentation techniques. describe how ai extracts structured information from documents and other content. apply the principles of fairness, reliability, privacy, inclusiveness, transparency, and accountability. understand foundational ai concepts across generative ai, language, speech, vision, information extraction, and responsible ai. get started with ai in azure this module introduces azure and its capabilities for building ai solutions. explore the key features and benefits of using microsoft foundry for ai development. training module describe azure tenants, subscriptions, resource groups, and resources. identify azure services used to develop and host ai solutions. explain how microsoft foundry supports ai application and agent development. locate and use deployment options and endpoints for foundry resources. build a foundation for developing ai solutions with microsoft foundry on azure. introduction to caldova learn about the caldova demo solution and how to use it to explore real-world customer scenarios for frontier ai solutions built with microsoft technologies. learning bite explain how caldova demonstrates patterns for ai-native enterprise software.",
         "filters": {
@@ -1305,8 +1361,8 @@
         "satya-jenson"
       ],
       "restricted_to": [],
-      "last_updated": "2026-09-15T13:25:21-07:00",
-      "rating": 3.6666666666666665,
+      "last_updated": "2026-09-15T21:07:43-07:00",
+      "rating": 3,
       "search": {
         "text": "build 2026 highlights microsoft build is the annual developer conference hosted by microsoft, where the latest technologies and innovations are showcased. catch up on the major announcements at microsoft build 2026. explain the significance of the majorana 2 quantum computing announcement at microsoft build 2026. describe the microsoft ai model announcements presented at microsoft build 2026. summarize key technology innovation themes shared by microsoft and nvidia leaders. summarize major quantum, ai model, and industry innovation announcements from microsoft build 2026. introducing majorana 2 quantum computing is the next big frontier for technology, and microsoft is making strides with its latest innovation. learn about the majorana 2 chip unveiled at microsoft build 2026. video explain the significance of the majorana 2 quantum computing announcement at microsoft build 2026. build announcement - microsoft ai models see mustafa suleyman present the microsoft ai models announcement at microsoft build 2026 video describe the microsoft ai model announcements presented at microsoft build 2026. satya nadella and jensen huang at build microsoft and nvidia executives satya nadella and jensen huang discuss the latest innovations and announcements at microsoft build 2026. video summarize key technology innovation themes shared by microsoft and nvidia leaders.",
         "filters": {
@@ -1364,8 +1420,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:25:21-07:00",
-      "rating": 4.333333333333333,
+      "last_updated": "2026-09-15T21:07:43-07:00",
+      "rating": 4,
       "search": {
         "text": "career cheat sheet career cheat sheet is a practical series focused on helping students and early career professionals build their personal brand and stand out with confidence. hosted by karen ngo, each episode shares simple, actionable strategies to help you define your strengths, communicate your value, and tell your story clearly across networking, interviews, and career growth. from building a career walking deck to using it in real-world conversations, this series gives you the tools to make your experience visible, memorable, and impactful early in your career. define a personal brand and identify the content needed for a career walking deck. build a career walking deck with copilot and powerpoint that communicates your professional value. use a career walking deck effectively in interviews, networking, and professional conversations. build and use a career walking deck as a practical personal branding tool. how to build your personal brand in this episode, karen breaks down what personal branding really means, how to define your career narrative, and how to turn it into a career walking deck—a simple visual tool that helps you stand out in interviews and career conversations. video define a personal brand and identify the content needed for a career walking deck. how to build a career walking deck with copilot and powerpoint in this episode, karen walks through how to create your own deck using linkedin, copilot, and powerpoint—turning your experience into a clear, visual story you can use in interviews and networking conversations. video build a career walking deck with copilot and powerpoint that communicates your professional value. how to use your career walking deck in interviews and networking in this episode, karen shares how to bring your deck into real-world situations—from coffee chats to networking to job interviews—so you can communicate your value clearly and confidently. video use a career walking deck effectively in interviews, networking, and professional conversations.",
         "filters": {
@@ -1394,7 +1450,7 @@
       "type": "playlist",
       "slug": "fabric-iq",
       "url": "playlists/fabric-iq/index.html",
-      "title": "Create knowledgable AI agents with Microsoft Fabric IQ",
+      "title": "Create knowledgeable AI agents with Microsoft Fabric IQ",
       "description": "In this playlist, you'll learn how to extend agent knowledge with Microsoft Fabric IQ.",
       "level": 200,
       "duration": "120 minutes",
@@ -1417,10 +1473,10 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": null,
-      "rating": 4,
+      "last_updated": "2026-09-16T13:12:08-07:00",
+      "rating": 1.5,
       "search": {
-        "text": "create knowledgable ai agents with microsoft fabric iq in this playlist, you'll learn how to extend agent knowledge with microsoft fabric iq. learning path explain what fabric iq is and how ontologies define business vocabulary. connect a fabric iq ontology to data sources and preview the ontology build and ground ai agents with enterprise knowledge using microsoft fabric iq. understand microsoft fabric iq fundamentals microsoft fabric iq provides a way to define business vocabulary in an ontology and bind the ontology to data sources. learn about ontology items, data agents, graph in microsoft fabric, and power bi semantic models. discover how ontology modeling differs from traditional analytical modeling by starting with business concepts rather than specific use cases. training module explain what fabric iq is and how ontologies define business vocabulary. create an ontology with fabric iq ontologies in fabric iq transform your data into a business vocabulary that everyone can understand. in this module, you'll learn two ways to create ontologies - building manually to understand the core components, or generating automatically from power bi semantic models to accelerate development. you'll practice both approaches and learn how to connect your ontology to data sources in onelake, including lakehouse tables and eventhouse streams. training module evaluate two approaches for creating an ontology in fabric iq build an ontology manually by working with entity types, properties, keys, and relationships generate an ontology from a power bi semantic model connect a fabric iq ontology to data sources and preview the ontology",
+        "text": "create knowledgeable ai agents with microsoft fabric iq in this playlist, you'll learn how to extend agent knowledge with microsoft fabric iq. learning path explain what fabric iq is and how ontologies define business vocabulary. connect a fabric iq ontology to data sources and preview the ontology build and ground ai agents with enterprise knowledge using microsoft fabric iq. understand microsoft fabric iq fundamentals microsoft fabric iq provides a way to define business vocabulary in an ontology and bind the ontology to data sources. learn about ontology items, data agents, graph in microsoft fabric, and power bi semantic models. discover how ontology modeling differs from traditional analytical modeling by starting with business concepts rather than specific use cases. training module explain what fabric iq is and how ontologies define business vocabulary. create an ontology with fabric iq ontologies in fabric iq transform your data into a business vocabulary that everyone can understand. in this module, you'll learn two ways to create ontologies - building manually to understand the core components, or generating automatically from power bi semantic models to accelerate development. you'll practice both approaches and learn how to connect your ontology to data sources in onelake, including lakehouse tables and eventhouse streams. training module evaluate two approaches for creating an ontology in fabric iq build an ontology manually by working with entity types, properties, keys, and relationships generate an ontology from a power bi semantic model connect a fabric iq ontology to data sources and preview the ontology",
         "filters": {
           "role": [
             "Data Analyst",
@@ -1471,8 +1527,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": null,
-      "rating": 3.5,
+      "last_updated": "2026-09-15T20:52:23-07:00",
+      "rating": 1,
       "search": {
         "text": "develop ai apps with microsoft foundry in this playlist, you'll learn how to develop ai applications using microsoft foundry. learning path create computer speech solutions with microsoft foundry.. create computer vision solutions with microsoft foundry. create ai apps with microsoft foundry. develop a speech-capable generative ai application a voice carries meaning beyond words. learn how to use models in microsoft foundry that transcribe and synthesize speech. training module deploy speech-capable generative ai models in microsoft foundry. use a generative ai model to transcribe speech. use a generative ai model to synthesize speech. develop a vision-enabled generative ai application a picture says a thousand words, and multimodal generative ai models can interpret images to respond to visual prompts. learn how to build computer vision chat apps with microsoft foundry. training module deploy a vision-enabled generative ai model in microsoft foundry. test an image-based prompt in the chat playground. create a chat app that submits image-based prompts.",
         "filters": {
@@ -1526,7 +1582,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:17:46-07:00",
-      "rating": 3.5,
+      "rating": 3,
       "search": {
         "text": "develop your first ai agent in this playlist, you'll learn how to develop ai agents using microsoft foundry. learning path create, configure, test, deploy, and consume an ai agent with microsoft foundry. build ai agents that dynamically discover and invoke tools through model context protocol servers. develop and deploy ai agents with microsoft foundry and integrated mcp tool ecosystems. develop your first agent with microsoft foundry learn how to create, configure, test, and deploy an ai agent with microsoft foundry using models, instructions, tools, tracing, endpoints, and client applications. training module explain how models, instructions, knowledge, and tools work together in generative ai agents. describe microsoft foundry capabilities for building and managing ai applications. create and configure an ai agent in microsoft foundry. select developer tools and deployment options for a foundry agent. build a client application that communicates with a deployed agent. create, configure, test, deploy, and consume an ai agent with microsoft foundry. integrate mcp tools with azure ai agents learn how to connect azure ai agents to model context protocol (mcp) servers for dynamic tool discovery and execution. training module describe mcp tool discovery, interoperability, security, and centralized management. configure an mcp server and client to expose and invoke tools. connect a microsoft foundry agent to an mcp server and manage tool approvals. build ai agents that dynamically discover and invoke tools through model context protocol servers.",
         "filters": {
@@ -1578,7 +1634,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:17:46-07:00",
-      "rating": 4.5,
+      "rating": 3,
       "search": {
         "text": "draft, analyze, and present with microsoft copilot learn common prompt flows in microsoft 365 apps including powerpoint, word, excel, teams, and outlook. explore microsoft copilot chat and the difference between work and web grounded data. learning path use microsoft copilot effectively across microsoft 365 with grounded responses and purposeful prompts. use copilot chat effectively with grounded work data, model selection, and specialized agents. use microsoft copilot across microsoft 365 applications and copilot chat to improve everyday productivity. get ready to work with microsoft copilot explore how microsoft copilot grounds responses in your organizational data and the web across microsoft 365 apps, discover how agents handle complex multi-step tasks, understand how enterprise data protection and sensitivity labels keep your data secure, and apply a four-element prompting framework to get accurate, useful results. training module describe how copilot works across microsoft 365 applications. identify enterprise data protection and security controls for copilot. create effective prompts using context, goals, sources, and expectations. use microsoft copilot effectively across microsoft 365 with grounded responses and purposeful prompts. unlock productivity and unleash creativity with ai powered chat learn how microsoft copilot chat helps you interact with your content across files, meetings, chats, emails, people, and the web. training module explain how copilot chat uses models, web grounding, and organizational context. use work data and specialized agents in copilot chat. use copilot chat effectively with grounded work data, model selection, and specialized agents.",
         "filters": {
@@ -1631,7 +1687,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:17:46-07:00",
-      "rating": 3,
+      "rating": 2,
       "search": {
         "text": "explore analytics data stores in microsoft fabric learn how microsoft fabric unifies analytics storage through onelake, and evaluate when to use lakehouses, warehouses, or eventhouses to analyze data. learning path understand microsoft fabric's unified analytics platform and how it supports data and ai workloads. discover, connect to, and work with data across onelake using its catalog and shortcuts. use microsoft fabric and onelake concepts to support unified analytics and data discovery. introduction to end-to-end analytics using microsoft fabric discover how microsoft fabric can meet your enterprise's analytics needs in one platform. learn about microsoft fabric, how it works, and identify how to use it to analyze data. training module identify fabric workloads and their roles in the analytics lifecycle. describe how data roles collaborate in a fabric environment. evaluate how fabric supports analytics and ai scenarios. understand microsoft fabric's unified analytics platform and how it supports data and ai workloads. discover and connect to data in onelake browse and connect to data using microsoft onelake's unified storage. discover data across workspaces with the onelake catalog, create shortcuts to reference existing data, and explore streaming sources in real-time hub. training module describe onelake architecture and integration capabilities. discover and connect to data by using the onelake catalog and shortcuts. discover, connect to, and work with data across onelake using its catalog and shortcuts.",
         "filters": {
@@ -1683,8 +1739,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:17:46-07:00",
-      "rating": 3.3333333333333335,
+      "last_updated": "2026-09-15T20:52:23-07:00",
+      "rating": 3,
       "search": {
         "text": "extend agent knowledge with microsoft iq in this playlist, you'll learn how to extend agent knowledge with microsoft iq. learning path build and ground ai agents with enterprise knowledge using microsoft foundry iq. publish microsoft foundry agents to teams and microsoft 365 copilot with organizational data access. extend ai agents with enterprise knowledge and publish them into microsoft 365 experiences. get started with foundry iq learn how to build foundry iq knowledge bases that ground ai agents with enterprise data using azure ai search, agentic retrieval, ranking, and citations. training module describe foundry iq components and the agentic retrieval architecture. configure knowledge bases that connect to enterprise knowledge sources. connect an ai agent to a foundry iq knowledge base through mcp. build and ground ai agents with enterprise knowledge using microsoft foundry iq. integrate your agent with microsoft 365 learn how to publish microsoft foundry agents to teams and microsoft 365 copilot, access organizational data with work iq, and refine your integration. training module compare direct publishing with microsoft 365 agents toolkit scenarios. publish an agent from the microsoft foundry portal. configure advanced enterprise agent scenarios with microsoft 365 agents toolkit. connect an agent to organizational data through work iq. test and refine an agent across microsoft 365 publishing targets. publish microsoft foundry agents to teams and microsoft 365 copilot with organizational data access. understand microsoft fabric iq fundamentals microsoft fabric iq provides a way to define business vocabulary in an ontology and bind the ontology to data sources. learn about ontology items, data agents, graph in microsoft fabric, and power bi semantic models. discover how ontology modeling differs from traditional analytical modeling by starting with business concepts rather than specific use cases. training module explain what fabric iq is and how ontologies define business vocabulary.",
         "filters": {
@@ -1698,62 +1754,6 @@
           "credential_type": [],
           "level": [
             "100",
-            "200"
-          ],
-          "modalities": [
-            "Lab",
-            "Video"
-          ],
-          "duration": [
-            "Hours",
-            "Minutes"
-          ]
-        }
-      }
-    },
-    {
-      "type": "playlist",
-      "slug": "azure-databricks",
-      "url": "playlists/azure-databricks/index.html",
-      "title": "Get started with Azure Databricks",
-      "description": "In this playlist, you'll learn how to get started with Azure Databricks.",
-      "level": 200,
-      "duration": "120 minutes",
-      "experience_type": "Learning Path",
-      "role": [
-        "Developer",
-        "Data Scientist",
-        "Data Engineer"
-      ],
-      "avatar": "alex",
-      "prerequisites": [
-        "Data engineering fundamentals and familiarity with Apache Spark concepts"
-      ],
-      "learning_outcomes": [
-        "Use Azure Databricks concepts to support integrated data engineering, analytics, and machine learning workloads."
-      ],
-      "modules": [
-        "start-databricks",
-        "use-delta-lake-azure-databricks"
-      ],
-      "restricted_to": [],
-      "assigned_to": [],
-      "last_updated": "2026-09-15T13:17:46-07:00",
-      "rating": 1,
-      "search": {
-        "text": "get started with azure databricks in this playlist, you'll learn how to get started with azure databricks. learning path use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. get started with azure databricks get hands-on with azure databricks as you explore lakehouse architecture, apache spark, delta lake, unity catalog, data engineering, analytics, machine learning, and genie code. training module describe the azure databricks platform and its apache spark foundation. identify common azure databricks workloads and use cases. explain lakehouse architecture, delta lake, and medallion design patterns. describe data governance with unity catalog and microsoft purview. use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. manage data with delta lake delta lake is a data management solution in azure databricks providing features including acid transactions, schema enforcement, and time travel ensuring data consistency, integrity, and versioning capabilities. training module what delta lake is how to create delta tables how to use schema versioning and time travel in delta lake how to maintain data integrity with delta lake",
-        "filters": {
-          "role": [
-            "Data Analyst",
-            "Data Engineer",
-            "Data Scientist",
-            "Developer"
-          ],
-          "experience_type": [
-            "Learning Path"
-          ],
-          "credential_type": [],
-          "level": [
             "200"
           ],
           "modalities": [
@@ -1790,7 +1790,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 4,
+      "rating": 2,
       "search": {
         "text": "leading at the frontier leading at the frontier is an executive conversation series exploring how ai is reshaping work, organizations, and leadership. hosted by katy george, corporate vice president of workforce transformation, and jeana jorgensen, corporate vice president of global skilling at microsoft, each episode unpacks how leaders can drive ai transformation with confidence across their organization. from redesigning workflows to building ai skills at scale, this series provides practical frameworks grounded in microsoft's own transformation journey. lead organizational ai transformation through strategy, skilling, adoption, and culture. leading at the frontier leading at the frontier is an executive conversation series exploring how ai is reshaping work, organizations, and leadership. hosted by katy george, corporate vice president of workforce transformation, and jeana jorgensen, corporate vice president of global skilling at microsoft, each episode unpacks how leaders can drive ai transformation with confidence across their organization. from redesigning workflows to building ai skills at scale, this series provides practical frameworks grounded in microsoft's own transformation journey. video identify proven strategies for driving organization-wide ai transformation. explain the leadership behaviors needed to embrace ai-driven change. design an approach for building ai skills at organizational scale. plan ai adoption across teams and business functions. foster a culture that sustains responsible ai innovation. lead organizational ai transformation through strategy, skilling, adoption, and culture.",
         "filters": {
@@ -1842,7 +1842,7 @@
       ],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:17:46-07:00",
-      "rating": 3.5,
+      "rating": 4.5,
       "search": {
         "text": "microsoft copilot solution customer discussions explore how microsoft copilot solutions can be discussed with customers, including understanding their needs, presenting ai capabilities, and demonstrating practical applications using microsoft copilot. sales skilling use copilot chat effectively with grounded work data, model selection, and specialized agents. explore microsoft copilot features and apply its capabilities in a guided lab. present and demonstrate microsoft copilot solutions to customers with practical product knowledge. unlock productivity and unleash creativity with ai powered chat learn how microsoft copilot chat helps you interact with your content across files, meetings, chats, emails, people, and the web. training module explain how copilot chat uses models, web grounding, and organizational context. use work data and specialized agents in copilot chat. use copilot chat effectively with grounded work data, model selection, and specialized agents. explore microsoft copilot get hands-on with microsoft copilot as you explore its features, capabilities, and user interface in a guided lab. hands-on lab explore microsoft copilot features and apply its capabilities in a guided lab.",
         "filters": {
@@ -1894,7 +1894,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:17:46-07:00",
-      "rating": 3,
+      "rating": 1,
       "search": {
         "text": "transform analytics data in microsoft fabric design dimensional models and apply transformations using dataflows, spark notebooks, and t-sql to produce consistent, analysis-ready data in microsoft fabric. learning path choose the appropriate fabric lakehouse, warehouse, or eventhouse for a business scenario. choose data stores in microsoft fabric evaluate lakehouse, warehouse, and eventhouse options to select the appropriate analytical data store for business scenarios in microsoft fabric. training module compare lakehouse, warehouse, and eventhouse scenarios and selection criteria. evaluate lakehouse capabilities for mixed data, spark processing, and sql analytics. evaluate warehouse capabilities for structured reporting, transactions, and t-sql workloads. evaluate eventhouse capabilities for streaming, time-series data, and kql analysis. choose the appropriate fabric lakehouse, warehouse, or eventhouse for a business scenario.",
         "filters": {
@@ -1943,8 +1943,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 4,
+      "last_updated": "2026-09-15T21:28:41-07:00",
+      "rating": 2,
       "search": {
         "text": "azure copilot demo learn how azure copilot can help you manage virtual machines, administer azure resources, and streamline cloud operations. video use microsoft copilot in azure to support virtual machine management and resource administration.",
         "filters": {
@@ -1970,7 +1970,7 @@
         {
           "slug": "01-azure-copilot",
           "title": "Azure Copilot Demo",
-          "description": "",
+          "description": "Learn how Azure Copilot can help you manage virtual machines, administer Azure resources, and streamline cloud operations.",
           "file": "01-azure-copilot.md",
           "url": "modules/azure-copilot-demo/index.html"
         }
@@ -2001,8 +2001,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 5,
+      "last_updated": "2026-09-15T21:28:41-07:00",
+      "rating": 1,
       "search": {
         "text": "build announcement - microsoft ai models see mustafa suleyman present the microsoft ai models announcement at microsoft build 2026 video describe the microsoft ai model announcements presented at microsoft build 2026.",
         "filters": {
@@ -2029,8 +2029,8 @@
       "pages": [
         {
           "slug": "01-mai-models",
-          "title": "Build announcement - Microsoft AI Models",
-          "description": "",
+          "title": "Build announcement - Microsoft AI models",
+          "description": "See Mustafa Suleyman present the Microsoft AI models announcement at Microsoft Build 2026",
           "file": "01-mai-models.md",
           "url": "modules/mai-model-announcement/index.html"
         }
@@ -2063,7 +2063,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 3,
+      "rating": 1,
       "search": {
         "text": "choose data stores in microsoft fabric evaluate lakehouse, warehouse, and eventhouse options to select the appropriate analytical data store for business scenarios in microsoft fabric. training module compare lakehouse, warehouse, and eventhouse scenarios and selection criteria. evaluate lakehouse capabilities for mixed data, spark processing, and sql analytics. evaluate warehouse capabilities for structured reporting, transactions, and t-sql workloads. evaluate eventhouse capabilities for streaming, time-series data, and kql analysis. choose the appropriate fabric lakehouse, warehouse, or eventhouse for a business scenario.",
         "filters": {
@@ -2088,49 +2088,49 @@
         {
           "slug": "01-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Learn how Microsoft Fabric data stores support different analytical workload requirements.",
           "file": "01-introduction.md",
           "url": "modules/fabric-data-stores/pages/01-introduction/index.html"
         },
         {
           "slug": "02-data-stores",
           "title": "Describe analytical data store options",
-          "description": "",
+          "description": "Compare lakehouse, warehouse, and eventhouse options for storing and analyzing data in Fabric.",
           "file": "02-data-stores.md",
           "url": "modules/fabric-data-stores/pages/02-data-stores/index.html"
         },
         {
           "slug": "03-lakehouse",
           "title": "Evaluate lakehouse capabilities",
-          "description": "",
+          "description": "Evaluate how a Fabric lakehouse combines flexible file storage with SQL analytics.",
           "file": "03-lakehouse.md",
           "url": "modules/fabric-data-stores/pages/03-lakehouse/index.html"
         },
         {
           "slug": "04-warehouse",
           "title": "Evaluate warehouse capabilities",
-          "description": "",
+          "description": "Evaluate Fabric warehouse capabilities for governed relational analytics and reporting.",
           "file": "04-warehouse.md",
           "url": "modules/fabric-data-stores/pages/04-warehouse/index.html"
         },
         {
           "slug": "05-eventhouse",
           "title": "Evaluate eventhouse capabilities",
-          "description": "",
+          "description": "Evaluate Fabric eventhouse capabilities for streaming, time-series, and event data analysis.",
           "file": "05-eventhouse.md",
           "url": "modules/fabric-data-stores/pages/05-eventhouse/index.html"
         },
         {
           "slug": "06-knowledge-check",
           "title": "Knowledge check",
-          "description": "",
+          "description": "Check your understanding of Fabric analytical data stores and their appropriate use cases.",
           "file": "06-knowledge-check.md",
           "url": "modules/fabric-data-stores/pages/06-knowledge-check/index.html"
         },
         {
           "slug": "07-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review how to choose among lakehouse, warehouse, and eventhouse data stores in Fabric.",
           "file": "07-summary.md",
           "url": "modules/fabric-data-stores/pages/07-summary/index.html"
         }
@@ -2161,7 +2161,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 2,
+      "rating": 5,
       "search": {
         "text": "copilot quickstart get hands-on with microsoft copilot as you explore its core capabilities and complete practical exercises. training module explore and apply core microsoft copilot capabilities using guided and reference content.",
         "filters": {
@@ -2187,21 +2187,21 @@
         {
           "slug": "01-copilot",
           "title": "What is Copilot",
-          "description": "",
+          "description": "Explore how Microsoft Copilot uses generative AI to assist with everyday work.",
           "file": "01-copilot.md",
           "url": "modules/custom-module/pages/01-copilot/index.html"
         },
         {
           "slug": "02-exercise",
           "title": "Exercise - Explore Copilot",
-          "description": "",
+          "description": "Practice using Microsoft Copilot to answer questions and complete common tasks.",
           "file": "02-exercise.md",
           "url": "modules/custom-module/pages/02-exercise/index.html"
         },
         {
           "slug": "03-copilot-pdf",
           "title": "Copilot Comparison",
-          "description": "",
+          "description": "Compare Microsoft Copilot experiences and capabilities using the accompanying reference document.",
           "file": "03-copilot-pdf.md",
           "url": "modules/custom-module/pages/03-copilot-pdf/index.html"
         }
@@ -2236,8 +2236,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": null,
-      "rating": 4,
+      "last_updated": "2026-09-15T20:52:23-07:00",
+      "rating": 2,
       "search": {
         "text": "create an ontology with fabric iq ontologies in fabric iq transform your data into a business vocabulary that everyone can understand. in this module, you'll learn two ways to create ontologies - building manually to understand the core components, or generating automatically from power bi semantic models to accelerate development. you'll practice both approaches and learn how to connect your ontology to data sources in onelake, including lakehouse tables and eventhouse streams. training module evaluate two approaches for creating an ontology in fabric iq build an ontology manually by working with entity types, properties, keys, and relationships generate an ontology from a power bi semantic model connect a fabric iq ontology to data sources and preview the ontology",
         "filters": {
@@ -2263,77 +2263,77 @@
         {
           "slug": "1-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Learn how a Fabric IQ ontology can unify healthcare data through a shared business vocabulary.",
           "file": "1-introduction.md",
           "url": "modules/create-ontology-with-fabric-iq/pages/1-introduction/index.html"
         },
         {
           "slug": "2-evaluate-ontology-creation-approaches",
           "title": "Choose an ontology creation approach",
-          "description": "",
+          "description": "Compare manual creation with semantic-model generation to choose an appropriate ontology workflow.",
           "file": "2-evaluate-ontology-creation-approaches.md",
           "url": "modules/create-ontology-with-fabric-iq/pages/2-evaluate-ontology-creation-approaches/index.html"
         },
         {
           "slug": "3-build-ontology-components-manually",
           "title": "Build an ontology manually",
-          "description": "",
+          "description": "Define entity types, properties, and relationships manually in a Fabric IQ ontology.",
           "file": "3-build-ontology-components-manually.md",
           "url": "modules/create-ontology-with-fabric-iq/pages/3-build-ontology-components-manually/index.html"
         },
         {
           "slug": "4-generate-ontology-from-semantic-model",
           "title": "Generate an ontology from a Power BI semantic model",
-          "description": "",
+          "description": "Generate ontology entities and relationships from an existing Power BI semantic model.",
           "file": "4-generate-ontology-from-semantic-model.md",
           "url": "modules/create-ontology-with-fabric-iq/pages/4-generate-ontology-from-semantic-model/index.html"
         },
         {
           "slug": "5-connect-ontology-to-data",
           "title": "Connect an ontology to data",
-          "description": "",
+          "description": "Bind ontology entity properties to lakehouse tables and eventhouse streams in OneLake.",
           "file": "5-connect-ontology-to-data.md",
           "url": "modules/create-ontology-with-fabric-iq/pages/5-connect-ontology-to-data/index.html"
         },
         {
           "slug": "6-configure-relationships",
           "title": "Configure ontology relationships",
-          "description": "",
+          "description": "Map relationship endpoints and keys so ontology entities connect correctly across data sources.",
           "file": "6-configure-relationships.md",
           "url": "modules/create-ontology-with-fabric-iq/pages/6-configure-relationships/index.html"
         },
         {
           "slug": "7-preview-ontology",
           "title": "Preview the ontology",
-          "description": "",
+          "description": "Preview ontology data and relationships to validate the connected business model.",
           "file": "7-preview-ontology.md",
           "url": "modules/create-ontology-with-fabric-iq/pages/7-preview-ontology/index.html"
         },
         {
           "slug": "8-exercise-build-ontology-manually",
           "title": "Exercise - Build an ontology manually",
-          "description": "",
+          "description": "Build and validate a healthcare ontology manually from OneLake data sources.",
           "file": "8-exercise-build-ontology-manually.md",
           "url": "modules/create-ontology-with-fabric-iq/pages/8-exercise-build-ontology-manually/index.html"
         },
         {
           "slug": "9-exercise-build-ontology-semantic-model",
           "title": "Exercise - Generate an ontology from a Power BI semantic model",
-          "description": "",
+          "description": "Generate and validate a healthcare ontology from a Power BI semantic model.",
           "file": "9-exercise-build-ontology-semantic-model.md",
           "url": "modules/create-ontology-with-fabric-iq/pages/9-exercise-build-ontology-semantic-model/index.html"
         },
         {
           "slug": "10-knowledge-check",
           "title": "Module assessment",
-          "description": "",
+          "description": "Check your understanding of ontology creation, data binding, relationships, and validation.",
           "file": "10-knowledge-check.md",
           "url": "modules/create-ontology-with-fabric-iq/pages/10-knowledge-check/index.html"
         },
         {
           "slug": "11-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review the approaches and steps for building a connected ontology with Fabric IQ.",
           "file": "11-summary.md",
           "url": "modules/create-ontology-with-fabric-iq/pages/11-summary/index.html"
         }
@@ -2367,8 +2367,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": null,
-      "rating": 3,
+      "last_updated": "2026-09-16T14:49:20-07:00",
+      "rating": 1,
       "search": {
         "text": "develop a speech-capable generative ai application a voice carries meaning beyond words. learn how to use models in microsoft foundry that transcribe and synthesize speech. training module deploy speech-capable generative ai models in microsoft foundry. use a generative ai model to transcribe speech. use a generative ai model to synthesize speech.",
         "filters": {
@@ -2395,49 +2395,49 @@
         {
           "slug": "1-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Explore how speech-capable generative AI models enable transcription and spoken responses in applications.",
           "file": "1-introduction.md",
           "url": "modules/develop-generative-ai-audio-apps/pages/1-introduction/index.html"
         },
         {
           "slug": "2-deploy-multimodal-model",
           "title": "Choose a speech-capable model",
-          "description": "",
+          "description": "Select and deploy a model that supports audio input and speech generation in Microsoft Foundry.",
           "file": "2-deploy-multimodal-model.md",
           "url": "modules/develop-generative-ai-audio-apps/pages/2-deploy-multimodal-model/index.html"
         },
         {
           "slug": "3-develop-audio-chat-app",
           "title": "Transcribe speech",
-          "description": "",
+          "description": "Build an application that sends recorded audio to a model for speech transcription.",
           "file": "3-develop-audio-chat-app.md",
           "url": "modules/develop-generative-ai-audio-apps/pages/3-develop-audio-chat-app/index.html"
         },
         {
           "slug": "3b-develop-speech-app",
           "title": "Synthesize speech",
-          "description": "",
+          "description": "Generate natural-sounding spoken responses from text with a speech-capable model.",
           "file": "3b-develop-speech-app.md",
           "url": "modules/develop-generative-ai-audio-apps/pages/3b-develop-speech-app/index.html"
         },
         {
           "slug": "4-exercise",
           "title": "Exercise - Use speech-capable generative AI models",
-          "description": "",
+          "description": "Build and test an application that transcribes speech and synthesizes audio responses.",
           "file": "4-exercise.md",
           "url": "modules/develop-generative-ai-audio-apps/pages/4-exercise/index.html"
         },
         {
           "slug": "5-knowledge-check",
           "title": "Module assessment",
-          "description": "",
+          "description": "Check your understanding of deploying and using speech-capable generative AI models.",
           "file": "5-knowledge-check.md",
           "url": "modules/develop-generative-ai-audio-apps/pages/5-knowledge-check/index.html"
         },
         {
           "slug": "6-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review the workflow for adding speech transcription and synthesis to generative AI applications.",
           "file": "6-summary.md",
           "url": "modules/develop-generative-ai-audio-apps/pages/6-summary/index.html"
         }
@@ -2471,8 +2471,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": null,
-      "rating": 4,
+      "last_updated": "2026-09-16T14:49:20-07:00",
+      "rating": 1,
       "search": {
         "text": "develop a vision-enabled generative ai application a picture says a thousand words, and multimodal generative ai models can interpret images to respond to visual prompts. learn how to build computer vision chat apps with microsoft foundry. training module deploy a vision-enabled generative ai model in microsoft foundry. test an image-based prompt in the chat playground. create a chat app that submits image-based prompts.",
         "filters": {
@@ -2499,42 +2499,42 @@
         {
           "slug": "1-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Explore how vision-capable generative AI models interpret images in multimodal applications.",
           "file": "1-introduction.md",
           "url": "modules/develop-generative-ai-vision-apps/pages/1-introduction/index.html"
         },
         {
           "slug": "2-deploy-multimodal-model",
           "title": "Use a vision-capable model in the Microsoft Foundry portal",
-          "description": "",
+          "description": "Select, deploy, and test a vision-capable model in the Microsoft Foundry portal.",
           "file": "2-deploy-multimodal-model.md",
           "url": "modules/develop-generative-ai-vision-apps/pages/2-deploy-multimodal-model/index.html"
         },
         {
           "slug": "3-develop-visual-chat-app",
           "title": "Develop a vision-based chat app",
-          "description": "",
+          "description": "Build a chat application that submits images and prompts to a multimodal model.",
           "file": "3-develop-visual-chat-app.md",
           "url": "modules/develop-generative-ai-vision-apps/pages/3-develop-visual-chat-app/index.html"
         },
         {
           "slug": "4-exercise",
           "title": "Exercise - Develop a vision-enabled chat app",
-          "description": "",
+          "description": "Create and test a chat application that uses visual context to answer questions.",
           "file": "4-exercise.md",
           "url": "modules/develop-generative-ai-vision-apps/pages/4-exercise/index.html"
         },
         {
           "slug": "5-knowledge-check",
           "title": "Module assessment",
-          "description": "",
+          "description": "Check your understanding of model deployment and vision-enabled application development.",
           "file": "5-knowledge-check.md",
           "url": "modules/develop-generative-ai-vision-apps/pages/5-knowledge-check/index.html"
         },
         {
           "slug": "6-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review how to deploy a multimodal model and build a vision-enabled chat application.",
           "file": "6-summary.md",
           "url": "modules/develop-generative-ai-vision-apps/pages/6-summary/index.html"
         }
@@ -2570,8 +2570,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 5,
+      "last_updated": "2026-09-15T21:28:41-07:00",
+      "rating": 1,
       "search": {
         "text": "develop your first agent with microsoft foundry learn how to create, configure, test, and deploy an ai agent with microsoft foundry using models, instructions, tools, tracing, endpoints, and client applications. training module explain how models, instructions, knowledge, and tools work together in generative ai agents. describe microsoft foundry capabilities for building and managing ai applications. create and configure an ai agent in microsoft foundry. select developer tools and deployment options for a foundry agent. build a client application that communicates with a deployed agent. create, configure, test, deploy, and consume an ai agent with microsoft foundry.",
         "filters": {
@@ -2598,63 +2598,63 @@
         {
           "slug": "01-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Begin a hands-on journey to build and deploy an AI agent with Microsoft Foundry.",
           "file": "01-introduction.md",
           "url": "modules/develop-first-agent/pages/01-introduction/index.html"
         },
         {
           "slug": "02-generative-ai-agents",
           "title": "Introduction to AI agents",
-          "description": "",
+          "description": "Learn how AI agents combine models, instructions, knowledge, and tools to pursue goals.",
           "file": "02-generative-ai-agents.md",
           "url": "modules/develop-first-agent/pages/02-generative-ai-agents/index.html"
         },
         {
           "slug": "03-foundry",
           "title": "Microsoft Foundry",
-          "description": "",
+          "description": "Explore the Microsoft Foundry services and resources used to develop AI agents.",
           "file": "03-foundry.md",
           "url": "modules/develop-first-agent/pages/03-foundry/index.html"
         },
         {
           "slug": "03b-create-agent",
           "title": "Create an AI agent in the Microsoft Foundry portal",
-          "description": "",
+          "description": "Create and test an AI agent interactively in the Microsoft Foundry portal.",
           "file": "03b-create-agent.md",
           "url": "modules/develop-first-agent/pages/03b-create-agent/index.html"
         },
         {
           "slug": "04-developer-tools",
           "title": "Develop an AI agent in Visual Studio Code",
-          "description": "",
+          "description": "Use Visual Studio Code and the Microsoft Foundry SDK to define and manage an AI agent.",
           "file": "04-developer-tools.md",
           "url": "modules/develop-first-agent/pages/04-developer-tools/index.html"
         },
         {
           "slug": "05-agent-client",
           "title": "Develop a client app for an AI agent",
-          "description": "",
+          "description": "Build a client application that sends requests to an AI agent and processes its responses.",
           "file": "05-agent-client.md",
           "url": "modules/develop-first-agent/pages/05-agent-client/index.html"
         },
         {
           "slug": "06-exercise-create-an-agent",
           "title": "Exercise - Create an agent",
-          "description": "",
+          "description": "Create, configure, and test a working AI agent in a guided exercise.",
           "file": "06-exercise-create-an-agent.md",
           "url": "modules/develop-first-agent/pages/06-exercise-create-an-agent/index.html"
         },
         {
           "slug": "06b-knowledge-check",
           "title": "Knowledge check",
-          "description": "",
+          "description": "Check your understanding of AI agent concepts, development tools, and client integration.",
           "file": "06b-knowledge-check.md",
           "url": "modules/develop-first-agent/pages/06b-knowledge-check/index.html"
         },
         {
           "slug": "07-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review the concepts and development steps used to create your first AI agent.",
           "file": "07-summary.md",
           "url": "modules/develop-first-agent/pages/07-summary/index.html"
         }
@@ -2685,7 +2685,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 5,
+      "rating": 2,
       "search": {
         "text": "discover and connect to data in onelake browse and connect to data using microsoft onelake's unified storage. discover data across workspaces with the onelake catalog, create shortcuts to reference existing data, and explore streaming sources in real-time hub. training module describe onelake architecture and integration capabilities. discover and connect to data by using the onelake catalog and shortcuts. discover, connect to, and work with data across onelake using its catalog and shortcuts.",
         "filters": {
@@ -2710,28 +2710,28 @@
         {
           "slug": "01-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Discover how OneLake provides a unified data foundation for Microsoft Fabric workloads.",
           "file": "01-introduction.md",
           "url": "modules/one-lake/pages/01-introduction/index.html"
         },
         {
           "slug": "02-onelake",
           "title": "Understand OneLake",
-          "description": "",
+          "description": "Learn how OneLake organizes, governs, and exposes data across a Fabric tenant.",
           "file": "02-onelake.md",
           "url": "modules/one-lake/pages/02-onelake/index.html"
         },
         {
           "slug": "03-browse-connect",
           "title": "Browse and connect to data in OneLake",
-          "description": "",
+          "description": "Browse OneLake data and connect to it through supported tools and endpoints.",
           "file": "03-browse-connect.md",
           "url": "modules/one-lake/pages/03-browse-connect/index.html"
         },
         {
           "slug": "04-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review how OneLake unifies data access, governance, and discovery across Microsoft Fabric.",
           "file": "04-summary.md",
           "url": "modules/one-lake/pages/04-summary/index.html"
         }
@@ -2761,7 +2761,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 2,
+      "rating": 1,
       "search": {
         "text": "explore microsoft ai models get hands-on with microsoft ai models as you explore reasoning, speech, transcription, and image generation in the mai playground. hands-on lab compare microsoft ai model capabilities for reasoning, speech, transcription, and image generation.",
         "filters": {
@@ -2786,8 +2786,8 @@
       "pages": [
         {
           "slug": "01-explore-mai-models",
-          "title": "Exercise - Explore Microsoft AI models",
-          "description": "",
+          "title": "Explore Microsoft AI models",
+          "description": "Get hands-on with Microsoft AI models as you explore reasoning, speech, transcription, and image generation in the MAI Playground.",
           "file": "01-explore-mai-models.md",
           "url": "modules/explore-mai-models/index.html"
         }
@@ -2818,7 +2818,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 3,
+      "rating": 5,
       "search": {
         "text": "explore microsoft copilot get hands-on with microsoft copilot as you explore its features, capabilities, and user interface in a guided lab. hands-on lab explore microsoft copilot features and apply its capabilities in a guided lab.",
         "filters": {
@@ -2843,8 +2843,8 @@
       "pages": [
         {
           "slug": "01-copilot-lab",
-          "title": "Exercise - Explore Microsoft Copilot",
-          "description": "",
+          "title": "Explore Microsoft Copilot",
+          "description": "Get hands-on with Microsoft Copilot as you explore its features, capabilities, and user interface in a guided lab.",
           "file": "01-copilot-lab.md",
           "url": "modules/explore-copilot/index.html"
         }
@@ -2902,14 +2902,14 @@
         {
           "slug": "01-cloud-defender",
           "title": "What is Microsoft Defender for Cloud?",
-          "description": "",
+          "description": "Learn how Microsoft Defender for Cloud assesses security posture and protects cloud workloads.",
           "file": "01-cloud-defender.md",
           "url": "modules/explore-cloud-defender/pages/01-cloud-defender/index.html"
         },
         {
           "slug": "02-simulation",
           "title": "Simulation - Microsoft Defender for Cloud interactive guide",
-          "description": "",
+          "description": "Explore Defender for Cloud security recommendations and controls in an interactive simulation.",
           "file": "02-simulation.md",
           "url": "modules/explore-cloud-defender/pages/02-simulation/index.html"
         }
@@ -2943,7 +2943,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 5,
+      "rating": 2,
       "search": {
         "text": "get ready to work with microsoft copilot explore how microsoft copilot grounds responses in your organizational data and the web across microsoft 365 apps, discover how agents handle complex multi-step tasks, understand how enterprise data protection and sensitivity labels keep your data secure, and apply a four-element prompting framework to get accurate, useful results. training module describe how copilot works across microsoft 365 applications. identify enterprise data protection and security controls for copilot. create effective prompts using context, goals, sources, and expectations. use microsoft copilot effectively across microsoft 365 with grounded responses and purposeful prompts.",
         "filters": {
@@ -2969,42 +2969,42 @@
         {
           "slug": "1-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Discover how Microsoft Copilot supports everyday work across Microsoft 365 applications.",
           "file": "1-introduction.md",
           "url": "modules/get-started-with-copilot/pages/1-introduction/index.html"
         },
         {
           "slug": "2-how-copilot-works",
           "title": "Explore how Copilot works across your Microsoft 365 apps",
-          "description": "",
+          "description": "Understand how Copilot combines large language models with Microsoft Graph and application context.",
           "file": "2-how-copilot-works.md",
           "url": "modules/get-started-with-copilot/pages/2-how-copilot-works/index.html"
         },
         {
           "slug": "3-copilot-security",
           "title": "Learn about data security in Copilot",
-          "description": "",
+          "description": "Learn how Microsoft Copilot protects organizational data while respecting existing access permissions.",
           "file": "3-copilot-security.md",
           "url": "modules/get-started-with-copilot/pages/3-copilot-security/index.html"
         },
         {
           "slug": "4-prompts",
           "title": "Write prompts that get results",
-          "description": "",
+          "description": "Write effective Copilot prompts by defining clear goals, context, sources, and expectations.",
           "file": "4-prompts.md",
           "url": "modules/get-started-with-copilot/pages/4-prompts/index.html"
         },
         {
           "slug": "5-knowledge-check",
           "title": "Quiz - Check your learning",
-          "description": "",
+          "description": "Check your understanding of Copilot capabilities, data security, and effective prompting.",
           "file": "5-knowledge-check.md",
           "url": "modules/get-started-with-copilot/pages/5-knowledge-check/index.html"
         },
         {
           "slug": "6-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review how Microsoft Copilot works securely across applications and responds to well-formed prompts.",
           "file": "6-summary.md",
           "url": "modules/get-started-with-copilot/pages/6-summary/index.html"
         }
@@ -3040,7 +3040,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-16T11:34:15-07:00",
-      "rating": 3,
+      "rating": 1,
       "search": {
         "text": "get started with ai in azure this module introduces azure and its capabilities for building ai solutions. explore the key features and benefits of using microsoft foundry for ai development. training module describe azure tenants, subscriptions, resource groups, and resources. identify azure services used to develop and host ai solutions. explain how microsoft foundry supports ai application and agent development. locate and use deployment options and endpoints for foundry resources. build a foundation for developing ai solutions with microsoft foundry on azure.",
         "filters": {
@@ -3067,49 +3067,49 @@
         {
           "slug": "01-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Learn how Azure services and Microsoft Foundry support the development of AI applications.",
           "file": "01-introduction.md",
           "url": "modules/get-started-ai-azure/pages/01-introduction/index.html"
         },
         {
           "slug": "02-azure",
           "title": "Introduction to Azure",
-          "description": "",
+          "description": "Understand Azure subscriptions, resources, and services used to build cloud solutions.",
           "file": "02-azure.md",
           "url": "modules/get-started-ai-azure/pages/02-azure/index.html"
         },
         {
           "slug": "03-develop",
           "title": "Developing AI apps on Azure",
-          "description": "",
+          "description": "Explore the services, models, and development workflow for building AI applications on Azure.",
           "file": "03-develop.md",
           "url": "modules/get-started-ai-azure/pages/03-develop/index.html"
         },
         {
           "slug": "04-foundry",
           "title": "Microsoft Foundry",
-          "description": "",
+          "description": "Learn how Microsoft Foundry unifies model discovery, deployment, development, and management.",
           "file": "04-foundry.md",
           "url": "modules/get-started-ai-azure/pages/04-foundry/index.html"
         },
         {
           "slug": "05-endpoints",
           "title": "Foundry endpoints",
-          "description": "",
+          "description": "Understand how Microsoft Foundry endpoints provide applications with access to deployed models.",
           "file": "05-endpoints.md",
           "url": "modules/get-started-ai-azure/pages/05-endpoints/index.html"
         },
         {
           "slug": "06-exercise",
           "title": "Exercise - Get started with Microsoft Foundry",
-          "description": "",
+          "description": "Create a Foundry project, deploy a model, and test it in a guided exercise.",
           "file": "06-exercise.md",
           "url": "modules/get-started-ai-azure/pages/06-exercise/index.html"
         },
         {
           "slug": "07-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review Azure AI application development concepts and the Microsoft Foundry workflow.",
           "file": "07-summary.md",
           "url": "modules/get-started-ai-azure/pages/07-summary/index.html"
         }
@@ -3147,7 +3147,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 1,
+      "rating": 4,
       "search": {
         "text": "get started with azure databricks get hands-on with azure databricks as you explore lakehouse architecture, apache spark, delta lake, unity catalog, data engineering, analytics, machine learning, and genie code. training module describe the azure databricks platform and its apache spark foundation. identify common azure databricks workloads and use cases. explain lakehouse architecture, delta lake, and medallion design patterns. describe data governance with unity catalog and microsoft purview. use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads.",
         "filters": {
@@ -3176,56 +3176,56 @@
         {
           "slug": "01-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Discover how Azure Databricks unifies data engineering, data science, machine learning, and analytics.",
           "file": "01-introduction.md",
           "url": "modules/start-databricks/pages/01-introduction/index.html"
         },
         {
           "slug": "02-azure-databricks",
           "title": "Get started with Azure Databricks",
-          "description": "",
+          "description": "Learn how to create an Azure Databricks workspace and access its collaborative environment.",
           "file": "02-azure-databricks.md",
           "url": "modules/start-databricks/pages/02-azure-databricks/index.html"
         },
         {
           "slug": "03-workloads",
           "title": "Azure Databricks workloads",
-          "description": "",
+          "description": "Explore Databricks capabilities for data engineering, machine learning, warehousing, and streaming.",
           "file": "03-workloads.md",
           "url": "modules/start-databricks/pages/03-workloads/index.html"
         },
         {
           "slug": "04-key-concepts",
           "title": "Understand key concepts",
-          "description": "",
+          "description": "Understand Databricks workspaces, compute, notebooks, jobs, and other foundational platform concepts.",
           "file": "04-key-concepts.md",
           "url": "modules/start-databricks/pages/04-key-concepts/index.html"
         },
         {
           "slug": "05-data-governance-using-unity-catalog-and-microsoft-purview",
           "title": "Data governance with Unity Catalog and Microsoft Purview",
-          "description": "",
+          "description": "Learn how Unity Catalog and Microsoft Purview provide discovery, governance, and access control for data assets.",
           "file": "05-data-governance-using-unity-catalog-and-microsoft-purview.md",
           "url": "modules/start-databricks/pages/05-data-governance-using-unity-catalog-and-microsoft-purview/index.html"
         },
         {
           "slug": "06-exercise-explore-databricks",
           "title": "Exercise - Explore Azure Databricks",
-          "description": "",
+          "description": "Explore an Azure Databricks workspace and use a notebook to work with data.",
           "file": "06-exercise-explore-databricks.md",
           "url": "modules/start-databricks/pages/06-exercise-explore-databricks/index.html"
         },
         {
           "slug": "06b-knowledge-check",
           "title": "Knowledge check",
-          "description": "",
+          "description": "Check your understanding of Azure Databricks architecture, workloads, concepts, and governance.",
           "file": "06b-knowledge-check.md",
           "url": "modules/start-databricks/pages/06b-knowledge-check/index.html"
         },
         {
           "slug": "08-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review Azure Databricks capabilities for collaborative data engineering, analytics, and machine learning.",
           "file": "08-summary.md",
           "url": "modules/start-databricks/pages/08-summary/index.html"
         }
@@ -3259,8 +3259,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": null,
-      "rating": 4,
+      "last_updated": "2026-09-16T14:49:20-07:00",
+      "rating": 5,
       "search": {
         "text": "get started with claude in microsoft foundry anthropic claude models and microsoft foundry create a powerful combination for developing generative ai applications and agents. training module describe key features of microsoft foundry. describe anthropic claude models and their capabilities. deploy and test claude models in foundry. develop client applications that use claude models in foundry.",
         "filters": {
@@ -3286,49 +3286,49 @@
         {
           "slug": "01-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Discover Claude models and how they support AI application development in Microsoft Foundry.",
           "file": "01-introduction.md",
           "url": "modules/claude-in-foundry/pages/01-introduction/index.html"
         },
         {
           "slug": "02-foundry",
           "title": "Microsoft Foundry",
-          "description": "",
+          "description": "Explore the Microsoft Foundry platform for discovering, deploying, and building with AI models.",
           "file": "02-foundry.md",
           "url": "modules/claude-in-foundry/pages/02-foundry/index.html"
         },
         {
           "slug": "03-claude-models",
           "title": "Claude models in Microsoft Foundry",
-          "description": "",
+          "description": "Compare the Claude models available in Microsoft Foundry and choose one for your scenario.",
           "file": "03-claude-models.md",
           "url": "modules/claude-in-foundry/pages/03-claude-models/index.html"
         },
         {
           "slug": "04-deploy-claude",
           "title": "Deploy Claude models in Microsoft Foundry",
-          "description": "",
+          "description": "Deploy a Claude model from the Microsoft Foundry model catalog and configure its endpoint.",
           "file": "04-deploy-claude.md",
           "url": "modules/claude-in-foundry/pages/04-deploy-claude/index.html"
         },
         {
           "slug": "05-code-claude",
           "title": "Use a Claude model in code",
-          "description": "",
+          "description": "Connect application code to a deployed Claude model and submit chat completion requests.",
           "file": "05-code-claude.md",
           "url": "modules/claude-in-foundry/pages/05-code-claude/index.html"
         },
         {
           "slug": "06-knowledge-check",
           "title": "Module assessment",
-          "description": "",
+          "description": "Check your understanding of selecting, deploying, and using Claude models in Microsoft Foundry.",
           "file": "06-knowledge-check.md",
           "url": "modules/claude-in-foundry/pages/06-knowledge-check/index.html"
         },
         {
           "slug": "07-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review how to deploy and use Claude models for AI applications in Microsoft Foundry.",
           "file": "07-summary.md",
           "url": "modules/claude-in-foundry/pages/07-summary/index.html"
         }
@@ -3390,42 +3390,42 @@
         {
           "slug": "1-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Discover how Foundry IQ grounds AI agents in connected organizational knowledge.",
           "file": "1-introduction.md",
           "url": "modules/get-started-foundry-iq/pages/1-introduction/index.html"
         },
         {
           "slug": "2-explore-foundry-iq",
           "title": "What is Foundry IQ?",
-          "description": "",
+          "description": "Explore how Foundry IQ organizes and retrieves knowledge for grounded AI experiences.",
           "file": "2-explore-foundry-iq.md",
           "url": "modules/get-started-foundry-iq/pages/2-explore-foundry-iq/index.html"
         },
         {
           "slug": "3-knowledge-bases",
           "title": "Knowledge bases",
-          "description": "",
+          "description": "Learn how Foundry IQ knowledge bases connect, enrich, and retrieve enterprise content.",
           "file": "3-knowledge-bases.md",
           "url": "modules/get-started-foundry-iq/pages/3-knowledge-bases/index.html"
         },
         {
           "slug": "4-connect-agents",
           "title": "Connect an agent to Foundry IQ",
-          "description": "",
+          "description": "Connect a Foundry agent to a knowledge base so it can return grounded responses.",
           "file": "4-connect-agents.md",
           "url": "modules/get-started-foundry-iq/pages/4-connect-agents/index.html"
         },
         {
           "slug": "5-exercise",
           "title": "Exercise - Get started with Foundry IQ in Microsoft Foundry",
-          "description": "",
+          "description": "Create a knowledge base and connect it to an agent in a guided Foundry IQ exercise.",
           "file": "5-exercise.md",
           "url": "modules/get-started-foundry-iq/pages/5-exercise/index.html"
         },
         {
           "slug": "7-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review how Foundry IQ knowledge bases ground agents in connected enterprise content.",
           "file": "7-summary.md",
           "url": "modules/get-started-foundry-iq/pages/7-summary/index.html"
         }
@@ -3489,49 +3489,49 @@
         {
           "slug": "01-ai-workloads",
           "title": "Exercise - Explore AI workloads",
-          "description": "",
+          "description": "Explore common artificial intelligence workloads and the business scenarios they support.",
           "file": "01-ai-workloads.md",
           "url": "modules/hands-on-ai-concepts/pages/01-ai-workloads/index.html"
         },
         {
           "slug": "02-generative-ai",
           "title": "Exercise - Explore generative AI and agents",
-          "description": "",
+          "description": "Experiment with generative AI models and agents to create content and complete tasks.",
           "file": "02-generative-ai.md",
           "url": "modules/hands-on-ai-concepts/pages/02-generative-ai/index.html"
         },
         {
           "slug": "03-language",
           "title": "Exercise - Explore text analytics",
-          "description": "",
+          "description": "Use text analytics to detect language, extract key phrases, and analyze sentiment.",
           "file": "03-language.md",
           "url": "modules/hands-on-ai-concepts/pages/03-language/index.html"
         },
         {
           "slug": "04-speech",
           "title": "Exercise - Explore AI speech",
-          "description": "",
+          "description": "Explore speech recognition and synthesis capabilities through a hands-on AI exercise.",
           "file": "04-speech.md",
           "url": "modules/hands-on-ai-concepts/pages/04-speech/index.html"
         },
         {
           "slug": "05-vision",
           "title": "Exercise - Explore computer vision",
-          "description": "",
+          "description": "Use computer vision to analyze images and identify visual content in a hands-on exercise.",
           "file": "05-vision.md",
           "url": "modules/hands-on-ai-concepts/pages/05-vision/index.html"
         },
         {
           "slug": "06-info-extraction",
           "title": "Exercise - Explore information extraction",
-          "description": "",
+          "description": "Extract structured fields and insights from documents with an AI-powered service.",
           "file": "06-info-extraction.md",
           "url": "modules/hands-on-ai-concepts/pages/06-info-extraction/index.html"
         },
         {
           "slug": "07-explore-rag",
           "title": "Exercise - Explore retrieval augmented generation (RAG)",
-          "description": "",
+          "description": "Ground generative AI responses in retrieved source data through a hands-on RAG exercise.",
           "file": "07-explore-rag.md",
           "url": "modules/hands-on-ai-concepts/pages/07-explore-rag/index.html"
         }
@@ -3562,8 +3562,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 3,
+      "last_updated": "2026-09-15T21:28:41-07:00",
+      "rating": 5,
       "search": {
         "text": "how to build a career walking deck with copilot and powerpoint in this episode, karen walks through how to create your own deck using linkedin, copilot, and powerpoint—turning your experience into a clear, visual story you can use in interviews and networking conversations. video build a career walking deck with copilot and powerpoint that communicates your professional value.",
         "filters": {
@@ -3591,7 +3591,7 @@
         {
           "slug": "01-walking-deck",
           "title": "How to build a career walking deck with Copilot and PowerPoint",
-          "description": "",
+          "description": "In this episode, Karen walks through how to create your own deck using LinkedIn, Copilot, and PowerPoint—turning your experience into a clear, visual story you can use in interviews and networking conversations.",
           "file": "01-walking-deck.md",
           "url": "modules/walking-deck/index.html"
         }
@@ -3622,8 +3622,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 5,
+      "last_updated": "2026-09-15T21:28:41-07:00",
+      "rating": 2,
       "search": {
         "text": "how to build your personal brand in this episode, karen breaks down what personal branding really means, how to define your career narrative, and how to turn it into a career walking deck—a simple visual tool that helps you stand out in interviews and career conversations. video define a personal brand and identify the content needed for a career walking deck.",
         "filters": {
@@ -3651,7 +3651,7 @@
         {
           "slug": "01-personal-brand",
           "title": "How to build your personal brand",
-          "description": "",
+          "description": "In this episode, Karen breaks down what personal branding really means, how to define your career narrative, and how to turn it into a career walking deck—a simple visual tool that helps you stand out in interviews and career conversations.",
           "file": "01-personal-brand.md",
           "url": "modules/personal-brand/index.html"
         }
@@ -3682,7 +3682,7 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:13:11-07:00",
+      "last_updated": "2026-09-15T21:28:41-07:00",
       "rating": 5,
       "search": {
         "text": "how to use your career walking deck in interviews and networking in this episode, karen shares how to bring your deck into real-world situations—from coffee chats to networking to job interviews—so you can communicate your value clearly and confidently. video use a career walking deck effectively in interviews, networking, and professional conversations.",
@@ -3711,7 +3711,7 @@
         {
           "slug": "01-walking-deck",
           "title": "How to use your career walking deck in interviews and networking",
-          "description": "",
+          "description": "In this episode, Karen shares how to bring your deck into real-world situations—from coffee chats to networking to job interviews—so you can communicate your value clearly and confidently.",
           "file": "01-walking-deck.md",
           "url": "modules/use-walking-deck/index.html"
         }
@@ -3746,7 +3746,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 2,
+      "rating": 5,
       "search": {
         "text": "integrate mcp tools with azure ai agents learn how to connect azure ai agents to model context protocol (mcp) servers for dynamic tool discovery and execution. training module describe mcp tool discovery, interoperability, security, and centralized management. configure an mcp server and client to expose and invoke tools. connect a microsoft foundry agent to an mcp server and manage tool approvals. build ai agents that dynamically discover and invoke tools through model context protocol servers.",
         "filters": {
@@ -3773,42 +3773,42 @@
         {
           "slug": "1-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Learn how Model Context Protocol tools extend Azure AI agents with external capabilities.",
           "file": "1-introduction.md",
           "url": "modules/connect-agent-to-mcp-tools/pages/1-introduction/index.html"
         },
         {
           "slug": "2-understand-mcp-tool-discovery",
           "title": "Understand MCP tool discovery",
-          "description": "",
+          "description": "Understand how agents discover the tools exposed by a Model Context Protocol server.",
           "file": "2-understand-mcp-tool-discovery.md",
           "url": "modules/connect-agent-to-mcp-tools/pages/2-understand-mcp-tool-discovery/index.html"
         },
         {
           "slug": "3-mcp-client-server-setup",
           "title": "Integrate agent tools using an MCP server and client",
-          "description": "",
+          "description": "Configure an MCP server and client so an agent can discover and invoke external tools.",
           "file": "3-mcp-client-server-setup.md",
           "url": "modules/connect-agent-to-mcp-tools/pages/3-mcp-client-server-setup/index.html"
         },
         {
           "slug": "4-use-azure-ai-agents-with-mcp",
           "title": "Use Azure AI agents with MCP servers",
-          "description": "",
+          "description": "Connect an Azure AI agent to an MCP server and handle tool approval and execution.",
           "file": "4-use-azure-ai-agents-with-mcp.md",
           "url": "modules/connect-agent-to-mcp-tools/pages/4-use-azure-ai-agents-with-mcp/index.html"
         },
         {
           "slug": "5-exercise",
           "title": "Exercise - Extend agents with Model Context Protocol (MCP) tools",
-          "description": "",
+          "description": "Build and test an Azure AI agent that uses tools provided by an MCP server.",
           "file": "5-exercise.md",
           "url": "modules/connect-agent-to-mcp-tools/pages/5-exercise/index.html"
         },
         {
           "slug": "7-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review MCP tool discovery, client-server integration, and agent tool execution.",
           "file": "7-summary.md",
           "url": "modules/connect-agent-to-mcp-tools/pages/7-summary/index.html"
         }
@@ -3845,7 +3845,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 2,
+      "rating": 4,
       "search": {
         "text": "integrate your agent with microsoft 365 learn how to publish microsoft foundry agents to teams and microsoft 365 copilot, access organizational data with work iq, and refine your integration. training module compare direct publishing with microsoft 365 agents toolkit scenarios. publish an agent from the microsoft foundry portal. configure advanced enterprise agent scenarios with microsoft 365 agents toolkit. connect an agent to organizational data through work iq. test and refine an agent across microsoft 365 publishing targets. publish microsoft foundry agents to teams and microsoft 365 copilot with organizational data access.",
         "filters": {
@@ -3872,56 +3872,56 @@
         {
           "slug": "1-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Learn how to publish a Microsoft Foundry agent into Microsoft 365 experiences.",
           "file": "1-introduction.md",
           "url": "modules/integrate-foundry-agent-with-m365/pages/1-introduction/index.html"
         },
         {
           "slug": "2-understand-publishing-options",
           "title": "Understand Foundry agent publishing options",
-          "description": "",
+          "description": "Compare portal and developer-tool options for publishing Foundry agents to Microsoft 365.",
           "file": "2-understand-publishing-options.md",
           "url": "modules/integrate-foundry-agent-with-m365/pages/2-understand-publishing-options/index.html"
         },
         {
           "slug": "3-publish-agent-foundry-portal",
           "title": "Publish an agent from Foundry portal to Teams",
-          "description": "",
+          "description": "Publish a Foundry agent to Microsoft Teams directly from the Foundry portal.",
           "file": "3-publish-agent-foundry-portal.md",
           "url": "modules/integrate-foundry-agent-with-m365/pages/3-publish-agent-foundry-portal/index.html"
         },
         {
           "slug": "4-agents-toolkit-advanced",
           "title": "Advanced - Use Microsoft 365 Agents Toolkit",
-          "description": "",
+          "description": "Use Microsoft 365 Agents Toolkit to customize and publish an advanced agent integration.",
           "file": "4-agents-toolkit-advanced.md",
           "url": "modules/integrate-foundry-agent-with-m365/pages/4-agents-toolkit-advanced/index.html"
         },
         {
           "slug": "5-access-m365-data-workiq",
           "title": "Access Microsoft 365 data with Work IQ",
-          "description": "",
+          "description": "Connect an agent to Microsoft 365 work data through Work IQ capabilities.",
           "file": "5-access-m365-data-workiq.md",
           "url": "modules/integrate-foundry-agent-with-m365/pages/5-access-m365-data-workiq/index.html"
         },
         {
           "slug": "6-test-iterate-agent",
           "title": "Test and iterate your integrated agent",
-          "description": "",
+          "description": "Test agent behavior in Microsoft 365 and refine its instructions and integration.",
           "file": "6-test-iterate-agent.md",
           "url": "modules/integrate-foundry-agent-with-m365/pages/6-test-iterate-agent/index.html"
         },
         {
           "slug": "7-exercise",
           "title": "Work IQ - Workplace intelligence for AI agents",
-          "description": "",
+          "description": "Explore how Work IQ gives AI agents secure access to contextual workplace intelligence.",
           "file": "7-exercise.md",
           "url": "modules/integrate-foundry-agent-with-m365/pages/7-exercise/index.html"
         },
         {
           "slug": "9-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review the options and steps for publishing and improving a Foundry agent in Microsoft 365.",
           "file": "9-summary.md",
           "url": "modules/integrate-foundry-agent-with-m365/pages/9-summary/index.html"
         }
@@ -3951,8 +3951,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 3,
+      "last_updated": "2026-09-15T21:28:41-07:00",
+      "rating": 5,
       "search": {
         "text": "introducing majorana 2 quantum computing is the next big frontier for technology, and microsoft is making strides with its latest innovation. learn about the majorana 2 chip unveiled at microsoft build 2026. video explain the significance of the majorana 2 quantum computing announcement at microsoft build 2026.",
         "filters": {
@@ -3979,7 +3979,7 @@
         {
           "slug": "01-majorana-2",
           "title": "Introducing Majorana 2",
-          "description": "",
+          "description": "Quantum computing is the next big frontier for technology, and Microsoft is making strides with its latest innovation. Learn about the Majorana 2 chip unveiled at Microsoft Build 2026.",
           "file": "01-majorana-2.md",
           "url": "modules/majorana-2/index.html"
         }
@@ -4017,7 +4017,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-16T11:34:15-07:00",
-      "rating": 5,
+      "rating": 3,
       "search": {
         "text": "introduction to ai concepts curious about artificial intelligence? want to understand what the buzz is about? this module introduces you to the world of ai. training module explain generative ai, language models, and the role of ai agents. describe natural language processing tasks such as classification, sentiment analysis, and entity extraction. explain how speech recognition and speech synthesis support conversational ai. distinguish image classification, object detection, and semantic segmentation techniques. describe how ai extracts structured information from documents and other content. apply the principles of fairness, reliability, privacy, inclusiveness, transparency, and accountability. understand foundational ai concepts across generative ai, language, speech, vision, information extraction, and responsible ai.",
         "filters": {
@@ -4044,70 +4044,70 @@
         {
           "slug": "01-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Explore core artificial intelligence capabilities and the basic principles behind how they work.",
           "file": "01-introduction.md",
           "url": "modules/ai-concepts/pages/01-introduction/index.html"
         },
         {
           "slug": "02-generative-ai",
           "title": "Generative AI and agents",
-          "description": "",
+          "description": "Learn how generative AI models create content and how agents use them to complete tasks.",
           "file": "02-generative-ai.md",
           "url": "modules/ai-concepts/pages/02-generative-ai/index.html"
         },
         {
           "slug": "03-language",
           "title": "Text and natural language",
-          "description": "",
+          "description": "Discover how AI processes and generates natural language for text-based applications.",
           "file": "03-language.md",
           "url": "modules/ai-concepts/pages/03-language/index.html"
         },
         {
           "slug": "04-speech",
           "title": "Speech",
-          "description": "",
+          "description": "Learn how AI recognizes spoken language and synthesizes natural-sounding speech.",
           "file": "04-speech.md",
           "url": "modules/ai-concepts/pages/04-speech/index.html"
         },
         {
           "slug": "05-vision",
           "title": "Computer Vision",
-          "description": "",
+          "description": "Explore how computer vision enables AI systems to interpret images and video.",
           "file": "05-vision.md",
           "url": "modules/ai-concepts/pages/05-vision/index.html"
         },
         {
           "slug": "06-info-extraction",
           "title": "Information extraction",
-          "description": "",
+          "description": "Learn how AI extracts structured information from documents and other unstructured content.",
           "file": "06-info-extraction.md",
           "url": "modules/ai-concepts/pages/06-info-extraction/index.html"
         },
         {
           "slug": "07-responsible-ai",
           "title": "Responsible AI",
-          "description": "",
+          "description": "Examine the principles that guide fair, reliable, safe, private, inclusive, transparent, and accountable AI.",
           "file": "07-responsible-ai.md",
           "url": "modules/ai-concepts/pages/07-responsible-ai/index.html"
         },
         {
           "slug": "08-exercise",
           "title": "Exercise - Explore AI workloads",
-          "description": "",
+          "description": "Explore generative AI, language, speech, vision, and information extraction workloads through interactive exercises.",
           "file": "08-exercise.md",
           "url": "modules/ai-concepts/pages/08-exercise/index.html"
         },
         {
           "slug": "09-knowledge-check",
           "title": "Knowledge check",
-          "description": "",
+          "description": "Check your understanding of the core artificial intelligence concepts covered in this module.",
           "file": "09-knowledge-check.md",
           "url": "modules/ai-concepts/pages/09-knowledge-check/index.html"
         },
         {
           "slug": "10-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review the capabilities, applications, and responsible use of artificial intelligence.",
           "file": "10-summary.md",
           "url": "modules/ai-concepts/pages/10-summary/index.html"
         }
@@ -4136,7 +4136,7 @@
       ],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 2,
+      "rating": 5,
       "search": {
         "text": "introduction to caldova learn about the caldova demo solution and how to use it to explore real-world customer scenarios for frontier ai solutions built with microsoft technologies. learning bite explain how caldova demonstrates patterns for ai-native enterprise software.",
         "filters": {
@@ -4160,7 +4160,7 @@
         {
           "slug": "01-caldova",
           "title": "Introduction to Caldova",
-          "description": "",
+          "description": "Learn about the Caldova demo solution and how to use it to explore real-world customer scenarios for frontier AI solutions built with Microsoft technologies.",
           "file": "01-caldova.md",
           "url": "modules/intro-to-caldova/index.html"
         }
@@ -4192,7 +4192,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 1,
+      "rating": 2,
       "search": {
         "text": "introduction to end-to-end analytics using microsoft fabric discover how microsoft fabric can meet your enterprise's analytics needs in one platform. learn about microsoft fabric, how it works, and identify how to use it to analyze data. training module identify fabric workloads and their roles in the analytics lifecycle. describe how data roles collaborate in a fabric environment. evaluate how fabric supports analytics and ai scenarios. understand microsoft fabric's unified analytics platform and how it supports data and ai workloads.",
         "filters": {
@@ -4217,35 +4217,35 @@
         {
           "slug": "01-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Discover how Microsoft Fabric unifies data engineering, analytics, and business intelligence.",
           "file": "01-introduction.md",
           "url": "modules/intro-to-fabric/pages/01-introduction/index.html"
         },
         {
           "slug": "02-analytics",
           "title": "Explore end-to-end analytics with Microsoft Fabric",
-          "description": "",
+          "description": "Explore how Fabric supports the complete analytics process from ingestion to insights.",
           "file": "02-analytics.md",
           "url": "modules/intro-to-fabric/pages/02-analytics/index.html"
         },
         {
           "slug": "03-data-teams",
           "title": "Explore data teams and Microsoft Fabric",
-          "description": "",
+          "description": "Learn how different data roles collaborate through shared Microsoft Fabric workloads.",
           "file": "03-data-teams.md",
           "url": "modules/intro-to-fabric/pages/03-data-teams/index.html"
         },
         {
           "slug": "04-use-fabric",
           "title": "Enable and use Microsoft Fabric",
-          "description": "",
+          "description": "Learn how to enable Microsoft Fabric and navigate its integrated experiences and workspaces.",
           "file": "04-use-fabric.md",
           "url": "modules/intro-to-fabric/pages/04-use-fabric/index.html"
         },
         {
           "slug": "05-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review the unified analytics capabilities, roles, and experiences provided by Microsoft Fabric.",
           "file": "05-summary.md",
           "url": "modules/intro-to-fabric/pages/05-summary/index.html"
         }
@@ -4274,8 +4274,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": null,
-      "rating": 3,
+      "last_updated": "2026-09-15T21:59:29-07:00",
+      "rating": 4,
       "search": {
         "text": "is agentic ai upending the corporate ladder? ey's global consulting ai leader dan diasio joins host molly wood to discuss how agentic ai is shaping the future of work and how companies can reinvent themselves as ai-first frontier firms. learn how ai is disrupting the consulting industry, why investing in upskilling your employees is now mandatory, and why the right combination of mindset, skill set, and tool set matters more than ever. listen in to discover practical strategies for leaders to drive transformation and compete with ai-native disruptors. video analyze how agentic ai influences decision-making processes and career progression within organizations.",
         "filters": {
@@ -4301,7 +4301,7 @@
         {
           "slug": "01-video",
           "title": "Is Agentic AI upending the corporate ladder?",
-          "description": "",
+          "description": "EY's Global Consulting AI Leader Dan Diasio joins host Molly Wood to discuss how agentic AI is shaping the future of work and how companies can reinvent themselves as AI-first Frontier Firms. Learn how AI is disrupting the consulting industry, why investing in upskilling your employees is now mandatory, and why the right combination of mindset, skill set, and tool set matters more than ever. Listen in to discover practical strategies for leaders to drive transformation and compete with AI-native disruptors.",
           "file": "01-video.md",
           "url": "modules/agentic-ai-corporate-ladder/index.html"
         }
@@ -4335,8 +4335,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:13:11-07:00",
-      "rating": 4,
+      "last_updated": "2026-09-15T21:28:41-07:00",
+      "rating": 2,
       "search": {
         "text": "leading at the frontier leading at the frontier is an executive conversation series exploring how ai is reshaping work, organizations, and leadership. hosted by katy george, corporate vice president of workforce transformation, and jeana jorgensen, corporate vice president of global skilling at microsoft, each episode unpacks how leaders can drive ai transformation with confidence across their organization. from redesigning workflows to building ai skills at scale, this series provides practical frameworks grounded in microsoft's own transformation journey. video identify proven strategies for driving organization-wide ai transformation. explain the leadership behaviors needed to embrace ai-driven change. design an approach for building ai skills at organizational scale. plan ai adoption across teams and business functions. foster a culture that sustains responsible ai innovation. lead organizational ai transformation through strategy, skilling, adoption, and culture.",
         "filters": {
@@ -4362,35 +4362,35 @@
         {
           "slug": "01-drive-ai",
           "title": "3 proven ways to drive AI transformation across your organization",
-          "description": "",
+          "description": "Learn three leadership practices for turning AI ambition into organization-wide transformation.",
           "file": "01-drive-ai.md",
           "url": "modules/leading-frontier/pages/01-drive-ai/index.html"
         },
         {
           "slug": "02-leaders-ai",
           "title": "How leaders can drive AI transformation",
-          "description": "",
+          "description": "Explore how leaders set direction, model new behaviors, and remove barriers to AI adoption.",
           "file": "02-leaders-ai.md",
           "url": "modules/leading-frontier/pages/02-leaders-ai/index.html"
         },
         {
           "slug": "03-build-skills",
           "title": "How to build AI skills across your entire workforce",
-          "description": "",
+          "description": "Develop an inclusive approach to building practical AI skills throughout the workforce.",
           "file": "03-build-skills.md",
           "url": "modules/leading-frontier/pages/03-build-skills/index.html"
         },
         {
           "slug": "04-adoption",
           "title": "Why AI adoption fails and how leaders can fix it",
-          "description": "",
+          "description": "Identify common barriers to AI adoption and the leadership actions that overcome them.",
           "file": "04-adoption.md",
           "url": "modules/leading-frontier/pages/04-adoption/index.html"
         },
         {
           "slug": "05-culture",
           "title": "How to build a culture of AI adoption across your organization",
-          "description": "",
+          "description": "Build a culture that encourages experimentation, trust, learning, and responsible AI use.",
           "file": "05-culture.md",
           "url": "modules/leading-frontier/pages/05-culture/index.html"
         }
@@ -4423,7 +4423,7 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": null,
+      "last_updated": "2026-09-15T20:52:23-07:00",
       "rating": 1,
       "search": {
         "text": "manage data with delta lake delta lake is a data management solution in azure databricks providing features including acid transactions, schema enforcement, and time travel ensuring data consistency, integrity, and versioning capabilities. training module what delta lake is how to create delta tables how to use schema versioning and time travel in delta lake how to maintain data integrity with delta lake",
@@ -4450,63 +4450,63 @@
         {
           "slug": "01-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Discover how Delta Lake adds transactional reliability and data management features to data lakes.",
           "file": "01-introduction.md",
           "url": "modules/use-delta-lake-azure-databricks/pages/01-introduction/index.html"
         },
         {
           "slug": "02-understand-delta-lake",
           "title": "Get started with Delta Lake",
-          "description": "",
+          "description": "Explore Delta Lake support for ACID transactions, scalable metadata, schema controls, and time travel.",
           "file": "02-understand-delta-lake.md",
           "url": "modules/use-delta-lake-azure-databricks/pages/02-understand-delta-lake/index.html"
         },
         {
           "slug": "03-manage-acid-transactions",
           "title": "Create Delta tables",
-          "description": "",
+          "description": "Create managed and external Delta tables that support reliable concurrent data operations.",
           "file": "03-manage-acid-transactions.md",
           "url": "modules/use-delta-lake-azure-databricks/pages/03-manage-acid-transactions/index.html"
         },
         {
           "slug": "04-implement-schema-enforcement",
           "title": "Implement schema enforcement",
-          "description": "",
+          "description": "Enforce and evolve Delta table schemas to prevent invalid writes while accommodating planned changes.",
           "file": "04-implement-schema-enforcement.md",
           "url": "modules/use-delta-lake-azure-databricks/pages/04-implement-schema-enforcement/index.html"
         },
         {
           "slug": "05-data-versioning-and-time-travel-in-delta-lake",
           "title": "Data versioning and time travel in Delta Lake",
-          "description": "",
+          "description": "Query, audit, and restore earlier Delta table versions through transaction history and time travel.",
           "file": "05-data-versioning-and-time-travel-in-delta-lake.md",
           "url": "modules/use-delta-lake-azure-databricks/pages/05-data-versioning-and-time-travel-in-delta-lake/index.html"
         },
         {
           "slug": "06-data-integrity-with-delta-lake",
           "title": "Data integrity with Delta Lake",
-          "description": "",
+          "description": "Protect Delta Lake data with constraints, validation rules, and reliable transactional updates.",
           "file": "06-data-integrity-with-delta-lake.md",
           "url": "modules/use-delta-lake-azure-databricks/pages/06-data-integrity-with-delta-lake/index.html"
         },
         {
           "slug": "07-exercise-use-delta-lake",
           "title": "Exercise - Use Delta Lake in Azure Databricks",
-          "description": "",
+          "description": "Create and manage Delta tables in Azure Databricks through a guided practical exercise.",
           "file": "07-exercise-use-delta-lake.md",
           "url": "modules/use-delta-lake-azure-databricks/pages/07-exercise-use-delta-lake/index.html"
         },
         {
           "slug": "08-knowledge-check",
           "title": "Module assessment",
-          "description": "",
+          "description": "Check your understanding of Delta tables, schemas, time travel, and data integrity.",
           "file": "08-knowledge-check.md",
           "url": "modules/use-delta-lake-azure-databricks/pages/08-knowledge-check/index.html"
         },
         {
           "slug": "09-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review the Delta Lake capabilities that make lakehouse data reliable, consistent, and recoverable.",
           "file": "09-summary.md",
           "url": "modules/use-delta-lake-azure-databricks/pages/09-summary/index.html"
         }
@@ -4536,7 +4536,7 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": "2026-09-15T13:13:11-07:00",
+      "last_updated": "2026-09-15T21:28:41-07:00",
       "rating": 3,
       "search": {
         "text": "satya nadella and jensen huang at build microsoft and nvidia executives satya nadella and jensen huang discuss the latest innovations and announcements at microsoft build 2026. video summarize key technology innovation themes shared by microsoft and nvidia leaders.",
@@ -4564,7 +4564,7 @@
         {
           "slug": "01-satya-jensen",
           "title": "Satya Nadella and Jensen Huang at Build",
-          "description": "",
+          "description": "Microsoft and NVidia executives Satya Nadella and Jensen Huang discuss the latest innovations and announcements at Microsoft Build 2026.",
           "file": "01-satya-jensen.md",
           "url": "modules/satya-jenson/index.html"
         }
@@ -4593,8 +4593,8 @@
       ],
       "restricted_to": [],
       "assigned_to": [],
-      "last_updated": null,
-      "rating": 4,
+      "last_updated": "2026-09-15T20:52:23-07:00",
+      "rating": 1,
       "search": {
         "text": "understand microsoft fabric iq fundamentals microsoft fabric iq provides a way to define business vocabulary in an ontology and bind the ontology to data sources. learn about ontology items, data agents, graph in microsoft fabric, and power bi semantic models. discover how ontology modeling differs from traditional analytical modeling by starting with business concepts rather than specific use cases. training module explain what fabric iq is and how ontologies define business vocabulary.",
         "filters": {
@@ -4618,42 +4618,42 @@
         {
           "slug": "1-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Learn how Fabric IQ replaces complex cross-source queries with a shared business vocabulary.",
           "file": "1-introduction.md",
           "url": "modules/understand-fabric-iq-fundamentals/pages/1-introduction/index.html"
         },
         {
           "slug": "2-get-started-with-fabric-iq",
           "title": "Get started with Fabric IQ",
-          "description": "",
+          "description": "Explore how Fabric IQ defines ontology items and binds business concepts to OneLake data.",
           "file": "2-get-started-with-fabric-iq.md",
           "url": "modules/understand-fabric-iq-fundamentals/pages/2-get-started-with-fabric-iq/index.html"
         },
         {
           "slug": "3-explore-fabric-iq-components",
           "title": "Explore Microsoft Fabric IQ components",
-          "description": "",
+          "description": "Examine the ontology, graph, data-agent, and Power BI components that form the Fabric IQ ecosystem.",
           "file": "3-explore-fabric-iq-components.md",
           "url": "modules/understand-fabric-iq-fundamentals/pages/3-explore-fabric-iq-components/index.html"
         },
         {
           "slug": "4-understand-ontology-modeling-paradigm",
           "title": "Understand the ontology modeling paradigm",
-          "description": "",
+          "description": "Compare business-centered ontology modeling with traditional use-case-driven analytical data modeling.",
           "file": "4-understand-ontology-modeling-paradigm.md",
           "url": "modules/understand-fabric-iq-fundamentals/pages/4-understand-ontology-modeling-paradigm/index.html"
         },
         {
           "slug": "5-knowledge-check",
           "title": "Module assessment",
-          "description": "",
+          "description": "Check your understanding of Fabric IQ concepts, components, and ontology modeling.",
           "file": "5-knowledge-check.md",
           "url": "modules/understand-fabric-iq-fundamentals/pages/5-knowledge-check/index.html"
         },
         {
           "slug": "6-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review how Fabric IQ ontologies connect business vocabulary to data for queries and graph exploration.",
           "file": "6-summary.md",
           "url": "modules/understand-fabric-iq-fundamentals/pages/6-summary/index.html"
         }
@@ -4712,28 +4712,28 @@
         {
           "slug": "1-introduction",
           "title": "Introduction",
-          "description": "",
+          "description": "Learn how grounding and agents help you use Microsoft Copilot Chat more intentionally at work.",
           "file": "1-introduction.md",
           "url": "modules/unlock-copilot-chat/pages/1-introduction/index.html"
         },
         {
           "slug": "2-copilot-chat",
           "title": "Understand Microsoft Copilot Chat",
-          "description": "",
+          "description": "Understand how work and web grounding determine the sources Copilot Chat uses in its responses.",
           "file": "2-copilot-chat.md",
           "url": "modules/unlock-copilot-chat/pages/2-copilot-chat/index.html"
         },
         {
           "slug": "3-work-data",
           "title": "Use your work data to get better results with Copilot Chat",
-          "description": "",
+          "description": "Ground Copilot Chat in emails, files, meetings, and chats to produce contextually relevant results.",
           "file": "3-work-data.md",
           "url": "modules/unlock-copilot-chat/pages/3-work-data/index.html"
         },
         {
           "slug": "4-summary",
           "title": "Summary",
-          "description": "",
+          "description": "Review how grounding, semantic indexing, and agents improve Microsoft Copilot Chat results.",
           "file": "4-summary.md",
           "url": "modules/unlock-copilot-chat/pages/4-summary/index.html"
         }
@@ -4890,7 +4890,7 @@
       "restricted_to": [],
       "assigned_to": [],
       "search": {
-        "text": "azure databricks data engineer associate demonstrate expertise in integrating and modeling data, building and deploying optimized pipelines, and troubleshooting and maintaining workloads in azure databricks. certification analyze data with azure databricks in this course, you'll learn how to analyze data with azure databricks. the course explores the capabilities of azure databricks and how to use it to process and analyze large datasets. you'll gain hands-on experience in data exploration, transformation, and visualization, as well as best practices for working with big data in the cloud. dp-750 microsoft official curriculum use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. get started with azure databricks in this playlist, you'll learn how to get started with azure databricks. learning path use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. get started with azure databricks get hands-on with azure databricks as you explore lakehouse architecture, apache spark, delta lake, unity catalog, data engineering, analytics, machine learning, and genie code. training module describe the azure databricks platform and its apache spark foundation. identify common azure databricks workloads and use cases. explain lakehouse architecture, delta lake, and medallion design patterns. describe data governance with unity catalog and microsoft purview. use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. manage data with delta lake delta lake is a data management solution in azure databricks providing features including acid transactions, schema enforcement, and time travel ensuring data consistency, integrity, and versioning capabilities. training module what delta lake is how to create delta tables how to use schema versioning and time travel in delta lake how to maintain data integrity with delta lake",
+        "text": "azure databricks data engineer associate demonstrate expertise in integrating and modeling data, building and deploying optimized pipelines, and troubleshooting and maintaining workloads in azure databricks. certification implement a data analytics solution with azure databricks in this course, you'll learn how to analyze data with azure databricks. the course explores the capabilities of azure databricks and how to use it to process and analyze large datasets. you'll gain hands-on experience in data exploration, transformation, and visualization, as well as best practices for working with big data in the cloud. dp-750 microsoft official curriculum use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. analyze data with azure databricks in this playlist, you'll learn how to analyze data with azure databricks. learning path use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. get started with azure databricks get hands-on with azure databricks as you explore lakehouse architecture, apache spark, delta lake, unity catalog, data engineering, analytics, machine learning, and genie code. training module describe the azure databricks platform and its apache spark foundation. identify common azure databricks workloads and use cases. explain lakehouse architecture, delta lake, and medallion design patterns. describe data governance with unity catalog and microsoft purview. use azure databricks concepts to support integrated data engineering, analytics, and machine learning workloads. manage data with delta lake delta lake is a data management solution in azure databricks providing features including acid transactions, schema enforcement, and time travel ensuring data consistency, integrity, and versioning capabilities. training module what delta lake is how to create delta tables how to use schema versioning and time travel in delta lake how to maintain data integrity with delta lake",
         "filters": {
           "role": [
             "Data Analyst",

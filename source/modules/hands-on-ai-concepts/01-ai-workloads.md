@@ -1,5 +1,6 @@
 ---
 title: Exercise - Explore AI workloads
+description: Explore common artificial intelligence workloads and the business scenarios they support.
 ---
 
 > **TIP**: A hosted environment with an online virtual machine is provided for this lab. Alternatively, you can complete the lab using your own local computer and cloud subscription.

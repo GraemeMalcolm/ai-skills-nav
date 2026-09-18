@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Discover how Delta Lake adds transactional reliability and data management features to data lakes.
 ---
 
 Delta Lake (usually just called Delta) is an open-source storage framework built on top of existing data lake formats like Parquet. It turns a regular "data lake" (which is just files in object storage) into a transactional data store that combines the flexibility of lakes with the reliability of warehouses. Delta is what makes a data lake behave like a reliable database—without giving up the openness and scalability of lake storage.

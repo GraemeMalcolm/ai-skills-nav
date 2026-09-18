@@ -1,5 +1,6 @@
 ---
 title: What is Microsoft Defender for Cloud?
+description: Learn how Microsoft Defender for Cloud assesses security posture and protects cloud workloads.
 ---
 
 ## What is Microsoft Defender for Cloud?

@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Explore how speech-capable generative AI models enable transcription and spoken responses in applications.
 ---
 
 ::: zone pivot="Video"

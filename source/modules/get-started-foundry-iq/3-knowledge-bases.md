@@ -1,5 +1,6 @@
 ---
 title: Knowledge bases
+description: Learn how Foundry IQ knowledge bases connect, enrich, and retrieve enterprise content.
 ---
 
 ::: zone pivot="Video"

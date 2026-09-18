@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Learn how Fabric IQ replaces complex cross-source queries with a shared business vocabulary.
 ---
 
 Imagine you're a data analyst at Lamna Healthcare, responsible for helping clinical operations teams understand patient care patterns across your facility.
@@ -8,8 +9,8 @@ Patient records sit in lakehouse tables while vital signs stream continuously fr
 
 Business users can't explore the data themselves—they depend on you to write queries each time they have a question. By the time you deliver answers, clinical conditions may have already changed.
 
-Fabric IQ solves this challenge by letting you define business vocabulary in an ontology, then bind those concepts to your data sources in OneLake. You define concepts such as Patient, Department, and Room with their properties and relationships, creating a semantic layer. Business users can then ask questions in natural language through data agents or visually explore relationships through Graph in Microsoft Fabric—exploring the data themselves without needing you to write queries. 
+Fabric IQ solves this challenge by letting you define business vocabulary in an ontology, then bind those concepts to your data sources in OneLake. You define concepts such as Patient, Department, and Room with their properties and relationships, creating a semantic layer. Business users can then ask questions in natural language through data agents or visually explore relationships through Graph in Microsoft Fabric—exploring the data themselves without needing you to write queries.
 
-In this module, you'll discover what Fabric IQ is and how it works. You'll explore the components that work together—ontology items, data agents, Graph in Microsoft Fabric, and Power BI semantic models—and learn when to use each one. You'll also see how ontology modeling shifts your approach from use-case-driven thinking to concept-driven thinking, fundamentally changing how teams collaborate around data. 
+In this module, you'll discover what Fabric IQ is and how it works. You'll explore the components that work together—ontology items, data agents, Graph in Microsoft Fabric, and Power BI semantic models—and learn when to use each one. You'll also see how ontology modeling shifts your approach from use-case-driven thinking to concept-driven thinking, fundamentally changing how teams collaborate around data.
 
 > **IMPORTANT**: Fabric IQ is currently in *preview*.

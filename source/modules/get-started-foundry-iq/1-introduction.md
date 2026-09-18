@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Discover how Foundry IQ grounds AI agents in connected organizational knowledge.
 ---
 
 ::: zone pivot="Video"

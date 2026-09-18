@@ -1,5 +1,6 @@
 ---
 title: Transcribe speech
+description: Build an application that sends recorded audio to a model for speech transcription.
 ---
 
 ::: zone pivot="Video"

@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Learn how Microsoft Fabric data stores support different analytical workload requirements.
 ---
 
 Microsoft Fabric provides multiple analytical data stores, each designed for different data patterns and workloads. Choosing the right store for your scenario is one of the most important decisions you make when building an analytics solution. The right choice affects how you ingest data, how your team queries it, and how well your solution adapts as requirements evolve.

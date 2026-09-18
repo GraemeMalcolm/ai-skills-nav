@@ -1,5 +1,6 @@
 ---
 title: Describe analytical data store options
+description: Compare lakehouse, warehouse, and eventhouse options for storing and analyzing data in Fabric.
 ---
 
 Microsoft Fabric provides three primary analytical data stores: the lakehouse, the warehouse, and the eventhouse. Each store is built on OneLake and uses an open data format, but they serve different purposes and support different workload patterns. Understanding the strengths and trade-offs of each store helps you match data characteristics and team skills to the right solution.

@@ -1,5 +1,6 @@
 ---
 title: Module assessment
+description: Check your understanding of ontology creation, data binding, relationships, and validation.
 ---
 
 Test your knowledge.

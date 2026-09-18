@@ -1,5 +1,6 @@
 ---
 title: Summary
+description: Review the approaches and steps for building a connected ontology with Fabric IQ.
 ---
 
 In this module, you learned two approaches for creating ontologies in Fabric IQ: building manually to understand core concepts, or generating from a Power BI semantic model to automate initial structure. Both approaches produce entity types, properties, relationship types, and entity type keys that define your business vocabulary.

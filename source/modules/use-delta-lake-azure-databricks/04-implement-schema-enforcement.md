@@ -1,5 +1,6 @@
 ---
 title: Implement schema enforcement
+description: Enforce and evolve Delta table schemas to prevent invalid writes while accommodating planned changes.
 ---
 
 Schema enforcement in Delta Lake, sometimes called "schema on write," ensures that data being written to a Delta table matches the table’s defined schema. This prevents corrupt or inconsistent records from being introduced into the dataset. For example, if a column is defined as INT and an incoming DataFrame tries to write a STRING into that column, the operation fails. By enforcing strict schema rules, Delta Lake guarantees that all data adheres to the expected format, which helps maintain data quality and consistency across pipelines.
@@ -24,7 +25,6 @@ INSERT INTO main.default.payments (id, amount) VALUES
 ```
 
 This enforcement is important in big data environments where data often comes from diverse sources with varying formats. Without schema enforcement, subtle errors—like mismatched types or missing fields—could propagate silently and break downstream processes or analytics. With Delta Lake, schema enforcement acts as a safeguard that catches these problems at write time instead of leaving them to be discovered later.
-
 
 ## Schema evolution
 

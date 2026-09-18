@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Learn how a Fabric IQ ontology can unify healthcare data through a shared business vocabulary.
 ---
 
 Imagine you work at Lamna Healthcare, a fictitious medical center that manages operations across hospitals, departments, and rooms.

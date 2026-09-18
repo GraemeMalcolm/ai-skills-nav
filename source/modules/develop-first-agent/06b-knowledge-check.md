@@ -1,5 +1,6 @@
 ---
 title: Knowledge check
+description: Check your understanding of AI agent concepts, development tools, and client integration.
 ---
 
 Test your knowledge.

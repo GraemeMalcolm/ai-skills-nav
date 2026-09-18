@@ -1,5 +1,6 @@
 ---
 title: Data integrity with Delta Lake
+description: Protect Delta Lake data with constraints, validation rules, and reliable transactional updates.
 ---
 
 Data integrity in Delta Lake is a critical aspect that ensures the accuracy, consistency, and reliability of data throughout its lifecycle. Delta Lake provides several mechanisms to uphold data integrity, especially in environments with complex data pipelines, and multiple concurrent users. We already covered ACID transactions, schema enforcement, evolution, time travel etc.
@@ -94,7 +95,7 @@ Session 1 finishes and commits successfully, producing version 2 of the table wh
 
 ## Define Expectations
 
-Finally, Delta provides data quality tooling such as Lakeflow Declarative Pipelines expectations, which allow you to define data quality rules declaratively and track violations. 
+Finally, Delta provides data quality tooling such as Lakeflow Declarative Pipelines expectations, which allow you to define data quality rules declaratively and track violations.
 
 They let you assert boolean conditions on records as data flows through ETL/streaming pipelines (materialized views or streaming tables), to validate that data meets specified constraints. For example, you might enforce that a column "age" is between 0 and 120, or that certain fields are not null. The conditions are expressed in SQL (or via Python decorators) and run per record. When a record violates the expectation, what happens next depends on the expectation’s configuration ("action on violation") — you can warn/log, drop the record, or fail the update.
 
@@ -102,7 +103,7 @@ There are three main parts to an expectation:
 
 - **Expectation name** – a label identifying the rule (must be unique per dataset). Used for monitoring, metrics, and understanding which rule failed.
 
-- **Constraint / Condition** – a SQL boolean condition that each record must satisfy. 
+- **Constraint / Condition** – a SQL boolean condition that each record must satisfy.
 
 - **Action on violation** – what to do when a record violates the constraint. The options are:
   

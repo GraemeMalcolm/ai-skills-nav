@@ -1,5 +1,6 @@
 ---
 title: Introduction to Caldova
+description: Learn about the Caldova demo solution and how to use it to explore real-world customer scenarios for frontier AI solutions built with Microsoft technologies.
 ---
 
 ## Introduction to Caldova

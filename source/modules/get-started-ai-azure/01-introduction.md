@@ -1,5 +1,6 @@
 ---
 title: Introduction
+description: Learn how Azure services and Microsoft Foundry support the development of AI applications.
 ---
 
 ::: zone pivot="Video"
