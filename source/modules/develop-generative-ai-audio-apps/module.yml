@@ -1,8 +1,5 @@
 title: Develop a speech-capable generative AI application
 description: A voice carries meaning beyond words. Learn how to use models in Microsoft Foundry that transcribe and synthesize speech.
-modalities:
-  - Video
-  - Lab
 level: 200
 duration: 43 minutes
 experience_type: Training module

@@ -1,10 +1,9 @@
 title: Create an ontology with Fabric IQ
-description: Ontologies in Fabric IQ transform your data into a business vocabulary that everyone can understand. In this module,
+description:
+  Ontologies in Fabric IQ transform your data into a business vocabulary that everyone can understand. In this module,
   you'll learn two ways to create ontologies - building manually to understand the core components, or generating
   automatically from Power BI semantic models to accelerate development. You'll practice both approaches and learn how
   to connect your ontology to data sources in OneLake, including lakehouse tables and eventhouse streams.
-modalities:
-  - Lab
 level: 200
 duration: 120 minutes
 experience_type: Training module

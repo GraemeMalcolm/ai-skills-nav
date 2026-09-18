@@ -156,7 +156,6 @@ Each module folder MUST contain `module.yml`, `thumbnail.png`, and at least one 
 ```yaml
 title: Module title
 description: Module description
-modality: Multimodal
 level: 200
 duration: 40 minutes
 experience_type: Microsoft Official Curriculum
@@ -180,7 +179,7 @@ pages:
 
 Rules:
 
-- `title`, `description`, `modality`, `level`, `duration`, `experience_type`, `topics`, `role`, and `pages` SHOULD be present.
+- `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `role`, and `pages` SHOULD be present.
 - `pages` MUST be a non-empty array.
 - `prerequisites` and `learning_outcomes` MUST each be a non-empty array of strings.
 - For a module with multiple pages, `learning_outcomes` MUST contain one outcome per page in page order, followed by one overall module outcome.
@@ -190,7 +189,7 @@ Rules:
 - Page order MUST follow the YAML array.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
-- Modality and role values are content-defined, not hard-coded enums. Current modalities are `Lab`, `Multimodal`, and `Video`.
+- Page modalities are derived from Markdown directives: `[!VIDEO]` produces `Video`, `[!LAB_STEPS]` produces `Lab`, `[!LAB_HOST]` produces `Hosted Lab`, and `[!SIMULATION]` produces `Simulation`. Module modalities are the discrete union of their page modalities.
 
 Course, playlist, and module home pages MUST list prerequisites and learning outcomes. When an item has multiple learning outcomes, the final value MUST be bold and prefixed with `Overall outcome:`. A single learning objective MUST be displayed without that prefix.
 
@@ -424,7 +423,7 @@ Required filter fields:
 
 - All content: role, experience type, level, and modality.
 
-A module's modality values come directly from its metadata. A curated playlist MUST inherit the sorted, unique union of modalities declared by its modules. A course MUST inherit the sorted, unique union of modalities from all modules in its playlists. Modality filtering MUST apply to courses and playlists using these inherited values.
+A module's modality values MUST be derived at build time as the sorted, unique union of its page modality directives. A curated playlist MUST inherit the sorted, unique union of modalities derived for its modules. A course MUST inherit the sorted, unique union of modalities from all modules in its playlists. Modality filtering MUST apply to courses and playlists using these inherited values.
 
 Multiple selections in one field use OR semantics. Different fields, and search plus filters, use AND semantics. Filters are applied when the filter dialog is submitted. Cancelling or closing MUST discard unsubmitted checkbox changes. **Clear all** MUST clear and immediately apply filters. Search state is page-local and is not persisted.
 

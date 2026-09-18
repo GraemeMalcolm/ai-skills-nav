@@ -229,7 +229,6 @@ Module metadata uses the following source contract:
 | Stable identifier | One | Yes | Canonical reusable identity for playlist references, personal playlists, routes, analytics, and sharing. In the current source layout this is the module folder name. |
 | `title` | One string | Yes | Module heading, card title, playlist navigation label, breadcrumbs, and search text. |
 | `description` | One string | Yes | Module overview, card summary or tooltip, and search text. |
-| `modalities` | List of strings | No | Describes delivery formats present in the module such as `Video` and `Lab`; displayed as metadata and used directly and transitively for filtering. At least one value is required. Values are content-defined rather than a closed enumeration unless product governance establishes one. |
 | `level` | One string or number | Yes | Displayed level and catalog filter value. |
 | `duration` | One string | Yes | Human-readable estimated completion time. A normalized value should also be available in the production model. |
 | `experience_type` | One string | Yes | Displayed experience type and catalog filter value. |
@@ -240,6 +239,8 @@ Module metadata uses the following source contract:
 | `pages` | Ordered list of page entries | Yes | Defines the module structure, overview page list, sidebar, and Previous/Next sequence. At least one entry is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Module cards, module overview, and personal-playlist management. |
 
+Page modalities are derived at build time from Markdown directives: `[!VIDEO]` produces `Video`, `[!LAB_STEPS]` produces `Lab`, `[!LAB_HOST]` produces `Hosted Lab`, and `[!SIMULATION]` produces `Simulation`. Each page record in `catalog.json` contains its derived modalities, and each module contains the unique union of its page modalities for display and direct or transitive filtering.
+
 A page entry may be a Markdown filename or an object. The object form supports `file` as the required source reference plus optional `title` and `description` values for navigation and overview presentation. These overrides do not replace page front matter or alter the canonical page body.
 
 Example:
@@ -247,9 +248,6 @@ Example:
 ```yaml
 title: Introduction to AI Concepts
 description: Explore common AI workloads and responsible AI.
-modalities:
-     - Video
-     - Lab
 level: 100
 duration: 120 minutes
 experience_type: Microsoft Official Curriculum
@@ -420,7 +418,7 @@ Search is a free-text discovery mechanism, not a substitute for filtering and no
 | --- | --- | --- |
 | Course | `title`, `course_number`, `description`, `topics`, `experience_type` or its fallback | `credentials`, `level`, `duration`, `role`, `avatar`, playlist references |
 | Curated playlist | `title`, `description`, `topics`, `experience_type` or its fallback | `level`, `duration`, `role`, derived modality, `avatar`, module references |
-| Module | `title`, `description`, `topics`, `experience_type` or its fallback | `modalities`, `level`, `duration`, `role`, `avatar`, page references and page body text |
+| Module | `title`, `description`, `topics`, `experience_type` or its fallback | Derived modalities, `level`, `duration`, `role`, `avatar`, page references and page body text |
 
 For example, a module with this metadata:
 
@@ -431,13 +429,10 @@ topics:
      - Azure Databricks
 role:
      - Data Engineer
-modalities:
-     - Video
-     - Lab
 level: 200
 ```
 
-must match searches for `lakehouse`, `Apache Spark`, `machine learning`, and `Azure Databricks`. It must not match `Data Engineer`, `Video`, `Lab`, or `200` solely because those values occur in discrete metadata. Those values belong to filters.
+must match searches for `lakehouse`, `Apache Spark`, `machine learning`, and `Azure Databricks`. It must not match `Data Engineer`, derived `Video` or `Lab` modalities, or `200` solely because those values are available to filters.
 
 **FR-SEARCH-001** The searchable document for each catalog item must be constructed only from its title, description, and topics.
 
@@ -472,13 +467,13 @@ Filters provide structured refinement using the existing small set of stable cat
 | Role | Authored `role` | Courses, playlists, and modules |
 | Experience type | Authored `experience_type` | Courses, playlists, and modules |
 | Level | Authored `level` | Courses, playlists, and modules |
-| Modality | Module `modalities`; derived union for playlists and courses | Courses, playlists, and modules |
+| Modality | Derived from page directives for modules; derived union for playlists and courses | Courses, playlists, and modules |
 
 Duration, topics, credentials, course number, assistant association, and hierarchy membership are not baseline filters. Adding a filter requires evidence of a stable learner need and must satisfy the metadata minimization requirements.
 
 **FR-FILTER-001** Available filter values must be generated from current published content and must not be maintained as a second independent list.
 
-**FR-FILTER-002** A module's modality filter values must come from its authored `modalities`. A playlist's values must be the unique union of its modules' modalities. A course's values must be the unique union of all modules in its playlists.
+**FR-FILTER-002** A module's modality filter values must be derived at build time as the unique union of its page modality directives. A playlist's values must be the unique union of its modules' modalities. A course's values must be the unique union of all modules in its playlists.
 
 **FR-FILTER-003** Selecting multiple values within one filter uses OR semantics. For example, selecting `Developer` and `Data Engineer` matches content intended for either role.
 

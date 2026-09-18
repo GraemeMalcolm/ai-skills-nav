@@ -1,8 +1,7 @@
 title: Manage data with Delta Lake
-description: Delta Lake is a data management solution in Azure Databricks providing features including ACID transactions, schema
+description:
+  Delta Lake is a data management solution in Azure Databricks providing features including ACID transactions, schema
   enforcement, and time travel ensuring data consistency, integrity, and versioning capabilities.
-modalities:
-  - Lab
 level: 200
 duration: 75 minutes
 experience_type: Training module

@@ -1,8 +1,5 @@
 title: Get started with Azure Databricks
 description: Get hands-on with Azure Databricks as you explore lakehouse architecture, Apache Spark, Delta Lake, Unity Catalog, data engineering, analytics, machine learning, and Genie Code.
-modalities:
-  - Video
-  - Lab
 level: 200
 duration: 40 minutes
 experience_type: Training module

@@ -938,19 +938,29 @@ async function getModulePages(module) {
       throw new Error(`Module ${module.slug} references missing page ${file}`);
     }
     const parsed = parseFrontMatter(await readFile(sourceFile, "utf8"), sourceFile);
+    const catalogLinks = extractCatalogLinks(parsed.body);
     return {
       file,
       sourceFile,
       slug: pageSlug(file),
       title: (typeof entry === "object" && entry.title) || parsed.data.title || pageSlug(file),
       description: (typeof entry === "object" && entry.description) || parsed.data.description || "",
-      catalogLinks: extractCatalogLinks(parsed.body),
+      modalities: catalogModalities
+        .filter(({ type }) => catalogLinks[type].length)
+        .map(({ name }) => name),
+      catalogLinks,
     };
   }));
 }
 
 const catalogFilterFields = ["role", "experience_type", "credential_type", "level", "modalities", "duration"];
 const catalogLinkTypes = ["video", "lab_steps", "lab_host", "simulation"];
+const catalogModalities = [
+  { type: "video", name: "Video" },
+  { type: "lab_steps", name: "Lab" },
+  { type: "lab_host", name: "Hosted Lab" },
+  { type: "simulation", name: "Simulation" },
+];
 
 function extractCatalogLinks(markdown) {
   const links = Object.fromEntries(catalogLinkTypes.map((type) => [type, []]));
@@ -1039,6 +1049,7 @@ function catalogRecord(item, type) {
       slug: page.slug,
       title: page.title,
       description: page.description,
+      modalities: page.modalities,
       file: page.file,
       url: pages.length === 1
         ? `modules/${slug}/index.html`
@@ -1189,6 +1200,10 @@ async function build() {
   const playlistMap = new Map(playlists.map((playlist) => [playlist.slug, playlist]));
   const courseMap = new Map(courses.map((course) => [course.slug, course]));
   const credentialMap = new Map(credentials.map((credential) => [credential.slug, credential]));
+  await Promise.all(modules.map(async (module) => {
+    module.pages = await getModulePages(module);
+    module.modalities = [...new Set(module.pages.flatMap((page) => page.modalities))];
+  }));
   modules.forEach((module) => {
     module.rating = Math.floor(Math.random() * 5) + 1;
     buildSearchContext(module);
@@ -1246,9 +1261,6 @@ async function build() {
     });
     buildSearchContext(credential, [...childCourses, ...childPlaylists]);
   }
-  await Promise.all(modules.map(async (module) => {
-    module.pages = await getModulePages(module);
-  }));
   await writeCatalog({ courses, playlists, modules, credentials });
 
   for (const contentRoot of contentRoots) {

@@ -1,0 +1,183 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "AI Skills Nav" [ref=e5] [cursor=pointer]:
+        - /url: ../index.html
+      - link "Catalog" [ref=e12] [cursor=pointer]:
+        - /url: index.html
+      - link "Official Curriculum" [ref=e13] [cursor=pointer]:
+        - /url: ../official-curriculum/index.html
+      - link "Credentials" [ref=e14] [cursor=pointer]:
+        - /url: ../credentials/index.html
+    - link "Sign-in" [ref=e16] [cursor=pointer]:
+      - /url: "#sign-in"
+  - navigation "Breadcrumb" [ref=e17]:
+    - list [ref=e18]:
+      - listitem [ref=e19]:
+        - link "Home" [ref=e20] [cursor=pointer]:
+          - /url: ../index.html
+      - listitem [ref=e21]:
+        - text: /
+        - generic [ref=e22]: Catalog
+  - main [ref=e24]:
+    - generic [ref=e25]:
+      - paragraph [ref=e26]: Explore all learning
+      - heading "Catalog" [level=1] [ref=e27]
+      - paragraph [ref=e28]: Browse courses, skilling playlists, and individual learning experiences.
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - paragraph [ref=e32]: All skilling
+          - heading "Learning catalog" [level=2] [ref=e33]
+        - generic [ref=e34]:
+          - search [ref=e35]:
+            - generic [ref=e36]: Search all skilling
+            - searchbox "Search all skilling" [ref=e37]
+            - button "Search" [ref=e38] [cursor=pointer]
+          - button "Filter" [ref=e39] [cursor=pointer]
+      - generic [ref=e40]:
+        - link "AI Fundamentals Learning Path Level 200 · 240 minutes 3.5 out of 5 stars" [ref=e41] [cursor=pointer]:
+          - /url: ../playlists/ai-fundamentals/index.html
+          - generic [ref=e43]:
+            - strong [ref=e44]: AI Fundamentals
+            - generic [ref=e45]: Learning Path
+            - generic [ref=e46]: Level 200 · 240 minutes
+            - img "3.5 out of 5 stars" [ref=e47]:
+              - generic [ref=e48]:
+                - text: ★★★★★
+                - generic [ref=e49]: ★★★★★
+              - generic [ref=e50]: "3.5"
+        - link "Analyze data with Azure Databricks Learning Path Level 200 · 120 minutes 1.0 out of 5 stars In this playlist, you'll learn how to analyze data with Azure Databricks." [ref=e51] [cursor=pointer]:
+          - /url: ../playlists/azure-databricks/index.html
+          - generic [ref=e53]:
+            - strong [ref=e54]: Analyze data with Azure Databricks
+            - generic [ref=e55]: Learning Path
+            - generic [ref=e56]: Level 200 · 120 minutes
+            - img "1.0 out of 5 stars" [ref=e57]:
+              - generic [ref=e58]:
+                - text: ★★★★★
+                - generic [ref=e59]: ★★★★★
+              - generic [ref=e60]: "1.0"
+          - tooltip "In this playlist, you'll learn how to analyze data with Azure Databricks."
+        - link "Azure Copilot Demo Video Level 100 · 10 minutes 2.0 out of 5 stars" [ref=e62] [cursor=pointer]:
+          - /url: ../modules/azure-copilot-demo/index.html
+          - generic [ref=e64]:
+            - strong [ref=e65]: Azure Copilot Demo
+            - generic [ref=e66]: Video
+            - generic [ref=e67]: Level 100 · 10 minutes
+            - img "2.0 out of 5 stars" [ref=e68]:
+              - generic [ref=e69]:
+                - text: ★★★★★
+                - generic [ref=e70]: ★★★★★
+              - generic [ref=e71]: "2.0"
+        - link "Build 2026 Highlights Skilling Playlist Level 200 · 30 minutes 2.0 out of 5 stars" [ref=e72] [cursor=pointer]:
+          - /url: ../playlists/build-2026/index.html
+          - generic [ref=e74]:
+            - strong [ref=e75]: Build 2026 Highlights
+            - generic [ref=e76]: Skilling Playlist
+            - generic [ref=e77]: Level 200 · 30 minutes
+            - img "2.0 out of 5 stars" [ref=e78]:
+              - generic [ref=e79]:
+                - text: ★★★★★
+                - generic [ref=e80]: ★★★★★
+              - generic [ref=e81]: "2.0"
+        - link "Build announcement - Microsoft AI models Video Level 100 · 15 minutes 1.0 out of 5 stars" [ref=e83] [cursor=pointer]:
+          - /url: ../modules/mai-model-announcement/index.html
+          - generic [ref=e85]:
+            - strong [ref=e86]: Build announcement - Microsoft AI models
+            - generic [ref=e87]: Video
+            - generic [ref=e88]: Level 100 · 15 minutes
+            - img "1.0 out of 5 stars" [ref=e89]:
+              - generic [ref=e90]:
+                - text: ★★★★★
+                - generic [ref=e91]: ★★★★★
+              - generic [ref=e92]: "1.0"
+        - link "Career cheat sheet Skilling Playlist Level 100 · 30 minutes 1.7 out of 5 stars" [ref=e93] [cursor=pointer]:
+          - /url: ../playlists/career-cheat-sheet/index.html
+          - generic [ref=e95]:
+            - strong [ref=e96]: Career cheat sheet
+            - generic [ref=e97]: Skilling Playlist
+            - generic [ref=e98]: Level 100 · 30 minutes
+            - img "1.7 out of 5 stars" [ref=e99]:
+              - generic [ref=e100]:
+                - text: ★★★★★
+                - generic [ref=e101]: ★★★★★
+              - generic [ref=e102]: "1.7"
+        - link "Choose data stores in Microsoft Fabric Training module Level 300 · 60 minutes 3.0 out of 5 stars" [ref=e104] [cursor=pointer]:
+          - /url: ../modules/fabric-data-stores/index.html
+          - generic [ref=e106]:
+            - strong [ref=e107]: Choose data stores in Microsoft Fabric
+            - generic [ref=e108]: Training module
+            - generic [ref=e109]: Level 300 · 60 minutes
+            - img "3.0 out of 5 stars" [ref=e110]:
+              - generic [ref=e111]:
+                - text: ★★★★★
+                - generic [ref=e112]: ★★★★★
+              - generic [ref=e113]: "3.0"
+        - link "Copilot Quickstart Training module Level 100 · 30 minutes 2.0 out of 5 stars" [ref=e115] [cursor=pointer]:
+          - /url: ../modules/custom-module/index.html
+          - generic [ref=e117]:
+            - strong [ref=e118]: Copilot Quickstart
+            - generic [ref=e119]: Training module
+            - generic [ref=e120]: Level 100 · 30 minutes
+            - img "2.0 out of 5 stars" [ref=e121]:
+              - generic [ref=e122]:
+                - text: ★★★★★
+                - generic [ref=e123]: ★★★★★
+              - generic [ref=e124]: "2.0"
+        - link "Create an ontology with Fabric IQ Training module Level 200 · 120 minutes 2.0 out of 5 stars" [ref=e126] [cursor=pointer]:
+          - /url: ../modules/create-ontology-with-fabric-iq/index.html
+          - generic [ref=e128]:
+            - strong [ref=e129]: Create an ontology with Fabric IQ
+            - generic [ref=e130]: Training module
+            - generic [ref=e131]: Level 200 · 120 minutes
+            - img "2.0 out of 5 stars" [ref=e132]:
+              - generic [ref=e133]:
+                - text: ★★★★★
+                - generic [ref=e134]: ★★★★★
+              - generic [ref=e135]: "2.0"
+        - link "Create knowledgeable AI agents with Microsoft Fabric IQ Learning Path Level 200 · 120 minutes 3.5 out of 5 stars" [ref=e136] [cursor=pointer]:
+          - /url: ../playlists/fabric-iq/index.html
+          - generic [ref=e138]:
+            - strong [ref=e139]: Create knowledgeable AI agents with Microsoft Fabric IQ
+            - generic [ref=e140]: Learning Path
+            - generic [ref=e141]: Level 200 · 120 minutes
+            - img "3.5 out of 5 stars" [ref=e142]:
+              - generic [ref=e143]:
+                - text: ★★★★★
+                - generic [ref=e144]: ★★★★★
+              - generic [ref=e145]: "3.5"
+        - link "Develop a speech-capable generative AI application Training module Level 200 · 43 minutes 5.0 out of 5 stars" [ref=e147] [cursor=pointer]:
+          - /url: ../modules/develop-generative-ai-audio-apps/index.html
+          - generic [ref=e149]:
+            - strong [ref=e150]: Develop a speech-capable generative AI application
+            - generic [ref=e151]: Training module
+            - generic [ref=e152]: Level 200 · 43 minutes
+            - img "5.0 out of 5 stars" [ref=e153]:
+              - generic [ref=e154]:
+                - text: ★★★★★
+                - generic [ref=e155]: ★★★★★
+              - generic [ref=e156]: "5.0"
+        - link "Develop a vision-enabled generative AI application Training module Level 200 · 45 minutes 4.0 out of 5 stars" [ref=e158] [cursor=pointer]:
+          - /url: ../modules/develop-generative-ai-vision-apps/index.html
+          - generic [ref=e160]:
+            - strong [ref=e161]: Develop a vision-enabled generative AI application
+            - generic [ref=e162]: Training module
+            - generic [ref=e163]: Level 200 · 45 minutes
+            - img "4.0 out of 5 stars" [ref=e164]:
+              - generic [ref=e165]:
+                - text: ★★★★★
+                - generic [ref=e166]: ★★★★★
+              - generic [ref=e167]: "4.0"
+      - navigation "Catalog pages" [ref=e168]:
+        - button "Previous" [disabled] [ref=e169]
+        - button "Page 1" [ref=e170] [cursor=pointer]: "1"
+        - button "Page 2" [ref=e171] [cursor=pointer]: "2"
+        - button "Page 3" [ref=e172] [cursor=pointer]: "3"
+        - button "Page 4" [ref=e173] [cursor=pointer]: "4"
+        - button "Page 5" [ref=e174] [cursor=pointer]: "5"
+        - button "Next" [ref=e175] [cursor=pointer]
+  - button "Chat with Nav" [ref=e177] [cursor=pointer]:
+    - generic [ref=e178]: Ask Nav

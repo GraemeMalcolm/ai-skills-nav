@@ -163,12 +163,10 @@ async function importModule(entry) {
   }
   await copyFile(temporaryThumbnail, path.join(outputDirectory, "thumbnail.png"));
 
-  const hasExercise = orderedUnits.some((unit) => /exercise/i.test(unit.data.uid));
   const topics = [...new Set([...(module.products ?? []), ...(module.subjects ?? [])].map(displayValue))];
   const metadata = {
     title: module.title ?? module.metadata?.title,
     description: module.summary ?? module.metadata?.description,
-    modalities: hasExercise ? ["Multimodal", "Lab"] : ["Multimodal"],
     level: levelValues[module.levels?.[0]] ?? 200,
     duration: `${orderedUnits.reduce((total, unit) => total + (unit.data.durationInMinutes ?? 0), 0)} minutes`,
     experience_type: "Training module",
