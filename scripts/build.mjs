@@ -825,7 +825,7 @@ function catalogFilterDialog(items, fields, subject) {
   const uniqueValues = (selector) => [...new Set(items.flatMap(selector).filter((value) => value !== undefined && value !== null && value !== ""))]
     .sort((left, right) => String(left).localeCompare(String(right), undefined, { numeric: true }));
   const selectors = {
-    modalities: (item) => Array.isArray(item.modalities) ? item.modalities : [],
+    modalities: (item) => item.searchContext?.filters.modalities || [],
     level: (item) => [item.level],
     experience_type: (item) => catalogMetadataValues(item, "experience_type"),
     credential_type: (item) => [item.credential_type],
