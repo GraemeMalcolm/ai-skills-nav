@@ -1107,7 +1107,10 @@ function catalogMetadataValues(item, field) {
 }
 
 function buildSearchContext(item, children = []) {
-  const ownText = [item.title, item.description, item.course_number, item.experience_type, item.credential_type, ...catalogMetadataValues(item, "learning_outcomes")];
+  const pageText = Array.isArray(item.pages)
+    ? item.pages.flatMap((page) => [page.title, page.description])
+    : [];
+  const ownText = [item.title, item.description, item.course_number, item.experience_type, item.credential_type, ...catalogMetadataValues(item, "learning_outcomes"), ...pageText];
   item.searchContext = {
     text: [ownText.filter(Boolean).join(" "), ...children.map((child) => child.searchContext.text)]
       .filter(Boolean)
