@@ -133,6 +133,7 @@ Course metadata uses the following source contract:
 | `topics` | List of strings | Yes | Search terms, topic presentation, recommendations, and future topic browsing. At least one value is required. |
 | `role` | List of strings | Yes | Intended learner roles shown in metadata and used as catalog filter values. At least one value is required. |
 | `restricted_to` | List of domain strings | No | Limits simulated browsing and discovery to signed-in email addresses whose domain matches one listed value. |
+| `hidden` | One Boolean | No | When `true`, excludes the course from discovery while preserving direct-route and parent-context access. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the course. The reference must resolve when supplied. |
 | `playlists` | Ordered list of playlist identifiers | Yes | Defines course membership and the complete course learning sequence. At least one valid reference is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Course cards and course overview. It must have an accessible treatment appropriate to whether the image is informative or decorative. |
@@ -185,6 +186,7 @@ Playlist metadata uses the following source contract:
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
 | `role` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
 | `restricted_to` | List of domain strings | No | Limits simulated browsing and discovery to signed-in email addresses whose domain matches one listed value. |
+| `hidden` | One Boolean | No | When `true`, excludes the playlist from discovery while preserving direct-route and parent-context access. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the playlist. |
 | `modules` | Ordered list of module identifiers | Yes | Defines playlist membership, sidebar order, and cross-module Previous/Next navigation. At least one valid reference is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Playlist cards and overview. |
@@ -235,6 +237,7 @@ Module metadata uses the following source contract:
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
 | `role` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
 | `restricted_to` | List of domain strings | No | Limits simulated browsing and discovery to signed-in email addresses whose domain matches one listed value. |
+| `hidden` | One Boolean | No | When `true`, excludes the module from discovery while preserving direct-route and parent-context access. |
 | `avatar` | One identifier | No | Associates a contextual AI assistant configuration with the module. |
 | `pages` | Ordered list of page entries | Yes | Defines the module structure, overview page list, sidebar, and Previous/Next sequence. At least one entry is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Module cards, module overview, and personal-playlist management. |
@@ -391,6 +394,8 @@ Search and Filter controls must appear with the result collection heading rather
 **FR-CATALOG-015** Signed-in headers must replace Sign-in with Profile and Sign-out. Sign-out must clear the active identity and return the learner to Home from any route.
 
 **FR-CATALOG-016** Cards and detail overviews must display authored experience type when present. Missing values must fall back to `Course`, `Skilling Playlist`, and `Learning Experience` for their respective content types.
+
+**FR-CATALOG-017** A course, playlist, or module with `hidden: true` must not appear on Home, Catalog, Official Curriculum, personalized skilling-plan discovery sections, or as a standalone search result. Its standalone route must still be generated and directly accessible. When a non-hidden parent references a hidden child, that child must remain visible and navigable within the parent.
 
 ### 7.3 Profile and personalized plan
 

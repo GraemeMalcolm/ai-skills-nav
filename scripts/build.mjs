@@ -1127,6 +1127,10 @@ function averageRating(items) {
   return items.reduce((total, item) => total + item.rating, 0) / items.length;
 }
 
+function isDiscoverable(item) {
+  return item.hidden !== true;
+}
+
 function catalogRecord(item, type) {
   const { slug, directory, avatarData, searchContext, pages, ...metadata } = item;
   const record = {
@@ -1276,7 +1280,7 @@ async function build() {
     item.last_updated = await lastCommitDate(item.directory);
   }));
   const roleAccess = new Map();
-  for (const item of [...courses, ...playlists, ...modules]) {
+  for (const item of [...courses, ...playlists, ...modules].filter(isDiscoverable)) {
     for (const role of Array.isArray(item.role) ? item.role : [item.role]) {
       if (!role) continue;
       const access = roleAccess.get(role) || { name: role, unrestricted: false, domains: new Set() };
@@ -1353,7 +1357,11 @@ async function build() {
     });
     buildSearchContext(credential, [...childCourses, ...childPlaylists]);
   }
-  await writeCatalog({ courses, playlists, modules, credentials });
+  const discoverableCourses = courses.filter(isDiscoverable);
+  const discoverablePlaylists = playlists.filter(isDiscoverable);
+  const discoverableModules = modules.filter(isDiscoverable);
+  const discoverableItems = [...discoverableCourses, ...discoverablePlaylists, ...discoverableModules];
+  await writeCatalog({ courses: discoverableCourses, playlists: discoverablePlaylists, modules: discoverableModules, credentials });
 
   for (const contentRoot of contentRoots) {
     if (await exists(contentRoot.directory)) {
@@ -1373,9 +1381,9 @@ async function build() {
     "Secure cloud resources with Microsoft Defender",
     "Connect agents to MCP tools",
   ]));
-  const spotlightPlaylists = [...playlists]
+  const spotlightPlaylists = [...discoverablePlaylists]
     .sort((left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0) || left.title.localeCompare(right.title));
-  const homeModules = homepageItems(modules, 4, 4);
+  const homeModules = homepageItems(discoverableModules, 4, 4);
   const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p class="home-hero-summary">Choose a curated path or jump straight into a learning experience.</p>
       <form class="hero-search" role="search" data-site-search data-catalog-url="${relativeUrl(homeFile, catalogFile)}" data-animated-search data-search-hints="${heroSearchHints}">
         <label for="hero-search-input">What do you want to learn how to do?</label>
@@ -1385,23 +1393,23 @@ async function build() {
     </section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><div class="card-grid">${spotlightPlaylists.map((item, index) => card(homeFile, item, "playlists", index >= 4)).join("")}</div></section>
     <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>New and highly rated</h2></div><div class="card-grid" data-module-grid>${homeModules.items.slice(0, homeModules.featuredCount).map((item) => card(homeFile, item, "modules")).join("")}</div><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div></section>
-    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["role", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
+    ${catalogFilterDialog(discoverableItems, ["role", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
 
   const catalogItems = [
-    ...courses.map((item) => ({ item, type: "courses" })),
-    ...playlists.map((item) => ({ item, type: "playlists" })),
-    ...modules.map((item) => ({ item, type: "modules" })),
+    ...discoverableCourses.map((item) => ({ item, type: "courses" })),
+    ...discoverablePlaylists.map((item) => ({ item, type: "playlists" })),
+    ...discoverableModules.map((item) => ({ item, type: "modules" })),
   ].sort((left, right) => left.item.title.localeCompare(right.item.title));
   const catalogSearchForm = catalogSearch("catalog-search-input", "Search all skilling", "Search all skilling");
   const catalogTools = `<div class="catalog-section-tools">${catalogSearchForm}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
   const catalogContent = `<section class="catalog-intro"><p class="kicker">Explore all learning</p><h1>Catalog</h1><p>Browse courses, skilling playlists, and individual learning experiences.</p></section>
     <section class="catalog-section"><div class="section-heading-row"><div class="section-heading"><p class="kicker">All skilling</p><h2>Learning catalog</h2></div>${catalogTools}</div><div class="card-grid catalog-card-grid" data-paged-catalog>${catalogItems.map(({ item, type }) => card(catalogFile, item, type)).join("")}</div><p class="filter-empty" data-catalog-empty role="status" aria-live="polite" hidden>No skilling matches your search and filters.</p><nav class="catalog-pagination" aria-label="Catalog pages" data-catalog-pagination></nav></section>
-    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["role", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
+    ${catalogFilterDialog(discoverableItems, ["role", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
   await writePage(catalogFile, shell({ outputFile: catalogFile, title: "Catalog", breadcrumbs: [{ label: "Catalog" }], avatar: defaultAvatar, content: catalogContent, bodyClass: "catalog-page unified-catalog-page", hasModuleCards: true }));
 
   const officialCurriculumType = "Microsoft Official Curriculum";
-  const officialCourses = courses.filter((item) => item.experience_type === officialCurriculumType);
+  const officialCourses = discoverableCourses.filter((item) => item.experience_type === officialCurriculumType);
   const officialSearch = catalogSearch("official-curriculum-search-input", "Search official curriculum", "Search official curriculum");
   const officialTools = `<div class="catalog-section-tools">${officialSearch}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
   const trainingPartnersDialog = `<dialog class="filter-dialog training-partners-dialog" data-training-partners-dialog aria-labelledby="training-partners-title">
@@ -1451,19 +1459,19 @@ async function build() {
   </dialog>`;
   const personalizedPlanSearch = catalogSearch("personalized-plan-search-input", "Search my skilling plan", "Search my skilling plan");
   const personalizedPlanTools = `<div class="catalog-section-tools personalized-plan-tools">${personalizedPlanSearch}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
-  const continueTemplates = modules.map((module) => `<template data-continue-module-template data-module-slug="${escapeHtml(module.slug)}">${card(personalizedPlanFile, module, "modules", false, "continue")}</template>`).join("");
+  const continueTemplates = discoverableModules.map((module) => `<template data-continue-module-template data-module-slug="${escapeHtml(module.slug)}">${card(personalizedPlanFile, module, "modules", false, "continue")}</template>`).join("");
   const personalizedPlanContent = `${personalPlaylistDetail}<div data-personalized-plan data-auth-only data-playlists-url="${relativeUrl(personalizedPlanFile, personalizedPlanFile)}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}">
     <section class="catalog-intro"><p class="kicker">Personalized learning</p><h1>My skilling plan</h1><p data-personalized-summary>Your recommendations are based on the role selected in your profile.</p></section>
     <section class="catalog-section" data-continue-section hidden><div class="section-heading-row"><div class="section-heading"><p class="kicker">Resume learning</p><h2>Continue where you left off</h2></div>${personalizedPlanTools}</div><div class="card-grid" data-continue-grid></div>${continueTemplates}</section>
-    <section class="catalog-section" data-role-skilling-section><div class="section-heading-row" data-role-skilling-heading><div class="section-heading"><p class="kicker">Recommended learning</p><h2>Skilling for my role</h2></div></div><div class="card-grid" data-plan-paged-grid data-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-role-skilling-empty hidden>No skilling items match your selected role.</p><nav class="catalog-pagination" aria-label="Skilling for my role pages" data-plan-pagination></nav></section>
-    <section class="catalog-section alt" data-other-role-skilling-section hidden><div class="section-heading"><p class="kicker">Explore related paths</p><h2>Skilling for other roles of interest</h2></div><div class="card-grid" data-plan-paged-grid data-other-role-skilling-grid>${[...courses.map((item) => card(personalizedPlanFile, item, "courses")), ...playlists.map((item) => card(personalizedPlanFile, item, "playlists")), ...modules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-other-role-skilling-empty hidden>No skilling items match your other roles of interest.</p><nav class="catalog-pagination" aria-label="Skilling for other roles pages" data-plan-pagination></nav></section>
+    <section class="catalog-section" data-role-skilling-section><div class="section-heading-row" data-role-skilling-heading><div class="section-heading"><p class="kicker">Recommended learning</p><h2>Skilling for my role</h2></div></div><div class="card-grid" data-plan-paged-grid data-role-skilling-grid>${[...discoverableCourses.map((item) => card(personalizedPlanFile, item, "courses")), ...discoverablePlaylists.map((item) => card(personalizedPlanFile, item, "playlists")), ...discoverableModules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-role-skilling-empty hidden>No skilling items match your selected role.</p><nav class="catalog-pagination" aria-label="Skilling for my role pages" data-plan-pagination></nav></section>
+    <section class="catalog-section alt" data-other-role-skilling-section hidden><div class="section-heading"><p class="kicker">Explore related paths</p><h2>Skilling for other roles of interest</h2></div><div class="card-grid" data-plan-paged-grid data-other-role-skilling-grid>${[...discoverableCourses.map((item) => card(personalizedPlanFile, item, "courses")), ...discoverablePlaylists.map((item) => card(personalizedPlanFile, item, "playlists")), ...discoverableModules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-other-role-skilling-empty hidden>No skilling items match your other roles of interest.</p><nav class="catalog-pagination" aria-label="Skilling for other roles pages" data-plan-pagination></nav></section>
     <section class="catalog-section alt" data-organization-skilling-section><div class="section-heading"><p class="kicker">Available to your organization</p><h2>Skilling for my organization</h2></div><div class="card-grid" data-plan-paged-grid data-organization-skilling-grid>${[
-      ...courses.filter((item) => item.restricted_to.length || item.assigned_to.length).map((item) => card(personalizedPlanFile, item, "courses", false, "organization")),
-      ...playlists.filter((item) => item.restricted_to.length || item.assigned_to.length).map((item) => card(personalizedPlanFile, item, "playlists", false, "organization")),
-      ...modules.filter((item) => item.restricted_to.length || item.assigned_to.length).map((item) => card(personalizedPlanFile, item, "modules", false, "organization")),
+      ...discoverableCourses.filter((item) => item.restricted_to.length || item.assigned_to.length).map((item) => card(personalizedPlanFile, item, "courses", false, "organization")),
+      ...discoverablePlaylists.filter((item) => item.restricted_to.length || item.assigned_to.length).map((item) => card(personalizedPlanFile, item, "playlists", false, "organization")),
+      ...discoverableModules.filter((item) => item.restricted_to.length || item.assigned_to.length).map((item) => card(personalizedPlanFile, item, "modules", false, "organization")),
     ].join("")}</div><p class="filter-empty" data-organization-skilling-empty hidden>No skilling items are assigned to your organization.</p><nav class="catalog-pagination" aria-label="Skilling for my organization pages" data-plan-pagination></nav></section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Saved by you</p><h2>My playlists</h2></div><div class="card-grid" data-plan-paged-grid data-plan-playlist-grid></div><p class="filter-empty" data-plan-playlist-empty hidden>You have not created any personal playlists yet.</p><nav class="catalog-pagination" aria-label="My playlists pages" data-plan-pagination></nav></section>
-    ${catalogFilterDialog([...courses, ...playlists, ...modules], ["role", "experience_type", "level", "duration", "modalities"], "your skilling plan")}
+    ${catalogFilterDialog(discoverableItems, ["role", "experience_type", "level", "duration", "modalities"], "your skilling plan")}
   </div>`;
   const personalPlaylistSidebar = `<aside class="sidebar" data-sidebar><div class="sidebar-heading"><button class="icon-button menu-toggle" type="button" aria-label="Hide navigation" aria-expanded="true" data-menu-toggle>${icon("menu")}</button><span>Navigation</span></div><nav aria-label="Playlist" data-personal-playlist-navigation></nav></aside><div class="sidebar-scrim" data-menu-close></div>`;
   await writePage(personalizedPlanFile, shell({ outputFile: personalizedPlanFile, title: "My skilling plan", breadcrumbs: [{ label: "My skilling plan" }], sidebar: personalPlaylistSidebar, avatar: defaultAvatar, content: personalizedPlanContent, bodyClass: "catalog-page personalized-page", hasModuleCards: true }));
