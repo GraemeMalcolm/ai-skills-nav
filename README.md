@@ -63,7 +63,7 @@ The catalog includes a mix of module types and subject areas, enabling explorati
 
 The static proof of concept simulates sign-in by accepting a syntactically valid email address and a non-empty password. Only the email address is retained in browser `localStorage`; the password is discarded. Content with `restricted_to` metadata is visible only when the signed-in email domain matches an allowed domain. This client-side behavior demonstrates the experience and is not a security boundary for confidential content.
 
-Signed-in users can open **Profile** to view their email address and choose a primary role, other roles of interest, and preferred content modalities. Saving opens **My Skilling**, whose active filters initialize from those preferences on every visit. Learners can override the page filters while their primary-role recommendations remain fixed; other-role recommendations use selected non-primary roles, and organization recommendations use all selected roles and modalities. Personal playlists are always shown without filtering.
+Signed-in users can open **Profile** to view their email address and choose a primary role, other roles of interest, and preferred content modalities. Saving opens **My Skilling**, whose active filters initialize from those preferences on every visit. Primary-role recommendations always use the saved role, and other-role recommendations use selected non-primary roles; both apply the selected modalities but ignore other metadata filters. Organization recommendations show all skilling assigned to the signed-in domain, and personal playlists show every saved playlist; neither section is filtered by search or metadata.
 
 ### Personal playlists
 

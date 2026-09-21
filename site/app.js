@@ -1672,7 +1672,6 @@ const applyCatalogVisibility = () => {
   const isPersonalizedPage = document.body.classList.contains("personalized-page");
   const profile = isPersonalizedPage ? readProfile() : { role: "", otherRoles: [], modalities: [] };
   const selectedRole = profile.role;
-  const selectedRoles = appliedFilters.role;
   const selectedOtherRoles = appliedFilters.role.filter((role) => role !== selectedRole);
   let visibleModules = 0;
   let visiblePlaylists = 0;
@@ -1691,26 +1690,27 @@ const applyCatalogVisibility = () => {
     });
   }
   catalogCards.forEach((card) => {
-    if (isPersonalizedPage && card.closest("[data-organization-skilling-grid]")) {
+    const isOrganizationCard = isPersonalizedPage && Boolean(card.closest("[data-organization-skilling-grid]"));
+    const isOtherRoleCard = isPersonalizedPage && Boolean(card.closest("[data-other-role-skilling-grid]"));
+    if (isOrganizationCard) {
       if (isAssignedToCurrentOrganization(card) && canAccess(card.dataset.restrictedTo)) availableOrganizationItems++;
     }
-    let matches = canAccess(card.dataset.restrictedTo) && matchesSearch(card);
-    if (matches && isPersonalizedPage) {
+    let matches = canAccess(card.dataset.restrictedTo) && (isOrganizationCard || matchesSearch(card));
+    if (matches && isOrganizationCard) {
+      matches = isAssignedToCurrentOrganization(card);
+    } else if (matches && isPersonalizedPage) {
       const roles = JSON.parse(card.dataset.role || "[]");
-      if (card.closest("[data-organization-skilling-grid]")) {
-        matches = isAssignedToCurrentOrganization(card) && selectedRoles.some((role) => roles.includes(role));
-      } else {
-        matches = card.closest("[data-other-role-skilling-grid]")
-          ? selectedOtherRoles.some((role) => roles.includes(role))
-          : Boolean(selectedRole) && roles.includes(selectedRole);
-      }
+      matches = isOtherRoleCard
+        ? selectedOtherRoles.some((role) => roles.includes(role))
+        : Boolean(selectedRole) && roles.includes(selectedRole);
     }
     if (matches && !isHomePage && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
       // Parent cards inherit applicable child metadata, while experience type
       // remains the parent card's own catalog classification.
       matches = activeFilterFields.every((field) => {
-        if (isPersonalizedPage && field === "role") return true;
+        if (isOrganizationCard) return true;
+        if (isPersonalizedPage && field !== "modalities") return true;
         if (field === "modalities" && appliedModalitiesMode === "containing" && !appliedFilters[field].length) return false;
         if (!appliedFilters[field].length) return true;
         const values = JSON.parse(card.dataset[field] || "[]");
@@ -1759,7 +1759,7 @@ const applyCatalogVisibility = () => {
   if (otherRoleSkillingEmptyState) otherRoleSkillingEmptyState.hidden = visibleOtherRoleItems !== 0;
   const otherRoleSkillingSection = personalizedPlanPage?.querySelector("[data-other-role-skilling-section]");
   if (otherRoleSkillingSection) otherRoleSkillingSection.hidden = selectedOtherRoles.length === 0;
-  if (organizationSkillingSection) organizationSkillingSection.hidden = availableOrganizationItems === 0 || selectedRoles.length === 0;
+  if (organizationSkillingSection) organizationSkillingSection.hidden = availableOrganizationItems === 0;
   if (organizationSkillingEmptyState) organizationSkillingEmptyState.hidden = visibleOrganizationItems !== 0;
   if (planPlaylistEmptyState) {
     planPlaylistEmptyState.textContent = "You have not created any personal playlists yet.";
