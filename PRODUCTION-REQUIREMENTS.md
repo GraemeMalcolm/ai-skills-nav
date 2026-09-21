@@ -403,15 +403,15 @@ Search and Filter controls must appear with the result collection heading rather
 
 **FR-PROFILE-002** Profile must provide a role selector populated from published role values. A role may be offered only when at least one item for that role is public or accessible to the learner's email domain.
 
-**FR-PROFILE-003** A selected role must be persisted per learner identity. A saved role that becomes unavailable must be cleared rather than used to expose inaccessible recommendations.
+**FR-PROFILE-003** The selected primary role, other roles of interest, and preferred page modalities must be persisted per learner identity. A saved role that becomes unavailable must be cleared rather than used to expose inaccessible recommendations.
 
-**FR-PROFILE-004** Profile must provide direct access to the learner's personal playlists and personalized skilling plan.
+**FR-PROFILE-004** Profile must provide multi-select controls for other roles and preferred modalities. Selecting OK must save the profile, close the dialog, and navigate to My Skilling.
 
 **FR-PLAN-001** The personalized plan must require sign-in and a valid selected role.
 
-**FR-PLAN-002** The plan must contain a **Skilling for my role** section showing accessible courses, curated playlists, and modules assigned to the selected role.
+**FR-PLAN-002** On every visit, the plan filters must initialize from the saved primary role, other roles, and preferred modalities and visibly indicate active filters. The learner may override those filters without changing the saved profile. **Skilling for my role** must always use the saved primary role, while the other-role and organization sections must use the currently selected non-primary roles and modalities.
 
-**FR-PLAN-003** The plan must contain a **My playlists** section showing only the current learner's personal playlists.
+**FR-PLAN-003** The plan must contain a **My playlists** section showing all the current learner's personal playlists without applying plan search or metadata filters.
 
 **FR-PLAN-004** Personalized recommendations, role choices, and playlist content must all respect the same authorization rules used by catalogs and direct routes.
 

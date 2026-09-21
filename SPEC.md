@@ -455,15 +455,15 @@ Above 860 px, a playlist sidebar MUST be sticky and collapsible. At or below 860
 
 ### 7.6 Profile and personalized plan
 
-Profile MUST display the normalized signed-in email address, a role selector, a link to personal playlists, and an action to open the personalized plan. The available roles MUST be generated from content role values and limited to roles backed by unrestricted content or restricted content authorized for the current email domain. A saved role that is no longer available MUST be cleared.
+Profile MUST display the normalized signed-in email address, a primary-role selector, a multi-select for other roles of interest, and a multi-select containing all page modality values. The available roles MUST be generated from content role values and limited to roles backed by unrestricted content or restricted content authorized for the current email domain. A saved role that is no longer available MUST be cleared. Submitting Profile MUST save the preferences, close the dialog, and navigate to My Skilling.
 
-Store each user's selected role under:
+Store each user's selected role, other roles, and preferred modalities under:
 
 ```text
 ai-skills-nav:profile:<encoded-normalized-email>
 ```
 
-The personalized-plan route MUST require sign-in and a valid role. Its **Skilling for my role** section MUST show accessible courses, curated playlists, and modules whose role exactly includes the selected value. Its **My playlists** section MUST render the signed-in user's personal playlists. Profile and plan state MUST remain isolated between signed-in email addresses.
+The personalized-plan route MUST require sign-in and a valid role. On every visit, its filters MUST initialize from the profile's primary role, other roles, and preferred modalities and MUST indicate that filters are active. Learners MAY override those filters without changing their saved profile. **Skilling for my role** MUST always use the profile's primary role, even when that role is deselected in the page filter. **Skilling for other roles of interest** and **Skilling for my organization** MUST use the currently selected non-primary roles and modalities. **My playlists** MUST render every personal playlist for the signed-in user without applying search or metadata filters. Profile and plan state MUST remain isolated between signed-in email addresses.
 
 ## 8. Personal playlists
 

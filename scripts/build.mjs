@@ -561,6 +561,7 @@ function signInDialog(outputFile) {
   const logo = relativeUrl(outputFile, path.join(outputRoot, "assets", "microsoft-logo.svg"));
   const personalizedPlanUrl = relativeUrl(outputFile, path.join(outputRoot, "personalized-plan", "index.html"));
   const roleOptions = escapeHtml(JSON.stringify(profileRoleOptions));
+  const modalityOptions = escapeHtml(JSON.stringify(catalogModalities));
   return `<div class="account-links"><a class="filter-trigger" href="#profile" data-profile-open data-auth-only hidden>Profile</a><a class="filter-trigger auth-link" href="#sign-in" data-auth-open>Sign-in</a></div>
   <dialog class="filter-dialog sign-in-dialog" data-sign-in-dialog aria-labelledby="sign-in-title">
     <form data-sign-in-form novalidate>
@@ -573,7 +574,7 @@ function signInDialog(outputFile) {
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-sign-in-close>Cancel</button><button class="primary-button" type="submit">Sign-in</button></footer>
     </form>
   </dialog>
-  <dialog class="filter-dialog profile-dialog" data-profile-dialog aria-labelledby="profile-title">
+  <dialog class="filter-dialog profile-dialog" data-profile-dialog data-profile-plan-url="${escapeHtml(personalizedPlanUrl)}" aria-labelledby="profile-title">
     <form data-profile-form>
       <header class="filter-dialog-header"><div><p class="kicker">Your account</p><h2 id="profile-title">Profile</h2></div><button class="icon-button" type="button" aria-label="Close profile" data-profile-close>${icon("close")}</button></header>
       <div class="filter-dialog-body profile-fields">
@@ -584,7 +585,11 @@ function signInDialog(outputFile) {
           <button class="profile-multiselect-trigger" type="button" aria-labelledby="profile-other-roles-label profile-other-roles-summary" aria-expanded="false" data-profile-other-roles-trigger disabled><span id="profile-other-roles-summary" data-profile-other-roles-summary>Select roles</span></button>
           <div class="profile-multiselect-options" role="group" aria-labelledby="profile-other-roles-label" data-profile-other-roles-options hidden></div>
         </div>
-        <a href="${escapeHtml(personalizedPlanUrl)}" data-profile-plan hidden>Personalized skilling plan</a>
+        <div class="profile-multiselect" data-profile-modalities data-profile-modality-values="${modalityOptions}">
+          <span id="profile-modalities-label">I learn best from content that includes:</span>
+          <button class="profile-multiselect-trigger" type="button" aria-labelledby="profile-modalities-label profile-modalities-summary" aria-expanded="false" data-profile-modalities-trigger><span id="profile-modalities-summary" data-profile-modalities-summary>Select content types</span></button>
+          <div class="profile-multiselect-options" role="group" aria-labelledby="profile-modalities-label" data-profile-modalities-options hidden></div>
+        </div>
       </div>
       <footer class="filter-dialog-actions"><button class="text-button" type="button" data-profile-close>Cancel</button><button class="primary-button" type="submit" data-profile-submit disabled>OK</button></footer>
     </form>

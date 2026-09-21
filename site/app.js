@@ -137,8 +137,11 @@ const profileOtherRoles = profileDialog?.querySelector("[data-profile-other-role
 const profileOtherRolesTrigger = profileOtherRoles?.querySelector("[data-profile-other-roles-trigger]");
 const profileOtherRolesSummary = profileOtherRoles?.querySelector("[data-profile-other-roles-summary]");
 const profileOtherRolesOptions = profileOtherRoles?.querySelector("[data-profile-other-roles-options]");
+const profileModalities = profileDialog?.querySelector("[data-profile-modalities]");
+const profileModalitiesTrigger = profileModalities?.querySelector("[data-profile-modalities-trigger]");
+const profileModalitiesSummary = profileModalities?.querySelector("[data-profile-modalities-summary]");
+const profileModalitiesOptions = profileModalities?.querySelector("[data-profile-modalities-options]");
 const profileSubmit = profileDialog?.querySelector("[data-profile-submit]");
-const profilePlanLink = profileDialog?.querySelector("[data-profile-plan]");
 let pendingPersonalPlaylistTrigger = null;
 let openProfileDialog = () => { };
 const pendingPersonalPlaylistKey = "ai-skills-nav:pending-personal-playlist";
@@ -176,15 +179,16 @@ const normalizeRecentPage = (recentPage) => recentPage
 const readProfile = () => {
   try {
     const storageKey = profileStorageKey();
-    if (!storageKey) return { role: "", otherRoles: [], recentPage: null };
+    if (!storageKey) return { role: "", otherRoles: [], modalities: [], recentPage: null };
     const profile = JSON.parse(localStorage.getItem(storageKey) || "null");
     return {
       role: typeof profile?.role === "string" ? profile.role : "",
       otherRoles: Array.isArray(profile?.otherRoles) ? profile.otherRoles.filter((role) => typeof role === "string") : [],
+      modalities: Array.isArray(profile?.modalities) ? profile.modalities.filter((modality) => typeof modality === "string") : [],
       recentPage: normalizeRecentPage(profile?.recentPage),
     };
   } catch {
-    return { role: "", otherRoles: [], recentPage: null };
+    return { role: "", otherRoles: [], modalities: [], recentPage: null };
   }
 };
 const writeProfileRecord = (profile) => {
@@ -197,11 +201,17 @@ const writeProfileRecord = (profile) => {
     return false;
   }
 };
-const writeProfile = (role, otherRoles = []) => {
+const writeProfile = (role, otherRoles = [], modalities = []) => {
   const profile = readProfile();
-  return writeProfileRecord({ role, otherRoles, recentPage: profile.recentPage });
+  return writeProfileRecord({ role, otherRoles, modalities, recentPage: profile.recentPage });
 };
-const siteRootUrl = () => profilePlanLink ? new URL("../", profilePlanLink.href) : null;
+const profilePlanUrl = () => profileDialog?.dataset.profilePlanUrl
+  ? new URL(profileDialog.dataset.profilePlanUrl, window.location.href)
+  : null;
+const siteRootUrl = () => {
+  const planUrl = profilePlanUrl();
+  return planUrl ? new URL("../", planUrl) : null;
+};
 const currentSitePath = () => {
   const root = siteRootUrl();
   if (!root || root.origin !== window.location.origin || !window.location.pathname.startsWith(root.pathname)) return null;
@@ -352,8 +362,8 @@ if (authLink && signInDialog && signInForm && signInEmail && signInPassword && s
       trigger.click();
       return;
     }
-    if (readProfile().role && profilePlanLink?.href) {
-      window.location.assign(profilePlanLink.href);
+    if (readProfile().role && profilePlanUrl()) {
+      window.location.assign(profilePlanUrl());
       return;
     }
     openProfileDialog();
@@ -364,10 +374,12 @@ updateAuthOnlyElements();
 updateRestrictedElements();
 updatePageAccess();
 
-if (profileLink && profileDialog && profileForm && profileEmail && profileRole && profileOtherRoles && profileOtherRolesTrigger && profileOtherRolesSummary && profileOtherRolesOptions && profileSubmit && profilePlanLink) {
+if (profileLink && profileDialog && profileForm && profileEmail && profileRole && profileOtherRoles && profileOtherRolesTrigger && profileOtherRolesSummary && profileOtherRolesOptions && profileModalities && profileModalitiesTrigger && profileModalitiesSummary && profileModalitiesOptions && profileSubmit) {
   const isAvailableProfileRole = () => Array.from(profileRole.options)
     .some((option) => option.value && option.value === profileRole.value);
   const selectedOtherRoles = () => [...profileOtherRolesOptions.querySelectorAll('input[type="checkbox"]:checked')]
+    .map((input) => input.value);
+  const selectedModalities = () => [...profileModalitiesOptions.querySelectorAll('input[type="checkbox"]:checked')]
     .map((input) => input.value);
   const closeOtherRoles = () => {
     profileOtherRolesOptions.hidden = true;
@@ -378,6 +390,32 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     profileOtherRolesSummary.textContent = selectedCount
       ? `${selectedCount} role${selectedCount === 1 ? "" : "s"} selected`
       : "Select roles";
+  };
+  const closeModalities = () => {
+    profileModalitiesOptions.hidden = true;
+    profileModalitiesTrigger.setAttribute("aria-expanded", "false");
+  };
+  const updateModalitiesSummary = () => {
+    const selectedCount = selectedModalities().length;
+    profileModalitiesSummary.textContent = selectedCount
+      ? `${selectedCount} content type${selectedCount === 1 ? "" : "s"} selected`
+      : "Select content types";
+  };
+  const updateModalityOptions = (selectedValues) => {
+    const modalityValues = JSON.parse(profileModalities.dataset.profileModalityValues || "[]");
+    profileModalitiesOptions.replaceChildren(...modalityValues.map((modality) => {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      const text = document.createElement("span");
+      input.type = "checkbox";
+      input.value = modality;
+      input.checked = selectedValues.includes(modality);
+      text.textContent = modality;
+      label.append(input, text);
+      return label;
+    }));
+    closeModalities();
+    updateModalitiesSummary();
   };
   const updateOtherRoleOptions = (roleOptions, selectedRoles = selectedOtherRoles()) => {
     profileOtherRolesOptions.replaceChildren(...roleOptions
@@ -400,7 +438,6 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
   const updateProfileSubmit = () => {
     const hasRole = isAvailableProfileRole();
     profileSubmit.disabled = !hasRole;
-    profilePlanLink.hidden = !hasRole;
   };
   const closeProfileDialog = () => {
     profileDialog.close();
@@ -418,6 +455,7 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     profileRole.replaceChildren(new Option("Select a role", ""), ...roleOptions.map((role) => new Option(role.name, role.name)));
     profileRole.value = roleOptions.some((role) => role.name === savedRole) ? savedRole : "";
     updateOtherRoleOptions(roleOptions, profile.otherRoles);
+    updateModalityOptions(profile.modalities);
     updateProfileSubmit();
     profileDialog.showModal();
     profileRole.focus();
@@ -436,12 +474,21 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
   });
   profileOtherRolesTrigger.addEventListener("click", () => {
     const open = profileOtherRolesOptions.hidden;
+    closeModalities();
     profileOtherRolesOptions.hidden = !open;
     profileOtherRolesTrigger.setAttribute("aria-expanded", String(open));
   });
   profileOtherRolesOptions.addEventListener("change", updateOtherRolesSummary);
+  profileModalitiesTrigger.addEventListener("click", () => {
+    const open = profileModalitiesOptions.hidden;
+    closeOtherRoles();
+    profileModalitiesOptions.hidden = !open;
+    profileModalitiesTrigger.setAttribute("aria-expanded", String(open));
+  });
+  profileModalitiesOptions.addEventListener("change", updateModalitiesSummary);
   profileDialog.addEventListener("click", (event) => {
     if (!profileOtherRoles.contains(event.target)) closeOtherRoles();
+    if (!profileModalities.contains(event.target)) closeModalities();
   });
   profileOtherRoles.addEventListener("keydown", (event) => {
     if (event.key !== "Escape" || profileOtherRolesOptions.hidden) return;
@@ -449,26 +496,26 @@ if (profileLink && profileDialog && profileForm && profileEmail && profileRole &
     closeOtherRoles();
     profileOtherRolesTrigger.focus();
   });
+  profileModalities.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || profileModalitiesOptions.hidden) return;
+    event.preventDefault();
+    closeModalities();
+    profileModalitiesTrigger.focus();
+  });
   profileRole.addEventListener("change", () => {
     const roleOptions = JSON.parse(profileRole.dataset.profileRoles || "[]")
       .filter((role) => role.unrestricted || role.domains.includes(currentAuth.domain));
     updateOtherRoleOptions(roleOptions);
     updateProfileSubmit();
   });
-  profilePlanLink.addEventListener("click", (event) => {
-    if (!isAvailableProfileRole() || !writeProfile(profileRole.value, selectedOtherRoles())) {
-      event.preventDefault();
-      return;
-    }
-    updateProfileSubmit();
-    rememberPendingPersonalPlaylist();
-  });
   profileForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    if (!profileForm.reportValidity() || !isAvailableProfileRole() || !writeProfile(profileRole.value, selectedOtherRoles())) return;
+    if (!profileForm.reportValidity() || !isAvailableProfileRole() || !writeProfile(profileRole.value, selectedOtherRoles(), selectedModalities())) return;
     updateProfileSubmit();
+    rememberPendingPersonalPlaylist();
     closeProfileDialog();
-    if (document.querySelector("[data-personalized-plan]")) window.location.reload();
+    const planUrl = profilePlanUrl();
+    if (planUrl) window.location.assign(planUrl);
   });
 }
 
@@ -1481,7 +1528,7 @@ if (personalizedPlanPage && currentAuth) {
     role = "";
   }
   otherRoles = otherRoles.filter((otherRole) => otherRole !== role && accessibleRoles.has(otherRole));
-  writeProfile(role, otherRoles);
+  writeProfile(role, otherRoles, profile.modalities);
   personalizedPlanPage.querySelector("[data-other-role-skilling-section]").hidden = otherRoles.length === 0;
   const summary = personalizedPlanPage.querySelector("[data-personalized-summary]");
   summary.textContent = role
@@ -1545,6 +1592,13 @@ const readPersistedFilters = () => {
 const persistedFilterState = readPersistedFilters();
 let appliedFilters = persistedFilterState.filters;
 let appliedModalitiesMode = persistedFilterState.modalitiesMode;
+if (personalizedPlanPage && currentAuth) {
+  const profile = readProfile();
+  appliedFilters = emptyFilters();
+  appliedFilters.role = [...new Set([profile.role, ...profile.otherRoles].filter(Boolean))];
+  appliedFilters.modalities = [...new Set(profile.modalities)];
+  appliedModalitiesMode = appliedFilters.modalities.length ? "containing" : "all";
+}
 let searchTerms = [];
 let searchActive = false;
 const updateFilterCounts = () => {
@@ -1616,9 +1670,9 @@ const applyCatalogVisibility = () => {
   const homeVisible = { courses: 0, playlists: 0, modules: 0 };
   const isHomePage = document.body.classList.contains("home-page");
   const isPersonalizedPage = document.body.classList.contains("personalized-page");
-  const profile = isPersonalizedPage ? readProfile() : { role: "", otherRoles: [] };
+  const profile = isPersonalizedPage ? readProfile() : { role: "", otherRoles: [], modalities: [] };
   const selectedRole = profile.role;
-  const selectedOtherRoles = profile.otherRoles;
+  const selectedOtherRoles = appliedFilters.role.filter((role) => role !== selectedRole);
   let visibleModules = 0;
   let visiblePlaylists = 0;
   let visibleCourses = 0;
@@ -1641,10 +1695,10 @@ const applyCatalogVisibility = () => {
     }
     let matches = canAccess(card.dataset.restrictedTo) && matchesSearch(card);
     if (matches && isPersonalizedPage) {
+      const roles = JSON.parse(card.dataset.role || "[]");
       if (card.closest("[data-organization-skilling-grid]")) {
-        matches = isAssignedToCurrentOrganization(card);
+        matches = isAssignedToCurrentOrganization(card) && selectedOtherRoles.some((role) => roles.includes(role));
       } else {
-        const roles = JSON.parse(card.dataset.role || "[]");
         matches = card.closest("[data-other-role-skilling-grid]")
           ? selectedOtherRoles.some((role) => roles.includes(role))
           : Boolean(selectedRole) && roles.includes(selectedRole);
@@ -1655,6 +1709,7 @@ const applyCatalogVisibility = () => {
       // Parent cards inherit applicable child metadata, while experience type
       // remains the parent card's own catalog classification.
       matches = activeFilterFields.every((field) => {
+        if (isPersonalizedPage && field === "role") return true;
         if (field === "modalities" && appliedModalitiesMode === "containing" && !appliedFilters[field].length) return false;
         if (!appliedFilters[field].length) return true;
         const values = JSON.parse(card.dataset[field] || "[]");
@@ -1690,13 +1745,10 @@ const applyCatalogVisibility = () => {
     if (matches && card.closest("[data-organization-skilling-grid]")) visibleOrganizationItems++;
     if (matches) visibleCatalogItems++;
   });
-  if (isPersonalizedPage) {
-    personalizedPlanPage.querySelectorAll("[data-plan-playlist-grid] > .content-card").forEach((card) => {
-      const matches = matchesCatalogTerms(card, searchTerms);
-      card.hidden = !matches;
-      if (matches) visiblePlanPlaylists++;
-    });
-  }
+  if (isPersonalizedPage) personalizedPlanPage.querySelectorAll("[data-plan-playlist-grid] > .content-card").forEach((card) => {
+    card.hidden = false;
+    visiblePlanPlaylists++;
+  });
   renderCatalogPagination(matchingPagedCards);
   if (moduleEmptyState) moduleEmptyState.hidden = visibleModules !== 0;
   if (playlistEmptyState) playlistEmptyState.hidden = visiblePlaylists !== 0;
@@ -1704,12 +1756,12 @@ const applyCatalogVisibility = () => {
   if (catalogEmptyState) catalogEmptyState.hidden = visibleCatalogItems !== 0;
   if (roleSkillingEmptyState) roleSkillingEmptyState.hidden = visibleRoleItems !== 0;
   if (otherRoleSkillingEmptyState) otherRoleSkillingEmptyState.hidden = visibleOtherRoleItems !== 0;
-  if (organizationSkillingSection) organizationSkillingSection.hidden = availableOrganizationItems === 0;
+  const otherRoleSkillingSection = personalizedPlanPage?.querySelector("[data-other-role-skilling-section]");
+  if (otherRoleSkillingSection) otherRoleSkillingSection.hidden = selectedOtherRoles.length === 0;
+  if (organizationSkillingSection) organizationSkillingSection.hidden = availableOrganizationItems === 0 || selectedOtherRoles.length === 0;
   if (organizationSkillingEmptyState) organizationSkillingEmptyState.hidden = visibleOrganizationItems !== 0;
   if (planPlaylistEmptyState) {
-    planPlaylistEmptyState.textContent = searchActive
-      ? "No personal playlists match your search."
-      : "You have not created any personal playlists yet.";
+    planPlaylistEmptyState.textContent = "You have not created any personal playlists yet.";
     planPlaylistEmptyState.hidden = visiblePlanPlaylists !== 0;
   }
   if (isPersonalizedPage) paginatePlanGrids();
