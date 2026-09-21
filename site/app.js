@@ -1672,6 +1672,7 @@ const applyCatalogVisibility = () => {
   const isPersonalizedPage = document.body.classList.contains("personalized-page");
   const profile = isPersonalizedPage ? readProfile() : { role: "", otherRoles: [], modalities: [] };
   const selectedRole = profile.role;
+  const selectedRoles = appliedFilters.role;
   const selectedOtherRoles = appliedFilters.role.filter((role) => role !== selectedRole);
   let visibleModules = 0;
   let visiblePlaylists = 0;
@@ -1697,7 +1698,7 @@ const applyCatalogVisibility = () => {
     if (matches && isPersonalizedPage) {
       const roles = JSON.parse(card.dataset.role || "[]");
       if (card.closest("[data-organization-skilling-grid]")) {
-        matches = isAssignedToCurrentOrganization(card) && selectedOtherRoles.some((role) => roles.includes(role));
+        matches = isAssignedToCurrentOrganization(card) && selectedRoles.some((role) => roles.includes(role));
       } else {
         matches = card.closest("[data-other-role-skilling-grid]")
           ? selectedOtherRoles.some((role) => roles.includes(role))
@@ -1758,7 +1759,7 @@ const applyCatalogVisibility = () => {
   if (otherRoleSkillingEmptyState) otherRoleSkillingEmptyState.hidden = visibleOtherRoleItems !== 0;
   const otherRoleSkillingSection = personalizedPlanPage?.querySelector("[data-other-role-skilling-section]");
   if (otherRoleSkillingSection) otherRoleSkillingSection.hidden = selectedOtherRoles.length === 0;
-  if (organizationSkillingSection) organizationSkillingSection.hidden = availableOrganizationItems === 0 || selectedOtherRoles.length === 0;
+  if (organizationSkillingSection) organizationSkillingSection.hidden = availableOrganizationItems === 0 || selectedRoles.length === 0;
   if (organizationSkillingEmptyState) organizationSkillingEmptyState.hidden = visibleOrganizationItems !== 0;
   if (planPlaylistEmptyState) {
     planPlaylistEmptyState.textContent = "You have not created any personal playlists yet.";
