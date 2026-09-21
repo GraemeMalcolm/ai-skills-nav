@@ -95,6 +95,7 @@ learning_outcomes:
   - Learner outcome
 restricted_to:
   - example.com
+hidden: true
 avatar: optional-avatar-slug
 playlists:
   - playlist-slug
@@ -110,6 +111,7 @@ Rules:
 - For a course with one playlist, `learning_outcomes` MUST contain only that playlist's overall objective.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
+- `hidden` is optional. When `true`, the course MUST be excluded from discovery surfaces while its direct route and appearances inside parent items remain available.
 - `credentials` is an optional array of credential names. The detail page MUST list every credential in metadata order, or show “No associated credential is specified.” when omitted or empty.
 - Playlist order MUST follow the YAML array.
 
@@ -133,6 +135,7 @@ learning_outcomes:
   - Learner outcome
 restricted_to:
   - example.com
+hidden: true
 avatar: optional-avatar-slug
 modules:
   - module-slug
@@ -147,6 +150,7 @@ Rules:
 - For a playlist with one module, `learning_outcomes` MUST contain only that module's overall objective.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
+- `hidden` is optional. When `true`, the playlist MUST be excluded from discovery surfaces while its direct route and appearances inside parent items remain available.
 - Module order MUST follow the YAML array.
 
 ### 3.3 Module schema
@@ -169,6 +173,7 @@ learning_outcomes:
   - Learner outcome
 restricted_to:
   - example.com
+hidden: true
 avatar: optional-avatar-slug
 pages:
   - 01-introduction.md
@@ -189,6 +194,7 @@ Rules:
 - Page order MUST follow the YAML array.
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
+- `hidden` is optional. When `true`, the module MUST be excluded from discovery surfaces while its direct route and appearances inside parent items remain available.
 - Page modalities are derived from Markdown directives in the effective page content after recursively resolving `[!INCLUDE]` tags: `[!VIDEO]` produces `Video`, `[!LAB_STEPS]` produces `Lab`, `[!LAB_HOST]` produces `Hosted Lab`, and `[!SIMULATION]` produces `Simulation`. Module modalities are the discrete union of their page modalities.
 
 Course, playlist, and module home pages MUST list prerequisites and learning outcomes. When an item has multiple learning outcomes, the final value MUST be bold and prefixed with `Overall outcome:`. A single learning objective MUST be displayed without that prefix.
