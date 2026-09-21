@@ -1,0 +1,16 @@
+title: Use Copilot Chat
+description: Use Copilot chat effectively with effective prompts.
+level: 100
+duration: 20 minutes
+role:
+  - Business User
+prerequisites:
+  - Basic familiarity with Microsoft Copilot and access to Microsoft 365
+  - Familiarity with Microsoft 365 applications and basic generative AI concepts
+learning_outcomes:
+  - Use work data and specialized agents in Copilot Chat.
+  - Create effective prompts using context, goals, sources, and expectations.
+  - Generate useful responses in Copilot Chat.
+modules:
+  - copilot-chat
+  - prompts

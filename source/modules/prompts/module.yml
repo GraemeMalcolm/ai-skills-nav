@@ -1,0 +1,14 @@
+title: Write prompts that get results
+description: Write effective Copilot prompts by defining clear goals, context, sources, and expectations.
+level: 100
+duration: 10 minutes
+hidden: true
+role:
+  - Business User
+avatar: matt
+prerequisites:
+  - Familiarity with Microsoft 365 apps and basic generative AI concepts
+learning_outcomes:
+  - Create effective prompts using context, goals, sources, and expectations.
+pages:
+  - 01-prompts.md

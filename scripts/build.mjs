@@ -717,10 +717,23 @@ function accessData(item, inherited = []) {
   return ` data-access-domains="${escapeHtml(JSON.stringify(combinedRestrictions(inherited, item.restricted_to)))}"`;
 }
 
-function thumbnail(outputFile, item, type) {
+function thumbnailTarget(item, type) {
   const source = path.join(item.directory, "thumbnail.png");
-  const target = path.join(outputRoot, "content", type, item.slug, "thumbnail.png");
-  return `<img src="${relativeUrl(outputFile, target)}" alt="" loading="lazy">`;
+  if (existsSync(source)) return path.join(outputRoot, "content", type, item.slug, "thumbnail.png");
+
+  const experienceType = String(item.experience_type || "").toLocaleLowerCase();
+  const fallback = type === "credentials"
+    ? "credential.png"
+    : type === "modules"
+      ? experienceType === "training module" ? "ms-module.png" : "nav-module.png"
+      : type === "playlists"
+        ? experienceType === "learning path" ? "ms-playlist.png" : "nav-playlist.png"
+        : experienceType === "microsoft official curriculum" ? "ms-course.png" : "nav-course.png";
+  return path.join(outputRoot, "assets", fallback);
+}
+
+function thumbnail(outputFile, item, type) {
+  return `<img src="${relativeUrl(outputFile, thumbnailTarget(item, type))}" alt="" loading="lazy">`;
 }
 
 function experienceTypeName(item, type) {
@@ -1468,7 +1481,7 @@ async function build() {
       name: page.title,
       path: `modules/${module.slug}/pages/${page.slug}/index.html`,
     })),
-    thumbnail: relativeUrl(personalizedPlanFile, path.join(outputRoot, "content", "modules", module.slug, "thumbnail.png")),
+    thumbnail: relativeUrl(personalizedPlanFile, thumbnailTarget(module, "modules")),
   }));
   const personalPlaylistDetail = `<div class="page-actions">${shareTrigger(true, "filter-trigger")}</div>${shareDialog(true, false)}
   <div data-personal-playlists data-auth-only data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}" hidden></div>
@@ -1621,6 +1634,8 @@ async function build() {
     copyFile(path.join(root, "site", "moderation.txt"), path.join(outputRoot, "assets", "moderation.txt")),
     copyFile(path.join(root, "site", "media", "microsoft-logo.svg"), path.join(outputRoot, "assets", "microsoft-logo.svg")),
     copyFile(path.join(root, "site", "media", "playlist.png"), path.join(outputRoot, "assets", "playlist.png")),
+    ...["ms-module.png", "nav-module.png", "ms-playlist.png", "nav-playlist.png", "ms-course.png", "nav-course.png", "credential.png"]
+      .map((file) => copyFile(path.join(root, "site", "media", file), path.join(outputRoot, "assets", file))),
     copyFile(path.join(root, "site", "media", "favicon.ico"), path.join(outputRoot, "favicon.ico")),
     cp(path.join(root, "templates", "media"), path.join(outputRoot, "content", "templates", "media"), { recursive: true }),
     cp(path.join(root, "skillable"), path.join(outputRoot, "labhost"), { recursive: true }),

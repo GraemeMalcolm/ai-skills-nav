@@ -1,0 +1,15 @@
+title: Understand Microsoft Copilot Chat
+description: Understand how work and web grounding determine the sources Copilot Chat uses in its responses.s.
+level: 100
+duration: 10 minutes
+experience_type: Training module
+hidden: true
+role:
+  - Business User
+avatar: matt
+prerequisites:
+  - Basic familiarity with Microsoft Copilot and access to Microsoft 365
+learning_outcomes:
+  - Use work data and specialized agents in Copilot Chat.
+pages:
+  - 01-copilot-chat.md
