@@ -1484,7 +1484,7 @@ async function build() {
     thumbnail: relativeUrl(personalizedPlanFile, thumbnailTarget(module, "modules")),
   }));
   const personalPlaylistDetail = `<div class="page-actions">${shareTrigger(true, "filter-trigger")}</div>${shareDialog(true, false)}
-  <div data-personal-playlists data-auth-only data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}" hidden></div>
+  <div data-personal-playlists data-auth-only data-module-catalog="${escapeHtml(JSON.stringify(moduleCatalog))}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "my-playlist.png"))}" hidden></div>
   <dialog class="filter-dialog personal-playlist-dialog" data-new-personal-playlist-dialog aria-labelledby="new-personal-playlist-title">
     <form data-new-personal-playlist-form>
       <header class="filter-dialog-header"><div><p class="kicker">Personal collection</p><h2 id="new-personal-playlist-title">New personal playlist</h2></div><button class="icon-button" type="button" aria-label="Close" data-new-personal-playlist-close>${icon("close")}</button></header>
@@ -1502,7 +1502,7 @@ async function build() {
   const personalizedPlanSearch = catalogSearch("personalized-plan-search-input", "Search my skilling plan", "Search my skilling plan");
   const personalizedPlanTools = `<div class="catalog-section-tools personalized-plan-tools">${personalizedPlanSearch}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
   const continueTemplates = discoverableModules.map((module) => `<template data-continue-module-template data-module-slug="${escapeHtml(module.slug)}">${card(personalizedPlanFile, module, "modules", false, "continue")}</template>`).join("");
-  const personalizedPlanContent = `${personalPlaylistDetail}<div data-personalized-plan data-auth-only data-playlists-url="${relativeUrl(personalizedPlanFile, personalizedPlanFile)}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "playlist.png"))}">
+  const personalizedPlanContent = `${personalPlaylistDetail}<div data-personalized-plan data-auth-only data-playlists-url="${relativeUrl(personalizedPlanFile, personalizedPlanFile)}" data-playlist-thumbnail="${relativeUrl(personalizedPlanFile, path.join(outputRoot, "assets", "my-playlist.png"))}">
     <section class="catalog-intro"><p class="kicker">Personalized learning</p><h1>My skilling plan</h1><p data-personalized-summary>Your recommendations are based on the role selected in your profile.</p></section>
     <section class="catalog-section" data-continue-section hidden><div class="section-heading-row"><div class="section-heading"><p class="kicker">Resume learning</p><h2>Continue where you left off</h2></div>${personalizedPlanTools}</div><div class="card-grid" data-continue-grid></div>${continueTemplates}</section>
     <section class="catalog-section" data-role-skilling-section><div class="section-heading-row" data-role-skilling-heading><div class="section-heading"><p class="kicker">Recommended learning</p><h2>Skilling for my role</h2></div></div><div class="card-grid" data-plan-paged-grid data-role-skilling-grid>${[...discoverableCourses.map((item) => card(personalizedPlanFile, item, "courses")), ...discoverablePlaylists.map((item) => card(personalizedPlanFile, item, "playlists")), ...discoverableModules.map((item) => card(personalizedPlanFile, item, "modules"))].join("")}</div><p class="filter-empty" data-role-skilling-empty hidden>No skilling items match your selected role.</p><nav class="catalog-pagination" aria-label="Skilling for my role pages" data-plan-pagination></nav></section>
@@ -1633,7 +1633,7 @@ async function build() {
     copyFile(path.join(root, "site", "app.js"), path.join(outputRoot, "assets", "app.js")),
     copyFile(path.join(root, "site", "moderation.txt"), path.join(outputRoot, "assets", "moderation.txt")),
     copyFile(path.join(root, "site", "media", "microsoft-logo.svg"), path.join(outputRoot, "assets", "microsoft-logo.svg")),
-    copyFile(path.join(root, "site", "media", "playlist.png"), path.join(outputRoot, "assets", "playlist.png")),
+    copyFile(path.join(root, "site", "media", "my-playlist.png"), path.join(outputRoot, "assets", "my-playlist.png")),
     ...["ms-module.png", "nav-module.png", "ms-playlist.png", "nav-playlist.png", "ms-course.png", "nav-course.png", "credential.png"]
       .map((file) => copyFile(path.join(root, "site", "media", file), path.join(outputRoot, "assets", file))),
     copyFile(path.join(root, "site", "media", "favicon.ico"), path.join(outputRoot, "favicon.ico")),
