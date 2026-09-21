@@ -242,7 +242,7 @@ Module metadata uses the following source contract:
 | `pages` | Ordered list of page entries | Yes | Defines the module structure, overview page list, sidebar, and Previous/Next sequence. At least one entry is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Module cards, module overview, and personal-playlist management. |
 
-Page modalities are derived at build time from Markdown directives in the effective page content after recursively resolving `[!INCLUDE]` tags: `[!VIDEO]` produces `Video`, `[!LAB_STEPS]` produces `Lab`, `[!LAB_HOST]` produces `Hosted Lab`, and `[!SIMULATION]` produces `Simulation`. Each page record in `catalog.json` contains its derived modalities, and each module contains the unique union of its page modalities for display and direct or transitive filtering.
+Page modalities are derived at build time from the effective Markdown content after recursively resolving `[!INCLUDE]` tags. `[!VIDEO]` produces `Video content`; `[!LAB_STEPS]`, `[!LAB_HOST]`, or `[!SIMULATION]` produces `Hands-on interactivity`; a `::: knowledge-check` block produces `Quiz or assessment`; and `[!PDF]` or standard Markdown outside those custom constructs produces `Static text and graphics`. A page may have multiple modalities. Each page record in `catalog.json` contains its derived modalities, and each module contains the unique union of its page modalities for display and direct or transitive filtering.
 
 A page entry may be a Markdown filename or an object. The object form supports `file` as the required source reference plus optional `title` and `description` values for navigation and overview presentation. These overrides do not replace page front matter or alter the canonical page body.
 

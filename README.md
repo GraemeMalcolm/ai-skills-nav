@@ -52,7 +52,7 @@ The catalog includes a mix of module types and subject areas, enabling explorati
 - The home banner provides an animated natural-language search prompt across all catalog items; the five example prompts run once per page load and settle on “Build the skills you need.”
 - Dedicated catalog pages place Search and Filter controls above the card grid. Search clear actions appear beneath the right edge of their search fields.
 - Keyword search covers titles, descriptions, topics, course numbers, and experience types where applicable, using case-insensitive AND matching after conversational stop words are removed.
-- Filters cover role, experience type, level, and modality. Page modalities are derived from their effective content after recursive includes; module modalities are derived from their pages, and playlist and course modalities are derived from their modules.
+- Filters cover role, experience type, level, and modality. Effective page content is classified as video content, hands-on interactivity, quiz or assessment, and static text and graphics after recursive includes; module modalities are derived from their pages, and playlist and course modalities are derived from their modules.
 - Catalog cards expose descriptions as tooltips.
 - Breadcrumbs provide context throughout the generated site.
 - Curated playlists include a collapsible navigation pane listing their modules in the defined order.

@@ -453,10 +453,11 @@ function icon(name) {
     plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
     star: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z"/></svg>',
     video: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>',
-    lab: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3M8 14h8"/></svg>',
+    lab: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="11" rx="1"/><path d="M9 17h6M12 14v3M5 20h14l-1-3H6zM8 18.5h8"/></svg>',
     simulation: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h4v4H7zM15 8h2M15 12h2M7 16h10"/></svg>',
     knowledge: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 3.2 2.4c-.8.3-.8 1.1-.8 1.6M12 17h.01"/></svg>',
     document: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6zM14 3v4h4M9 11h6M9 15h6"/></svg>',
+    blankDocument: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6zM14 3v4h4"/></svg>',
   };
   return icons[name];
 }
@@ -887,11 +888,11 @@ function overviewContents(outputFile, items, type, heading, targetForItem) {
 
 function pageOverviewContents(outputFile, pages, heading, targetForPage) {
   const pageFormat = (page) => {
-    if (page.modalities.includes("Video")) return { icon: "video", label: "Video" };
-    if (page.modalities.includes("Lab") || page.modalities.includes("Hosted Lab")) return { icon: "lab", label: "Lab" };
-    if (page.modalities.includes("Simulation")) return { icon: "simulation", label: "Simulation" };
-    if (page.hasKnowledgeCheck) return { icon: "knowledge", label: "Knowledge check" };
-    return { icon: "document", label: "Static text and graphics" };
+    if (page.modalities.includes("Video content")) return { icon: "video", label: "Video content" };
+    if (page.modalities.includes("Hands-on interactivity")) return { icon: "lab", label: "Hands-on interactivity" };
+    if (page.modalities.includes("Quiz or assessment")) return { icon: "knowledge", label: "Quiz or assessment" };
+    if (page.modalities.includes("Static text and graphics")) return { icon: "document", label: "Static text and graphics" };
+    return { icon: "blankDocument", label: "No modality" };
   };
   return `<section class="overview-contents" aria-labelledby="module-pages-title">
     <h2 id="module-pages-title">${escapeHtml(heading)}</h2>
@@ -1036,9 +1037,7 @@ async function getModulePages(module) {
       slug: pageSlug(file),
       title: (typeof entry === "object" && entry.title) || parsed.data.title || pageSlug(file),
       description: (typeof entry === "object" && entry.description) || parsed.data.description || "",
-      modalities: catalogModalities
-        .filter(({ type }) => catalogLinks[type].length)
-        .map(({ name }) => name),
+      modalities: derivePageModalities(effectiveBody, catalogLinks),
       hasKnowledgeCheck: /^::: knowledge-check\b/im.test(effectiveBody),
       catalogLinks,
     };
@@ -1048,10 +1047,10 @@ async function getModulePages(module) {
 const catalogFilterFields = ["role", "experience_type", "credential_type", "level", "modalities", "duration"];
 const catalogLinkTypes = ["video", "lab_steps", "lab_host", "simulation"];
 const catalogModalities = [
-  { type: "video", name: "Video" },
-  { type: "lab_steps", name: "Lab" },
-  { type: "lab_host", name: "Hosted Lab" },
-  { type: "simulation", name: "Simulation" },
+  "Video content",
+  "Hands-on interactivity",
+  "Quiz or assessment",
+  "Static text and graphics",
 ];
 
 function extractCatalogLinks(markdown) {
@@ -1064,6 +1063,28 @@ function extractCatalogLinks(markdown) {
     links[type].push((match[2] || match[4]).trim());
   }
   return links;
+}
+
+function derivePageModalities(markdown, catalogLinks) {
+  const modalities = [];
+  if (catalogLinks.video.length) modalities.push("Video content");
+  if (catalogLinks.lab_steps.length || catalogLinks.lab_host.length || catalogLinks.simulation.length) {
+    modalities.push("Hands-on interactivity");
+  }
+  if (/^::: knowledge-check\b/im.test(markdown)) modalities.push("Quiz or assessment");
+
+  const standardContent = markdown
+    .replace(/^::: knowledge-check\b[^\r\n]*\r?\n[\s\S]*?^::: end-knowledge-check\s*$/gim, "")
+    .replace(/^\s*\[!VIDEO\s*:?\s*https?:\/\/[^\]\s]+\]\s*$/gim, "")
+    .replace(/^\s*\[!PDF\[\]\([^)]+\)\]\s*$/gim, "")
+    .replace(/^\s*\[!(?:LAB_STEPS|LAB_HOST|SIMULATION)(?:\[[^\]]*\])?\([^)]+\)\]\s*$/gim, "")
+    .replace(/^\s*\[!(?:LAB_STEPS|LAB_HOST|SIMULATION)\s+[^\]]+\]\s*$/gim, "")
+    .replace(/^::: (?:zone(?:-end)?\b.*|end-knowledge-check)\s*$/gim, "")
+    .trim();
+  if (/\[!PDF\[\]\([^)]+\)\]/i.test(markdown) || standardContent) {
+    modalities.push("Static text and graphics");
+  }
+  return modalities;
 }
 
 function buildCatalogLinks(modules) {
