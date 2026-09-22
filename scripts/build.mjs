@@ -781,22 +781,33 @@ function card(outputFile, item, type, defaultHidden = false, instance = "") {
   </div>`;
 }
 
-function homepageItems(items, recentCount, ratingCount) {
+function homepageItems(items) {
   const byTitle = (left, right) => left.title.localeCompare(right.title);
-  const recent = [...items]
-    .sort((left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0) || byTitle(left, right))
-    .slice(0, recentCount);
-  const selected = new Set(recent);
-  const rated = [...items]
-    .filter((item) => !selected.has(item))
-    .sort((left, right) => right.rating - left.rating
+  const byRecent = (left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0) || byTitle(left, right);
+  const byRating = (left, right) => right.rating - left.rating
       || Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0)
-      || byTitle(left, right))
-    .slice(0, ratingCount);
-  rated.forEach((item) => selected.add(item));
+      || byTitle(left, right);
+  const selected = new Set();
+  const select = (experienceType, recentCount, ratingCount) => {
+    const candidates = items.filter((item) => item.experience_type?.toLocaleLowerCase() === experienceType);
+    [...candidates]
+      .filter((item) => !selected.has(item))
+      .sort(byRecent)
+      .slice(0, recentCount)
+      .forEach((item) => selected.add(item));
+    [...candidates]
+      .filter((item) => !selected.has(item))
+      .sort(byRating)
+      .slice(0, ratingCount)
+      .forEach((item) => selected.add(item));
+  };
+  select("training module", 2, 1);
+  select("video", 1, 1);
+  select("hands-on lab", 1, 1);
+  select("exam prep", 1, 0);
   return {
     featuredCount: selected.size,
-    items: [...recent, ...rated, ...items.filter((item) => !selected.has(item))],
+    items: [...selected, ...items.filter((item) => !selected.has(item))],
   };
 }
 
@@ -1425,7 +1436,7 @@ async function build() {
   ]));
   const spotlightPlaylists = [...discoverablePlaylists]
     .sort((left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0) || left.title.localeCompare(right.title));
-  const homeModules = homepageItems(discoverableModules, 4, 4);
+  const homeModules = homepageItems(discoverableModules);
   const homeContent = `<section class="home-hero"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p class="home-hero-summary">Choose a curated path or jump straight into a learning experience.</p>
       <form class="hero-search" role="search" data-site-search data-catalog-url="${relativeUrl(homeFile, catalogFile)}" data-animated-search data-search-hints="${heroSearchHints}">
         <label for="hero-search-input">What do you want to learn how to do?</label>
