@@ -5,6 +5,7 @@ duration: 30 minutes
 experience_type: Video
 role:
   - Business Leader
+  - Business User
 prerequisites:
   - Understanding of corporate structures and decision-making processes, and a conceptual awareness of agentic AI.
 learning_outcomes:
