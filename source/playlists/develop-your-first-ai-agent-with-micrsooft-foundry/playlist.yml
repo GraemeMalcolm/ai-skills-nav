@@ -1,0 +1,15 @@
+title: Develop your first Ai agent with Micrsooft Foundry
+description: Preview agent development, then learn to create, configure, test, deploy, and consume an AI agent with Microsoft Foundry.
+level: 200
+duration: 60 minutes
+role:
+  - Developer
+  - Solution Architect
+prerequisites:
+  - Familiarity with basic AI concepts and programming
+learning_outcomes:
+  - Get ready to develop your first agent using Microsoft Foundry.
+  - Create, configure, test, deploy, and consume an AI agent with Microsoft Foundry.
+modules:
+  - sneak-peek-first-agent
+  - develop-first-agent
