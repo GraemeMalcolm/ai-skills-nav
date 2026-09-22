@@ -7,7 +7,6 @@ role:
   - Data Scientist
   - Data Analyst
   - Data Engineer
-  - Developer
 avatar: alex
 prerequisites:
   - Data engineering fundamentals and familiarity with Apache Spark concepts
