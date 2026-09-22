@@ -6,6 +6,7 @@ role:
   - Developer
   - Solution Architect
 prerequisites:
+  - A desire to learn how to build AI agents with Microsoft Foundry
   - Familiarity with basic AI concepts and programming
 learning_outcomes:
   - Get ready to develop your first agent using Microsoft Foundry.
