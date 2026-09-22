@@ -4,8 +4,8 @@ level: 200
 duration: 40 minutes
 experience_type: Training module
 role:
-  - Developer
   - Data Scientist
+  - Data Analyst
   - Data Engineer
 avatar: alex
 prerequisites:
