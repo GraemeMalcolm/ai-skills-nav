@@ -9,7 +9,6 @@ role:
   - Student
   - Developer
   - Solution Architect
-  - Administrator
 prerequisites:
   - General awareness of current Microsoft technology and an interest in Microsoft Build announcements
 learning_outcomes:

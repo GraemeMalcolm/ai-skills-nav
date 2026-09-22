@@ -5,7 +5,6 @@ duration: 30 minutes
 experience_type: Hands-on lab
 role:
   - Business User
-avatar: matt
 prerequisites:
   - Access to Microsoft Copilot and basic familiarity with AI assistants
 learning_outcomes:

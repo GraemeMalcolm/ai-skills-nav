@@ -5,6 +5,7 @@ duration: 70 minutes
 experience_type: Learning Path
 role:
   - Business User
+  - Student
 prerequisites:
   - Familiarity with Microsoft 365 applications and basic generative AI concepts
 learning_outcomes:

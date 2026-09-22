@@ -16,7 +16,6 @@ learning_outcomes:
   - Explore computer vision capabilities and use cases.
   - Explore information extraction from documents and unstructured content.
   - Build and test a retrieval-augmented generation experience.
-  - Apply core AI workload concepts.
 pages:
   - 01-ai-workloads.md
   - 02-generative-ai.md

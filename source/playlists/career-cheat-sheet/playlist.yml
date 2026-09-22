@@ -4,7 +4,6 @@ level: 100
 duration: 30 minutes
 role:
   - Business User
-  - Business Leader
   - Student
 prerequisites:
   - An interest in career development and willingness to reflect on professional strengths.
