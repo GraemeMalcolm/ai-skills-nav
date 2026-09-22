@@ -1,0 +1,32 @@
+title: Introduction to retrieval-augmented generation concepts
+description: >-
+  Retrieval-augmented generation (RAG) helps generative AI applications produce responses that are grounded in relevant
+  information. In this module, you'll explore how a RAG solution prepares, retrieves, and uses data to generate answers.
+level: 100
+duration: 34 minutes
+experience_type: Training module
+topics:
+  - Microsoft Foundry
+  - Artificial Intelligence
+role:
+  - Developer
+  - Solution Architect
+  - Student
+avatar: anton
+prerequisites:
+  - Familiarity with generative AI concepts and terminology.
+  - A basic understanding of large language models (LLMs) and prompts.
+learning_outcomes:
+  - Explain the purpose and benefits of retrieval-augmented generation (RAG).
+  - Describe how data is prepared for retrieval.
+  - Describe how a RAG solution retrieves relevant information and uses it to generate a grounded response.
+  - Identify considerations for evaluating and improving a RAG solution.
+pages:
+  - 1-introduction.md
+  - 2-understand-rag.md
+  - 3-prepare-data.md
+  - 4-retrieve-generate.md
+  - 5-evaluate-rag.md
+  - 6-exercise.md
+  - 7-knowledge-check.md
+  - 8-summary.md

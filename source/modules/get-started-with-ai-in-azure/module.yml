@@ -1,0 +1,26 @@
+title: Get started with AI in Azure
+description: Learn how Microsoft enables you to build AI with the latest technology, securely, and at scale.
+level: 100
+duration: 56 minutes
+experience_type: Training module
+topics:
+  - Microsoft Foundry
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+avatar: anton
+prerequisites:
+  - Ability to navigate the Azure portal
+learning_outcomes:
+  - Get started with AI in Azure
+pages:
+  - 1-introduction.md
+  - 2-what-is-azure.md
+  - 3-develop-ai-apps.md
+  - 4-microsoft-foundry.md
+  - 5-endpoints.md
+  - 6-exercise.md
+  - 7-knowledge-check.md
+  - 8-summary.md

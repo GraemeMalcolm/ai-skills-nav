@@ -1,0 +1,31 @@
+title: Get started with Microsoft Foundry IQ
+description: >-
+  Learn how Microsoft Foundry IQ helps AI agents retrieve relevant information from enterprise data and generate
+  grounded, citation-backed responses.
+level: 100
+duration: 38 minutes
+experience_type: Training module
+topics:
+  - Microsoft Foundry
+  - Artificial Intelligence
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+avatar: anton
+prerequisites:
+  - A basic understanding of generative AI, AI agents, and retrieval-augmented generation (RAG).
+learning_outcomes:
+  - Describe how Foundry IQ provides agents with a managed, reusable knowledge layer.
+  - Explain how knowledge bases organize indexed and remote knowledge sources.
+  - Describe how agentic retrieval finds and returns relevant, cited information.
+  - Explain how an agent connects to a knowledge base and uses retrieved information.
+pages:
+  - 1-introduction.md
+  - 2-explore-foundry-iq.md
+  - 3-knowledge-bases.md
+  - 4-connect-agents.md
+  - 5-exercise.md
+  - 6-knowledge-check.md
+  - 7-summary.md

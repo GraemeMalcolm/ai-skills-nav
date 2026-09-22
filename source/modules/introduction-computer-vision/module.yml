@@ -1,0 +1,32 @@
+title: Introduction to computer vision concepts
+description: Introduction to computer vision concepts
+level: 100
+duration: 34 minutes
+experience_type: Training module
+topics:
+  - Microsoft Foundry
+  - Artificial Intelligence
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+avatar: anton
+prerequisites:
+  - A basic understanding of machine learning concepts
+learning_outcomes:
+  - Identify different types of computer vision tasks
+  - Describe how filters are used in image analysis
+  - Describe the main features of a convolutional neural network (CNN)
+  - Describe the main features of a vision transformer (ViT)
+  - Describe how generative AI can be used to create images
+pages:
+  - 1-introduction.md
+  - 2-overview.md
+  - 3-understand-image-processing.md
+  - 4-computer-vision-models.md
+  - 5-modern-vision-models.md
+  - 5a-generate-images.md
+  - 5b-exercise.md
+  - 6-knowledge-check.md
+  - 7-summary.md

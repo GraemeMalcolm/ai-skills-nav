@@ -6,7 +6,7 @@ level: 200
 duration: 30 minutes
 experience_type: Training module
 role:
-  - AI Engineer
+  - Developer
 avatar: anton
 prerequisites:
   - Conceptual knowledge of generative AI.

@@ -1,0 +1,30 @@
+title: Introduction to AI speech concepts
+description: >-
+  Imagine AI apps and agents that you can talk to. Explore the concepts behind AI speech, including speech recognition
+  and synthesis.
+level: 100
+duration: 28 minutes
+experience_type: Training module
+topics:
+  - Microsoft Foundry
+  - Artificial Intelligence
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+avatar: anton
+prerequisites:
+  - A basic understanding of machine learning and generative AI concepts.
+learning_outcomes:
+  - Identify different scenarios for AI speech
+  - Describe how speech recognition works
+  - Describe how speech synthesis works
+pages:
+  - 1-introduction.md
+  - 2-speech-solutions.md
+  - 3-speech-recognition.md
+  - 4-speech-synthesis.md
+  - 5-exercise-speech.md
+  - 6-knowledge-check.md
+  - 7-summary.md

@@ -1,0 +1,30 @@
+title: Introduction to AI-powered information extraction concepts
+description: >-
+  AI information extraction enables you to extract data values from documents, images, and other unstructured data
+  sources.
+level: 100
+duration: 28 minutes
+experience_type: Training module
+topics:
+  - Microsoft Foundry
+  - Artificial Intelligence
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+avatar: anton
+prerequisites:
+  - Before starting this module, you should have a basic understanding of machine learning and computer vision concepts.
+learning_outcomes:
+  - Understand the key concepts of information extraction.
+  - Describe how optical character recognition (OCR) extracts text from images.
+  - Explain how form extraction maps extracted text to data fields.
+pages:
+  - 1-introduction.md
+  - 2-overview.md
+  - 3-vision-extraction.md
+  - 4-form-extraction.md
+  - 6b-exercise.md
+  - 7-knowledge-check.md
+  - 8-summary.md

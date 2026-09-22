@@ -1,0 +1,31 @@
+title: Introduction to generative AI and agents
+description: >-
+  Generative AI powers applications that can create content, answer questions, and assist with tasks. In this module,
+  you'll explore the fundamentals of generative AI, including large language models (LLMs), prompts, and AI agents.
+level: 100
+duration: 37 minutes
+experience_type: Training module
+topics:
+  - Microsoft Foundry
+  - Artificial Intelligence
+role:
+  - Developer
+  - Solution Architect
+  - Student
+avatar: anton
+prerequisites:
+  - Familiarity with AI concepts and terminology
+  - Basic understanding of machine learning principles.
+learning_outcomes:
+  - Describe core concepts of generative AI.
+  - Explain how large language models (LLMs) work.
+  - Consider how to create effective prompts for LLMs.
+  - Describe core concepts of agents and agentic AI solutions.
+pages:
+  - 1-introduction.md
+  - 3-language-models.md
+  - 6-writing-prompts.md
+  - 7-agents.md
+  - 7a-exercise.md
+  - 8-knowledge-check.md
+  - 9-summary.md

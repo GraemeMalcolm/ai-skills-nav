@@ -15,6 +15,5 @@ learning_outcomes:
   - Explain how Caldova demonstrates patterns for AI-native enterprise software.
   - Conduct informed customer conversations about Microsoft AI solutions, platforms, and application patterns.
 modules:
-  - ai-concepts
-  - get-started-ai-azure
+  - develop-first-agent
   - intro-to-caldova

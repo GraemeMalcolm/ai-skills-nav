@@ -1,0 +1,31 @@
+title: Get started with generative AI and agents in Azure
+description: Learn how to use generative AI models and agents with Microsoft Foundry.
+level: 100
+duration: 58 minutes
+experience_type: Training module
+topics:
+  - Microsoft Foundry
+  - Artificial Intelligence
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+avatar: anton
+prerequisites:
+  - A basic understanding of machine learning and generative AI concepts.
+learning_outcomes:
+  - Describe how an agent encapsulates model behavior using system instructions and tools
+  - Identify the right model for a task using the Foundry model catalog
+  - Deploy a model in the Foundry portal and replicate Playground settings in code
+  - Create and test an agent in the Foundry portal
+  - Use an agent in the Playground to validate prompts and behavior
+  - Call an agent from code using the Foundry Project API
+pages:
+  - 1-introduction.md
+  - 2-generative-ai-models.md
+  - 3-using-generative-ai-models.md
+  - 4-creating-an-agent.md
+  - 6-exercise.md
+  - 7-knowledge-check.md
+  - 8-summary.md

@@ -1,0 +1,26 @@
+title: Introduction to natural language processing concepts
+description: Natural language processing (NLP) supports applications that can analyze text to infer semantic meaning.
+level: 100
+duration: 30 minutes
+experience_type: Training module
+topics:
+  - Microsoft Foundry
+  - Artificial Intelligence
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+avatar: anton
+prerequisites:
+  - A basic understanding of machine learning and AI concepts.
+learning_outcomes:
+  - Explore concepts and techniques for text analysis.
+pages:
+  - 1-introduction.md
+  - 2-how-it-works.md
+  - 3-statistical-techniques.md
+  - 4-semantic-models.md
+  - 4b-exercise.md
+  - 5-knowledge-check.md
+  - 6-summary.md

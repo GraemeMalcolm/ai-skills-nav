@@ -1,4 +1,4 @@
-import { copyFile, cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "js-yaml";
@@ -6,7 +6,6 @@ import yaml from "js-yaml";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const inputRoot = path.join(root, "temp");
 const outputRoot = path.join(root, "source", "modules");
-const temporaryThumbnail = path.join(root, "source", "modules", "custom-module", "thumbnail.png");
 
 const levelValues = {
   beginner: 100,
@@ -31,6 +30,9 @@ const displayValue = (value) => displayValues[value] ?? value
   .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
   .join(" ");
 
+const roleValues = (roles = []) => [...new Set(roles.map((role) =>
+  role === "ai-engineer" ? "Developer" : displayValue(role)))];
+
 const readYaml = async (file) => yaml.load(await readFile(file, "utf8"));
 
 function listItems(value) {
@@ -52,9 +54,65 @@ function imageDirectives(markdown) {
   );
 }
 
+const directiveNames = {
+  include: "INCLUDE",
+  lab_steps: "LAB_STEPS",
+  lab_host: "LAB_HOST",
+  simulation: "SIMULATION",
+  pdf: "PDF",
+  video: "VIDEO",
+};
+
+const conceptsExerciseRoot = "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-concepts/refs/heads/main/Instructions/exercises";
+const fundamentalsExerciseRoot = "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-fundamentals/refs/heads/main/Instructions/Exercises";
+const exerciseSources = {
+  "2339547": `${conceptsExerciseRoot}/02-generative-ai.md`,
+  "2339548": `${conceptsExerciseRoot}/03-language.md`,
+  "2339573": `${conceptsExerciseRoot}/04-speech.md`,
+  "2339549": `${conceptsExerciseRoot}/05-vision.md`,
+  "2339457": `${conceptsExerciseRoot}/06-info-extraction.md`,
+  "2373030": `${conceptsExerciseRoot}/07-explore-rag.md`,
+  "2345150": `${fundamentalsExerciseRoot}/00-explore-foundry.md`,
+  "2373039": `${fundamentalsExerciseRoot}/07-foundry-iq.md`,
+  "2347367": `${fundamentalsExerciseRoot}/02a-generative-ai.md`,
+  "2347369": `${fundamentalsExerciseRoot}/06a-content-understanding.md`,
+  "2347368": `${fundamentalsExerciseRoot}/04a-speech.md`,
+  "2359156": `${fundamentalsExerciseRoot}/03b-text-analysis.md`,
+  "2347912": `${fundamentalsExerciseRoot}/05a-image-analysis.md`,
+};
+
+function exerciseDirectives(markdown) {
+  return markdown
+    .replace(
+      /\[!\[[^\]]*launch the exercise[^\]]*\]\([^)]+\)\]\((https?:\/\/go\.microsoft\.com\/fwlink\/\?[^)]+)\)/gi,
+      (match, launchUrl) => {
+        const linkId = [...new URL(launchUrl.replaceAll("&amp;", "&")).searchParams]
+          .find(([name]) => name.toLowerCase() === "linkid")?.[1];
+        const exerciseSource = exerciseSources[linkId];
+        if (!exerciseSource) return match;
+        return `[!LAB_STEPS[](${exerciseSource})]`;
+      },
+    )
+    .replace(/^!\[Screenshot[^\]]*\]\([^)]+\)\s*\n+/gim, "")
+    .replace(/\*Use the following button to start the exercise\*\s*\n\s*(?=\[!LAB_STEPS)/gi, "");
+}
+
+function normalizeDirectives(markdown) {
+  return markdown
+    .replace(/\[!(include|lab_steps|lab_host|simulation|pdf)(\[[^\]]*\])?\(([^)]+)\)\]/gi,
+      (match, directive, option = "[]", reference) =>
+        `[!${directiveNames[directive.toLowerCase()]}${option}(${reference})]`)
+    .replace(/\[!(include|lab_steps|lab_host|simulation)\s+([^\]]+)\]/gi,
+      (match, directive, reference) =>
+        `[!${directiveNames[directive.toLowerCase()]} ${reference.trim()}]`)
+    .replace(/\[!(video)\s*:?\s*(https?:\/\/[^\]\s]+)\]/gi,
+      (match, directive, reference) => `[!${directiveNames[directive.toLowerCase()]} ${reference}]`);
+}
+
 function normalizeLearnMarkdown(markdown) {
-  const lines = imageDirectives(markdown)
+  const lines = normalizeDirectives(imageDirectives(exerciseDirectives(markdown)))
     .replaceAll("../media/", "media/")
+    .replaceAll("See the **Text and images** tab for more details!", "See the **Text** tab for more details!")
     .split(/\r?\n/);
   const output = [];
 
@@ -94,9 +152,15 @@ function normalizeLearnMarkdown(markdown) {
 
 function quizMarkdown(unit) {
   const questions = unit.quiz?.questions ?? [];
-  const items = questions.map((question) => {
+  const items = questions.map((question, questionIndex) => {
     const choices = question.choices ?? [];
     const answerIndex = choices.findIndex((choice) => choice.isCorrect);
+    if (answerIndex < 0) {
+      throw new Error(`${unit.uid ?? unit.title}: question ${questionIndex + 1} has no correct answer`);
+    }
+    if (answerIndex > 25) {
+      throw new Error(`${unit.uid ?? unit.title}: question ${questionIndex + 1} has more than 26 choices`);
+    }
     const choiceLines = choices.map((choice, index) =>
       `    ${String.fromCharCode(97 + index)}: ${JSON.stringify(String(choice.content))}`);
     const feedback = choices[answerIndex]?.explanation ?? "Review the module content and try again.";
@@ -119,12 +183,28 @@ function quizMarkdown(unit) {
   ].join("\n");
 }
 
+async function expandLocalIncludes(markdown, sourceFile, moduleDirectory, stack = []) {
+  const includePattern = /\[!INCLUDE(?:\[[^\]]*\])?\(([^)]+)\)\]/gi;
+  let output = "";
+  let cursor = 0;
+  for (const match of markdown.matchAll(includePattern)) {
+    output += markdown.slice(cursor, match.index);
+    const includeFile = path.resolve(path.dirname(sourceFile), match[1]);
+    const relative = path.relative(moduleDirectory, includeFile);
+    if (relative.startsWith("..") || path.isAbsolute(relative) || stack.includes(includeFile)) {
+      throw new Error(`Invalid or recursive include ${match[1]} in ${sourceFile}`);
+    }
+    const included = await readFile(includeFile, "utf8");
+    output += await expandLocalIncludes(included, includeFile, moduleDirectory, [...stack, includeFile]);
+    cursor = match.index + match[0].length;
+  }
+  return output + markdown.slice(cursor);
+}
+
 async function pageMarkdown(unit, unitFile, moduleDirectory) {
   if (unit.quiz?.questions?.length) return quizMarkdown(unit);
-  const include = String(unit.content ?? "").match(/\[!include\[\]\(([^)]+)\)\]/i);
-  if (!include) return String(unit.content ?? "").trim();
-  const includeFile = path.resolve(moduleDirectory, include[1]);
-  return readFile(includeFile, "utf8");
+  const source = normalizeDirectives(String(unit.content ?? ""));
+  return expandLocalIncludes(source, path.join(moduleDirectory, unitFile), moduleDirectory);
 }
 
 async function importModule(entry) {
@@ -152,7 +232,12 @@ async function importModule(entry) {
     const pageFile = unit.file.replace(/\.yml$/i, ".md");
     const source = await pageMarkdown(unit.data, unit.file, inputDirectory);
     const body = normalizeLearnMarkdown(source).trim();
-    const page = `---\ntitle: ${yaml.dump(unit.data.title, { lineWidth: -1 }).trim()}\n---\n\n${body}\n`;
+    const pageMetadata = {
+      title: unit.data.title ?? unit.data.metadata?.title,
+      description: unit.data.metadata?.description,
+    };
+    if (!pageMetadata.description) delete pageMetadata.description;
+    const page = `---\n${yaml.dump(pageMetadata, { lineWidth: 120, noRefs: true }).trim()}\n---\n\n${body}\n`;
     await writeFile(path.join(outputDirectory, pageFile), page, "utf8");
     pages.push(pageFile);
   }
@@ -161,7 +246,6 @@ async function importModule(entry) {
   if (entries.some((item) => item.isDirectory() && item.name === "media")) {
     await cp(mediaDirectory, path.join(outputDirectory, "media"), { recursive: true });
   }
-  await copyFile(temporaryThumbnail, path.join(outputDirectory, "thumbnail.png"));
 
   const topics = [...new Set([...(module.products ?? []), ...(module.subjects ?? [])].map(displayValue))];
   const metadata = {
@@ -171,7 +255,7 @@ async function importModule(entry) {
     duration: `${orderedUnits.reduce((total, unit) => total + (unit.data.durationInMinutes ?? 0), 0)} minutes`,
     experience_type: "Training module",
     topics,
-    role: (module.roles ?? []).map(displayValue),
+    role: roleValues(module.roles),
     prerequisites: listItems(module.prerequisites),
     learning_outcomes: listItems(module.abstract),
     pages,

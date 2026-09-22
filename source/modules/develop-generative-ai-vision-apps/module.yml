@@ -6,7 +6,7 @@ level: 200
 duration: 45 minutes
 experience_type: Training module
 role:
-  - AI Engineer
+  - Developer
 avatar: anton
 prerequisites:
   - Experience with deploying generative AI models in Microsoft Foundry.

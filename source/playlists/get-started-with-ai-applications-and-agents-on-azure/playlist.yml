@@ -1,0 +1,29 @@
+title: Get started with AI applications and agents on Azure
+description: Learn how to build AI applications and agents on Azure using generative AI, text, speech, vision, information extraction, and grounded enterprise knowledge.
+level: 100
+duration: 345 minutes
+avatar: anton
+experience_type: Learning Path
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+prerequisites:
+  - Ability to navigate the Azure portal
+learning_outcomes:
+  - Get started with AI in Azure
+  - Call an agent from code using the Foundry Project API
+  - Learn how to use Microsoft Foundry capabilities for text analysis
+  - Learn to use Azure Speech's Voice Live capabilities
+  - Understand video generation capabilities
+  - Explore and interact with results using Foundry tools and APIs
+  - Explain how an agent connects to a knowledge base and uses retrieved information.
+modules:
+  - get-started-with-ai-in-azure
+  - get-started-with-generative-ai-and-agents
+  - get-started-with-text-analysis-azure
+  - get-started-with-speech-azure
+  - get-started-with-vision-azure
+  - get-started-with-Information-extraction
+  - get-started-with-foundry-iq

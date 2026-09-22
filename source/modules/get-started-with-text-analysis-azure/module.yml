@@ -1,0 +1,29 @@
+title: Get started with text analysis in Azure
+description: >-
+  Learn how to use both general-purpose AI models and Azure Language in Foundry Tools, then build a lightweight Python
+  client application that analyzes text.
+level: 100
+duration: 45 minutes
+experience_type: Training module
+topics:
+  - Foundry Tools
+  - Microsoft Foundry
+  - Natural Language Processing
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+avatar: anton
+prerequisites:
+  - Ability to navigate the Azure portal and basic knowledge of Python programming
+learning_outcomes:
+  - Learn how to use Microsoft Foundry capabilities for text analysis
+pages:
+  - 1-introduction.md
+  - 2-azure-language.md
+  - 3-language-sdk.md
+  - 4-language-mcp.md
+  - 5-exercise.md
+  - 6-knowledge-check.md
+  - 7-summary.md

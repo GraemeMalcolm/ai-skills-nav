@@ -1,0 +1,32 @@
+title: AI concepts for developers and technology professionals
+description: Build a practical foundation in AI concepts, including generative AI and agents, natural language processing, speech, computer vision, information extraction, and retrieval-augmented generation.
+level: 100
+duration: 315 minutes
+avatar: anton
+experience_type: Learning Path
+role:
+  - Developer
+  - Solution Architect
+  - Student
+  - Data Scientist
+prerequisites:
+  - Basic familiarity with digital technology and an interest in artificial intelligence
+  - Familiarity with AI concepts and terminology
+  - Basic understanding of machine learning principles.
+learning_outcomes:
+  - Understand foundational AI concepts across generative AI, language, speech, vision, information extraction, and responsible AI.
+  - Describe core concepts of agents and agentic AI solutions.
+  - Explore concepts and techniques for text analysis.
+  - Describe how speech synthesis works
+  - Describe how generative AI can be used to create images
+  - Explain how form extraction maps extracted text to data fields.
+  - Identify considerations for evaluating and improving a RAG solution.
+  - Apply foundational AI concepts to understand generative AI, language, speech, vision, information extraction, and retrieval-augmented generation solutions.
+modules:
+  - ai-concepts
+  - introduction-to-generative-ai
+  - introduction-language
+  - introduction-ai-speech
+  - introduction-computer-vision
+  - introduction-information-extraction
+  - rag-fundamentals
