@@ -805,9 +805,14 @@ function homepageItems(items) {
   select("video", 1, 1);
   select("hands-on lab", 1, 1);
   select("exam prep", 1, 0);
+  const featured = [...selected];
+  for (let index = featured.length - 1; index > 0; index--) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [featured[index], featured[randomIndex]] = [featured[randomIndex], featured[index]];
+  }
   return {
     featuredCount: selected.size,
-    items: [...selected, ...items.filter((item) => !selected.has(item))],
+    items: [...featured, ...items.filter((item) => !selected.has(item))],
   };
 }
 
