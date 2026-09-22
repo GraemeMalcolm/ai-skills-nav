@@ -1,0 +1,16 @@
+title: "Exam Prep: DP-600"
+description: "Prepare for DP-600 exam: Fabric Analytics Engineer Associate with this comprehensive module covering the key exam objectives."
+level: 200
+duration: 35 minutes
+experience_type: Exam Prep
+role:
+  - Data Analyst
+  - Data Engineer
+prerequisites:
+  - Experience with data analysis using Microsoft Fabric.
+learning_outcomes:
+  - "Get ready to take exam DP-600: Fabric Analytics Engineer Associate with confidence."
+pages:
+  - 01-maintain-analytics.md
+  - 02-prepare-data.md
+  - 03-semantic-modelmd
