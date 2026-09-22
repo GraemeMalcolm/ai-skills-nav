@@ -5,10 +5,6 @@ description: >-
 level: 100
 duration: 50 minutes
 experience_type: Training module
-topics:
-  - Foundry Tools
-  - Microsoft Foundry
-  - Classification Analysis
 role:
   - Developer
   - Data Scientist

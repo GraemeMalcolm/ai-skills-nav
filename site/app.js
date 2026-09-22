@@ -727,6 +727,36 @@ const menuToggle = document.querySelector("[data-menu-toggle]");
 const menuReveal = document.querySelector("[data-menu-reveal]");
 const sidebar = document.querySelector("[data-sidebar]");
 
+const sidebarScrollStorageKey = (() => {
+  const navigation = sidebar?.querySelector("nav");
+  const rootLink = navigation?.querySelector(".playlist-link") || navigation?.querySelector("a[href]");
+  if (!navigation || !rootLink) return null;
+  const rootUrl = new URL(rootLink.href, window.location.href);
+  return `ai-skills-nav:sidebar-scroll:${navigation.getAttribute("aria-label")}:${rootUrl.pathname}${rootUrl.search}`;
+})();
+
+const saveSidebarScroll = () => {
+  if (!sidebar || !sidebarScrollStorageKey) return;
+  try {
+    sessionStorage.setItem(sidebarScrollStorageKey, String(sidebar.scrollTop));
+  } catch {
+    // Navigation still works when session storage is unavailable.
+  }
+};
+
+if (sidebar && sidebarScrollStorageKey) {
+  try {
+    const savedScrollTop = Number(sessionStorage.getItem(sidebarScrollStorageKey));
+    if (Number.isFinite(savedScrollTop)) sidebar.scrollTop = savedScrollTop;
+  } catch {
+    // Keep the browser's default scroll position when storage is unavailable.
+  }
+  sidebar.addEventListener("click", (event) => {
+    if (event.target.closest("a[href]")) saveSidebarScroll();
+  });
+  window.addEventListener("pagehide", saveSidebarScroll);
+}
+
 if (menuToggle && window.matchMedia("(max-width: 860px)").matches) {
   menuToggle.setAttribute("aria-expanded", "false");
 }

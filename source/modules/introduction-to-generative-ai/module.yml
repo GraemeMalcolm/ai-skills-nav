@@ -5,9 +5,6 @@ description: >-
 level: 100
 duration: 37 minutes
 experience_type: Training module
-topics:
-  - Microsoft Foundry
-  - Artificial Intelligence
 role:
   - Developer
   - Solution Architect

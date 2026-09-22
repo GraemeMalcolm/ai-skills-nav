@@ -1,11 +1,8 @@
-title: Introduction to natural language processing concepts
+title: Introduction to text analysis concepts
 description: Natural language processing (NLP) supports applications that can analyze text to infer semantic meaning.
 level: 100
 duration: 30 minutes
 experience_type: Training module
-topics:
-  - Microsoft Foundry
-  - Artificial Intelligence
 role:
   - Developer
   - Data Scientist

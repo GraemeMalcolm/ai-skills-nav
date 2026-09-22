@@ -5,10 +5,6 @@ description: >-
 level: 100
 duration: 45 minutes
 experience_type: Training module
-topics:
-  - Foundry Tools
-  - Microsoft Foundry
-  - Natural Language Processing
 role:
   - Developer
   - Data Scientist
