@@ -5,7 +5,6 @@ duration: 60 minutes
 experience_type: Training module
 role:
   - Data Analyst
-  - Data Engineer
 avatar: inna
 prerequisites:
   - Foundational data analytics knowledge and awareness of end-to-end analytics workflows
