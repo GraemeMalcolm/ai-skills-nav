@@ -5,6 +5,7 @@ duration: 30 minutes
 experience_type: Training module
 role:
   - Business User
+  - Student
 avatar: matt
 prerequisites:
   - Familiarity with Microsoft 365 apps and basic generative AI concepts
