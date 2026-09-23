@@ -17,7 +17,7 @@ Contoso Corporation operates 500 retail stores across North America. They're mod
 
 ## Workload 1: Data engineering
 
-# [Scenario](#tab/scenario-de)
+::: zone pivot="Scenario"
 
 Contoso's data engineering team needs to build the analytics foundation. Here are their requirements:
 
@@ -31,7 +31,9 @@ Contoso's data engineering team needs to build the analytics foundation. Here ar
 
 Consider the decision factors: data format, write pattern, workload type, and team skills. **Which Fabric data store would you recommend?**
 
-# [Recommendation](#tab/recommendation-de)
+::: zone-end
+
+::: zone pivot="Recommendation"
 
 **Lakehouse.** Here's how the decision factors align:
 
@@ -48,11 +50,13 @@ The lakehouse also creates a **SQL analytics endpoint** automatically, exposing 
 
 > **TIP**: **AI readiness:** The lakehouse stores all data formats, including unstructured documents and images that generative AI and RAG pipelines require. Feature engineering happens here in Spark notebooks using the full Python ML ecosystem.
 
+::: zone-end
+
 ---
 
 ## Workload 2: Business intelligence
 
-# [Scenario](#tab/scenario-bi)
+::: zone pivot="Scenario"
 
 With curated data now available from the engineering lakehouse, Contoso's BI team needs to build executive dashboards and operational reports. Their requirements:
 
@@ -65,7 +69,9 @@ With curated data now available from the engineering lakehouse, Contoso's BI tea
 
 The engineering lakehouse's SQL analytics endpoint is read-only, so it can't support the write operations this team needs. **Which Fabric data store would you recommend?**
 
-# [Recommendation](#tab/recommendation-bi)
+::: zone-end
+
+::: zone pivot="Recommendation"
 
 **Warehouse.** Here's how the decision factors align:
 
@@ -82,11 +88,13 @@ The warehouse reads data from the engineering lakehouse through **cross-database
 
 > **TIP**: **AI readiness:** The warehouse provides the governed dimensional model that Copilot and data agents query when business users ask natural language questions. Clear star schemas with descriptive names make AI-generated answers more accurate.
 
+::: zone-end
+
 ---
 
 ## Workload 3: Real-time inventory monitoring
 
-# [Scenario](#tab/scenario-rt)
+::: zone pivot="Scenario"
 
 Contoso's operations team needs to monitor inventory across 500 stores in real time. Their requirements:
 
@@ -99,7 +107,9 @@ Contoso's operations team needs to monitor inventory across 500 stores in real t
 
 Neither the lakehouse (batch ingestion) nor the warehouse (not optimized for streaming time-series at this scale) fits these requirements. **Which Fabric data store would you recommend?**
 
-# [Recommendation](#tab/recommendation-rt)
+::: zone-end
+
+::: zone pivot="Recommendation"
 
 **Eventhouse.** Here's how the decision factors align:
 
@@ -116,11 +126,13 @@ An **eventstream** routes point-of-sale events to both the eventhouse for real-t
 
 > **TIP**: **AI readiness:** The eventhouse enables real-time anomaly detection on streaming IoT data using KQL's built-in ML functions, with no batch delay and no separate ML pipeline.
 
+::: zone-end
+
 ---
 
 ## Workload 4: Machine learning
 
-# [Scenario](#tab/scenario-ml)
+::: zone pivot="Scenario"
 
 Contoso's data science team needs to build predictive models for customer churn and product recommendations. Their requirements:
 
@@ -132,7 +144,9 @@ Contoso's data science team needs to build predictive models for customer churn 
 
 The team needs the same Spark and Python capabilities as the engineering lakehouse, but can't risk disrupting production pipelines. **What would you recommend?**
 
-# [Recommendation](#tab/recommendation-ml)
+::: zone-end
+
+::: zone pivot="Recommendation"
 
 **A dedicated data science lakehouse.** This second lakehouse is separate from the engineering lakehouse, which provides workload isolation.
 
@@ -148,6 +162,8 @@ Instead of copying data, **shortcuts** to the engineering lakehouse and warehous
 ![Diagram showing data science lakehouse with shortcuts to engineering lakehouse and warehouse, plus Spark notebooks for ML training.](media/lakehouse-data-science.svg)
 
 > **TIP**: **AI readiness:** The ML lakehouse uses Semantic Link (SemPy) to connect data science outputs to Power BI semantic model definitions, so data scientists can reuse business logic like measures and relationships without reimplementing them.
+
+::: zone-end
 
 ---
 

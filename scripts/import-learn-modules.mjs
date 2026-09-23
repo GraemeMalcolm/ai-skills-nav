@@ -118,8 +118,32 @@ function normalizeDirectives(markdown) {
       (match, directive, reference) => `[!${directiveNames[directive.toLowerCase()]} ${reference}]`);
 }
 
+function normalizeLearnTabs(markdown) {
+  const output = [];
+  let tabOpen = false;
+
+  for (const line of markdown.split(/\r?\n/)) {
+    const tab = line.match(/^#\s+\[([^\]]+)\]\(#tab\/[^)]+\)\s*$/i);
+    if (tab) {
+      if (tabOpen) output.push("::: zone-end", "");
+      output.push(`::: zone pivot="${tab[1].replaceAll('"', "'")}"`);
+      tabOpen = true;
+      continue;
+    }
+    if (tabOpen && /^---\s*$/.test(line)) {
+      output.push("::: zone-end", "", line);
+      tabOpen = false;
+      continue;
+    }
+    output.push(line);
+  }
+
+  if (tabOpen) output.push("::: zone-end");
+  return output.join("\n");
+}
+
 function normalizeLearnMarkdown(markdown) {
-  const lines = normalizeDirectives(imageDirectives(exerciseDirectives(markdown)))
+  const lines = normalizeLearnTabs(normalizeDirectives(imageDirectives(exerciseDirectives(markdown))))
     .replaceAll("../media/", "media/")
     .replaceAll("See the **Text and images** tab for more details!", "See the **Text** tab for more details!")
     .split(/\r?\n/);
