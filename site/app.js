@@ -6,6 +6,43 @@
 const stripMarkdownFrontMatter = (source) =>
   source.replace(/^---\s*\r?\n[\s\S]*?\r?\n---\s*(?:\r?\n|$)/, "");
 
+const escapeLabHtml = (value) => String(value)
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
+
+let labMarkdownConfigured = false;
+const configureLabMarkdown = () => {
+  if (labMarkdownConfigured) return;
+  window.marked.use({
+    extensions: [{
+      name: "targetBlankLink",
+      level: "inline",
+      start(source) {
+        return source.indexOf("[");
+      },
+      tokenizer(source) {
+        const match = source.match(/^\[((?:!\[[^\]\r\n]*\]\([^\r\n)]+\)|[^\]\r\n]+))\]\(([^\s)]+)(?:\s+["']([^"']*)["'])?\)\{\s*:?\s*target\s*=\s*["']_blank["']\s*\}/i);
+        if (!match) return undefined;
+        return {
+          type: "targetBlankLink",
+          raw: match[0],
+          href: match[2],
+          title: match[3],
+          tokens: this.lexer.inlineTokens(match[1]),
+        };
+      },
+      renderer(token) {
+        const title = token.title ? ` title="${escapeLabHtml(token.title)}"` : "";
+        return `<a href="${escapeLabHtml(token.href)}"${title} target="_blank" rel="noopener noreferrer">${this.parser.parseInline(token.tokens)}</a>`;
+      },
+    }],
+  });
+  labMarkdownConfigured = true;
+};
+
 const resolveLabMarkdownUrls = (source, sourceUrl) => {
   const resolveUrl = (value) => {
     if (!value || /^(?:[a-z][a-z\d+.-]*:|#)/i.test(value)) return value;
@@ -63,6 +100,7 @@ const loadLabSteps = async (container) => {
   try {
     if (!sourceUrl) throw new Error("LAB_STEPS is missing its source URL");
     if (typeof window.marked?.parse !== "function") throw new Error("Markdown renderer is unavailable");
+    configureLabMarkdown();
     const response = await fetch(sourceUrl, { cache: "no-store" });
     if (!response.ok) throw new Error(`Lab steps request failed: ${response.status} ${response.statusText}`);
     const markdown = resolveLabMarkdownUrls(stripMarkdownFrontMatter(await response.text()), sourceUrl);

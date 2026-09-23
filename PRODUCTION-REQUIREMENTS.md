@@ -913,7 +913,7 @@ Expected rendering behavior:
 
 **FR-LAB-005** Hosted-lab launch URLs must preserve all authored path, query-string, and fragment components when substituted into the standard template.
 
-**FR-LAB-006** `[!LAB_STEPS]` content must be fetched and rendered when the learner opens the page, without using a cached response, so the latest source is shown without rebuilding the site. The page must show an animated loading state during retrieval and an actionable retry state when retrieval or rendering fails.
+**FR-LAB-006** `[!LAB_STEPS]` content must be fetched and rendered when the learner opens the page, without using a cached response, so the latest source is shown without rebuilding the site. Runtime rendering must apply the same supported Markdown extensions as build-time rendering, including `{target="_blank"}` link attributes. The page must show an animated loading state during retrieval and an actionable retry state when retrieval or rendering fails.
 
 **FR-LAB-007** Relative media referenced by the hosted-lab template must resolve from the template document and be published at a stable content path accessible from every generated route.
 
