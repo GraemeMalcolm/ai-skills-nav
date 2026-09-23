@@ -79,12 +79,16 @@ const exerciseSources = {
   "2347368": `${fundamentalsExerciseRoot}/04a-speech.md`,
   "2359156": `${fundamentalsExerciseRoot}/03b-text-analysis.md`,
   "2347912": `${fundamentalsExerciseRoot}/05a-image-analysis.md`,
+  "2259608": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/06-data-warehouse.md",
+  "2260722": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/07-real-time-Intelligence.md",
+  "2352592": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/25-discover-onelake.md",
+  "2352753": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/01-lakehouse.md",
 };
 
 function exerciseDirectives(markdown) {
   return markdown
     .replace(
-      /\[!\[[^\]]*launch the exercise[^\]]*\]\([^)]+\)\]\((https?:\/\/go\.microsoft\.com\/fwlink\/\?[^)]+)\)/gi,
+      /\[!\[[^\]]*launch (?:the )?exercise[^\]]*\]\([^)]+\)\]\((https?:\/\/go\.microsoft\.com\/fwlink\/\?[^)]+)\)/gi,
       (match, launchUrl) => {
         const linkId = [...new URL(launchUrl.replaceAll("&amp;", "&")).searchParams]
           .find(([name]) => name.toLowerCase() === "linkid")?.[1];
@@ -94,7 +98,8 @@ function exerciseDirectives(markdown) {
       },
     )
     .replace(/^!\[Screenshot[^\]]*\]\([^)]+\)\s*\n+/gim, "")
-    .replace(/\*Use the following button to start the exercise\*\s*\n\s*(?=\[!LAB_STEPS)/gi, "");
+    .replace(/\*Use the following button to start the exercise\*\s*\n\s*(?=\[!LAB_STEPS)/gi, "")
+    .replace(/^Launch the exercise and follow the instructions\.\s*\n\s*(?=\[!LAB_STEPS)/gim, "");
 }
 
 function normalizeDirectives(markdown) {
@@ -247,14 +252,13 @@ async function importModule(entry) {
     await cp(mediaDirectory, path.join(outputDirectory, "media"), { recursive: true });
   }
 
-  const topics = [...new Set([...(module.products ?? []), ...(module.subjects ?? [])].map(displayValue))];
   const metadata = {
     title: module.title ?? module.metadata?.title,
     description: module.summary ?? module.metadata?.description,
     level: levelValues[module.levels?.[0]] ?? 200,
     duration: `${orderedUnits.reduce((total, unit) => total + (unit.data.durationInMinutes ?? 0), 0)} minutes`,
     experience_type: "Training module",
-    topics,
+    avatar: "inna",
     role: roleValues(module.roles),
     prerequisites: listItems(module.prerequisites),
     learning_outcomes: listItems(module.abstract),

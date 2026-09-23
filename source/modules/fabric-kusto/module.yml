@@ -1,0 +1,30 @@
+title: Get started with Real-Time Intelligence in Microsoft Fabric
+description: Real-Time Intelligence in Microsoft Fabric helps you ingest, process, store, visualize, and act on data in motion to
+  get insights from events as they happen.
+level: 100
+duration: 66 minutes
+experience_type: Training module
+avatar: inna
+role:
+  - Data Analyst
+  - Data Engineer
+prerequisites:
+  - Before starting this module, you should be familiar with the Microsoft Fabric interface and core concepts.
+learning_outcomes:
+  - Describe real-time analytics, streams and events.
+  - Understand Real-Time Intelligence components in Fabric.
+  - Ingest data and transform data in motion.
+  - Store and query data in KQL databases.
+  - Visualize streaming data with Real-Time Dashboards.
+  - Automate actions with Activator.
+pages:
+  - 1-introduction.md
+  - 2-define-real-time-analytics.md
+  - 3-describe-kusto-databases-tables.md
+  - 3a-define-real-time-hub.md
+  - 4-write-queries-kusto-query-language.md
+  - 4b-visualize-data.md
+  - 4c-activator.md
+  - 5-exercise-use-kusto-query-data-onelake.md
+  - 6-knowledge-check.md
+  - 7-summary.md

@@ -1,0 +1,24 @@
+title: Discover and connect to data in OneLake
+description: Browse and connect to data using Microsoft OneLake's unified storage. Discover data across workspaces with the OneLake
+  catalog, create shortcuts to reference existing data, and explore streaming sources in Real-Time hub.
+level: 100
+duration: 45 minutes
+experience_type: Training module
+avatar: inna
+role:
+  - Data Analyst
+  - Data Engineer
+prerequisites:
+  - Understanding of Microsoft Fabric platform and workloads
+learning_outcomes:
+  - Describe OneLake architecture and capabilities
+  - Browse and connect to data using OneLake catalog
+  - Discover streaming data in Real-Time hub
+pages:
+  - 1-introduction.md
+  - 2-understand-onelake.md
+  - 3-browse-connect-onelake.md
+  - 4-discover-streaming-data.md
+  - 5-exercise.md
+  - 6-knowledge-check.md
+  - 7-summary.md

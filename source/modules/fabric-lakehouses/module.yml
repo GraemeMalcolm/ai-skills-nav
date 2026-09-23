@@ -1,0 +1,26 @@
+title: Get started with lakehouses in Microsoft Fabric
+description: Lakehouses in Microsoft Fabric combine data lake storage flexibility with data warehouse analytical capabilities.
+  Learn how to create a lakehouse, ingest and transform data, and query data with SQL and Spark.
+level: 100
+duration: 58 minutes
+experience_type: Training module
+avatar: inna
+role:
+  - Data Analyst
+  - Data Engineer
+  - Data Scientist
+prerequisites:
+  - Before starting this module, you should understand fundamental data storage and analytics concepts.
+learning_outcomes:
+  - Describe core features and capabilities of lakehouses in Microsoft Fabric.
+  - Create a lakehouse.
+  - Ingest and transform data in a lakehouse.
+  - Query and analyze lakehouse data with SQL and Spark.
+pages:
+  - 1-introduction.md
+  - 2-fabric-lakehouse.md
+  - 3-work-lakehouse.md
+  - 4-explore-data-lakehouse.md
+  - 5-exercise-lakehouse.md
+  - 6-knowledge-check.md
+  - 7-summary.md

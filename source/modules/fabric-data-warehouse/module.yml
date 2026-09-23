@@ -1,0 +1,30 @@
+title: Get started with data warehouses in Microsoft Fabric
+description: Understand what a Fabric data warehouse is, why it provides full T-SQL transactional capabilities, and how to create,
+  query, and transform data for analytics.
+level: 100
+duration: 69 minutes
+experience_type: Training module
+avatar: inna
+role:
+  - Data Analyst
+  - Data Engineer
+prerequisites:
+  - >-
+    You should be familiar with the Microsoft Fabric interface, relational database concepts, SQL fundamentals, and
+    basic dimensional modeling concepts such as fact and dimension tables.
+learning_outcomes:
+  - Describe data warehouse concepts and dimensional modeling fundamentals.
+  - Create tables, load data, and understand ingestion methods in a Fabric warehouse.
+  - Query and transform data using T-SQL and the visual query editor.
+  - Model warehouse data for reporting and downstream consumption.
+  - Secure and monitor a data warehouse.
+pages:
+  - 1-introduction.md
+  - 2-understand-data-warehouse.md
+  - 3-understand-data-warehouse-fabric.md
+  - 4-query-transform-data.md
+  - 5-model-data.md
+  - 6-security-monitor.md
+  - 7-exercise.md
+  - 8-knowledge-check.md
+  - 9-summary.md

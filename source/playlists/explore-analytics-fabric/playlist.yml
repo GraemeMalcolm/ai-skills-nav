@@ -1,18 +1,24 @@
 title: Explore analytics data stores in Microsoft Fabric
-description: Learn how Microsoft Fabric unifies analytics storage through OneLake, and evaluate when to use lakehouses, warehouses, or eventhouses to analyze data.
-level: 400
-duration: 400 minutes
+description: Learn how Microsoft Fabric unifies analytics through OneLake, and explore lakehouses, warehouses, and Real-Time Intelligence for analyzing data.
+level: 100
+duration: 260 minutes
 experience_type: Learning Path
 role:
   - Data Analyst
   - Data Engineer
+  - Data Scientist
 avatar: inna
 prerequisites:
-  - Foundational data analytics knowledge and familiarity with data lake concepts
+  - Foundational knowledge of data analytics and data storage concepts
 learning_outcomes:
   - Understand Microsoft Fabric's unified analytics platform and how it supports data and AI workloads.
   - Discover, connect to, and work with data across OneLake using its catalog and shortcuts.
-  - Use Microsoft Fabric and OneLake concepts to support unified analytics and data discovery.
+  - Create and analyze data in Fabric lakehouses
+  - Create and analyze data in Fabric data warehouses.
+  - Ingest, query, visualize, and act on real-time data.
 modules:
-  - intro-to-fabric
-  - one-lake
+  - fabric-analytics
+  - fabric-onelake
+  - fabric-lakehouses
+  - fabric-data-warehouse
+  - fabric-kusto

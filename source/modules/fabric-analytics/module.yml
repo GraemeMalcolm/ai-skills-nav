@@ -1,0 +1,24 @@
+title: Introduction to end-to-end analytics using Microsoft Fabric
+description: Discover how Microsoft Fabric can meet your enterprise's analytics needs in one platform. Learn about Microsoft
+  Fabric, how it works, and identify how you can use it for your analytics needs.
+level: 100
+duration: 22 minutes
+experience_type: Training module
+avatar: inna
+role:
+  - Data Analyst
+  - Data Engineer
+  - Data Scientist
+prerequisites:
+  - You should be familiar with data analytics and engineering concepts and terminology.
+learning_outcomes:
+  - Identify the capabilities of Microsoft Fabric.
+  - Implement Microsoft Fabric to meet your enterprise's analytics needs.
+  - Describe how Fabric supports AI capabilities through Copilot, data agents, and Fabric IQ.
+pages:
+  - 1-introduction.md
+  - 2-explore-analytics-fabric.md
+  - 3-data-team.md
+  - 4-use-fabric.md
+  - 5-knowledge-check.md
+  - 6-summary.md
