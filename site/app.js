@@ -229,9 +229,7 @@ trackRecentLearningPage();
 const hydrateContinueSection = () => {
   const section = document.querySelector("[data-continue-section]");
   const grid = section?.querySelector("[data-continue-grid]");
-  const tools = document.querySelector("[data-personalized-plan] .personalized-plan-tools");
-  const roleHeading = document.querySelector("[data-role-skilling-heading]");
-  if (!section || !grid || !tools || !roleHeading) return;
+  if (!section || !grid) return;
   const recentPage = currentAuth ? readProfile().recentPage : null;
   const template = recentPage
     ? [...section.querySelectorAll("[data-continue-module-template]")].find((item) => item.dataset.moduleSlug === recentPage.moduleSlug)
@@ -241,19 +239,13 @@ const hydrateContinueSection = () => {
   const target = root && recentPage ? new URL(recentPage.path, root) : null;
   const isLocalTarget = target && target.origin === window.location.origin && target.pathname.startsWith(root.pathname);
   const isAccessible = card && canAccess(card.dataset.restrictedTo);
-  if (!card || !isLocalTarget || !isAccessible) {
-    roleHeading.append(tools);
-    return;
-  }
+  if (!card || !isLocalTarget || !isAccessible) return;
   card.removeAttribute("data-catalog-card");
   card.removeAttribute("data-filter-card");
   card.removeAttribute("data-default-hidden");
   card.hidden = false;
   const link = card.matches("a") ? card : card.querySelector("a.content-card");
-  if (!link) {
-    roleHeading.append(tools);
-    return;
-  }
+  if (!link) return;
   link.href = target.href;
   grid.replaceChildren(card);
   section.hidden = false;
