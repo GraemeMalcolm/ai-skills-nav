@@ -1449,8 +1449,17 @@ async function build() {
     "Secure cloud resources with Microsoft Defender",
     "Connect agents to MCP tools",
   ]));
-  const spotlightPlaylists = [...discoverablePlaylists]
-    .sort((left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0) || left.title.localeCompare(right.title));
+  const byRecent = (left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0)
+    || left.title.localeCompare(right.title);
+  const spotlightPlaylists = ["Learning Path", "Skilling Playlist"]
+    .flatMap((experienceType) => discoverablePlaylists
+      .filter((playlist) => experienceTypeName(playlist, "playlists") === experienceType)
+      .sort(byRecent)
+      .slice(0, 2));
+  for (let index = spotlightPlaylists.length - 1; index > 0; index--) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [spotlightPlaylists[index], spotlightPlaylists[randomIndex]] = [spotlightPlaylists[randomIndex], spotlightPlaylists[index]];
+  }
   const homeModules = homepageItems(discoverableModules);
   const homeContent = `<section class="home-hero hero-theme-home"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p class="home-hero-summary">Choose a curated path or jump straight into a learning experience.</p>
       <form class="hero-search" role="search" data-site-search data-catalog-url="${relativeUrl(homeFile, catalogFile)}" data-animated-search data-search-hints="${heroSearchHints}">
@@ -1459,7 +1468,7 @@ async function build() {
         <span class="hero-search-actions"><button class="filter-trigger" type="button" data-filter-open data-catalog-url="${relativeUrl(homeFile, catalogFile)}">Filter<span class="filter-count" data-filter-count hidden></span></button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></span>
       </form>
     </section>
-    <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><div class="card-grid">${spotlightPlaylists.map((item, index) => card(homeFile, item, "playlists", index >= 4)).join("")}</div></section>
+    <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><div class="card-grid">${spotlightPlaylists.map((item) => card(homeFile, item, "playlists")).join("")}</div></section>
     <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>New and highly rated</h2></div><div class="card-grid" data-module-grid>${homeModules.items.map((item, index) => card(homeFile, item, "modules", index >= homeModules.featuredCount)).join("")}</div><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div></section>
     ${catalogFilterDialog(discoverableItems, ["role", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
