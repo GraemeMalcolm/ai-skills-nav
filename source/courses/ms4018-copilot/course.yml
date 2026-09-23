@@ -8,6 +8,7 @@ duration: 1 day
 experience_type: Microsoft Official Curriculum
 role:
   - Business User
+  - Data Analyst
 avatar: matt
 prerequisites:
   - Familiarity with Microsoft 365 applications and basic generative AI concepts
