@@ -1,0 +1,29 @@
+title: Develop generative AI apps that use tools
+description: >-
+  Tools enable models to perform tasks and interact with external systems, enabling them to extend their capabilities
+  beyond basic chat interactions.
+level: 100
+duration: 60 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Be familiar with Microsoft Foundry and generative AI models.
+  - Have some programming experience.
+learning_outcomes:
+  - Describe the capabilities of generative AI tools.
+  - Use the code_interpreter tool to run code and analyze data.
+  - Use the web_search tool to retrieve real-time information from the internet.
+  - Use the file_search tool to access and analyze files.
+  - Use the function tool to run custom code.
+pages:
+  - 01-introduction.md
+  - 02-what-are-tools.md
+  - 03-code-interpreter.md
+  - 04-web-search.md
+  - 05-file-search.md
+  - 06-function.md
+  - 07-exercise.md
+  - 08-knowledge-check.md
+  - 09-summary.md

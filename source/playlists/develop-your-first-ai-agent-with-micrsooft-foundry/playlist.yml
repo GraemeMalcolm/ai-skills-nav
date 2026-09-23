@@ -11,6 +11,7 @@ prerequisites:
 learning_outcomes:
   - Get ready to develop your first agent using Microsoft Foundry.
   - Create, configure, test, deploy, and consume an AI agent with Microsoft Foundry.
+  - Prepare for and complete the development lifecycle of an AI agent with Microsoft Foundry.
 modules:
   - sneak-peek-first-agent
   - develop-first-agent

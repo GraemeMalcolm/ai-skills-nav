@@ -1,0 +1,32 @@
+title: Implement a responsible generative AI solution in Microsoft Foundry
+description: >-
+  Generative AI enables amazing creative solutions, but must be implemented responsibly to minimize the risk of harmful
+  content generation.
+level: 200
+duration: 45 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+  - Solution Architect
+  - Student
+prerequisites:
+  - >-
+    Before starting this module, you should be familiar with Microsoft Foundry. Consider completing the [Introduction to
+    Microsoft Foundry](/training/modules/introduction-to-azure-ai-studio) module before starting this one.
+learning_outcomes:
+  - Describe an overall process for responsible generative AI solution development
+  - Identify and prioritize potential harms relevant to a generative AI solution
+  - Measure the presence of harms in a generative AI solution
+  - Mitigate harms in a generative AI solution
+  - Prepare to deploy and operate a generative AI solution responsibly
+pages:
+  - 1-introduction.md
+  - 2-plan-responsible-ai.md
+  - 3-identify-harms.md
+  - 4-measure-harms.md
+  - 5-mitigate-harms.md
+  - 6-operate-responsibly.md
+  - 7-exercise-content-filters.md
+  - 8-knowledge-check.md
+  - 9-summary.md

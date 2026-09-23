@@ -19,6 +19,7 @@ learning_outcomes:
   - Understand video generation capabilities
   - Explore and interact with results using Foundry tools and APIs
   - Explain how an agent connects to a knowledge base and uses retrieved information.
+  - Build connected AI applications and agents on Azure across generative AI, language, speech, vision, information extraction, and enterprise knowledge.
 modules:
   - get-started-with-ai-in-azure
   - get-started-with-generative-ai-and-agents

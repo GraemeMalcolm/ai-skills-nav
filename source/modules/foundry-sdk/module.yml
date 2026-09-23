@@ -1,0 +1,27 @@
+title: Develop a generative AI chat app with Microsoft Foundry
+description: Use Microsoft Foundry to develop generative AI chat applications with projects and the Responses API.
+level: 100
+duration: 53 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Be familiar with Azure services and the Azure portal.
+  - Be familiar with generative AI concepts and use cases.
+  - Have experience with Python or another programming language.
+learning_outcomes:
+  - Describe the process for creating a generative AI chat application with Microsoft Foundry.
+  - Use the Chat playground to explore models and generate code samples.
+  - Choose an endpoint, authentication method, and client SDK for your app development.
+  - Use the Responses API to generate AI responses in applications.
+  - Use the ChatCompletions API to generate AI responses in applications.
+pages:
+  - 01-introduction.md
+  - 02-chat-playground.md
+  - 03-microsoft-foundry-sdk.md
+  - 04-responses-api.md
+  - 05-openai-api.md
+  - 06-exercise.md
+  - 07-knowledge-check.md
+  - 08-summary.md

@@ -9,8 +9,8 @@ avatar: anton
 prerequisites:
   - Software development experience and foundational knowledge of generative AI
 learning_outcomes:
-  - Create computer speech solutions with Microsoft Foundry..
-  - Create computer vision solutions with Microsoft Foundry.
+  - Use a generative AI model to synthesize speech.
+  - Create a chat app that submits image-based prompts.
   - Create AI apps with Microsoft Foundry.
 modules:
   - develop-generative-ai-audio-apps

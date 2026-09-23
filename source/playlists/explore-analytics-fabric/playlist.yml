@@ -11,11 +11,12 @@ avatar: inna
 prerequisites:
   - Foundational knowledge of data analytics and data storage concepts
 learning_outcomes:
-  - Understand Microsoft Fabric's unified analytics platform and how it supports data and AI workloads.
-  - Discover, connect to, and work with data across OneLake using its catalog and shortcuts.
-  - Create and analyze data in Fabric lakehouses
-  - Create and analyze data in Fabric data warehouses.
-  - Ingest, query, visualize, and act on real-time data.
+  - Describe how Fabric supports AI capabilities through Copilot, data agents, and Fabric IQ.
+  - Discover streaming data in Real-Time hub
+  - Query and analyze lakehouse data with SQL and Spark.
+  - Secure and monitor a data warehouse.
+  - Automate actions with Activator.
+  - Explore and apply Microsoft Fabric analytics stores for unified, batch, and real-time data workloads.
 modules:
   - fabric-analytics
   - fabric-onelake

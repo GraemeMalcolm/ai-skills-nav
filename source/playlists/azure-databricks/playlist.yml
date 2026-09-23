@@ -12,6 +12,8 @@ prerequisites:
   - Data engineering fundamentals and familiarity with Apache Spark concepts
 learning_outcomes:
   - Use Azure Databricks concepts to support integrated data engineering, analytics, and machine learning workloads.
+  - How to maintain data integrity with Delta Lake
+  - Analyze data reliably with Azure Databricks while maintaining data integrity with Delta Lake.
 modules:
   - start-databricks
   - use-delta-lake-azure-databricks

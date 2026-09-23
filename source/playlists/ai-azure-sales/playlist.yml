@@ -10,8 +10,7 @@ role:
 prerequisites:
   - Technical sales experience and foundational knowledge of cloud computing
 learning_outcomes:
-  - Understand foundational AI concepts across generative AI, language, speech, vision, information extraction, and responsible AI.
-  - Build a foundation for developing AI solutions with Microsoft Foundry on Azure.
+  - Create, configure, test, deploy, and consume an AI agent with Microsoft Foundry.
   - Explain how Caldova demonstrates patterns for AI-native enterprise software.
   - Conduct informed customer conversations about Microsoft AI solutions, platforms, and application patterns.
 modules:

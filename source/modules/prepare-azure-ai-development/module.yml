@@ -1,0 +1,31 @@
+title: Plan and prepare to develop AI solutions on Azure
+description: >-
+  Microsoft Azure offers multiple services that enable developers to build amazing AI-powered solutions. Proper planning
+  and preparation involves identifying the services you'll use and creating an optimal working environment for your
+  development team.
+level: 100
+duration: 60 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Basic software development concepts
+  - Basic AI concepts
+  - Basic Azure concepts
+learning_outcomes:
+  - Identify common AI capabilities that you can implement in applications
+  - Describe Microsoft Foundry and considerations for using it
+  - Describe Foundry Tools and considerations for using them
+  - Identify appropriate developer tools and SDKs for an AI project
+  - Describe considerations for responsible AI
+pages:
+  - 1-introduction.md
+  - 2-what-is-ai.md
+  - 4-azure-ai-foundry.md
+  - 3-azure-ai-services.md
+  - 5-tools-and-sdks.md
+  - 6-responsible-ai.md
+  - 7-exercise-explore-ai-foundry.md
+  - 8-knowledge-check.md
+  - 9-summary.md

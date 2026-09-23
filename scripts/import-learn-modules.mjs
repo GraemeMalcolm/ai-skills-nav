@@ -87,6 +87,12 @@ const exerciseSources = {
   "2360808": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/26c-transform-data-notebooks.md",
   "2361021": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/26b-transform-data-dataflows.md",
   "2361022": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/26d-transform-data-tsql.md",
+  "2353440": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/Instructions/Exercises/06-Explore-content-filters.md",
+  "2353647": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/Instructions/Exercises/01-Explore-ai-studio.md",
+  "2354118": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/Instructions/Exercises/02-model-catalog-evaluation.md",
+  "2354220": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/Instructions/Exercises/04b-finetune-model.md",
+  "2354411": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/Instructions/Exercises/03-foundry-sdk.md",
+  "2356945": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/Instructions/Exercises/04a-use-own-data.md",
 };
 
 function exerciseDirectives(markdown) {
@@ -286,7 +292,7 @@ async function importModule(entry) {
     level: levelValues[module.levels?.[0]] ?? 200,
     duration: `${orderedUnits.reduce((total, unit) => total + (unit.data.durationInMinutes ?? 0), 0)} minutes`,
     experience_type: "Training module",
-    avatar: "inna",
+    avatar: "anton",
     role: roleValues(module.roles),
     prerequisites: listItems(module.prerequisites),
     learning_outcomes: listItems(module.abstract),

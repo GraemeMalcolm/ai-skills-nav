@@ -61,7 +61,8 @@ After resolving all attachments, read every selected module's `module.yml`, incl
 - `role`: Take the discrete union of all non-empty child `role` values. Preserve first occurrence by module order and child list order.
 - `prerequisites`: Copy only the first module's non-empty `prerequisites`, preserving their order and exact wording. Do not inherit prerequisites from later modules. Remove exact duplicates while retaining the first occurrence. If the first module has no prerequisites, use `None`.
 - Module summary outcome: Select exactly one learning outcome from each module. For a module with one learning outcome, use that outcome. For a module with multiple outcomes, use its final learning outcome, following the repository convention that the final value is the module's summary outcome. Stop and ask for correction if a module has no learning outcomes.
-- `learning_outcomes`: Add the selected summary outcome for each module in module order. Include exactly one outcome per module; do not synthesize or append a playlist-wide outcome.
+- Cumulative outcome: Synthesize one concise playlist-wide learning outcome grounded in all selected module summary outcomes. Describe what learners can accomplish after completing the full playlist without inventing products, activities, audiences, or prerequisites.
+- `learning_outcomes`: Add the selected summary outcome for each module in module order, then append the cumulative outcome as the final item. Include exactly one outcome per module plus one cumulative outcome.
 - `description`: Write one concise description grounded in the selected module titles and overall outcomes. Describe what learners will learn without inventing products, activities, audiences, or prerequisites.
 
 Discrete union means exact, case-sensitive deduplication with the first occurrence retained.
@@ -82,6 +83,7 @@ prerequisites:
   - <prerequisites from the first module, or None>
 learning_outcomes:
   - <one module summary outcome per module, in module order>
+  - <one cumulative playlist-wide outcome>
 modules:
   - <resolved module slugs in attachment order>
 ```
@@ -95,10 +97,11 @@ Quote scalar values when required for valid YAML. Do not add fields that were no
 3. Parse the new `playlist.yml` as YAML and verify:
    - `title` and `experience_type` match the supplied values.
    - `level` equals the highest child level.
-  - `duration` equals the sum of child durations rounded up to a multiple of 15 minutes.
-  - Roles are the ordered discrete union of all module roles.
-  - Prerequisites match only the first module's prerequisites, or `None` when it has none.
-  - Learning outcomes contain exactly one summary outcome per module in module order, with no additional playlist-wide outcome.
+   - `duration` equals the sum of child durations rounded up to a multiple of 15 minutes.
+   - Roles are the ordered discrete union of all module roles.
+   - Prerequisites match only the first module's prerequisites, or `None` when it has none.
+   - Learning outcomes contain exactly one summary outcome per module in module order, followed by exactly one cumulative playlist-wide outcome.
+   - The learning outcome count equals the module count plus one.
    - Module order matches attachment order after duplicate removal.
 4. For each page attachment, validate the hidden module exactly as required by `../create-hidden-page-module/SKILL.md`.
 5. Run `npm run build` once from the repository root. Fix only errors caused by the new playlist or hidden modules; report unrelated failures without changing unrelated files.

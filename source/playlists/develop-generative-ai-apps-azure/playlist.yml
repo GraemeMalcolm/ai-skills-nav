@@ -1,0 +1,29 @@
+title: Develop generative AI apps in Azure
+description: Plan and build generative AI applications with Microsoft Foundry, select and optimize models, extend apps with tools, and implement responsible AI safeguards.
+level: 100
+duration: 412 minutes
+experience_type: Learning Path
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+avatar: anton
+prerequisites:
+  - Basic software development, AI, and Azure concepts
+  - Experience with Python or another programming language
+learning_outcomes:
+  - Describe considerations for responsible AI
+  - Understand different evaluation metrics and when to use them
+  - Use the ChatCompletions API to generate AI responses in applications.
+  - Use the function tool to run custom code.
+  - Compare optimization strategies and determine when to combine them.
+  - Prepare to deploy and operate a generative AI solution responsibly
+  - Develop, optimize, and responsibly operate generative AI applications in Azure with Microsoft Foundry.
+modules:
+  - prepare-azure-ai-development
+  - model-catalog-evaluate
+  - foundry-sdk
+  - use-generative-ai-tools
+  - optimize-generative-ai-model-performance
+  - responsible-ai-studio

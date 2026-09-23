@@ -1,0 +1,28 @@
+title: Select, deploy, and evaluate Microsoft Foundry models
+description: >-
+  Explore how to select appropriate models from the model catalog using benchmarks, deploy them to endpoints, and
+  evaluate their performance using manual and automated approaches in Microsoft Foundry portal.
+level: 200
+duration: 63 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Data Scientist
+  - Developer
+prerequisites:
+  - Before starting this module, you should be familiar with fundamental AI concepts and services in Azure.
+learning_outcomes:
+  - Explore and filter models in the model catalog
+  - Compare models using benchmark metrics for quality, safety, cost, and performance
+  - Deploy a model to an endpoint and test it in the playground
+  - Evaluate model performance using manual and automated approaches
+  - Understand different evaluation metrics and when to use them
+pages:
+  - 1-introduction.md
+  - 2-explore-model-catalog.md
+  - 3-select-models-benchmarks.md
+  - 4-deploy-models.md
+  - 5-evaluate-performance.md
+  - 6-exercise.md
+  - 7-knowledge-check.md
+  - 8-summary.md

@@ -10,11 +10,12 @@ avatar: inna
 prerequisites:
   - Data analytics fundamentals and familiarity with data lakes and warehouses
 learning_outcomes:
-  - Choose the appropriate Fabric lakehouse, warehouse, or eventhouse for a business scenario.
-  - Design fact and dimension tables for analytical workloads.
-  - Transform data with Dataflows Gen2 and Power Query.
-  - Transform lakehouse data with Spark SQL and PySpark notebooks.
-  - Transform warehouse data with T-SQL, views, and stored procedures.
+  - Choose the appropriate data store for a business scenario.
+  - Implement slowly changing dimension patterns
+  - Load transformed data to lakehouse or warehouse destinations
+  - Write and size Delta tables appropriately
+  - Implement dimensional tables in a warehouse
+  - Design and transform analytics data across Microsoft Fabric stores using dimensional modeling, Dataflows Gen2, notebooks, and T-SQL.
 modules:
   - choose-data-store-fabric
   - design-dimensional-models-fabric
