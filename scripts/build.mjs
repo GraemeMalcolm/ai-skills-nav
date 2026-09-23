@@ -852,7 +852,7 @@ function levelFilterOptions() {
       <input id="filter-level-min" type="range" min="100" max="500" step="100" value="100" aria-label="Minimum level" data-filter-level-min>
       <input id="filter-level-max" type="range" min="100" max="500" step="100" value="500" aria-label="Maximum level" data-filter-level-max>
     </div>
-    <div class="profile-range-ticks" aria-hidden="true"><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span></div>
+    <div class="profile-range-ticks" aria-hidden="true"><span title="Novice">100</span><span title="Beginner">200</span><span title="Intermediate">300</span><span title="Advanced">400</span><span title="Expert">500</span></div>
   </fieldset>`;
 }
 
