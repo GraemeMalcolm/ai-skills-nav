@@ -1,22 +1,27 @@
 title: Integrate MCP Tools with Azure AI Agents
-description: Learn how to connect Azure AI agents to Model Context Protocol (MCP) servers for dynamic tool discovery and execution.
+description: >-
+  Enable dynamic tool access for your Azure AI agents. Learn how to connect MCP-hosted tools and integrate them
+  seamlessly into agent workflows.
 level: 200
-duration: 60 minutes
+duration: 51 minutes
 experience_type: Training module
+avatar: anton
 role:
   - Developer
-avatar: anton
+  - Solution Architect
+  - Student
 prerequisites:
-  - Foundational AI agent development skills and familiarity with APIs
+  - Experience with deploying generative AI models in Microsoft Foundry.
+  - Programming experience.
 learning_outcomes:
-  - Describe MCP tool discovery, interoperability, security, and centralized management.
-  - Configure an MCP server and client to expose and invoke tools.
-  - Connect a Microsoft Foundry agent to an MCP server and manage tool approvals.
-  - Build AI agents that dynamically discover and invoke tools through Model Context Protocol servers.
+  - Explain the roles of the MCP server and client in tool discovery and invocation.
+  - Wrap MCP tools as asynchronous functions and register them with Azure AI agents.
+  - Build an Azure AI agent that dynamically accesses and calls MCP tools during runtime.
 pages:
   - 1-introduction.md
   - 2-understand-mcp-tool-discovery.md
   - 3-mcp-client-server-setup.md
   - 4-use-azure-ai-agents-with-mcp.md
   - 5-exercise.md
+  - 6-knowledge-check.md
   - 7-summary.md

@@ -15,4 +15,4 @@ prerequisites:
 learning_outcomes:
   - Develop and deploy AI agents with Microsoft Foundry and integrated MCP tool ecosystems.
 playlists:
-  - agent-developer
+  - develop-ai-agents-on-azure

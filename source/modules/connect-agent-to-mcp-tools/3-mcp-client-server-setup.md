@@ -1,13 +1,13 @@
 ---
 title: Integrate agent tools using an MCP server and client
-description: Configure an MCP server and client so an agent can discover and invoke external tools.
+description: Learn how to expose Model Context Protocol (MCP) tools through a server and register them to an Azure AI Agent.
 ---
 
 ::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=e8c3e82b-64c1-4474-ae71-a884d4de2078]
 
-> **TIP**: See the *Text* tab for more details!
+> **TIP**: See the **Text** tab for more details!
 
 ::: zone-end
 
@@ -36,7 +36,7 @@ When an MCP client session is initialized, the client can dynamically pull in to
 **Overview of MCP agent tool integration**
 
 - The **MCP server** hosts tool definitions decorated with `@mcp.tool`.
-- The **MCP client** initializes an MCP client connection to the server.
+- The **MCP client** initializes an MCP client connection to the server. 
 - The **MCP client**  fetches the available tool definitions with `session.list_tools()`.
 - Each tool is wrapped in an async function that invokes `session.call_tool`
 - The tool functions are bundled into `FunctionTool` that makes them usable by the agent.

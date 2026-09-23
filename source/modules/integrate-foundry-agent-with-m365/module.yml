@@ -1,20 +1,25 @@
 title: Integrate your agent with Microsoft 365
-description: Learn how to publish Microsoft Foundry agents to Teams and Microsoft 365 Copilot, access organizational data with Work IQ, and refine your integration.
+description: >-
+  Learn how to publish Microsoft Foundry agents to Microsoft Teams and Microsoft 365 Copilot, access workplace data with
+  Work IQ, and test your integrated agents.
 level: 200
-duration: 60 minutes
+duration: 74 minutes
 experience_type: Training module
+avatar: anton
 role:
   - Developer
-avatar: anton
+  - Solution Architect
 prerequisites:
-  - Experience developing AI agents and familiarity with Microsoft 365 and Microsoft Entra ID
+  - Familiarity with Azure and the Azure portal
+  - >-
+    Experience building agents in Microsoft Foundry (recommended: [Develop AI agents with Microsoft Foundry and Visual
+    Studio Code](/training/modules/develop-ai-agents-azure-vs-code/) module)
+  - A Microsoft 365 subscription with access to Teams
 learning_outcomes:
-  - Compare direct publishing with Microsoft 365 Agents Toolkit scenarios.
-  - Publish an agent from the Microsoft Foundry portal.
-  - Configure advanced enterprise agent scenarios with Microsoft 365 Agents Toolkit.
-  - Connect an agent to organizational data through Work IQ.
-  - Test and refine an agent across Microsoft 365 publishing targets.
-  - Publish Microsoft Foundry agents to Teams and Microsoft 365 Copilot with organizational data access.
+  - Explain the options for publishing Foundry agents to Microsoft 365
+  - Publish an agent from the Foundry portal to Teams and Microsoft 365 Copilot
+  - Use Work IQ to access Microsoft 365 data in your agents
+  - Test and troubleshoot agents integrated with Microsoft 365
 pages:
   - 1-introduction.md
   - 2-understand-publishing-options.md
@@ -23,4 +28,5 @@ pages:
   - 5-access-m365-data-workiq.md
   - 6-test-iterate-agent.md
   - 7-exercise.md
+  - 8-knowledge-check.md
   - 9-summary.md

@@ -1,0 +1,42 @@
+title: Develop AI agents on Azure
+description: >-
+  Build, test, deploy, and integrate AI agents on Azure with Microsoft Foundry Agent Service and Visual Studio Code.
+  Extend agents with custom tools and MCP, ground responses with Foundry IQ and retrieval-augmented generation (RAG),
+  publish agents to Microsoft Teams and Microsoft 365 Copilot with Work IQ, orchestrate agent-driven workflows, and
+  develop single-agent and multi-agent solutions with Microsoft Agent Framework and the A2A protocol.
+level: 200
+duration: 600 minutes
+avatar: anton
+experience_type: Learning Path
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+prerequisites:
+  - Familiarity with Azure and the Azure portal
+  - >-
+    An understanding of generative AI (recommended: [Fundamentals of Generative
+    AI](/training/modules/fundamentals-generative-ai/) module)
+  - Basic familiarity with Visual Studio Code
+learning_outcomes:
+  - Deploy and integrate agents into applications
+  - Build an agent that integrates custom tools using the Microsoft Foundry Agent Service.
+  - Build an Azure AI agent that dynamically accesses and calls MCP tools during runtime.
+  - Test and monitor agent retrieval to maintain quality in production
+  - Test and troubleshoot agents integrated with Microsoft 365
+  - Utilize Power Fx expressions to manipulate data and control flow.
+  - Integrate plugin functions with your AI agent
+  - Develop multi-agent solutions
+  - Implement A2A strategies to discover and invoke remote agents.
+  - Build and deploy grounded, extensible AI agents and orchestrated multi-agent solutions on Azure that integrate tools, enterprise knowledge, workflows, Microsoft 365, and remote agents.
+modules:
+  - develop-ai-agents-azure-vs-code
+  - build-agent-with-custom-tools
+  - connect-agent-to-mcp-tools
+  - introduction-foundry-iq
+  - integrate-foundry-agent-with-m365
+  - build-agent-workflows-microsoft-foundry
+  - develop-ai-agent-with-semantic-kernel
+  - orchestrate-semantic-kernel-multi-agent-solution
+  - discover-agents-with-a2a

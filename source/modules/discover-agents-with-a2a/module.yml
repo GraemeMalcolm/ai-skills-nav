@@ -1,0 +1,28 @@
+title: Discover Azure AI Agents with A2A
+description: >-
+  Learn how to implement the A2A protocol to enable agent discovery, direct communication, and coordinated task
+  execution across remote agents.
+level: 200
+duration: 56 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+  - Solution Architect
+  - Student
+prerequisites:
+  - Experience with deploying generative AI models in Microsoft Foundry.
+  - Programming experience.
+learning_outcomes:
+  - Understand the A2A protocol and its role in multi-agent orchestration.
+  - Design discoverable agents for modular, collaborative problem-solving.
+  - Implement A2A strategies to discover and invoke remote agents.
+pages:
+  - 1-introduction.md
+  - 2-define-a2a-agent.md
+  - 3-implement-agent-executor.md
+  - 4-host-a2a-agent-server.md
+  - 5-connect-to-a2a-agent.md
+  - 6-exercise.md
+  - 7-knowledge-check.md
+  - 8-summary.md

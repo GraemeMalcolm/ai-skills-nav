@@ -1,0 +1,38 @@
+title: Develop AI agents with Microsoft Foundry and Visual Studio Code
+description: >-
+  Learn how to build, test, and deploy AI agents using Microsoft Foundry Agent Service through both the Azure portal and
+  Visual Studio Code extension.
+level: 200
+duration: 95 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+prerequisites:
+  - Familiarity with Azure and the Azure portal
+  - >-
+    An understanding of generative AI (recommended: [Fundamentals of Generative
+    AI](/training/modules/fundamentals-generative-ai/) module)
+  - Basic familiarity with Visual Studio Code
+learning_outcomes:
+  - Describe the purpose and capabilities of AI agents
+  - Explain the key features of Microsoft Foundry Agent Service
+  - Set up and configure the Microsoft Foundry extension in Visual Studio Code
+  - Build and configure AI agents using multiple development approaches
+  - Extend agent capabilities with tools and functions
+  - Test agents using integrated playgrounds
+  - Deploy and integrate agents into applications
+pages:
+  - 1-introduction.md
+  - 2-understand-ai-agents-foundry.md
+  - 3-explore-development-approaches.md
+  - 4-build-agent-azure-portal.md
+  - 5-set-up-vs-code.md
+  - 6-configure-manage-agents.md
+  - 7-extend-agent-capabilities.md
+  - 8-test-deploy-integrate.md
+  - 9-exercise.md
+  - 10-knowledge-check.md
+  - 11-summary.md

@@ -1,13 +1,13 @@
 ---
 title: Understand MCP tool discovery
-description: Understand how agents discover the tools exposed by a Model Context Protocol server.
+description: Learn how Model Context Protocol (MCP) servers host functions that can be discovered by LLMs.
 ---
 
 ::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=bfe2e37a-385b-4499-8b5b-81a4b2d50c79]
 
-> **TIP**: See the *Text* tab for more details!
+> **TIP**: See the **Text** tab for more details!
 
 ::: zone-end
 

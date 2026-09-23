@@ -1,0 +1,32 @@
+title: Integrate custom tools into your agent
+description: >-
+  Built-in tools are useful, but they may not meet all your needs. In this module, learn how to extend the capabilities
+  of your agent by integrating custom tools for your agent to use.
+level: 200
+duration: 53 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+  - Solution Architect
+  - Student
+prerequisites:
+  - Familiarity with Azure and the Azure portal.
+  - >-
+    An understanding of generative AI. You can learn more with [Fundamentals of Generative
+    AI](/training/modules/fundamentals-generative-ai/).
+  - >-
+    It's highly recommended you have experience with the Microsoft Foundry Agent Service. You can learn more with
+    [Develop an AI agent with Microsoft Foundry Agent Service](/training/modules/develop-ai-agent-azure/).
+learning_outcomes:
+  - Describe the benefits of using custom tools with your agent.
+  - Explore the different options for custom tools.
+  - Build an agent that integrates custom tools using the Microsoft Foundry Agent Service.
+pages:
+  - 1-introduction.md
+  - 2-why-use-custom-tools.md
+  - 3-custom-tool-options.md
+  - 4-how-use-custom-tools.md
+  - 5-exercise.md
+  - 6-knowledge-check.md
+  - 7-summary.md

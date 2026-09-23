@@ -1,9 +1,9 @@
 ---
 title: Summary
-description: Review MCP tool discovery, client-server integration, and agent tool execution.
+description: Reflect on what you learned about Model Context Protocol (MCP) agent tools.
 ---
 
-In this learning experience, you learned how to integrate external tools with Microsoft Foundry Agent Service using the Model Context Protocol (MCP).
+In this module, you learned how to integrate external tools with Microsoft Foundry Agent Service using the Model Context Protocol (MCP).
 
 By connecting your agent to an MCP server, you can dynamically discover and register tools at runtime without hardcoding APIs or redeploying your agent. Using an MCP client, you generated function wrappers from discovered tools and connected them directly to your agent. This integration allows your agent to adapt to evolving toolsets, and create more flexible AI solutions that can grow alongside your applications.
 

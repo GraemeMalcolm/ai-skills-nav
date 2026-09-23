@@ -1,23 +1,23 @@
 ---
 title: Summary
-description: Review the options and steps for publishing and improving a Foundry agent in Microsoft 365.
+description: Summary of integrating Microsoft Foundry agents with Microsoft 365.
 ---
 
 ::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=61fc9a23-17f7-488f-b4ac-d834cf68fbd3]
 
-> **TIP**: See the *Text* tab for more details!
+> **TIP**: See the **Text** tab for more details!
 
 ::: zone-end
 
 ::: zone pivot="Text"
 
-In this learning experience, you learned how to publish Microsoft Foundry agents to Microsoft Teams and Microsoft 365 Copilot, making your AI assistants available where users already work.
+In this module, you learned how to publish Microsoft Foundry agents to Microsoft Teams and Microsoft 365 Copilot, making your AI assistants available where users already work.
 
 You explored the direct publishing workflow from the Foundry portal, which automatically provisions Azure Bot Service and creates the necessary Microsoft Entra ID registrations. You also learned about the Microsoft 365 Agents Toolkit as an alternative for complex enterprise scenarios.
 
-The learning experience covered publish scopes (shared for testing, organization for broad distribution), agent identity considerations for RBAC permissions, and how Work IQ connects agents to Microsoft 365 data through the Model Context Protocol (MCP).
+The module covered publish scopes (shared for testing, organization for broad distribution), agent identity considerations for RBAC permissions, and how Work IQ connects agents to Microsoft 365 data through the Model Context Protocol (MCP).
 
 ## Learn more
 

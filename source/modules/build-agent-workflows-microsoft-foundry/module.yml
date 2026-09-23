@@ -1,0 +1,33 @@
+title: Build agent-driven workflows using Microsoft Foundry
+description: >-
+  Workflows enable you to orchestrate AI agents and other components to create intelligent applications. Learn how to
+  build and manage workflows using Microsoft Foundry.
+level: 100
+duration: 64 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+prerequisites:
+  - Be familiar with deploying and managing AI agents using Microsoft Foundry.
+learning_outcomes:
+  - Explain how nodes, variables, and agent outputs control workflow execution
+  - Route requests using structured outputs and conditional logic
+  - Loop over multiple inputs with For-Each nodes
+  - Use human-in-the-loop and escalation patterns for low-confidence items
+  - Utilize Power Fx expressions to manipulate data and control flow.
+pages:
+  - 1-introduction.md
+  - 2-understand-workflows.md
+  - 3-identify-workflow-patterns.md
+  - 4-create-workflows-microsoft-foundry.md
+  - 5-add-agents-to-workflow.md
+  - 6-apply-power-fx.md
+  - 7-maintain-workflows.md
+  - 8-use-workflows-in-code.md
+  - 9-exercise.md
+  - 10-knowledge-check.md
+  - 11-summary.md

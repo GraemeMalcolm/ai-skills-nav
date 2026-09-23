@@ -1,13 +1,15 @@
 ---
 title: Advanced - Use Microsoft 365 Agents Toolkit
-description: Use Microsoft 365 Agents Toolkit to customize and publish an advanced agent integration.
+description: >-
+  Learn about the Microsoft 365 Agents Toolkit as an alternative approach for complex Foundry agent integration
+  scenarios.
 ---
 
 ::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=2924a259-6eeb-4858-8ede-137334937e99]
 
-> **TIP**: See the *Text* tab for more details!
+> **TIP**: See the **Text** tab for more details!
 
 ::: zone-end
 
@@ -48,7 +50,7 @@ The Agents Toolkit includes the **Microsoft 365 Agents Playground**, a local tes
 ## Comparison summary
 
 | Aspect | Direct Foundry publishing | Agents Toolkit proxy |
-| -------- | --------------------------- | ---------------------- |
+|--------|---------------------------|----------------------|
 | Setup time | Minutes | Hours to days |
 | Code required | None | Proxy application |
 | Customization | Limited | Extensive |

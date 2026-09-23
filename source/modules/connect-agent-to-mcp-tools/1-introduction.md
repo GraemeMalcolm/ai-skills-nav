@@ -1,11 +1,13 @@
 ---
 title: Introduction
-description: Learn how Model Context Protocol tools extend Azure AI agents with external capabilities.
+description: Learn how to integrate Model Context Protocol (MCP) tools with Azure AI Agents.
 ---
 
 ::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=1a012084-af85-408e-aa2f-e53c0615c113]
+
+> **NOTE**: See the **Text** tab for more details!
 
 ::: zone-end
 
@@ -17,8 +19,6 @@ Model Context Protocol (MCP) servers can help solve this problem by integrating 
 
 Suppose you're working for a retailer that specializes in cosmetics. Your team wants to build an AI assistant that can help manage inventory by checking product stock levels and recent sales trends. Using an MCP server, you can connect the assistant to a set of tools that can make inventory assessments and provide recommendations to the team.
 
-In this learning experience, you learn how to set up an MCP server and client, and connect tools to an Azure AI Agent dynamically. You also practice creating your own AI MCP tool solution with Microsoft Foundry Agent Service.
+In this module, you learn how to set up an MCP server and client, and connect tools to an Azure AI Agent dynamically. You also practice creating your own AI MCP tool solution with Microsoft Foundry Agent Service.
 
 ::: zone-end
-
-> **TIP**: We recognize that different people like to learn in different ways. You can choose to complete this learning experience in video-based format or you can read the content as text and images. The text contains greater detail than the videos, so in some cases you might want to refer to it as supplemental material to the video presentation.

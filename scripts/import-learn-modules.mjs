@@ -65,6 +65,7 @@ const directiveNames = {
 
 const conceptsExerciseRoot = "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-concepts/refs/heads/main/Instructions/exercises";
 const fundamentalsExerciseRoot = "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-fundamentals/refs/heads/main/Instructions/Exercises";
+const agentsExerciseRoot = "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-agents/refs/heads/main/Instructions/Exercises";
 const exerciseSources = {
   "2339547": `${conceptsExerciseRoot}/02-generative-ai.md`,
   "2339548": `${conceptsExerciseRoot}/03-language.md`,
@@ -93,6 +94,16 @@ const exerciseSources = {
   "2354220": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/Instructions/Exercises/04b-finetune-model.md",
   "2354411": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/Instructions/Exercises/03-foundry-sdk.md",
   "2356945": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/Instructions/Exercises/04a-use-own-data.md",
+  "2347700": `${agentsExerciseRoot}/04-integrate-agent-with-foundry-iq.md`,
+  "2352591": `${agentsExerciseRoot}/05b-work-iq-integration.md`,
+  "2352649": `${agentsExerciseRoot}/01-build-agent-portal-and-vscode.md`,
+  "2352775": `${agentsExerciseRoot}/05a-m365-teams-integration.md`,
+  "2353400": `${agentsExerciseRoot}/03-mcp-integration.md`,
+  "2353408": `${agentsExerciseRoot}/06-build-workflow-ms-foundry.md`,
+  "2353425": `${agentsExerciseRoot}/09-multi-remote-agents-with-a2a.md`,
+  "2353605": `${agentsExerciseRoot}/07-agent-framework.md`,
+  "2353606": `${agentsExerciseRoot}/08-agent-framework-multi-agents.md`,
+  "2353623": `${agentsExerciseRoot}/02-agent-custom-tools.md`,
 };
 
 function exerciseDirectives(markdown) {
@@ -108,6 +119,7 @@ function exerciseDirectives(markdown) {
       },
     )
     .replace(/^!\[Screenshot[^\]]*\]\([^)]+\)\s*\n+/gim, "")
+    .replace(/^\[!INCLUDE\s+\[Lab note\]\(\.\.\/\.\.\/\.\.\/includes\/wwl\/launch-exercise-note\.md\)\]\s*\n+/gim, "")
     .replace(/\*Use the following button to start the exercise\*\s*\n\s*(?=\[!LAB_STEPS)/gi, "")
     .replace(/^Launch the exercise and follow the instructions\.\s*\n\s*(?=\[!LAB_STEPS)/gim, "");
 }

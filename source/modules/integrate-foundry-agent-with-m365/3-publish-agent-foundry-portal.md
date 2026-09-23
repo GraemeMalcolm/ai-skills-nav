@@ -1,13 +1,13 @@
 ---
 title: Publish an agent from Foundry portal to Teams
-description: Publish a Foundry agent to Microsoft Teams directly from the Foundry portal.
+description: Learn the step-by-step process to publish a Microsoft Foundry agent to Microsoft Teams and Microsoft 365 Copilot.
 ---
 
 ::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=04287dee-eec6-4a54-9690-7de0e8e7f2f3]
 
-> **TIP**: See the *Text* tab for more details!
+> **TIP**: See the **Text** tab for more details!
 
 ::: zone-end
 
@@ -46,7 +46,7 @@ Gather the following information before starting:
 - Your organization's name and contact details
 - URLs for your privacy policy and terms of use
 
-> **TIP**: Don't include secrets, API keys, or sensitive information in any metadata fields. These fields are visible to users who discover your agent.
+> **WARNING**: Don't include secrets, API keys, or sensitive information in any metadata fields. These fields are visible to users who discover your agent.
 
 ## Publish your agent
 
@@ -75,7 +75,7 @@ Follow these steps to publish your agent from the Foundry portal:
 Fill in the required fields:
 
 | Field | Description |
-| ------- | ------------- |
+|-------|-------------|
 | **Name** | Display name for your agent in the Teams store |
 | **Description** | Brief explanation of what your agent does |
 | **Icons** | Upload small and large PNG icons |

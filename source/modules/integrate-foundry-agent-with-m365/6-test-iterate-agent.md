@@ -1,13 +1,13 @@
 ---
 title: Test and iterate your integrated agent
-description: Test agent behavior in Microsoft 365 and refine its instructions and integration.
+description: Learn best practices for testing and troubleshooting Foundry agents after publishing to Microsoft Teams.
 ---
 
 ::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=7916e7c8-663c-46fa-835a-c9b803c1e953]
 
-> **TIP**: See the *Text* tab for more details!
+> **TIP**: See the **Text** tab for more details!
 
 ::: zone-end
 
@@ -35,13 +35,11 @@ When issues arise, these common scenarios and resolutions can help:
 ### Agent doesn't respond in Teams
 
 **Possible causes:**
-
 - Azure Bot Service isn't running
 - Bot Service configuration is incorrect
 - Network issues between Teams and your agent
 
 **Resolution:**
-
 1. Verify the Bot Service resource exists in the Azure portal.
 2. Check Bot Service logs for errors.
 3. Confirm the agent is published and the package was uploaded correctly.
@@ -51,7 +49,6 @@ When issues arise, these common scenarios and resolutions can help:
 **Possible cause:** The published agent identity doesn't have the required permissions.
 
 **Resolution:**
-
 1. Find the published agent's identity in the Foundry portal.
 2. In the Azure portal, locate the resources your tools access.
 3. Assign appropriate RBAC roles to the published agent identity.
@@ -59,13 +56,11 @@ When issues arise, these common scenarios and resolutions can help:
 ### Users can't find the agent
 
 **Possible causes:**
-
 - Wrong publish scope selected
 - Admin approval pending (for organization scope)
 - Tenant policies block custom apps
 
 **Resolution:**
-
 - For shared scope: Share the direct link with users.
 - For organization scope: Verify admin approval in the Microsoft 365 admin center.
 - Check tenant settings for custom app permissions.
@@ -73,13 +68,11 @@ When issues arise, these common scenarios and resolutions can help:
 ### Slow response times
 
 **Possible causes:**
-
 - Complex agent instructions requiring extended processing
 - Tools that query large data sets
 - Network latency
 
 **Resolution:**
-
 - Simplify agent instructions where possible.
 - Optimize tool configurations.
 - Test from different network locations to isolate network issues.

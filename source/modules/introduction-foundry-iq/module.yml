@@ -1,0 +1,31 @@
+title: Build knowledge-enhanced AI agents with Foundry IQ
+description: >
+  Learn how to connect AI agents with enterprise knowledge using Foundry IQ. You'll explore how Retrieval Augmented
+  Generation (RAG) solves the knowledge problem for AI agents, discover how Foundry IQ provides a shared knowledge
+  platform that multiple agents can access, improve retrieval quality through data optimization, and configure agent
+  instructions for consistent, cited responses.
+level: 200
+duration: 71 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+  - Solution Architect
+prerequisites:
+  - Basic understanding of Azure cloud services
+  - Familiarity with AI and machine learning concepts
+learning_outcomes:
+  - Explain how RAG solves the knowledge problem by connecting agents to real-time information
+  - Describe how Foundry IQ provides a shared knowledge platform that multiple agents can access
+  - Configure data sources for knowledge bases including Azure AI Search, Blob Storage, SharePoint, and OneLake
+  - Configure agent instructions to control retrieval behavior and ensure consistent citations
+  - Test and monitor agent retrieval to maintain quality in production
+pages:
+  - 1-introduction.md
+  - 2-understand-rag.md
+  - 3-foundry-iq.md
+  - 4-data-requirements.md
+  - 5-configure-retrieval.md
+  - 7-exercise.md
+  - 6-knowledge-check.md
+  - 8-summary.md

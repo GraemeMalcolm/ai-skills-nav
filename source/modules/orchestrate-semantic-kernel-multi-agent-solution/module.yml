@@ -1,0 +1,33 @@
+title: Orchestrate a multi-agent solution using the Microsoft Agent Framework
+description: >-
+  Learn how to use the Microsoft Agent Framework SDK to develop your own AI agents that can collaborate for a
+  multi-agent solution.
+level: 200
+duration: 73 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+  - Solution Architect
+  - Student
+prerequisites:
+  - Familiarity with Azure and the Azure portal.
+  - >-
+    An understanding of generative AI. You can learn more with [Fundamentals of Generative
+    AI](/training/modules/fundamentals-generative-ai/).
+learning_outcomes:
+  - Build AI agents using the Microsoft Agent Framework SDK
+  - Understand how and when to use different orchestration patterns
+  - Develop multi-agent solutions
+pages:
+  - 1-introduction.md
+  - 2-understand-agent-framework.md
+  - 3-understand-agent-orchestration.md
+  - 4-use-concurrent-orchestration.md
+  - 5-use-sequential-orchestration.md
+  - 6-use-group-chat-orchestration.md
+  - 7-use-handoff-orchestration.md
+  - 8-use-magentic-orchestration.md
+  - 9-exercise.md
+  - 10-knowledge-check.md
+  - 11-summary.md

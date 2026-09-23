@@ -1,13 +1,15 @@
 ---
 title: Access Microsoft 365 data with Work IQ
-description: Connect an agent to Microsoft 365 work data through Work IQ capabilities.
+description: >-
+  Learn how to use Microsoft Work IQ to provide your Foundry agents with access to Microsoft 365 data like emails,
+  meetings, and documents.
 ---
 
 ::: zone pivot="Video"
 
 [!VIDEO https://learn-video.azurefd.net/vod/player?id=757b6fae-8663-419e-a9e4-eb69ec034388]
 
-> **TIP**: See the *Text* tab for more details!
+> **TIP**: See the **Text** tab for more details!
 
 ::: zone-end
 
@@ -29,7 +31,7 @@ With Work IQ, your agents can answer questions like:
 Work IQ accesses data across multiple Microsoft 365 services:
 
 | Data type | Example capabilities |
-| ----------- | --------------------- |
+|-----------|---------------------|
 | **Emails** | Search messages, find communications from specific people |
 | **Meetings** | Check calendar, retrieve meeting notes and decisions |
 | **Documents** | Find files in SharePoint and OneDrive, search content |
@@ -125,7 +127,7 @@ To use Work IQ, you need:
 - A Microsoft 365 subscription with a Copilot license
 - Administrative consent for the Work IQ application in your Microsoft Entra tenant
 
-> **TIP**: Work IQ requires administrative consent because it accesses organization-wide Microsoft 365 data. If you're not a tenant administrator, contact your IT department to request access.
+> **IMPORTANT**: Work IQ requires administrative consent because it accesses organization-wide Microsoft 365 data. If you're not a tenant administrator, contact your IT department to request access.
 
 ## Security and data access
 
