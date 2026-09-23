@@ -1,0 +1,26 @@
+title: Design dimensional models for analytics in Microsoft Fabric
+description: Learn dimensional schema types, fact and dimension table design, and slowly changing dimension patterns for analytics
+  workloads in Microsoft Fabric.
+level: 200
+duration: 63 minutes
+experience_type: Training module
+avatar: inna
+role:
+  - Data Analyst
+  - Data Engineer
+prerequisites:
+  - Understanding of relational database concepts and analytical data stores
+learning_outcomes:
+  - Describe dimensional schema types for analytics
+  - Design fact tables for business processes
+  - Design dimension tables for descriptive attributes
+  - Implement slowly changing dimension patterns
+pages:
+  - 1-introduction.md
+  - 2-describe-schema-types.md
+  - 3-design-fact-tables.md
+  - 4-design-dimension-tables.md
+  - 5-implement-slowly-changing-dimensions.md
+  - 6-exercise.md
+  - 7-knowledge-check.md
+  - 8-summary.md

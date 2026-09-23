@@ -1,0 +1,26 @@
+title: Transform data using notebooks in Microsoft Fabric
+description: Use Fabric notebooks to transform data with Spark SQL and PySpark, connecting to lakehouses, warehouses, and other
+  data stores.
+level: 200
+duration: 68 minutes
+experience_type: Training module
+avatar: inna
+role:
+  - Data Analyst
+  - Data Engineer
+prerequisites:
+  - Understanding of lakehouse concepts and SQL fundamentals
+learning_outcomes:
+  - Describe notebooks in Microsoft Fabric
+  - Shape and clean data using Spark SQL and PySpark
+  - Combine and aggregate data using Spark SQL and PySpark
+  - Write and size Delta tables appropriately
+pages:
+  - 1-introduction.md
+  - 2-describe-notebooks.md
+  - 3-shape-clean-data.md
+  - 4-combine-aggregate.md
+  - 5-write-delta-tables.md
+  - 6-exercise.md
+  - 7-knowledge-check.md
+  - 8-summary.md

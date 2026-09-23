@@ -83,6 +83,10 @@ const exerciseSources = {
   "2260722": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/07-real-time-Intelligence.md",
   "2352592": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/25-discover-onelake.md",
   "2352753": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/01-lakehouse.md",
+  "2356046": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/26-design-dimensional-models.md",
+  "2360808": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/26c-transform-data-notebooks.md",
+  "2361021": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/26b-transform-data-dataflows.md",
+  "2361022": "https://raw.githubusercontent.com/MicrosoftLearning/mslearn-fabric/refs/heads/main/Instructions/Labs/26d-transform-data-tsql.md",
 };
 
 function exerciseDirectives(markdown) {
@@ -268,5 +272,6 @@ async function importModule(entry) {
   console.log(`Imported ${entry.name}: ${pages.length} pages`);
 }
 
-const entries = (await readdir(inputRoot, { withFileTypes: true })).filter((entry) => entry.isDirectory());
+const entries = (await readdir(inputRoot, { withFileTypes: true }))
+  .filter((entry) => entry.isDirectory() && entry.name !== "icons");
 for (const entry of entries) await importModule(entry);

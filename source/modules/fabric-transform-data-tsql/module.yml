@@ -1,0 +1,26 @@
+title: Transform data using T-SQL in Microsoft Fabric
+description: Use T-SQL in Microsoft Fabric warehouses to transform and query data, create reusable views and stored procedures, and
+  build dimensional tables.
+level: 200
+duration: 84 minutes
+experience_type: Training module
+avatar: inna
+role:
+  - Data Analyst
+  - Data Engineer
+prerequisites:
+  - Understanding of warehouse concepts and T-SQL fundamentals
+learning_outcomes:
+  - Transform warehouse data using T-SQL queries
+  - Create views for reusable transformation logic
+  - Build stored procedures for repeatable data processing
+  - Implement dimensional tables in a warehouse
+pages:
+  - 1-introduction.md
+  - 2-transform-queries.md
+  - 3-create-views.md
+  - 4-build-stored-procedures.md
+  - 5-implement-dimensional-tables.md
+  - 6-exercise.md
+  - 7-knowledge-check.md
+  - 8-summary.md

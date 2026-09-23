@@ -1,0 +1,25 @@
+title: Transform data using Dataflows Gen2 in Microsoft Fabric
+description: Apply low-code transformations using Power Query in Dataflows Gen2 to prepare analytical data for downstream
+  consumption.
+level: 200
+duration: 61 minutes
+experience_type: Training module
+avatar: inna
+role:
+  - Data Analyst
+  - Data Engineer
+prerequisites:
+  - Understanding of data transformation concepts and Power Query fundamentals
+learning_outcomes:
+  - Create and configure Dataflows Gen2 in Microsoft Fabric
+  - Apply Power Query transformations to prepare data
+  - Optimize dataflow performance with query folding
+  - Load transformed data to lakehouse or warehouse destinations
+pages:
+  - 1-introduction.md
+  - 2-understand-dataflows.md
+  - 3-transform-power-query.md
+  - 4-optimize-performance.md
+  - 5-exercise.md
+  - 6-knowledge-check.md
+  - 7-summary.md
