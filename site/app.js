@@ -3,6 +3,80 @@
 // progressively enhance only the features whose marker attributes are present.
 // Keeping every feature guarded lets one shared script run on all page types.
 
+const stripMarkdownFrontMatter = (source) =>
+  source.replace(/^---\s*\r?\n[\s\S]*?\r?\n---\s*(?:\r?\n|$)/, "");
+
+const resolveLabMarkdownUrls = (source, sourceUrl) => {
+  const resolveUrl = (value) => {
+    if (!value || /^(?:[a-z][a-z\d+.-]*:|#)/i.test(value)) return value;
+    return new URL(value, sourceUrl).href;
+  };
+  return source
+    .replace(/(!?\[[^\]]*\]\()([^\s)]+)([^)]*\))/g, (match, prefix, url, suffix) =>
+      `${prefix}${resolveUrl(url)}${suffix}`)
+    .replace(/(<img\b[^>]*?\bsrc=["'])([^"']+)(["'][^>]*>)/gi, (match, prefix, url, suffix) =>
+      `${prefix}${resolveUrl(url)}${suffix}`);
+};
+
+const sanitizedLabContent = (html) => {
+  const template = document.createElement("template");
+  template.innerHTML = html;
+  template.content.querySelectorAll("script, iframe, object, embed, link, meta, base, form, input, button, textarea, select")
+    .forEach((element) => element.remove());
+  template.content.querySelectorAll("*").forEach((element) => {
+    [...element.attributes].forEach((attribute) => {
+      const name = attribute.name.toLocaleLowerCase();
+      const value = attribute.value.trim();
+      if (name.startsWith("on") || name === "srcdoc" || ((name === "href" || name === "src") && /^javascript:/i.test(value))) {
+        element.removeAttribute(attribute.name);
+      }
+    });
+  });
+  return template.content;
+};
+
+const showLabStepsError = (container, error) => {
+  console.error("Unable to load lab steps", error);
+  container.setAttribute("aria-busy", "false");
+  const message = document.createElement("div");
+  message.className = "lab-steps-error";
+  message.setAttribute("role", "alert");
+  const text = document.createElement("p");
+  text.textContent = "The latest lab steps could not be loaded.";
+  const retry = document.createElement("button");
+  retry.className = "primary-button";
+  retry.type = "button";
+  retry.textContent = "Try again";
+  retry.addEventListener("click", () => loadLabSteps(container));
+  message.append(text, retry);
+  container.replaceChildren(message);
+};
+
+const loadLabSteps = async (container) => {
+  const sourceUrl = container.dataset.labStepsUrl;
+  container.setAttribute("aria-busy", "true");
+  const loading = document.createElement("div");
+  loading.className = "lab-steps-loading";
+  loading.setAttribute("role", "status");
+  loading.innerHTML = '<span class="lab-steps-spinner" aria-hidden="true"></span><span>Loading the latest lab steps...</span>';
+  container.replaceChildren(loading);
+  try {
+    if (!sourceUrl) throw new Error("LAB_STEPS is missing its source URL");
+    if (typeof window.marked?.parse !== "function") throw new Error("Markdown renderer is unavailable");
+    const response = await fetch(sourceUrl, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Lab steps request failed: ${response.status} ${response.statusText}`);
+    const markdown = resolveLabMarkdownUrls(stripMarkdownFrontMatter(await response.text()), sourceUrl);
+    const fragment = sanitizedLabContent(window.marked.parse(markdown));
+    container.replaceChildren(fragment);
+    container.setAttribute("aria-busy", "false");
+    container.classList.add("is-loaded");
+  } catch (error) {
+    showLabStepsError(container, error);
+  }
+};
+
+document.querySelectorAll("[data-lab-steps-url]").forEach((container) => loadLabSteps(container));
+
 // Use one definition of common conversational words for both catalog search and
 // avatar knowledge retrieval. The list covers English function words and
 // generic request language, but deliberately retains domain-bearing verbs such

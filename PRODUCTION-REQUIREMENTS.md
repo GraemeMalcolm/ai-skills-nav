@@ -913,6 +913,8 @@ Expected rendering behavior:
 
 **FR-LAB-005** Hosted-lab launch URLs must preserve all authored path, query-string, and fragment components when substituted into the standard template.
 
+**FR-LAB-006** `[!LAB_STEPS]` content must be fetched and rendered when the learner opens the page, without using a cached response, so the latest source is shown without rebuilding the site. The page must show an animated loading state during retrieval and an actionable retry state when retrieval or rendering fails.
+
 **FR-LAB-007** Relative media referenced by the hosted-lab template must resolve from the template document and be published at a stable content path accessible from every generated route.
 
 **FR-SIM-001** Authors must invoke the standard simulation launcher with `[!SIMULATION[](<launch-url>)]` rather than duplicating its explanatory text, image, link target, or new-window behavior in module pages.
@@ -941,7 +943,7 @@ title: Exercise - Explore AI workloads
 ::: zone-end
 ```
 
-The hosted variant must use `LAB_HOST` with a governed launch URL. It renders the shared `templates/hosted-lab.md` content, substitutes the URL for `{LAB_URL}`, and resolves the launch image from the template's media folder. The self-directed variant must render the referenced instructions inline so learners remain within the module's navigation context.
+The hosted variant must use `LAB_HOST` with a governed launch URL. It renders the shared `templates/hosted-lab.md` content, substitutes the URL for `{LAB_URL}`, and resolves the launch image from the template's media folder. The self-directed variant must fetch and render the referenced instructions inline at page-open time so learners receive the latest version while remaining within the module's navigation context.
 
 #### Example
 
@@ -1050,8 +1052,8 @@ The production implementation must demonstrate at least the following end-to-end
 6. A catalog item matches terms present in its title, description, topics, or displayed experience type, and a course also matches its course number. The same item does not match a term found only in its role, level, modality, duration, identifier, hierarchy references, or page body.
 7. Role, experience type, level, and modality values refine results through filters. Multiple values in one filter use OR; different filters use AND; and active search terms combine with all filters using AND.
 8. Clearing search retains active filters, clearing filters retains an active search, active constraints are visible, and an empty combined result produces accessible feedback.
-9. A page renders Markdown, local and root-relative includes, an external `[!LAB_STEPS]` source, `[!LAB_HOST]` and `[!SIMULATION]` launchers with their full URLs and template-relative images, relative images, video, and keyboard-operable choice pivots.
-10. Invalid metadata, broken hierarchy references, recursive includes, and inaccessible required external content prevent publication with actionable errors.
+9. A page renders Markdown, local and root-relative includes, an external `[!LAB_STEPS]` source retrieved at page-open time with loading and retry states, `[!LAB_HOST]` and `[!SIMULATION]` launchers with their full URLs and template-relative images, relative images, video, and keyboard-operable choice pivots.
+10. Invalid metadata, broken hierarchy references, recursive includes, and inaccessible required build-time external content prevent publication with actionable errors.
 11. A signed-in learner creates a personal playlist, edits it, adds modules from multiple entry points, reorders it, traverses module boundaries, removes a module, shares the individual playlist, and deletes it. A second identity on the same browser cannot see that playlist.
 12. A recipient opens a shared personal-playlist URL. An existing playlist is loaded unchanged; when it is absent, a new playlist is created from the shared name and valid ordered module identifiers.
 13. A learner opens a deep link to a page with valid hierarchy context and can move backward and forward without losing that context.

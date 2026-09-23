@@ -2023,6 +2023,61 @@ body.access-denied>[data-agent] {
 .lesson-header h1 {
   margin: 9px 0 0;
   font: 700 clamp(1.65rem, 3vw, 2.7rem)/1.1 "Manrope", sans-serif;
+}
+
+.lab-steps-import {
+  min-height: 120px;
+  margin: 30px 0;
+}
+
+.lab-steps-loading,
+.lab-steps-error {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  text-align: center;
+}
+
+.lab-steps-spinner {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  border: 3px solid var(--violet-soft);
+  border-top-color: var(--violet);
+  border-radius: 50%;
+  animation: lab-steps-spin .8s linear infinite;
+}
+
+.lab-steps-error {
+  flex-direction: column;
+  color: var(--ink);
+}
+
+.lab-steps-error p {
+  margin: 0;
+}
+
+.lab-steps-error .primary-button {
+  margin-top: 0;
+}
+
+@keyframes lab-steps-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-steps-spinner {
+    animation-duration: 1.6s;
+  }
   letter-spacing: 0;
 }
 

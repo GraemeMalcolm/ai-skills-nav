@@ -233,6 +233,13 @@ async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
     if (directive === "LAB_STEPS" && !remoteReference) {
       throw new Error(`LAB_STEPS must reference a fully-qualified HTTP(S) URL in ${sourceFile}`);
     }
+    if (directive === "LAB_STEPS") {
+      result += `\n\n<section class="lab-steps-import" data-lab-steps-url="${escapeHtml(includeReference)}" aria-live="polite" aria-busy="true">
+        <div class="lab-steps-loading" role="status"><span class="lab-steps-spinner" aria-hidden="true"></span><span>Loading the latest lab steps...</span></div>
+      </section>\n\n`;
+      cursor = match.index + match[0].length;
+      continue;
+    }
     const remoteSource = /^https?:\/\//i.test(sourceFile);
     if (remoteReference || remoteSource) {
       const includeUrl = new URL(includeReference, remoteSource ? sourceFile : undefined).href;
@@ -611,6 +618,9 @@ function breadcrumbs(outputFile, items = []) {
 function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], sidebar = "", eyebrow = "AI Skills Nav", headerExtra = "", avatar = null, agentOptions = {}, bodyClass = "", module = null, hasModuleCards = false, restrictedTo = [], showContentOverview = false }) {
   const styles = relativeUrl(outputFile, path.join(outputRoot, "assets", "styles.css"));
   const script = relativeUrl(outputFile, path.join(outputRoot, "assets", "app.js"));
+  const markdownScript = content.includes("data-lab-steps-url")
+    ? `<script src="${relativeUrl(outputFile, path.join(outputRoot, "assets", "marked.umd.js"))}" defer></script>\n  `
+    : "";
   const favicon = relativeUrl(outputFile, path.join(outputRoot, "favicon.ico"));
   const home = relativeUrl(outputFile, path.join(outputRoot, "index.html"));
   const personalizedPlan = relativeUrl(outputFile, path.join(outputRoot, "personalized-plan", "index.html"));
@@ -639,7 +649,7 @@ function shell({ outputFile, title, content, breadcrumbs: breadcrumbItems = [], 
   <title>${escapeHtml(title)} | AI Skills Nav</title>
   <link rel="icon" href="${favicon}" sizes="any">
   <link rel="stylesheet" href="${styles}">
-  <script src="${script}" defer></script>
+  ${markdownScript}<script src="${script}" defer></script>
 </head>
 <body class="${escapeHtml(bodyClass)}"${module ? ` data-module-slug="${escapeHtml(module.slug)}"` : ""} data-restricted-to="${escapeHtml(JSON.stringify(restrictedTo))}">
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -1647,6 +1657,7 @@ async function build() {
   await Promise.all([
     copyFile(path.join(root, "site", "styles.css"), path.join(outputRoot, "assets", "styles.css")),
     copyFile(path.join(root, "site", "app.js"), path.join(outputRoot, "assets", "app.js")),
+    copyFile(path.join(root, "node_modules", "marked", "lib", "marked.umd.js"), path.join(outputRoot, "assets", "marked.umd.js")),
     copyFile(path.join(root, "site", "moderation.txt"), path.join(outputRoot, "assets", "moderation.txt")),
     copyFile(path.join(root, "site", "media", "microsoft-logo.svg"), path.join(outputRoot, "assets", "microsoft-logo.svg")),
     copyFile(path.join(root, "site", "media", "my-playlist.png"), path.join(outputRoot, "assets", "my-playlist.png")),
