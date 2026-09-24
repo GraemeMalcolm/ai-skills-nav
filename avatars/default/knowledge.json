@@ -10,8 +10,7 @@
                     "architecture",
                     "structure",
                     "hierarchy",
-                    "structured",
-                    "catalog"
+                    "structured"
                 ],
                 "content": "The content on this website is organized into a hierarchy of courses, playlists, and modules. Courses group related playlists, and playlists group related modules. There are different 'types' of courses, playlists, and modules to reflect different learning experiences and skilling programs"
             },
@@ -78,6 +77,22 @@
                     "find"
                 ],
                 "content": "You can search for content using the search box or by asking the 'Nav' avatar to 'help me learn ...'. You can also apply filters based on factors like role, level, experience type, and the kinds of content the skilling contains."
+            },
+            {
+                "id": 6,
+                "title": "Catalog page",
+                "keywords": [
+                    "catalog"
+                ],
+                "content": "The Catalog page shows the full catalog of skilling content, arranged alphabetically. You can search and filter the catalog."
+            },
+            {
+                "id": 7,
+                "title": "Official Curriculum page",
+                "keywords": [
+                    "Official Curriculum"
+                ],
+                "content": "The Official Curriculum page shows Microsoft official curriculum courses, and details about training partners who can deliver them as instructor-led experiences.."
             }
         ]
     },
@@ -85,7 +100,7 @@
         "category": "AI agents",
         "documents": [
             {
-                "id": 6,
+                "id": 8,
                 "title": "Curriculum-specialist avatars",
                 "keywords": [
                     "ai help",
@@ -110,7 +125,7 @@
         "link": "https://aiskillsnavigator.microsoft.com/credentials",
         "documents": [
             {
-                "id": 7,
+                "id": 9,
                 "title": "Credentials",
                 "keywords": [
                     "credential",
@@ -119,7 +134,7 @@
                 "content": "A credential validates skills or expertise. Course pages show credential-preparation information when the course is aligned to a credential. The learning content can help you prepare, but completing content on this website does not itself award the credential."
             },
             {
-                "id": 8,
+                "id": 10,
                 "title": "Certifications",
                 "keywords": [
                     "certification",
@@ -130,7 +145,7 @@
                 "content": "A Microsoft Certification demonstrates expertise associated with a job role or technology and normally has requirements outside this website, such as passing an assessment or exam. Relevant courses and learning experiences can support certification preparation, but completing them does not automatically make you certified."
             },
             {
-                "id": 9,
+                "id": 11,
                 "title": "Applied Skills",
                 "keywords": [
                     "applied skill",
@@ -144,7 +159,7 @@
         "category": "Instructional Design",
         "documents": [
             {
-                "id": 10,
+                "id": 12,
                 "title": "Audience",
                 "keywords": [
                     "audience",
@@ -155,16 +170,17 @@
                 "content": "Content in this site is designed for specific audiences, reflecting the skills people need to succeed in a given job role. Use the provided filters to find content that is relevant to your role or the role you want to prepare for."
             },
             {
-                "id": 11,
+                "id": 13,
                 "title": "Levels",
                 "keywords": [
                     "level",
-                    "levels"
+                    "levels",
+                    "difficulty"
                 ],
                 "content": "Levels indicate the complexity or depth of a learning experience. They help you understand what prior knowledge or skills are expected and what you can expect to gain. Levels span from 100 (novice) to 500 (expert). The level of a course is determined by the levels of its included playlists and modules."
             },
             {
-                "id": 12,
+                "id": 14,
                 "title": "Ratings",
                 "keywords": [
                     "rating",
@@ -179,7 +195,7 @@
         "category": "Personalization",
         "documents": [
             {
-                "id": 17,
+                "id": 15,
                 "title": "Authentication",
                 "keywords": [
                     "sign-in",
@@ -193,7 +209,7 @@
                 "content": "Some functionality requires users to sign-in. In this proof-of-concept app, you can sign in using any email address and any password. No actual authentication takes place, but your sign-in and profile details are persisted in local browser storage."
             },
             {
-                "id": 18,
+                "id": 16,
                 "title": "Profile",
                 "keywords": [
                     "profile",
@@ -204,7 +220,7 @@
                 "content": "Signed-in users can manage their profile information, which includes their role. The user's role and organizational email domain are used to personalize content recommendations."
             },
             {
-                "id": 19,
+                "id": 17,
                 "title": "Personal Playlist",
                 "keywords": [
                     "personal playlist",
@@ -217,7 +233,7 @@
                 "content": "Signed-in usesr can save their favorite modules in personal playlists. To add a module to a personal playlist, use the \"+\" button on its card or open it and select the option to add it to a playlist. You can create a new personal playlist or add the module to an existing one. Personal playlists are stored only in your current browser and device, so they are not synchronized to an account or backend service."
             },
             {
-                "id": 20,
+                "id": 18,
                 "title": "Personal skilling plan",
                 "keywords": [
                     "personal skilling plan",
