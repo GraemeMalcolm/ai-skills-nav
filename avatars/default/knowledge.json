@@ -38,7 +38,7 @@
                     "skilling challenge",
                     "series"
                 ],
-                "content": "A playlist is an ordered collection of related modules selected to help you build skills in a focused sequence. Its navigation pane lists the modules in learning order. You can also create personal playlists, give them names and optional descriptions, and add modules from across the website. You can open a playlist directly or find it within a course. Specific types of playlist include learning paths (comprehensive sequences of modules and playlists for a particular role or skill), skilling playlists (sequences of related short-form skilling learning expperiences), and skilling challenges (focused, time-bound learning experiences)."
+                "content": "A playlist is an ordered collection of related modules selected to help you build skills in a focused sequence. Its navigation pane lists the modules in learning order. You can also create personal playlists, give them names and optional descriptions, and add modules from across the website. You can open a playlist directly or find it within a course. Specific types of playlist include learning paths (comprehensive sequences of modules for a particular role or skill), skilling playlists (sequences of related short-form skilling learning experiences), and skilling challenges (focused, time-bound learning experiences)."
             },
             {
                 "id": 3,
@@ -64,7 +64,7 @@
                     "cards",
                     "tiles"
                 ],
-                "content": "The home page shows a subset of courses, playlists, and modules as lists of cards. The content shown on the home page is based on a combination of the most recently updated content and the highest rated content."
+                "content": "The home page shows a subset of playlists, and modules as lists of cards. The content shown on the home page is based on a combination of the most recently updated content and the highest rated content."
             },
             {
                 "id": 5,
