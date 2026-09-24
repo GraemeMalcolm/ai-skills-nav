@@ -222,11 +222,13 @@
                 "keywords": [
                     "personal skilling plan",
                     "personal skilling plans",
-                    "recommended",
+                    "my skilling",
+                    "recommended training",
+                    "recommended skilling",
                     "personalized skilling plan",
                     "personalized skilling plans"
                 ],
-                "content": "Signed-in users can view a personal skilling plan that includes content that is restricted to their organization (based on their email domain), content that is recommended based on their role, and their personal playlists."
+                "content": "On the My Skilling page, signed-in users can view a personal skilling plan that includes content that is restricted to their organization (based on their email domain), content that is recommended based on their role, and their personal playlists."
             }
         ]
     }
