@@ -1835,7 +1835,7 @@ const applyCatalogVisibility = () => {
     } else if (matches && isPersonalizedPage) {
       const roles = JSON.parse(card.dataset.role || "[]");
       matches = isOtherRoleCard
-        ? selectedOtherRoles.some((role) => roles.includes(role))
+        ? !roles.includes(selectedRole) && selectedOtherRoles.some((role) => roles.includes(role))
         : Boolean(selectedRole) && roles.includes(selectedRole);
     }
     if (matches && !isHomePage && card.matches("[data-filter-card]")) {
