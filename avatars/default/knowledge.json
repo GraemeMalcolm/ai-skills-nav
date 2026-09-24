@@ -13,7 +13,7 @@
                     "structured",
                     "catalog"
                 ],
-                "content": "The content on this website is organized into a hierarchy of courses, playlists, and modules. Courses are Microsoft Official Curriculum that group one or more ordered curated playlists. A curated playlist is an ordered collection of related modules selected to help you build skills in a focused sequence. A module is an individual learning experience made up of one or more ordered pages. Modules can include articles, videos, labs, and other learning activities. You can add modules to personal playlists, which are stored only in your current browser and device."
+                "content": "The content on this website is organized into a hierarchy of courses, playlists, and modules. Courses group related playlists, and playlists group related modules. There are different 'types' of courses, playlists, and modules to reflect different learning experiences and skilling programs"
             },
             {
                 "id": 1,
@@ -22,18 +22,23 @@
                     "module",
                     "modules",
                     "learning experience",
-                    "skilling content"
+                    "video",
+                    "hands-on lab",
+                    "exam prep"
                 ],
-                "content": "A module is an individual learning experience made up of one or more ordered pages. Modules can include articles, videos, labs, and other learning activities. You can open a module directly, find it within a curated playlist, or add it to a personal playlist."
+                "content": "A module is an individual learning experience made up of one or more ordered pages. Modules can include static text and graphics, videos, labs, and other learning activities. Specific types of module include training modules (core technical skilling in multimodal format), videos (short, video-based presentations), exam prep session, (hints and tipcs for a specific certification exam), and hands-on labs (interactive practical exercises). You can open a module directly, find it within a curated playlist, or add it to a personal playlist."
             },
             {
                 "id": 2,
                 "title": "Playlist",
                 "keywords": [
                     "playlist",
-                    "playlists"
+                    "playlists",
+                    "learning path",
+                    "skilling challenge",
+                    "series"
                 ],
-                "content": "A curated playlist is an ordered collection of related modules selected to help you build skills in a focused sequence. Its navigation pane lists the modules in learning order. You can also create personal playlists, give them names and optional descriptions, and add modules from across the website. You can open a playlist directly or find it within a course."
+                "content": "A playlist is an ordered collection of related modules selected to help you build skills in a focused sequence. Its navigation pane lists the modules in learning order. You can also create personal playlists, give them names and optional descriptions, and add modules from across the website. You can open a playlist directly or find it within a course. Specific types of playlist include learning paths (comprehensive sequences of modules and playlists for a particular role or skill), skilling challenges (focused, time-bound learning experiences), and series (thematic collections of modules and playlists)."
             },
             {
                 "id": 3,
@@ -41,9 +46,13 @@
                 "keywords": [
                     "course",
                     "courses",
-                    "instructor-led"
+                    "instructor-led",
+                    "ilt",
+                    "Microsoft Official Curricula",
+                    "MOC",
+                    "Microsoft Official Curriculum"
                 ],
-                "content": "A course is role-based learning experience that groups one or more ordered curated playlists. A course can be completed through the linked self-paced learning experiences or delivered as instructor-led training. A course may also identify a related credential."
+                "content": "A course is role-based learning experience that groups one or more ordered curated playlists. A course can be completed through the linked self-paced learning experiences or delivered as instructor-led training. A course may also identify a related credential. Microsoft Official Curriculum (MOC) courses are the official technical skilling materials for certification preparation and role-readiness."
             },
             {
                 "id": 4,
@@ -163,51 +172,6 @@
                     "stars"
                 ],
                 "content": "Ratings allow signed-in users to provide feedback on the quality and usefulness of learning content. In this proof-of-concept, random ratings are assigned to all learning content when the catalog is built."
-            }
-        ]
-    },
-    {
-        "category": "Learning experience",
-        "documents": [
-            {
-                "id": 13,
-                "title": "Microsoft Official Curriculum",
-                "keywords": [
-                    "Microsoft Official Curriculum",
-                    "Microsoft Official Curricula"
-                ],
-                "content": "Microsoft Official Curriculum (MOC) is a series of training materials and courses developed by Microsoft to help individuals gain skills and knowledge in specific Microsoft technologies. MOC courses are often used for certification preparation and are available in various formats, including instructor-led training and online learning. MOC includes a mix of content modalities, including text and graphics, videos, labs, and assessments. MOC courses are designed to provide a comprehensive learning experience and are often updated to reflect the latest Microsoft technologies and best practices."
-            },
-            {
-                "id": 14,
-                "title": "Microsoft Short Form Skilling",
-                "keywords": [
-                    "short-form",
-                    "short form"
-                ],
-                "content": "Microsoft Short Form Skilling is a series of short, focused learning experiences designed to help individuals quickly gain skills and knowledge about relevant topics. These experiences are typically shorter than traditional courses and are designed to provide a quick and efficient way for individuals to learn new skills and stay up-to-date with the latest Microsoft technologies and trends."
-            },
-            {
-                "id": 15,
-                "title": "Microsoft Hands-On Skilling",
-                "keywords": [
-                    "lab",
-                    "labs",
-                    "hands-on",
-                    "hands on"
-                ],
-                "content": "Microsoft Hands-On Skilling is a series of learning experiences designed to help individuals gain skills and knowledge through hands-on practice, with minimal time spent on conceptual background and theory. Other skilling experiences may contain labs combined with other types of content; but Microsoft Hands-On Skilling focuses primarily on practical, hands-on exercises."
-            },
-            {
-                "id": 16,
-                "title": "Learning experiences",
-                "keywords": [
-                    "learning experience",
-                    "learning experiences",
-                    "skilling experience",
-                    "skilling experiences"
-                ],
-                "content": "This site includes content from multiple sources and in a variety of styles. Some specific experiences are identified on the course, playlist, and module pages. Learning experiences can help you find content that is designed to be consumed together or that shares a common style or approach. Common learning experiences include Microsoft Official Curriculum, Microsoft Short Form Skilling, and Microsoft Hands-On Skilling."
             }
         ]
     },
