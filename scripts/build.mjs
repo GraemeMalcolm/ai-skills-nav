@@ -1207,6 +1207,16 @@ function averageRating(items) {
   return items.reduce((total, item) => total + item.rating, 0) / items.length;
 }
 
+function randomRating() {
+  const percentile = Math.random();
+  const [minimum, maximum] = percentile < 0.9
+    ? [45, 50]
+    : percentile < 0.97
+      ? [38, 44]
+      : [10, 37];
+  return (minimum + Math.floor(Math.random() * (maximum - minimum + 1))) / 10;
+}
+
 function isDiscoverable(item) {
   return item.hidden !== true;
 }
@@ -1390,7 +1400,7 @@ async function build() {
     module.modalities = [...new Set(module.pages.flatMap((page) => page.modalities))];
   }));
   modules.forEach((module) => {
-    module.rating = Math.floor(Math.random() * 5) + 1;
+    module.rating = randomRating();
     buildSearchContext(module);
   });
   for (const playlist of playlists) {
