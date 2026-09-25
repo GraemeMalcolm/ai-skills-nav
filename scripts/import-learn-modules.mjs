@@ -107,6 +107,15 @@ const exerciseSources = {
   "2353623": `${agentsExerciseRoot}/02-agent-custom-tools.md`,
 };
 
+function githubPagesExerciseSource(launchUrl) {
+  const url = new URL(launchUrl);
+  if (url.hostname.toLowerCase() !== "microsoftlearning.github.io") return;
+  const [repository, ...contentPath] = url.pathname.split("/").filter(Boolean);
+  if (!repository || !contentPath.length || !contentPath.at(-1).toLowerCase().endsWith(".html")) return;
+  contentPath[contentPath.length - 1] = contentPath.at(-1).replace(/\.html$/i, ".md");
+  return `https://raw.githubusercontent.com/MicrosoftLearning/${repository}/refs/heads/main/${contentPath.join("/")}`;
+}
+
 function exerciseDirectives(markdown) {
   return markdown
     .replace(
@@ -119,7 +128,22 @@ function exerciseDirectives(markdown) {
         return `[!LAB_STEPS[](${exerciseSource})]`;
       },
     )
+    .replace(
+      /\[!\[[^\]]*\]\([^)]+\)\]\((https?:\/\/microsoftlearning\.github\.io\/[^)\s]+)\)/gi,
+      (match, launchUrl) => {
+        const exerciseSource = githubPagesExerciseSource(launchUrl);
+        return exerciseSource ? `[!LAB_STEPS[](${exerciseSource})]` : match;
+      },
+    )
+    .replace(
+      /\[[^\]]+\]\((https?:\/\/microsoftlearning\.github\.io\/[^)\s]+)\)/gi,
+      (match, launchUrl) => {
+        const exerciseSource = githubPagesExerciseSource(launchUrl);
+        return exerciseSource ? `[!LAB_STEPS[](${exerciseSource})]` : match;
+      },
+    )
     .replace(/^!\[Screenshot[^\]]*\]\([^)]+\)\s*\n+/gim, "")
+    .replace(/^!\[[^\]]*\]\([^)\n]*launch-exercise\.png\)\s*\n+/gim, "")
     .replace(/^\[!INCLUDE\s+\[Lab note\]\(\.\.\/\.\.\/\.\.\/includes\/wwl\/launch-exercise-note\.md\)\]\s*\n+/gim, "")
     .replace(/\*Use the following button to start the exercise\*\s*\n\s*(?=\[!LAB_STEPS)/gi, "")
     .replace(/^Launch the exercise and follow the instructions\.\s*\n\s*(?=\[!LAB_STEPS)/gim, "");

@@ -11,8 +11,4 @@ You'll need:
 
 - Access to Microsoft Copilot with Cowork.
 
-*Use the following button to start the exercise*
-
-![Select this button to launch the interactive exercise in a new browser tab.](media/launch-exercise.png)
-
-[Delegate your first task to Copilot Cowork](https://microsoftlearning.github.io/AB-6008_delegate_work_with_AI/Instructions/Self-Paced/01-cowork-orientation.html)
+[!LAB_STEPS[](https://raw.githubusercontent.com/MicrosoftLearning/AB-6008_delegate_work_with_AI/refs/heads/main/Instructions/Self-Paced/01-cowork-orientation.md)]
