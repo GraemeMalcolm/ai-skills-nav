@@ -1977,6 +1977,66 @@ body.access-denied>[data-agent] {
   margin-top: 4px;
 }
 
+.credential-resources {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.credential-resources li+li {
+  margin-top: 0;
+}
+
+.credential-resources a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fbfaf7;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.credential-resources a:hover {
+  border-color: var(--violet);
+}
+
+.credential-resource-thumbnail {
+  width: 72px;
+  aspect-ratio: 16 / 9;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #e8e4dd;
+}
+
+.credential-resource-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.credential-resource-quiz {
+  color: var(--violet);
+}
+
+.credential-resource-quiz svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .primary-button,
 .nav-button {
   display: inline-flex;

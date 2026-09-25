@@ -964,15 +964,24 @@ function courseOverview(outputFile, course, playlists, credentials) {
   return overview(outputFile, course, "courses", credentialSection, playlistList, pageNavigation(outputFile, null, nextTarget));
 }
 
-function credentialOverview(outputFile, credential, courses, playlists) {
+function credentialOverview(outputFile, credential, courses, playlists, examPrep) {
   const practiceUrl = credential.practice || credential.pratice;
+  const resourceItem = (item, type, label, target) =>
+    `<li${accessData(item)}><a href="${relativeUrl(outputFile, target)}">
+      <span class="credential-resource-thumbnail">${thumbnail(outputFile, item, type)}</span>
+      <strong>${escapeHtml(label)}</strong>
+    </a></li>`;
   const preparationItems = [
-    ...courses.map((course) => `<li><a href="${relativeUrl(outputFile, path.join(outputRoot, "courses", course.slug, "index.html"))}">Course ${escapeHtml(course.course_number)}: ${escapeHtml(course.title)}</a></li>`),
-    ...playlists.map((playlist) => `<li><a href="${relativeUrl(outputFile, path.join(outputRoot, "playlists", playlist.slug, "index.html"))}">Skilling playlist: ${escapeHtml(playlist.title)}</a></li>`),
-    ...(practiceUrl ? [`<li><a href="${escapeHtml(practiceUrl)}" target="_blank" rel="noopener noreferrer">Practice assessment</a></li>`] : []),
+    ...courses.map((course) => resourceItem(course, "courses", `Course ${course.course_number}: ${course.title}`, path.join(outputRoot, "courses", course.slug, "index.html"))),
+    ...(examPrep ? [resourceItem(examPrep, "modules", `Exam prep: ${examPrep.title.replace(/^Exam prep:\s*/i, "")}`, path.join(outputRoot, "modules", examPrep.slug, "index.html"))] : []),
+    ...playlists.map((playlist) => resourceItem(playlist, "playlists", `Skilling playlist: ${playlist.title}`, path.join(outputRoot, "playlists", playlist.slug, "index.html"))),
+    ...(practiceUrl ? [`<li><a href="${escapeHtml(practiceUrl)}" target="_blank" rel="noopener noreferrer">
+      <span class="credential-resource-thumbnail credential-resource-quiz" aria-hidden="true">${icon("knowledge")}</span>
+      <strong>Practice assessment</strong>
+    </a></li>`] : []),
   ];
   const preparation = preparationItems.length
-    ? `<ul>${preparationItems.join("")}</ul>`
+    ? `<ul class="credential-resources">${preparationItems.join("")}</ul>`
     : "<p>No preparation resources are specified.</p>";
   const details = `<section class="credential"><h2>Prepare for this credential</h2>${preparation}</section>`;
   return overview(outputFile, credential, "credentials", details);
@@ -1556,9 +1565,10 @@ async function build() {
   for (const credential of credentials) {
     const credentialCourses = (credential.courses || []).map((slug) => courseMap.get(slug));
     const credentialPlaylists = (credential.playlists || []).map((slug) => playlistMap.get(slug));
+    const credentialExamPrep = typeof credential["exam-prep"] === "string" ? moduleMap.get(credential["exam-prep"]) : undefined;
     const credentialFile = path.join(outputRoot, "credentials", credential.slug, "index.html");
     const credentialBreadcrumbs = [{ label: "Credentials", target: credentialsFile }, { label: credential.title }];
-    await writePage(credentialFile, shell({ outputFile: credentialFile, title: credential.title, breadcrumbs: credentialBreadcrumbs, avatar: defaultAvatar, bodyClass: "learning-page", restrictedTo: credential.restricted_to, content: credentialOverview(credentialFile, credential, credentialCourses, credentialPlaylists) }));
+    await writePage(credentialFile, shell({ outputFile: credentialFile, title: credential.title, breadcrumbs: credentialBreadcrumbs, avatar: defaultAvatar, bodyClass: "learning-page", restrictedTo: credential.restricted_to, content: credentialOverview(credentialFile, credential, credentialCourses, credentialPlaylists, credentialExamPrep) }));
   }
 
   for (const module of modules) {
