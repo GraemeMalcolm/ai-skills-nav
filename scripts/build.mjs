@@ -836,25 +836,32 @@ function predefinedFilterDefinitions(config) {
   });
 }
 
-function matchesPredefinedFilter(item, definition) {
-  if (item.restricted_to.length) return false;
-  if (definition.minRating !== undefined && !(item.rating >= definition.minRating)) return false;
-  const matchesKeywords = definition.keywords.length === 0 || definition.keywords.some((keyword) => {
+function predefinedKeywordMatchCount(item, keywords) {
+  return keywords.filter((keyword) => {
     const terms = keyword.toLocaleLowerCase().replace(/[^a-z0-9+#.-]+/g, " ").trim().split(/\s+/).filter(Boolean);
     return terms.every((term) => item.searchContext.text.includes(term));
-  });
-  if (!matchesKeywords) return false;
+  }).length;
+}
+
+function matchesPredefinedFilter(item, definition, keywordMatches) {
+  if (item.restricted_to.length) return false;
+  if (definition.minRating !== undefined && !(item.rating >= definition.minRating)) return false;
+  if (definition.keywords.length && keywordMatches === 0) return false;
   return Object.entries(definition.filters).every(([field, selected]) => {
     const values = item.searchContext.filters[field];
     return selected.some((value) => values.includes(value));
   });
 }
 
-function balancedRecentItems(items, limit = 8) {
+function byPredefinedRank(left, right) {
+  return right.keywordMatches - left.keywordMatches || byRecent(left.item, right.item);
+}
+
+function balancedPredefinedItems(items, limit = 8) {
   const types = ["courses", "playlists", "modules", "credentials"];
   const candidates = new Map(types.map((type) => [
     type,
-    items.filter((entry) => entry.type === type).sort((left, right) => byRecent(left.item, right.item)),
+    items.filter((entry) => entry.type === type).sort(byPredefinedRank),
   ]));
   const counts = new Map(types.map((type) => [type, 0]));
   let selectedCount = 0;
@@ -864,14 +871,14 @@ function balancedRecentItems(items, limit = 8) {
     const minimumCount = Math.min(...available.map((type) => counts.get(type)));
     const balanced = available
       .filter((type) => counts.get(type) === minimumCount)
-      .sort((left, right) => byRecent(candidates.get(left)[counts.get(left)].item, candidates.get(right)[counts.get(right)].item));
+      .sort((left, right) => byPredefinedRank(candidates.get(left)[counts.get(left)], candidates.get(right)[counts.get(right)]));
     const selectedType = balanced[0];
     counts.set(selectedType, counts.get(selectedType) + 1);
     selectedCount++;
   }
   return types
     .flatMap((type) => candidates.get(type).slice(0, counts.get(type)))
-    .sort((left, right) => byRecent(left.item, right.item));
+    .sort(byPredefinedRank);
 }
 
 function predefinedFilterTabs(outputFile, definitions, items) {
@@ -880,7 +887,9 @@ function predefinedFilterTabs(outputFile, definitions, items) {
       ${definitions.map((definition, index) => `<button type="button" role="tab" id="home-filter-${definition.id}-tab" aria-controls="home-filter-${definition.id}-panel" aria-selected="${index === 0}" tabindex="${index === 0 ? 0 : -1}">${escapeHtml(definition.heading)}</button>`).join("")}
     </div>
     ${definitions.map((definition, index) => {
-    const matches = balancedRecentItems(items.filter(({ item }) => matchesPredefinedFilter(item, definition)));
+    const matches = balancedPredefinedItems(items
+      .map((entry) => ({ ...entry, keywordMatches: predefinedKeywordMatchCount(entry.item, definition.keywords) }))
+      .filter(({ item, keywordMatches }) => matchesPredefinedFilter(item, definition, keywordMatches)));
     const content = matches.length
       ? `<div class="card-grid">${matches.map(({ item, type }) => card(outputFile, item, type, false, definition.id, false)).join("")}</div>`
       : `<p class="filter-empty">No skilling matches this filter.</p>`;
@@ -1560,7 +1569,7 @@ async function build() {
       </form>
     </section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><div class="card-grid">${spotlightPlaylists.map((item) => card(homeFile, item, "playlists")).join("")}</div></section>
-    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>New and highly rated</h2></div>${predefinedFilterTabs(homeFile, homeFilterDefinitions, homeFilterItems)}<div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div></section>
+    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>Popular skilling themes</h2></div>${predefinedFilterTabs(homeFile, homeFilterDefinitions, homeFilterItems)}<div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div></section>
     ${catalogFilterDialog(discoverableItems, ["role", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
 
