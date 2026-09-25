@@ -1,0 +1,36 @@
+title: Get more done with Copilot Cowork
+description: >
+  Copilot Cowork carries out tasks on your behalf across Microsoft 365. Describe what you need in natural language, and
+  it does the work—sending emails, scheduling meetings, creating documents, posting in Teams, and managing files. This
+  module shows you when to use it, how to write requests that produce useful results, and what it can do today.
+level: 100
+duration: 67 minutes
+experience_type: Training module
+avatar: matt
+role:
+  - Business User
+  - Business Owner
+prerequisites:
+  - Familiarity with Copilot Chat.
+learning_outcomes:
+  - Differentiate Copilot Chat, agents, and Cowork and choose the right AI tool for the shape of work in front of you.
+  - Recognize how Cowork's pay-as-you-go usage works, check what a task uses, and let model choice work in your favor.
+  - >-
+    Describe how Cowork carries out multi-step work: from your request through planning, progress, approval, and
+    results.
+  - Write effective requests that help Cowork produce useful, well-scoped results.
+  - >-
+    Identify scenarios where Cowork adds the most value, such as meeting prep, calendar triage, company research, and
+    launch planning.
+  - Recognize the security model that applies to Cowork and the known limitations to keep in mind as you work.
+pages:
+  - 1-introduction.md
+  - 2-choose-right-ai-tool.md
+  - 2b-understand-cowork-usage.md
+  - 3-how-cowork-works.md
+  - 4-write-effective-cowork-requests.md
+  - 5-see-cowork-action.md
+  - 6-guardrails-limitations-responsible-use.md
+  - 6b-exercise-cowork-intro.md
+  - 7-knowledge-check.md
+  - 8-summary.md

@@ -1,0 +1,27 @@
+title: Draft and refine business content using Microsoft Copilot
+description: >-
+  This module discusses Microsoft Copilot. It highlights how to create a first draft of your document, then edit and
+  enhance your content creation process to improve efficiency and collaboration.
+level: 100
+duration: 67 minutes
+experience_type: Training module
+avatar: matt
+role:
+  - Administrator
+  - Business User
+  - Functional Consultant
+  - Solution Architect
+  - Technology Manager
+prerequisites:
+  - Students should have basic functional experience with Microsoft 365 services.
+learning_outcomes:
+  - Describe the key features and benefits of Microsoft Copilot in Word, Outlook, and PowerPoint.
+  - Use Microsoft Copilot to draft, refine, and enhance documents, emails, and presentations.
+  - Use the Researcher agent to gain deeper insights to your questions.
+pages:
+  - 1-introduction.md
+  - 2-draft-content-using-copilot.md
+  - 3-research-gather-researcher-agent.md
+  - 3a-exercise-draft-refine-content.md
+  - 4-knowledge-check.md
+  - 5-summary.md

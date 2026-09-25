@@ -1,0 +1,42 @@
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Choosing the right data tool</title>
+  <desc id="desc">Diagram comparing three tools for data tasks: Copilot in Excel for quick analysis in one file, the Analyst agent for deep analysis across files, and Copilot Chat for general questions.</desc>
+  <rect width="900" height="300" fill="#F4F3F5"/>
+
+  <!-- Copilot in Excel -->
+  <g>
+    <rect x="30" y="30" width="260" height="240" rx="16" fill="#FFFFFF" stroke="#0078D4" stroke-width="3"/>
+    <rect x="128" y="60" width="64" height="52" rx="4" fill="#0078D4"/>
+    <line x1="128" y1="76" x2="192" y2="76" stroke="#F4F3F5" stroke-width="2"/>
+    <line x1="128" y1="92" x2="192" y2="92" stroke="#F4F3F5" stroke-width="2"/>
+    <line x1="150" y1="60" x2="150" y2="112" stroke="#F4F3F5" stroke-width="2"/>
+    <line x1="170" y1="60" x2="170" y2="112" stroke="#F4F3F5" stroke-width="2"/>
+    <text x="160" y="165" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#091F2C">Copilot in Excel</text>
+    <text x="160" y="200" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#091F2C">Quick analysis and</text>
+    <text x="160" y="220" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#091F2C">charts within one</text>
+    <text x="160" y="240" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#091F2C">spreadsheet</text>
+  </g>
+
+  <!-- Analyst agent -->
+  <g>
+    <rect x="320" y="30" width="260" height="240" rx="16" fill="#FFFFFF" stroke="#C73ECC" stroke-width="3"/>
+    <circle cx="440" cy="80" r="18" fill="none" stroke="#C73ECC" stroke-width="5"/>
+    <line x1="453" y1="93" x2="468" y2="108" stroke="#C73ECC" stroke-width="5" stroke-linecap="round"/>
+    <line x1="410" y1="65" x2="425" y2="70" stroke="#C73ECC" stroke-width="3"/>
+    <line x1="415" y1="90" x2="428" y2="86" stroke="#C73ECC" stroke-width="3"/>
+    <text x="450" y="165" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#091F2C">Analyst agent</text>
+    <text x="450" y="200" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#091F2C">Deep analysis and</text>
+    <text x="450" y="220" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#091F2C">reports across</text>
+    <text x="450" y="240" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#091F2C">multiple files</text>
+  </g>
+
+  <!-- Copilot Chat -->
+  <g>
+    <rect x="610" y="30" width="260" height="240" rx="16" fill="#FFFFFF" stroke="#FF5C39" stroke-width="3"/>
+    <path d="M 700 60 L 780 60 A 12 12 0 0 1 792 72 L 792 96 A 12 12 0 0 1 780 108 L 730 108 L 712 122 L 715 108 L 700 108 A 12 12 0 0 1 688 96 L 688 72 A 12 12 0 0 1 700 60 Z" fill="#FF5C39"/>
+    <text x="740" y="165" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#091F2C">Copilot Chat</text>
+    <text x="740" y="200" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#091F2C">General questions</text>
+    <text x="740" y="220" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#091F2C">that don't need a</text>
+    <text x="740" y="240" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#091F2C">dedicated data tool</text>
+  </g>
+</svg>

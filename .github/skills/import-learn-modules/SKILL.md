@@ -40,7 +40,7 @@ Known Learn exercise launch-button links are converted to `[!LAB_STEPS]` directi
 
 1. Run `git status --short` and note pre-existing changes. Never discard them.
 2. Inspect every immediate directory under `temp/`. Stop with an actionable error if `index.yml`, a referenced unit, or a local include is missing.
-3. Run `node scripts/import-learn-modules.mjs` from the repository root. This imports every module under `temp/`, not a selected subset.
+3. Run `node scripts/import-learn-modules.mjs` from the repository root. This imports every module under `temp/`, not a selected subset. Set `IMPORT_MODULE_AVATAR` for batches that require an avatar other than the default `anton`.
 4. Review the generated `source/modules/<module-slug>/module.yml` files and page front matter. Confirm titles, descriptions, levels, durations, roles, topics, prerequisites, outcomes, and page order came from the appropriate module or unit scope.
 5. Search the generated pages for `::: zone`, `[!INCLUDE`, `[!LAB_STEPS`, `[!LAB_HOST`, `[!SIMULATION`, `[!PDF`, `[!VIDEO`, and `::: knowledge-check`. Confirm each source experience retained the corresponding canonical tag.
 6. Run `npm run build`. Fix importer or imported-content errors caused by the conversion, then rerun the import and build.

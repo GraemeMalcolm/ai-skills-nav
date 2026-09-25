@@ -1,0 +1,25 @@
+title: Analyze and visualize data using Microsoft Copilot
+description: This module discusses Microsoft Copilot. It highlights how to analyze and visualize data effectively.
+level: 100
+duration: 66 minutes
+experience_type: Training module
+avatar: matt
+role:
+  - Administrator
+  - Business User
+  - Functional Consultant
+  - Solution Architect
+  - Technology Manager
+prerequisites:
+  - Students should have basic functional experience with Microsoft 365 services.
+learning_outcomes:
+  - >-
+    By the end of this module, you'll be able to leverage Microsoft Copilot for data analysis and visualization in Excel
+    and employ the Analyst Agent to gather insights and enhance your data presentations.
+pages:
+  - 1-introduction.md
+  - 2-analyze-data-workflows-excel.md
+  - 3-generate-insights-analyst-agent.md
+  - 3a-exercise-analyze-visualize-data.md
+  - 4-knowledge-check.md
+  - 5-summary.md

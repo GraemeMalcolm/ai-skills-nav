@@ -1,0 +1,27 @@
+title: Manage meetings and collaboration using Microsoft Copilot
+description: This module discusses Microsoft Copilot. It highlights how to manage meetings and enhance collaboration effectively.
+level: 100
+duration: 70 minutes
+experience_type: Training module
+avatar: matt
+role:
+  - Administrator
+  - Business User
+  - Functional Consultant
+  - Solution Architect
+  - Technology Manager
+prerequisites:
+  - Students should have basic functional experience with Microsoft 365 services.
+learning_outcomes:
+  - >-
+    By the end of this module, you'll be able to use Microsoft Copilot to follow up on meetings by summarizing email
+    threads, capture real-time insights and automate note taking during meetings, generate post-meeting summaries and
+    action items, draft effective follow-up emails, and leverage Copilot Pages and Notebooks for shared planning and
+    deeper analysis.
+pages:
+  - 1-introduction.md
+  - 2-streamline-meeting-prep.md
+  - 3-enhance-collaboration-chat-pages-notebooks.md
+  - 3a-exercise-manage-meetings-collaboration.md
+  - 4-knowledge-check.md
+  - 5-summary.md

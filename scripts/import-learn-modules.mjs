@@ -6,6 +6,7 @@ import yaml from "js-yaml";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const inputRoot = path.join(root, "temp");
 const outputRoot = path.join(root, "source", "modules");
+const avatar = process.env.IMPORT_MODULE_AVATAR ?? "anton";
 
 const levelValues = {
   beginner: 100,
@@ -304,7 +305,7 @@ async function importModule(entry) {
     level: levelValues[module.levels?.[0]] ?? 200,
     duration: `${orderedUnits.reduce((total, unit) => total + (unit.data.durationInMinutes ?? 0), 0)} minutes`,
     experience_type: "Training module",
-    avatar: "anton",
+    avatar,
     role: roleValues(module.roles),
     prerequisites: listItems(module.prerequisites),
     learning_outcomes: listItems(module.abstract),

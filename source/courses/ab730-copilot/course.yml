@@ -1,0 +1,17 @@
+title: Transform business workflows with generative AI
+course_number: AB-730
+credentials:
+  - ab-730
+description: In this course, learners will discover how to apply generative AI to streamline daily tasks, enhance decision-making, and drive meaningful business outcomes. Learners will understand how to use Microsoft 365 Copilot and its functionalities to improve their productivity. The course focuses on real-world use cases—no coding required—making it ideal for those who want to confidently integrate AI into their work.
+level: 100
+duration: 1 day
+experience_type: Microsoft Official Curriculum
+role:
+  - Business User
+avatar: matt
+prerequisites:
+  - Familiarity with Microsoft 365 applications and basic generative AI concepts
+learning_outcomes:
+  - Apply Microsoft Copilot across data analysis, delegated work, content creation, and meeting collaboration to improve end-to-end business workflows.
+playlists:
+  - enhance-business-workflows-with-ai

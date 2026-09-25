@@ -1,0 +1,38 @@
+<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Copilot architecture diagram</title>
+  <desc id="desc">Diagram showing three components, Large Language Models, Microsoft Graph data, and Work IQ, each with an arrow pointing to a central box labeled Personalized response.</desc>
+  <rect width="900" height="480" fill="#F4F3F5"/>
+
+  <!-- Component boxes -->
+  <g>
+    <rect x="60" y="60" width="220" height="90" rx="14" fill="#FFFFFF" stroke="#0078D4" stroke-width="3"/>
+    <text x="170" y="100" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="600" fill="#091F2C">Large Language</text>
+    <text x="170" y="126" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="600" fill="#091F2C">Models</text>
+  </g>
+
+  <g>
+    <rect x="60" y="195" width="220" height="90" rx="14" fill="#FFFFFF" stroke="#C73ECC" stroke-width="3"/>
+    <text x="170" y="235" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="600" fill="#091F2C">Microsoft Graph</text>
+    <text x="170" y="261" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="600" fill="#091F2C">data</text>
+  </g>
+
+  <g>
+    <rect x="60" y="330" width="220" height="90" rx="14" fill="#FFFFFF" stroke="#FF5C39" stroke-width="3"/>
+    <text x="170" y="382" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="600" fill="#091F2C">Work IQ</text>
+  </g>
+
+  <!-- Arrows converging to center -->
+  <path d="M 280 105 L 470 220" stroke="#0078D4" stroke-width="3" fill="none"/>
+  <path d="M 462 210 L 470 220 L 456 226 Z" fill="#0078D4"/>
+
+  <path d="M 280 240 L 470 240" stroke="#C73ECC" stroke-width="3" fill="none"/>
+  <path d="M 458 231 L 470 240 L 458 249 Z" fill="#C73ECC"/>
+
+  <path d="M 280 375 L 470 260" stroke="#FF5C39" stroke-width="3" fill="none"/>
+  <path d="M 456 254 L 470 260 L 462 270 Z" fill="#FF5C39"/>
+
+  <!-- Central hub -->
+  <rect x="480" y="190" width="360" height="110" rx="16" fill="#091F2C"/>
+  <text x="660" y="240" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F4F3F5">Personalized</text>
+  <text x="660" y="272" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F4F3F5">response</text>
+</svg>
