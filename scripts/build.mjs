@@ -857,7 +857,7 @@ function byPredefinedRank(left, right) {
   return right.keywordMatches - left.keywordMatches || byRecent(left.item, right.item);
 }
 
-function balancedPredefinedItems(items, limit = 8) {
+function balancedPredefinedItems(items, limit = 4) {
   const types = ["courses", "playlists", "modules", "credentials"];
   const candidates = new Map(types.map((type) => [
     type,

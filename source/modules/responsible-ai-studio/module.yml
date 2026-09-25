@@ -12,8 +12,7 @@ role:
   - Student
 prerequisites:
   - >-
-    Before starting this module, you should be familiar with Microsoft Foundry. Consider completing the [Introduction to
-    Microsoft Foundry](/training/modules/introduction-to-azure-ai-studio) module before starting this one.
+    Before starting this module, you should be familiar with Microsoft Foundry.
 learning_outcomes:
   - Describe an overall process for responsible generative AI solution development
   - Identify and prioritize potential harms relevant to a generative AI solution
