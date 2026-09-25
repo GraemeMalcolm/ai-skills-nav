@@ -1295,6 +1295,7 @@ async function build() {
   await rm(outputRoot, { recursive: true, force: true });
   await mkdir(outputRoot, { recursive: true });
 
+  const config = await readYaml(path.join(root, "config.yml"));
   const [modules, playlists, courses, credentials] = await Promise.all([
     loadCollection("modules", "module.yml"),
     loadCollection("playlists", "playlist.yml"),
@@ -1376,6 +1377,14 @@ async function build() {
   const playlistMap = new Map(playlists.map((playlist) => [playlist.slug, playlist]));
   const courseMap = new Map(courses.map((course) => [course.slug, course]));
   const credentialMap = new Map(credentials.map((credential) => [credential.slug, credential]));
+  if (!Array.isArray(config.spotlight) || config.spotlight.some((slug) => typeof slug !== "string" || slug.trim() === "")) {
+    throw new Error("config.yml spotlight must be a list of playlist slugs");
+  }
+  const spotlightPlaylists = config.spotlight.slice(0, 4).map((slug) => {
+    const playlist = playlistMap.get(slug);
+    if (!playlist) throw new Error(`config.yml spotlight references missing playlist ${slug}`);
+    return playlist;
+  });
   await Promise.all(modules.map(async (module) => {
     module.pages = await getModulePages(module);
     module.modalities = [...new Set(module.pages.flatMap((page) => page.modalities))];
@@ -1462,17 +1471,6 @@ async function build() {
     "Secure cloud resources with Microsoft Defender",
     "Connect agents to MCP tools",
   ]));
-  const byRecent = (left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0)
-    || left.title.localeCompare(right.title);
-  const spotlightPlaylists = ["Learning Path", "Skilling Playlist"]
-    .flatMap((experienceType) => discoverablePlaylists
-      .filter((playlist) => experienceTypeName(playlist, "playlists") === experienceType)
-      .sort(byRecent)
-      .slice(0, 2));
-  for (let index = spotlightPlaylists.length - 1; index > 0; index--) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
-    [spotlightPlaylists[index], spotlightPlaylists[randomIndex]] = [spotlightPlaylists[randomIndex], spotlightPlaylists[index]];
-  }
   const homeModules = homepageItems(discoverableModules);
   const homeContent = `<section class="home-hero hero-theme-home"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p class="home-hero-summary">Choose a curated path or jump straight into a learning experience.</p>
       <form class="hero-search" role="search" data-site-search data-catalog-url="${relativeUrl(homeFile, catalogFile)}" data-animated-search data-search-hints="${heroSearchHints}">
