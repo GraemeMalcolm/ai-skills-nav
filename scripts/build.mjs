@@ -837,6 +837,7 @@ function predefinedFilterDefinitions(config) {
 }
 
 function matchesPredefinedFilter(item, definition) {
+  if (item.restricted_to.length) return false;
   if (definition.minRating !== undefined && !(item.rating >= definition.minRating)) return false;
   const matchesKeywords = definition.keywords.length === 0 || definition.keywords.some((keyword) => {
     const terms = keyword.toLocaleLowerCase().replace(/[^a-z0-9+#.-]+/g, " ").trim().split(/\s+/).filter(Boolean);
