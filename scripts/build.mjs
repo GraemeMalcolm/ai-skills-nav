@@ -1010,7 +1010,10 @@ function courseOverview(outputFile, course, playlists, credentials) {
   const playlistList = overviewContents(outputFile, playlists, "playlists", "In this course:", (playlist) =>
     playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), playlist));
   const credentialContent = credentials.length
-    ? `<ul>${credentials.map((credential) => `<li${accessData(credential)}><a href="${relativeUrl(outputFile, path.join(outputRoot, "credentials", credential.slug, "index.html"))}">${escapeHtml(credential.credential_type || "Credential")}: ${escapeHtml(credential.title)}</a></li>`).join("")}</ul>`
+    ? `<ul class="credential-resources">${credentials.map((credential) => `<li${accessData(credential)}><a href="${relativeUrl(outputFile, path.join(outputRoot, "credentials", credential.slug, "index.html"))}">
+      <span class="credential-resource-thumbnail">${thumbnail(outputFile, credential, "credentials")}</span>
+      <strong>${escapeHtml(credential.credential_type || "Credential")}: ${escapeHtml(credential.title)}</strong>
+    </a></li>`).join("")}</ul>`
     : "<p>No associated credential is specified.</p>";
   const credentialSection = `<section class="credential"><h2>Credential preparation</h2>${credentialContent}</section>`;
   const firstPlaylist = playlists.find((playlist) => playlist.modules.length);
