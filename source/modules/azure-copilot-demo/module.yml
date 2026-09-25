@@ -1,5 +1,5 @@
 title: Azure Copilot Demo
-description: Learn how Azure Copilot can help you manage virtual machines, administer Azure resources, and streamline cloud operations.
+description: Learn how Azure Copilot can help you manage and secure virtual machines, administer Azure resources, and streamline cloud operations.
 level: 100
 duration: 10 minutes
 experience_type: Video
@@ -8,6 +8,6 @@ role:
 prerequisites:
   - Familiarity with Azure resources and basic cloud administration
 learning_outcomes:
-  - Use Microsoft Copilot in Azure to support virtual machine management and resource administration.
+  - Use Microsoft Copilot in Azure to support virtual machine management, security, governance, and resource administration.
 pages:
   - 01-azure-copilot.md
