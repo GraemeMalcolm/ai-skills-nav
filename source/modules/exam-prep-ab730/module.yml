@@ -1,0 +1,14 @@
+title: "Exam Prep: AB-730: AI Business Professional"
+description: Join Andrew Conniff, Lead Technical Trainer at Microsoft, for a live session designed to help you prepare for the AB‑730 - AI Business Professional exam. Andrew will walk through the exam’s focus areas, the skills being assessed, and what you can expect on test day. This session will give you a clear direction on where to spend your study time.
+level: 100
+duration: 25 minutes
+experience_type: Exam Prep
+role:
+  - Business User
+prerequisites:
+  - Knowledge of basic AI concepts and Microsoft Azure services.
+  - Familiarity with Microsoft Foundry.
+learning_outcomes:
+  - "Get ready to take exam AB-730: AI Business Professional with confidence."
+pages:
+  - 01-ab730-exam.md

@@ -1,0 +1,14 @@
+title: "Exam Prep: AI-901 - Microsoft Azure AI Fundamentals"
+description: John Savill provides key information to help pass the AI-901 - Microsoft Azure AI Fundamentals certification exam.
+level: 200
+duration: 75 minutes
+experience_type: Exam Prep
+role:
+  - Developer
+prerequisites:
+  - Knowledge of basic AI concepts and Microsoft Azure services.
+  - Familiarity with Microsoft Foundry.
+learning_outcomes:
+  - "Get ready to take exam AI-901: Microsoft Azure AI Fundamentals with confidence."
+pages:
+  - 01-ai901-exam.md

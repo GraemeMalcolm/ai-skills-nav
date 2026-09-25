@@ -857,29 +857,9 @@ function byPredefinedRank(left, right) {
   return right.keywordMatches - left.keywordMatches || byRecent(left.item, right.item);
 }
 
-function balancedPredefinedItems(items, limit = 4) {
-  const types = ["courses", "playlists", "modules", "credentials"];
+function rankedPredefinedItems(items, limit = 4) {
   const distinctItems = [...new Map(items.map((entry) => [`${entry.type}:${entry.item.slug}`, entry])).values()];
-  const candidates = new Map(types.map((type) => [
-    type,
-    distinctItems.filter((entry) => entry.type === type).sort(byPredefinedRank),
-  ]));
-  const counts = new Map(types.map((type) => [type, 0]));
-  let selectedCount = 0;
-  while (selectedCount < limit) {
-    const available = types.filter((type) => counts.get(type) < candidates.get(type).length);
-    if (!available.length) break;
-    const minimumCount = Math.min(...available.map((type) => counts.get(type)));
-    const balanced = available
-      .filter((type) => counts.get(type) === minimumCount)
-      .sort((left, right) => byPredefinedRank(candidates.get(left)[counts.get(left)], candidates.get(right)[counts.get(right)]));
-    const selectedType = balanced[0];
-    counts.set(selectedType, counts.get(selectedType) + 1);
-    selectedCount++;
-  }
-  return types
-    .flatMap((type) => candidates.get(type).slice(0, counts.get(type)))
-    .sort(byPredefinedRank);
+  return distinctItems.sort(byPredefinedRank).slice(0, limit);
 }
 
 function predefinedFilterTabs(outputFile, definitions, items) {
@@ -888,7 +868,7 @@ function predefinedFilterTabs(outputFile, definitions, items) {
       ${definitions.map((definition, index) => `<button type="button" role="tab" id="home-filter-${definition.id}-tab" aria-controls="home-filter-${definition.id}-panel" aria-selected="${index === 0}" tabindex="${index === 0 ? 0 : -1}">${escapeHtml(definition.heading)}</button>`).join("")}
     </div>
     ${definitions.map((definition, index) => {
-    const matches = balancedPredefinedItems(items
+    const matches = rankedPredefinedItems(items
       .map((entry) => ({ ...entry, keywordMatches: predefinedKeywordMatchCount(entry.item, definition.keywords) }))
       .filter(({ item, keywordMatches }) => matchesPredefinedFilter(item, definition, keywordMatches)));
     const content = matches.length
