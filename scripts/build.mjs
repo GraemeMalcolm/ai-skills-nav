@@ -966,6 +966,9 @@ function courseOverview(outputFile, course, playlists, credentials) {
 
 function credentialOverview(outputFile, credential, courses, playlists, examPrep) {
   const practiceUrl = credential.practice || credential.pratice;
+  const skills = credential.skills?.length
+    ? `<section class="credential-skills"><h2>Skills measured:</h2><ul>${credential.skills.map((skill) => `<li>${escapeHtml(skill)}</li>`).join("")}</ul></section>`
+    : "";
   const resourceItem = (item, type, label, target) =>
     `<li${accessData(item)}><a href="${relativeUrl(outputFile, target)}">
       <span class="credential-resource-thumbnail">${thumbnail(outputFile, item, type)}</span>
@@ -984,7 +987,7 @@ function credentialOverview(outputFile, credential, courses, playlists, examPrep
     ? `<ul class="credential-resources">${preparationItems.join("")}</ul>`
     : "<p>No preparation resources are specified.</p>";
   const details = `<section class="credential"><h2>Prepare for this credential</h2>${preparation}</section>`;
-  return overview(outputFile, credential, "credentials", details);
+  return overview(outputFile, credential, "credentials", details, skills);
 }
 
 function pageNavigation(outputFile, previousTarget = null, nextTarget = null, boundaries = {}) {
@@ -1420,6 +1423,7 @@ async function build() {
     });
   }
   for (const credential of credentials) {
+    if (credential.skills !== undefined && !Array.isArray(credential.skills)) throw new Error(`Credential ${credential.slug} skills must be a list`);
     if (credential.courses !== undefined && !Array.isArray(credential.courses)) throw new Error(`Credential ${credential.slug} courses must be a list`);
     if (credential.playlists !== undefined && !Array.isArray(credential.playlists)) throw new Error(`Credential ${credential.slug} playlists must be a list`);
     const childCourses = (credential.courses || []).map((slug) => {

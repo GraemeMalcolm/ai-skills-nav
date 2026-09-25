@@ -1755,6 +1755,26 @@ body.access-denied>[data-agent] {
   box-shadow: var(--shadow);
 }
 
+.credential-skills {
+  margin-top: 24px;
+}
+
+.credential-skills h2 {
+  margin: 0 0 8px;
+  font: 700 .9rem "Manrope", sans-serif;
+}
+
+.credential-skills ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.credential-skills li+li {
+  margin-top: 6px;
+}
+
 .overview-contents {
   margin-top: 24px;
 }
