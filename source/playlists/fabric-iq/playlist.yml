@@ -5,6 +5,8 @@ duration: 120 minutes
 experience_type: Learning Path
 role:
   - Developer
+  - Data Analyst
+  - Data Engineer
 avatar: inna
 prerequisites:
   - AI agent development experience and familiarity with Microsoft Fabric.

@@ -765,7 +765,7 @@ function cardRating(item) {
   return `<span class="card-rating" role="img" aria-label="${rating.toFixed(1)} out of 5 stars"><span class="card-rating-stars" aria-hidden="true"><span>${stars}</span><span class="card-rating-fill" style="width: ${(rating / 5) * 100}%">${stars}</span></span><span class="card-rating-value">${rating.toFixed(1)}</span></span>`;
 }
 
-function card(outputFile, item, type, defaultHidden = false, instance = "") {
+function card(outputFile, item, type, defaultHidden = false, instance = "", catalogInteractive = true) {
   const target = type === "playlists"
     ? playlistEntryTarget(path.join(outputRoot, "playlists"), item)
     : path.join(outputRoot, type, item.slug, "index.html");
@@ -784,46 +784,108 @@ function card(outputFile, item, type, defaultHidden = false, instance = "") {
     <span class="card-body"><strong>${escapeHtml(item.title)}</strong>${experienceType}<span class="card-meta-row">${metadataLine(item)}</span>${cardRating(item)}</span>
     ${tooltip}
   </a>`;
-  if (type !== "modules") return cardLink.replace('class="content-card"', `class="content-card"${searchData}${filterData}${defaultVisibility}`);
-  return `<div class="content-card-container"${searchData}${filterData}${defaultVisibility}>
+  const cardData = catalogInteractive ? `${searchData}${filterData}${defaultVisibility}` : accessData(item);
+  if (type !== "modules") return cardLink.replace('class="content-card"', `class="content-card"${cardData}`);
+  return `<div class="content-card-container"${cardData}>
     ${cardLink}
     <button class="card-playlist-add" type="button" aria-label="Add ${escapeHtml(item.title)} to a personal playlist" title="Add to personal playlist" data-personal-playlist-open data-module-name="${escapeHtml(item.title)}" data-module-path="modules/${escapeHtml(item.slug)}/index.html">${icon("plus")}</button>
   </div>`;
 }
 
-function homepageItems(items) {
+function byRecent(left, right) {
   const byTitle = (left, right) => left.title.localeCompare(right.title);
-  const byRecent = (left, right) => Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0) || byTitle(left, right);
-  const byRating = (left, right) => right.rating - left.rating
-      || Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0)
-      || byTitle(left, right);
-  const selected = new Set();
-  const select = (experienceType, recentCount, ratingCount) => {
-    const candidates = items.filter((item) => item.experience_type?.toLocaleLowerCase() === experienceType);
-    [...candidates]
-      .filter((item) => !selected.has(item))
-      .sort(byRecent)
-      .slice(0, recentCount)
-      .forEach((item) => selected.add(item));
-    [...candidates]
-      .filter((item) => !selected.has(item))
-      .sort(byRating)
-      .slice(0, ratingCount)
-      .forEach((item) => selected.add(item));
-  };
-  select("training module", 2, 1);
-  select("video", 1, 1);
-  select("hands-on lab", 1, 1);
-  select("exam prep", 1, 0);
-  const featured = [...selected];
-  for (let index = featured.length - 1; index > 0; index--) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
-    [featured[index], featured[randomIndex]] = [featured[randomIndex], featured[index]];
+  return Date.parse(right.last_updated || 0) - Date.parse(left.last_updated || 0) || byTitle(left, right);
+}
+
+function predefinedFilterDefinitions(config) {
+  const configured = config["pre-defined-filters"];
+  if (!Array.isArray(configured) || configured.length === 0) {
+    throw new Error("config.yml pre-defined-filters must be a non-empty list");
   }
-  return {
-    featuredCount: selected.size,
-    items: [...featured, ...items.filter((item) => !selected.has(item))],
-  };
+  return configured.map((entry, index) => {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry) || Object.keys(entry).length !== 1) {
+      throw new Error(`config.yml pre-defined-filters entry ${index + 1} must contain one named filter`);
+    }
+    const [[id, properties]] = Object.entries(entry);
+    if (!/^[a-z0-9-]+$/i.test(id) || !Array.isArray(properties) || properties.some((property) => !property || typeof property !== "object" || Array.isArray(property))) {
+      throw new Error(`config.yml pre-defined filter ${id} is invalid`);
+    }
+    const definition = Object.assign({}, ...properties);
+    if (typeof definition.heading !== "string" || !definition.heading.trim()) {
+      throw new Error(`config.yml pre-defined filter ${id} must define a heading`);
+    }
+    if (definition["min-rating"] !== undefined && (typeof definition["min-rating"] !== "number" || definition["min-rating"] < 0 || definition["min-rating"] > 5)) {
+      throw new Error(`config.yml pre-defined filter ${id} has an invalid min-rating`);
+    }
+    const filters = Object.fromEntries(Object.entries(definition)
+      .filter(([field]) => !["heading", "keywords", "min-rating"].includes(field))
+      .map(([field, values]) => {
+        if (!catalogFilterFields.includes(field)) throw new Error(`config.yml pre-defined filter ${id} uses unknown filter ${field}`);
+        const normalized = Array.isArray(values) ? values : [values];
+        if (!normalized.length || normalized.some((value) => value === undefined || value === null || value === "")) {
+          throw new Error(`config.yml pre-defined filter ${id} has invalid ${field} values`);
+        }
+        return [field, normalized.map(String)];
+      }));
+    const keywords = definition.keywords === undefined
+      ? []
+      : (Array.isArray(definition.keywords) ? definition.keywords : String(definition.keywords).split(","))
+        .map((keyword) => String(keyword).trim())
+        .filter(Boolean);
+    return { id, heading: definition.heading.trim(), minRating: definition["min-rating"], keywords, filters };
+  });
+}
+
+function matchesPredefinedFilter(item, definition) {
+  if (definition.minRating !== undefined && !(item.rating >= definition.minRating)) return false;
+  const matchesKeywords = definition.keywords.length === 0 || definition.keywords.some((keyword) => {
+    const terms = keyword.toLocaleLowerCase().replace(/[^a-z0-9+#.-]+/g, " ").trim().split(/\s+/).filter(Boolean);
+    return terms.every((term) => item.searchContext.text.includes(term));
+  });
+  if (!matchesKeywords) return false;
+  return Object.entries(definition.filters).every(([field, selected]) => {
+    const values = item.searchContext.filters[field];
+    return selected.some((value) => values.includes(value));
+  });
+}
+
+function balancedRecentItems(items, limit = 8) {
+  const types = ["courses", "playlists", "modules", "credentials"];
+  const candidates = new Map(types.map((type) => [
+    type,
+    items.filter((entry) => entry.type === type).sort((left, right) => byRecent(left.item, right.item)),
+  ]));
+  const counts = new Map(types.map((type) => [type, 0]));
+  let selectedCount = 0;
+  while (selectedCount < limit) {
+    const available = types.filter((type) => counts.get(type) < candidates.get(type).length);
+    if (!available.length) break;
+    const minimumCount = Math.min(...available.map((type) => counts.get(type)));
+    const balanced = available
+      .filter((type) => counts.get(type) === minimumCount)
+      .sort((left, right) => byRecent(candidates.get(left)[counts.get(left)].item, candidates.get(right)[counts.get(right)].item));
+    const selectedType = balanced[0];
+    counts.set(selectedType, counts.get(selectedType) + 1);
+    selectedCount++;
+  }
+  return types
+    .flatMap((type) => candidates.get(type).slice(0, counts.get(type)))
+    .sort((left, right) => byRecent(left.item, right.item));
+}
+
+function predefinedFilterTabs(outputFile, definitions, items) {
+  return `<div class="home-filter-tabs pivot" data-pivot data-predefined-filters>
+    <div class="pivot-tabs" role="tablist" aria-label="Skilling categories">
+      ${definitions.map((definition, index) => `<button type="button" role="tab" id="home-filter-${definition.id}-tab" aria-controls="home-filter-${definition.id}-panel" aria-selected="${index === 0}" tabindex="${index === 0 ? 0 : -1}">${escapeHtml(definition.heading)}</button>`).join("")}
+    </div>
+    ${definitions.map((definition, index) => {
+    const matches = balancedRecentItems(items.filter(({ item }) => matchesPredefinedFilter(item, definition)));
+    const content = matches.length
+      ? `<div class="card-grid">${matches.map(({ item, type }) => card(outputFile, item, type, false, definition.id, false)).join("")}</div>`
+      : `<p class="filter-empty">No skilling matches this filter.</p>`;
+    return `<div class="pivot-panel" role="tabpanel" id="home-filter-${definition.id}-panel" aria-labelledby="home-filter-${definition.id}-tab"${index === 0 ? "" : " hidden"}>${content}</div>`;
+  }).join("")}
+  </div>`;
 }
 
 function catalogSearch(inputId, label, placeholder) {
@@ -1367,7 +1429,7 @@ async function build() {
   playlists.sort((a, b) => a.title.localeCompare(b.title));
   courses.sort((a, b) => a.title.localeCompare(b.title));
   credentials.sort((a, b) => a.title.localeCompare(b.title));
-  await Promise.all([...courses, ...playlists, ...modules].map(async (item) => {
+  await Promise.all([...courses, ...playlists, ...modules, ...credentials].map(async (item) => {
     item.last_updated = await lastCommitDate(item.directory);
   }));
   const roleAccess = new Map();
@@ -1460,6 +1522,7 @@ async function build() {
   const discoverableCourses = courses.filter(isDiscoverable);
   const discoverablePlaylists = playlists.filter(isDiscoverable);
   const discoverableModules = modules.filter(isDiscoverable);
+  const discoverableCredentials = credentials.filter(isDiscoverable);
   const discoverableItems = [...discoverableCourses, ...discoverablePlaylists, ...discoverableModules];
   await writeCatalog({ courses: discoverableCourses, playlists: discoverablePlaylists, modules: discoverableModules, credentials });
 
@@ -1481,7 +1544,13 @@ async function build() {
     "Secure cloud resources with Microsoft Defender",
     "Connect agents to MCP tools",
   ]));
-  const homeModules = homepageItems(discoverableModules);
+  const homeFilterDefinitions = predefinedFilterDefinitions(config);
+  const homeFilterItems = [
+    ...discoverableCourses.map((item) => ({ item, type: "courses" })),
+    ...discoverablePlaylists.map((item) => ({ item, type: "playlists" })),
+    ...discoverableModules.map((item) => ({ item, type: "modules" })),
+    ...discoverableCredentials.map((item) => ({ item, type: "credentials" })),
+  ];
   const homeContent = `<section class="home-hero hero-theme-home"><p class="kicker">AI Skills Nav</p><h1>Skilling in the Name of...</h1><p class="home-hero-summary">Choose a curated path or jump straight into a learning experience.</p>
       <form class="hero-search" role="search" data-site-search data-catalog-url="${relativeUrl(homeFile, catalogFile)}" data-animated-search data-search-hints="${heroSearchHints}">
         <label for="hero-search-input">What do you want to learn how to do?</label>
@@ -1490,7 +1559,7 @@ async function build() {
       </form>
     </section>
     <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><div class="card-grid">${spotlightPlaylists.map((item) => card(homeFile, item, "playlists")).join("")}</div></section>
-    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>New and highly rated</h2></div><div class="card-grid" data-module-grid>${homeModules.items.map((item, index) => card(homeFile, item, "modules", index >= homeModules.featuredCount)).join("")}</div><div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div></section>
+    <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>New and highly rated</h2></div>${predefinedFilterTabs(homeFile, homeFilterDefinitions, homeFilterItems)}<div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div></section>
     ${catalogFilterDialog(discoverableItems, ["role", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
 

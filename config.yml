@@ -3,3 +3,37 @@ spotlight:
   - develop-your-first-ai-agent-with-microsoft-foundry
   - ai-concepts-for-developers-and-technology-professionals
   - build-2026
+pre-defined-filters:
+  - new-rated:
+      - heading: New and highly rated
+      - min-rating: 4.6
+  - ai-leadership:
+      - heading: AI Leadership
+      - role:
+          - Business Leader
+      - keywords: Artificial Intelligence, AI, Leadership, Strategy, Corporate
+  - ai-work:
+      - heading: AI at work
+      - role:
+          - Business User
+      - keywords: Artificial Intelligence, AI, Microsoft Copilot, Cowork, Microsoft 365
+  - develop-ai:
+      - heading: Develop AI solutions
+      - role:
+          - Developer
+      - keywords: Artificial Intelligence, AI, develop, Foundry, SDK, APIs, Copilot Studio
+  - data:
+      - heading: Modern data
+      - role:
+          - Developer
+          - Data Analyst
+          - Data Engineer
+      - keywords: data, fabric, sql, cosmos, postgresql
+  - security:
+      - heading: Security and governance
+      - role:
+          - Administrator
+          - Data Engineer
+          - Developer
+          - Security administrator
+      - keywords: security, secure, compliance, governance, identity, access, protection, defender, purview
