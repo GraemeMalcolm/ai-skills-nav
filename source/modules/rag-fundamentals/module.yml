@@ -1,7 +1,7 @@
 title: Introduction to retrieval-augmented generation concepts
 description: >-
   Retrieval-augmented generation (RAG) helps generative AI applications produce responses that are grounded in relevant
-  information. In this module, you'll explore how a RAG solution prepares, retrieves, and uses data to generate answers.
+  contextual data. In this module, you'll explore how a RAG solution prepares, retrieves, and uses data to generate answers.
 level: 100
 duration: 34 minutes
 experience_type: Training module
