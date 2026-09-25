@@ -863,12 +863,15 @@ function rankedPredefinedItems(items, limit = 4) {
 }
 
 function predefinedFilterTabs(outputFile, definitions, items) {
+  const eligibleItems = items.filter(({ item, type }) =>
+    type !== "credentials"
+    && !(type === "modules" && item.experience_type?.toLocaleLowerCase() === "exam prep"));
   return `<div class="home-filter-tabs pivot" data-pivot data-predefined-filters>
     <div class="pivot-tabs" role="tablist" aria-label="Skilling categories">
       ${definitions.map((definition, index) => `<button type="button" role="tab" id="home-filter-${definition.id}-tab" aria-controls="home-filter-${definition.id}-panel" aria-selected="${index === 0}" tabindex="${index === 0 ? 0 : -1}">${escapeHtml(definition.heading)}</button>`).join("")}
     </div>
     ${definitions.map((definition, index) => {
-    const matches = rankedPredefinedItems(items
+    const matches = rankedPredefinedItems(eligibleItems
       .map((entry) => ({ ...entry, keywordMatches: predefinedKeywordMatchCount(entry.item, definition.keywords) }))
       .filter(({ item, keywordMatches }) => matchesPredefinedFilter(item, definition, keywordMatches)));
     const content = matches.length
