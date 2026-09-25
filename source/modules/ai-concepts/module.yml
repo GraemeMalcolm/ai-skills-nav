@@ -7,7 +7,7 @@ role:
   - Developer
 avatar: anton
 prerequisites:
-  - Basic familiarity with digital technology and an interest in artificial intelligence
+  - Basic familiarity with digital technology, fundamental knowledge of mathematics, and an interest in artificial intelligence.
 learning_outcomes:
   - Explain generative AI, language models, and the role of AI agents.
   - Describe natural language processing tasks such as classification, sentiment analysis, and entity extraction.
