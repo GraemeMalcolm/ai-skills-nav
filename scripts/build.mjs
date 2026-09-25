@@ -859,9 +859,10 @@ function byPredefinedRank(left, right) {
 
 function balancedPredefinedItems(items, limit = 4) {
   const types = ["courses", "playlists", "modules", "credentials"];
+  const distinctItems = [...new Map(items.map((entry) => [`${entry.type}:${entry.item.slug}`, entry])).values()];
   const candidates = new Map(types.map((type) => [
     type,
-    items.filter((entry) => entry.type === type).sort(byPredefinedRank),
+    distinctItems.filter((entry) => entry.type === type).sort(byPredefinedRank),
   ]));
   const counts = new Map(types.map((type) => [type, 0]));
   let selectedCount = 0;
