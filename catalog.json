@@ -25,18 +25,18 @@
       "Technology Manager"
     ],
     "experience_type": [
+      "Any other courses",
+      "Any other module",
+      "Any other playlists",
       "Applied Skills",
       "Certification",
       "Exam Prep",
       "Hands-on lab",
       "Learning Path",
       "Microsoft Official Curriculum",
-      "Sales Skilling",
       "Skilling Playlist",
-      "Technical Sales Workshop",
       "Training module",
-      "Video",
-      "Virtual ILT"
+      "Video"
     ],
     "credential_type": [
       "Applied Skills",
@@ -1985,7 +1985,7 @@
             "Technical Sales Specialist"
           ],
           "experience_type": [
-            "Virtual ILT"
+            "Any other courses"
           ],
           "credential_type": [],
           "level": [
@@ -2552,7 +2552,7 @@
             "Technical Sales Specialist"
           ],
           "experience_type": [
-            "Technical Sales Workshop"
+            "Any other playlists"
           ],
           "credential_type": [],
           "level": [
@@ -3373,7 +3373,7 @@
             "Technical Sales Specialist"
           ],
           "experience_type": [
-            "Technical Sales Workshop"
+            "Any other playlists"
           ],
           "credential_type": [],
           "level": [
@@ -9804,7 +9804,7 @@
             "Technical Sales Specialist"
           ],
           "experience_type": [
-            "Sales Skilling"
+            "Any other module"
           ],
           "credential_type": [],
           "level": [

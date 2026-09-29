@@ -21,6 +21,40 @@ const contentRoots = [
   { name: "MicrosoftLearning", directory: path.join(root, "MicrosoftLearning") },
   { name: "avatars", directory: path.join(root, "avatars") },
 ];
+const experienceTypeFilterGroups = [
+  {
+    collectionType: "courses",
+    label: "Courses",
+    description: "Comprehensive self-paced or instructor-led training classes",
+    options: [
+      { value: "Microsoft Official Curriculum", description: "Official technical training for role readiness and credential preparation" },
+      { value: "Any other courses", description: "Role or workload focused training classes", fallback: true },
+    ],
+  },
+  {
+    collectionType: "playlists",
+    label: "Playlists",
+    description: "Ordered series of related modules",
+    options: [
+      { value: "Learning Path", description: "Official solution-focused skilling content" },
+      { value: "Skilling Playlist", description: "Curated collections of related content" },
+      { value: "Skilling Challenge", description: "Time-bound skilling challenges" },
+      { value: "Any other playlists", description: "Collections of modules", fallback: true },
+    ],
+  },
+  {
+    collectionType: "modules",
+    label: "Modules",
+    description: "Individual topic-based skilling",
+    options: [
+      { value: "Training module", description: "Official technical skilling in multi-modal formats" },
+      { value: "Video", description: "Video-based skilling presentations" },
+      { value: "Hands-on lab", description: "Practical interactive skilling" },
+      { value: "Exam Prep", description: "Hints and tips for specific Microsoft exams" },
+      { value: "Any other module", description: "Modular skilling content", fallback: true },
+    ],
+  },
+];
 // Build-time role access summary used to limit Profile choices to roles backed
 // by public content or content authorized for the signed-in email domain.
 let profileRoleOptions = [];
@@ -890,6 +924,14 @@ function filterOptions(name, values, label, accessByValue = new Map()) {
   return `<fieldset class="filter-group"><legend>${escapeHtml(label)}</legend><div class="filter-options">${values.map((value) => `<label data-option-access-domains="${escapeHtml(JSON.stringify(accessByValue.get(value) || []))}"><input type="checkbox" name="${escapeHtml(name)}" value="${escapeHtml(value)}"><span>${escapeHtml(value)}</span></label>`).join("")}</div></fieldset>`;
 }
 
+function experienceTypeFilterOptions(accessByValue) {
+  return `<fieldset class="filter-group"><legend>Experience type</legend><div class="experience-type-groups">${experienceTypeFilterGroups.map((group) => `
+    <section class="filter-option-section">
+      <h3 title="${escapeHtml(group.description)}">${escapeHtml(group.label)}</h3>
+      <div class="filter-options">${group.options.map((option) => `<label title="${escapeHtml(option.description)}" data-option-access-domains="${escapeHtml(JSON.stringify(accessByValue.get(option.value) || []))}"><input type="checkbox" name="experience_type" value="${escapeHtml(option.value)}"><span>${escapeHtml(option.value)}</span></label>`).join("")}</div>
+    </section>`).join("")}</div></fieldset>`;
+}
+
 function modalityFilterOptions(values) {
   return `<fieldset class="filter-group" data-modalities-filter><legend>Modality</legend>
     <div class="filter-choice"><label><input type="radio" name="modalities-mode" value="all" checked><span>Show all skilling</span></label></div>
@@ -939,12 +981,14 @@ function catalogFilterDialog(items, fields, subject) {
     const domains = unrestricted ? [] : [...new Set(owners.flatMap((item) => item.restricted_to))].sort();
     return [value, domains];
   }));
+  const experienceTypeValues = experienceTypeFilterGroups.flatMap((group) => group.options.map((option) => option.value));
   return `<dialog class="filter-dialog" id="catalog-filter" data-filter-dialog data-filter-fields="${escapeHtml(fields.join(","))}" aria-labelledby="filter-title">
     <form method="dialog" data-filter-form>
       <header class="filter-dialog-header"><div><p class="kicker">Refine ${escapeHtml(subject)}</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
       <div class="filter-dialog-body">
         ${fields.map((field) => {
     if (field === "duration") return durationFilterOptions();
+    if (field === "experience_type") return experienceTypeFilterOptions(optionAccess(field, experienceTypeValues));
     const values = uniqueValues(selectors[field]).map(String);
     return field === "modalities" ? modalityFilterOptions(values) : field === "level" ? levelFilterOptions() : filterOptions(field, values, labels[field], optionAccess(field, values));
   }).join("")}
@@ -1225,7 +1269,13 @@ function buildCatalogLinks(modules) {
 
 function catalogMetadataValues(item, field) {
   if (field === "experience_type") {
-    return [experienceTypeName(item, itemCollectionType(item))];
+    const collectionType = itemCollectionType(item);
+    const group = experienceTypeFilterGroups.find((candidate) => candidate.collectionType === collectionType);
+    if (!group) return [experienceTypeName(item, collectionType)];
+    const authoredType = experienceTypeName(item, collectionType).toLocaleLowerCase();
+    const option = group.options.find((candidate) => !candidate.fallback && candidate.value.toLocaleLowerCase() === authoredType)
+      || group.options.find((candidate) => candidate.fallback);
+    return option ? [option.value] : [];
   }
   if (field === "duration") {
     const duration = String(item.duration || "").trim().toLocaleLowerCase();

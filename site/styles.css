@@ -1081,6 +1081,21 @@ img {
   gap: 10px 18px;
 }
 
+.experience-type-groups {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.filter-option-section h3 {
+  margin: 0 0 8px;
+  font: 700 .95rem "Manrope", sans-serif;
+}
+
+.filter-option-section .filter-options {
+  grid-template-columns: 1fr;
+}
+
 .filter-options label,
 .filter-choice label {
   display: flex;
@@ -3043,6 +3058,11 @@ body.access-denied>[data-agent] {
 
   .filter-options {
     grid-template-columns: 1fr;
+  }
+
+  .experience-type-groups {
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
 
   .lesson {

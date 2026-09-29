@@ -389,7 +389,7 @@ Search and Filter controls must appear with the result collection heading rather
 
 **FR-CATALOG-013** Client-side simulated access control must not be treated as protection for confidential source or generated content; production authorization requires server-side enforcement.
 
-**FR-CATALOG-014** Experience type and role filter choices must include only values assigned to content accessible to the current learner. If an access change makes an active value inaccessible, the filter must clear that selection.
+**FR-CATALOG-014** Experience type filters must group the defined taxonomy under Courses, Playlists, and Modules, map unlisted authored types to the corresponding `Any other` choice, and provide explanatory tooltips on each group heading and choice. Experience type and role filter choices must respect content access for the current learner. If an access change makes an active value inaccessible, the filter must clear that selection.
 
 **FR-CATALOG-015** Signed-in headers must replace Sign-in with Profile and Sign-out. Sign-out must clear the active identity and return the learner to Home from any route.
 

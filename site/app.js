@@ -1931,6 +1931,9 @@ function updateAccessAwareFilterOptions() {
       selectionChanged = true;
     }
   });
+  filterForm.querySelectorAll(".filter-option-section").forEach((section) => {
+    section.hidden = ![...section.querySelectorAll("label")].some((label) => !label.hidden);
+  });
   if (selectionChanged) {
     persistFilters();
     updateFilterCounts();
