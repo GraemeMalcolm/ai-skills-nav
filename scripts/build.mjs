@@ -1555,7 +1555,7 @@ async function build() {
         <span class="hero-search-actions"><button class="filter-trigger" type="button" data-filter-open data-catalog-url="${relativeUrl(homeFile, catalogFile)}">Filter<span class="filter-count" data-filter-count hidden></span></button><button class="search-clear" type="button" data-search-clear hidden>Clear</button></span>
       </form>
     </section>
-    <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Spotlight Skilling</h2></div><div class="card-grid">${spotlightPlaylists.map((item) => card(homeFile, item, "playlists")).join("")}</div></section>
+    <section class="catalog-section"><div class="section-heading"><p class="kicker">Curated learning</p><h2>Featured playlists</h2></div><div class="card-grid">${spotlightPlaylists.map((item) => card(homeFile, item, "playlists")).join("")}</div></section>
     <section class="catalog-section alt"><div class="section-heading"><p class="kicker">Recently updated and learner favorites</p><h2>Popular skilling themes</h2></div>${predefinedFilterTabs(homeFile, homeFilterDefinitions, homeFilterItems)}<div class="section-links"><a class="filter-trigger" href="${relativeUrl(homeFile, catalogFile)}">All skilling</a></div></section>
     ${catalogFilterDialog(discoverableItems, ["role", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
   await writePage(homeFile, shell({ outputFile: homeFile, title: "Skilling in the Name of...", avatar: defaultAvatar, agentOptions: { audio: false, useLearnMcp: false, useCatalogSearch: true }, content: homeContent, bodyClass: "home-page", hasModuleCards: true }));
