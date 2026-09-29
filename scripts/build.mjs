@@ -924,11 +924,13 @@ function filterOptions(name, values, label, accessByValue = new Map()) {
   return `<fieldset class="filter-group"><legend>${escapeHtml(label)}</legend><div class="filter-options">${values.map((value) => `<label data-option-access-domains="${escapeHtml(JSON.stringify(accessByValue.get(value) || []))}"><input type="checkbox" name="${escapeHtml(name)}" value="${escapeHtml(value)}"><span>${escapeHtml(value)}</span></label>`).join("")}</div></fieldset>`;
 }
 
-function experienceTypeFilterOptions(accessByValue) {
-  return `<fieldset class="filter-group"><legend>Experience type</legend><div class="experience-type-groups">${experienceTypeFilterGroups.map((group) => `
+function experienceTypeFilterOptions(values, accessByValue) {
+  const availableValues = new Set(values);
+  const availableGroups = experienceTypeFilterGroups.filter((group) => group.options.some((option) => availableValues.has(option.value)));
+  return `<fieldset class="filter-group"><legend>Experience type</legend><div class="experience-type-groups">${availableGroups.map((group) => `
     <section class="filter-option-section">
       <h3 title="${escapeHtml(group.description)}">${escapeHtml(group.label)}</h3>
-      <div class="filter-options">${group.options.map((option) => `<label title="${escapeHtml(option.description)}" data-option-access-domains="${escapeHtml(JSON.stringify(accessByValue.get(option.value) || []))}"><input type="checkbox" name="experience_type" value="${escapeHtml(option.value)}"><span>${escapeHtml(option.value)}</span></label>`).join("")}</div>
+      <div class="filter-options">${group.options.filter((option) => availableValues.has(option.value)).map((option) => `<label title="${escapeHtml(option.description)}" data-option-access-domains="${escapeHtml(JSON.stringify(accessByValue.get(option.value) || []))}"><input type="checkbox" name="experience_type" value="${escapeHtml(option.value)}"><span>${escapeHtml(option.value)}</span></label>`).join("")}</div>
     </section>`).join("")}</div></fieldset>`;
 }
 
@@ -981,15 +983,14 @@ function catalogFilterDialog(items, fields, subject) {
     const domains = unrestricted ? [] : [...new Set(owners.flatMap((item) => item.restricted_to))].sort();
     return [value, domains];
   }));
-  const experienceTypeValues = experienceTypeFilterGroups.flatMap((group) => group.options.map((option) => option.value));
   return `<dialog class="filter-dialog" id="catalog-filter" data-filter-dialog data-filter-fields="${escapeHtml(fields.join(","))}" aria-labelledby="filter-title">
     <form method="dialog" data-filter-form>
       <header class="filter-dialog-header"><div><p class="kicker">Refine ${escapeHtml(subject)}</p><h2 id="filter-title">Filter</h2></div><button class="icon-button" type="button" aria-label="Close filters" data-filter-close>${icon("close")}</button></header>
       <div class="filter-dialog-body">
         ${fields.map((field) => {
     if (field === "duration") return durationFilterOptions();
-    if (field === "experience_type") return experienceTypeFilterOptions(optionAccess(field, experienceTypeValues));
     const values = uniqueValues(selectors[field]).map(String);
+    if (field === "experience_type") return experienceTypeFilterOptions(values, optionAccess(field, values));
     return field === "modalities" ? modalityFilterOptions(values) : field === "level" ? levelFilterOptions() : filterOptions(field, values, labels[field], optionAccess(field, values));
   }).join("")}
       </div>
