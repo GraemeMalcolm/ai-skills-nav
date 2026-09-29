@@ -1,0 +1,14 @@
+title: Microsoft IQ Quick Overview
+description: John Savill provides a quick overview of Microsoft IQ.
+level: 100
+duration: 2 minutes
+experience_type: Video
+role:
+  - Developer
+  - Solution Architect
+prerequisites:
+  - Familiarity with AI agent development.
+learning_outcomes:
+  - Understand the key features and capabilities of Microsoft IQ.
+pages:
+  - 01-microsoft-iq.md
