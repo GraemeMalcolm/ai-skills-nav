@@ -1,0 +1,13 @@
+title: "Microsoft Copilot: Skills in Copilot Cowork"
+description: Skills in Copilot Cowork let you create reusable, custom capabilities that teach Copilot how to handle the specific tasks and workflows unique to your role — so it gets smarter at the work only you do.
+level: 100
+duration: 1 minute
+experience_type: Video
+role:
+  - Business User
+prerequisites:
+  - Familiarity with Microsoft Copilot
+learning_outcomes:
+  - Create and use custom skills in Microsoft Copilot to handle specific tasks and workflows unique to your role.
+pages:
+  - 01-copilot-cowork.md
