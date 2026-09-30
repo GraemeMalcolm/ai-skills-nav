@@ -6,7 +6,7 @@ experience_type: Training module
 role:
   - Security administrator
 prerequisites:
-  - Basic cloud security knowledge and familiarity with Azure administration
+  - Basic cloud security knowledge and familiarity with Azure administration.
 learning_outcomes:
   - Explain how Microsoft Defender for Cloud supports security posture management and workload protection.
   - Use Microsoft Defender for Cloud.
