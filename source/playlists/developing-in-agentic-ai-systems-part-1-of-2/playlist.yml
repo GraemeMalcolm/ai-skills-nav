@@ -1,0 +1,24 @@
+title: Developing in Agentic AI Systems Part 1 of 2
+description: Learn how to use GitHub Copilot to design, deploy, and manage agentic AI systems within the software development lifecycle.
+level: 200
+duration: 165 minutes
+experience_type: Learning Path
+role:
+  - Devops Engineer
+  - Developer
+  - Solution Architect
+prerequisites:
+  - A GitHub account and familiarity with repositories, branches, and pull requests
+  - Basic experience with GitHub Actions and status checks
+  - A general understanding of the software development lifecycle (SDLC)
+  - Familiarity with AI-assisted development tools (such as GitHub Copilot)
+  - Awareness of basic repository governance concepts (for example, reviews, CODEOWNERS, and branch protection)
+learning_outcomes:
+  - Apply the contributor model to evaluate agent-generated work
+  - Operate agent systems safely using observability, tool governance, secrets boundaries, hooks, and reliability patterns
+  - Identify limits and protections that govern agent execution, including branch restrictions, pull request review, and environment safeguards
+  - Design and operate agentic AI systems across the software development lifecycle with safe architecture, governed tooling, and controlled execution
+modules:
+  - foundations-agentic-ai
+  - design-agent-architecture-integration
+  - agent-tooling-mcp-execution-environments

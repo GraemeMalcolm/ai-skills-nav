@@ -1,0 +1,36 @@
+title: Designing Agent Architecture and SDLC Integration
+description: Learn how agentic systems use GitHub workflows to build software safely.
+level: 200
+duration: 45 minutes
+experience_type: Training module
+role:
+  - Devops Engineer
+  - Administrator
+  - Developer
+  - Solution Architect
+prerequisites:
+  - A GitHub account and familiarity with repositories, branches, and pull requests
+  - Basic experience with GitHub Actions workflows and status checks
+  - >-
+    A general understanding of the software development lifecycle (SDLC) (planning, implementation, validation,
+    deployment)
+  - Awareness of repository governance concepts, such as required reviews, CODEOWNERS, and branch protection
+learning_outcomes:
+  - Map agent responsibilities to SDLC stages and define architectural boundaries
+  - Define structured agent tasks using inputs, outputs, and success criteria
+  - Separate planning, reasoning, and execution to create inspectable and reliable workflows
+  - Implement pull request-based governance using templates, checks, CODEOWNERS, rules, and environments
+  - Design reliable workflows using outputs, contexts, triggers, and cross-job handoffs
+  - >-
+    Operate agent systems safely using observability, tool governance, secrets boundaries, hooks, and reliability
+    patterns
+pages:
+  - 1-introduction.md
+  - 2-agent-responsibilities.md
+  - 3-inputs-outputs-success-criteria.md
+  - 4-plan-reason-execution.md
+  - 5-pull-request-governance-controls.md
+  - 6-reliable-workflows.md
+  - 7-agent-operations-controls.md
+  - 8-knowledge-check.md
+  - 9-summary.md

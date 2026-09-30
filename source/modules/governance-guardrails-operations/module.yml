@@ -1,0 +1,36 @@
+title: Governance, guardrails, and operations
+description: >-
+  This module covered how to design secure and compliant agent governance using GitHub-native controls,
+  human-in-the-loop approvals, and least-privilege access. It also introduced operational safeguards to improve
+  reliability, accountability, and recovery.
+level: 200
+duration: 45 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Devops Engineer
+  - Administrator
+  - Developer
+  - Solution Architect
+prerequisites:
+  - A GitHub account
+  - Basic understanding of repositories, branches, and pull requests
+  - Familiarity with GitHub Actions
+  - General understanding of agent workflows in GitHub, IDE, or CLI environments
+learning_outcomes:
+  - Define risk-based autonomy and action boundaries for agent systems
+  - Enforce governance using GitHub-native controls such as rulesets, checks, CODEOWNERS, and environments
+  - Design human-in-the-loop workflows for high-risk actions
+  - Control agent capabilities using least-privilege permissions
+  - Make agent actions observable, traceable, and auditable
+  - Maintain governance and operational reliability over time
+pages:
+  - 1-introduction.md
+  - 2-define-risk-based-autonomy.md
+  - 3-enforce-governance-github-controls.md
+  - 4-design-human-workflows.md
+  - 5-control-agent-capabilities.md
+  - 6-make-actions-observable-traceable-auditable.md
+  - 7-maintain-governance-operational-reliability.md
+  - 8-knowledge-check.md
+  - 9-summary.md

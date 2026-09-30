@@ -1,0 +1,19 @@
+title: "Exam Prep: GH-600: GitHub Certified Agentic AI Developer"
+description: As AI transitions from a coding assistant to a proactive collaborator, the industry is seeing the rise of the "Agentic AI Developer." This Microsoft Reactor session is a dedicated technical roadmap for those preparing for the GitHub Certified Agentic AI Developer (GH-600) exam. The GH-600 is a first-of-its-kind, role-based certification that shifts the focus from writing code to designing and governing the systems that operate on code. In this session, we will unpack the official exam objective domain, and walk through the official study guides to ensure you are ready for the exam.
+level: 300
+duration: 60 minutes
+experience_type: Exam Prep
+role:
+  - Developer
+  - Solution Architect
+  - Devops Engineer
+prerequisites:
+  - Familiarity with Microsoft Foundry.
+  - Basic understanding of GitHub repositories, branches, and pull requests.
+  - Experience with GitHub Actions and status checks.
+  - General understanding of the software development lifecycle (SDLC).
+  - Familiarity with AI-assisted development tools (such as GitHub Copilot).
+learning_outcomes:
+  - "Get ready to take exam GH-600: GitHub Certified Agentic AI Developer with confidence."
+pages:
+  - 01-gh600-exam.md

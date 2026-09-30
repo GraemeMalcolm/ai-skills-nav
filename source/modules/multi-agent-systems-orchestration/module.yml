@@ -1,0 +1,35 @@
+title: Multi-Agent systems and orchestration
+description: >-
+  Learn how to design reliable multi-agent systems in GitHub using observable workflows, coordinated artifacts, and safe
+  recovery mechanisms.
+level: 200
+duration: 90 minutes
+experience_type: Training module
+role:
+  - Devops Engineer
+  - Administrator
+  - Developer
+  - Solution Architect
+prerequisites:
+  - A GitHub account
+  - Basic understanding of repositories, branches, and pull requests
+  - Familiarity with GitHub Actions
+  - General understanding of agent workflows in GitHub, IDE, or CLI environments
+learning_outcomes:
+  - Define agent responsibilities and scope boundaries within the SDLC
+  - Coordinate multi-agent workflows using GitHub Actions events and orchestration patterns
+  - Isolate agent execution using branches, workflows, permissions, and concurrency controls
+  - Detect and resolve conflicts using GitHub-native validation and review mechanisms
+  - Ensure observability, attribution, and traceability of agent actions
+  - Diagnose failures and implement recovery strategies for reliable multi-agent systems
+pages:
+  - 1-introduction.md
+  - 2-multi-agent-responsibilities.md
+  - 3-agent-orchestration-github-workflows.md
+  - 4-execution-isolation-permissions-concurrency.md
+  - 5-conflict-resolution-github-arbitration.md
+  - 6-system-observability-evidence-workflows.md
+  - 7-scale-failure-recovery.md
+  - exercise.md
+  - 8-knowledge-check.md
+  - 9-summary.md

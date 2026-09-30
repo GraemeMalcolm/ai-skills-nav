@@ -1,0 +1,31 @@
+title: Memory, State, and Evaluation
+description: >-
+  Learn how to manage agent memory and state, persist progress across environments, and evaluate agent behavior using
+  clear success signals.
+level: 200
+duration: 50 minutes
+experience_type: Training module
+role:
+  - Devops Engineer
+  - Administrator
+  - Developer
+  - Solution Architect
+prerequisites:
+  - A GitHub account
+  - Basic understanding of repositories, branches, and pull requests
+  - Familiarity with GitHub Actions
+  - General understanding of agent workflows in GitHub, IDE, or CLI environments
+learning_outcomes:
+  - Learn agent memory strategies using short-term, long-term, and external memory
+  - Learn how to maintain and persistent agent state and manage context drift
+  - Learn how to manage agent state across tools and environments
+  - Understand agent evaluation signals and success criteria
+pages:
+  - 1-introduction.md
+  - 2-agent-memory-strategies.md
+  - 3-agent-state-context-drift.md
+  - 4-memory-state-continuity.md
+  - 5-evaluation-signals-quality-gates.md
+  - 6-agent-failures-behavior-improvement.md
+  - 7-knowledge-check.md
+  - 8-summary.md

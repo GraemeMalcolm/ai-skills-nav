@@ -1,0 +1,33 @@
+title: Foundations of Agentic AI in GitHub
+description: >-
+  Learn how AI coding agents are transforming software development by planning, acting, and improving within GitHub
+  workflows.
+level: 200
+duration: 40 minutes
+experience_type: Training module
+role:
+  - Devops Engineer
+  - Administrator
+  - Developer
+  - Solution Architect
+prerequisites:
+  - A GitHub account and familiarity with repositories, branches, and pull requests
+  - Basic experience with GitHub Actions and status checks
+  - A general understanding of the software development lifecycle (SDLC)
+  - Familiarity with AI-assisted development tools (such as GitHub Copilot)
+  - Awareness of basic repository governance concepts (for example, reviews, CODEOWNERS, and branch protection)
+learning_outcomes:
+  - Define agentic AI in the SDLC and distinguish agents from assistants
+  - Explain and apply the plan → act → evaluate lifecycle in agent workflows
+  - Describe how GitHub functions as the system of record and control plane for agent activity
+  - Identify responsibilities, risks, anti-patterns, and traceability requirements in agent systems
+  - Apply the contributor model to evaluate agent-generated work
+pages:
+  - 1-introduction.md
+  - 2-define-agentic-ai.md
+  - 3-explain-agent-lifecycle-plan-act-evaluate.md
+  - 4-describe-github-system-record-control-plane.md
+  - 5-identify-risks-traceability.md
+  - 6-apply-contributor-model-agent-generated-work.md
+  - 7-knowledge-check.md
+  - 8-summary.md
