@@ -6,10 +6,8 @@ description: >-
 level: 200
 duration: 45 minutes
 experience_type: Training module
-avatar: anton
 role:
   - Devops Engineer
-  - Administrator
   - Developer
   - Solution Architect
 prerequisites:
