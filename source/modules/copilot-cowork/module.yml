@@ -8,6 +8,6 @@ role:
 prerequisites:
   - Familiarity with Microsoft Copilot
 learning_outcomes:
-  - Create and use custom skills in Microsoft Copilot to handle specific tasks and workflows unique to your role.
+  - Create and use custom skills in Microsoft Copilot Cowork to automate tasks and workflows at work using Artificial Intelligence.
 pages:
   - 01-copilot-cowork.md
