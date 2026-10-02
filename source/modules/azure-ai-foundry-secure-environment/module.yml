@@ -1,4 +1,5 @@
 title: Secure Microsoft Foundry environments
+avatar: rohan
 description: >
   To secure Microsoft Foundry environments requires layered protections that control access, safeguard credentials,
   isolate network communication, and maintain visibility across connected resources.

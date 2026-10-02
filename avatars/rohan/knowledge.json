@@ -1,0 +1,355 @@
+[
+    {
+        "category": "Microsoft Defender for Cloud foundations",
+        "link": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction",
+        "documents": [
+            {
+                "id": 1,
+                "title": "Microsoft Defender for Cloud",
+                "keywords": [
+                    "Microsoft Defender for Cloud",
+                    "Defender for Cloud",
+                    "cloud security"
+                ],
+                "content": "Microsoft Defender for Cloud combines Cloud Security Posture Management (CSPM) with Cloud Workload Protection (CWP). CSPM provides visibility and hardening guidance, while CWP uses security alerts and workload-specific Defender plans to detect threats."
+            },
+            {
+                "id": 2,
+                "title": "Cloud Security Posture Management",
+                "keywords": [
+                    "CSPM",
+                    "Cloud Security Posture Management",
+                    "secure score",
+                    "security posture"
+                ],
+                "content": "Cloud Security Posture Management continuously assesses resources, subscriptions, and organizations for security issues. Defender for Cloud summarizes findings with secure score and provides recommendations that help teams reduce configuration risk."
+            },
+            {
+                "id": 3,
+                "title": "Cloud Workload Protection",
+                "keywords": [
+                    "CWP",
+                    "Cloud Workload Protection",
+                    "Defender plans",
+                    "security alerts"
+                ],
+                "content": "Cloud Workload Protection detects active threats by analyzing workload signals with Microsoft threat intelligence. Workload-specific Defender plans protect services such as servers, containers, storage, databases, and AI resources."
+            }
+        ]
+    },
+    {
+        "category": "AI security risks and governance",
+        "link": "https://learn.microsoft.com/training/modules/defender-for-cloud-ai-understand-protections/",
+        "documents": [
+            {
+                "id": 4,
+                "title": "Layers of an Azure AI workload",
+                "keywords": [
+                    "AI workload layers",
+                    "model endpoints",
+                    "retrieval",
+                    "orchestration"
+                ],
+                "content": "Azure AI workloads commonly include model endpoints, retrieval services, application logic, data stores, and orchestration or management services. Security teams should trace sensitive data across every layer and protect each service and connection."
+            },
+            {
+                "id": 5,
+                "title": "AI workload security responsibilities",
+                "keywords": [
+                    "AI security",
+                    "data handling",
+                    "attack surface",
+                    "AI workload protection"
+                ],
+                "content": "AI workloads need traditional controls for identity, secrets, networks, and posture, plus controls for model inputs and outputs. Prompts, responses, retrieval indexes, model endpoints, logs, and cached data all expand the security boundary."
+            },
+            {
+                "id": 6,
+                "title": "Prompt injection",
+                "keywords": [
+                    "prompt injection",
+                    "indirect prompt injection",
+                    "jailbreak",
+                    "malicious prompt"
+                ],
+                "content": "Prompt injection attempts to make a model ignore instructions, disclose information, or perform unintended actions. Direct attacks arrive through user input, while indirect attacks can be embedded in documents or other content retrieved by an AI application."
+            },
+            {
+                "id": 7,
+                "title": "AI data leakage and model misuse",
+                "keywords": [
+                    "data leakage",
+                    "model abuse",
+                    "model misuse",
+                    "sensitive prompts"
+                ],
+                "content": "Sensitive data can leak through model outputs, prompts, logs, caches, evaluation datasets, or retrieval sources. Model abuse includes generating harmful content, automating fraud, or using an AI workload beyond its approved scope."
+            },
+            {
+                "id": 8,
+                "title": "Threat modeling AI workloads",
+                "keywords": [
+                    "AI threat modeling",
+                    "misuse scenarios",
+                    "data exposure points",
+                    "model behavior"
+                ],
+                "content": "AI threat modeling should examine model behavior, prompt and response manipulation, data exposure points, and misuse scenarios. Map identified risks to controls such as identity protection, network isolation, Prompt Shields, and content filtering."
+            },
+            {
+                "id": 9,
+                "title": "Defense in depth for AI workloads",
+                "keywords": [
+                    "defense in depth",
+                    "Microsoft Purview",
+                    "Microsoft Entra ID",
+                    "Microsoft Foundry"
+                ],
+                "content": "A defense-in-depth AI strategy uses Defender for Cloud for posture and workload protection, Microsoft Purview for data governance, Microsoft Entra ID for identity and access, and Microsoft Foundry for model guardrails and observability."
+            }
+        ]
+    },
+    {
+        "category": "Protect and investigate AI workloads",
+        "link": "https://learn.microsoft.com/training/modules/defender-for-cloud-ai-protect-workloads/",
+        "documents": [
+            {
+                "id": 10,
+                "title": "Enable the AI workloads plan",
+                "keywords": [
+                    "AI workloads plan",
+                    "Defender plan",
+                    "AI discovery",
+                    "AI inventory"
+                ],
+                "content": "Enable the AI workloads plan in Defender for Cloud for each subscription that contains AI resources. The plan discovers Microsoft Foundry, Azure OpenAI, Azure Machine Learning, and connected assets to build an inventory for posture assessment and threat detection."
+            },
+            {
+                "id": 11,
+                "title": "AI workloads plan settings",
+                "keywords": [
+                    "suspicious prompt evidence",
+                    "data security for AI interactions",
+                    "Microsoft Purview",
+                    "monitoring coverage"
+                ],
+                "content": "Optional AI workload settings can capture short, redacted suspicious prompt evidence for investigations and integrate with Microsoft Purview to classify prompt and response data. Related CSPM, storage, database, and sensitive-data capabilities improve coverage."
+            },
+            {
+                "id": 12,
+                "title": "Data and AI security dashboard",
+                "keywords": [
+                    "Data and AI security dashboard",
+                    "AI closer look",
+                    "top issues",
+                    "protection status"
+                ],
+                "content": "The Data and AI security dashboard centralizes discovered resources, protection status, recommendations, alerts, attack paths, sensitive data findings, and internet exposure. Use its top issues and closer-look sections to prioritize investigation and remediation."
+            },
+            {
+                "id": 13,
+                "title": "AI Bill of Materials and Cloud Security Explorer",
+                "keywords": [
+                    "AI BOM",
+                    "AI Bill of Materials",
+                    "Cloud Security Explorer",
+                    "AI inventory"
+                ],
+                "content": "Defender CSPM builds an AI Bill of Materials that maps models, datasets, services, and dependencies. Cloud Security Explorer queries help locate deployed AI workloads, exposed resources, and vulnerable code repositories that provision AI services."
+            },
+            {
+                "id": 14,
+                "title": "AI attack paths and recommendations",
+                "keywords": [
+                    "attack path analysis",
+                    "security recommendations",
+                    "managed identity",
+                    "private endpoint"
+                ],
+                "content": "Attack path analysis connects configuration weaknesses to show how an attacker could reach sensitive AI data or services. Prioritize recommendations for managed identities, private endpoints, encryption, and vulnerable dependencies to break those paths."
+            },
+            {
+                "id": 15,
+                "title": "Runtime threat protection for AI",
+                "keywords": [
+                    "AI runtime protection",
+                    "CWP",
+                    "prompt injection detection",
+                    "data exfiltration"
+                ],
+                "content": "Cloud Workload Protection analyzes runtime signals from AI services, containers, compute, and data stores. It can detect suspicious prompts, data exfiltration, model abuse, anomalous API calls, privilege escalation, and unauthorized outbound connections."
+            },
+            {
+                "id": 16,
+                "title": "Respond to Defender for Cloud AI alerts",
+                "keywords": [
+                    "AI security alert",
+                    "alert evidence",
+                    "MITRE ATT&CK",
+                    "Logic App playbook"
+                ],
+                "content": "An AI alert includes severity, impacted resources, evidence, related entities, MITRE ATT&CK tactics, and recommended actions. Respond by updating alert status, investigating supporting evidence, or using automation rules and Logic App playbooks for containment and notification."
+            },
+            {
+                "id": 17,
+                "title": "Investigate AI incidents in Defender XDR",
+                "keywords": [
+                    "Microsoft Defender XDR",
+                    "AI incident",
+                    "prompt evidence",
+                    "Prompt Suspicious Segment"
+                ],
+                "content": "Microsoft Defender XDR correlates AI alerts with identity, endpoint, and data signals. Review incident timelines, affected assets, related alerts, and Prompt Suspicious Segment evidence, then assign, classify, and track the incident through resolution."
+            }
+        ]
+    },
+    {
+        "category": "Microsoft Foundry guardrails",
+        "link": "https://learn.microsoft.com/training/modules/azure-ai-foundry-configure-manage-guardrails/",
+        "documents": [
+            {
+                "id": 18,
+                "title": "Guardrails and Microsoft Content Safety",
+                "keywords": [
+                    "Microsoft Foundry guardrails",
+                    "Microsoft Content Safety",
+                    "input protection",
+                    "output protection"
+                ],
+                "content": "Microsoft Foundry guardrails use Microsoft Content Safety to evaluate model inputs and outputs in real time. They can flag, annotate, block, and log interactions that are harmful, ungrounded, sensitive, or inconsistent with policy."
+            },
+            {
+                "id": 19,
+                "title": "Prompt Shields",
+                "keywords": [
+                    "Prompt Shields",
+                    "jailbreak protection",
+                    "indirect attack",
+                    "annotate and block"
+                ],
+                "content": "Prompt Shields detect jailbreaks and direct or indirect prompt-injection attempts. Configure them to annotate suspicious input for observation or to annotate and block it before it reaches the model."
+            },
+            {
+                "id": 20,
+                "title": "Content filters",
+                "keywords": [
+                    "content filters",
+                    "harm categories",
+                    "violence",
+                    "hate",
+                    "sexual",
+                    "self-harm"
+                ],
+                "content": "Content filters classify prompts and responses for violence, hate, sexual, and self-harm content. Configure input and output thresholds according to workload risk, then connect the filter to each model deployment where it must apply."
+            },
+            {
+                "id": 21,
+                "title": "Blocklists",
+                "keywords": [
+                    "blocklist",
+                    "restricted terms",
+                    "exact match",
+                    "regular expression"
+                ],
+                "content": "Foundry blocklists enforce organization-specific policies for restricted names, identifiers, URLs, and code terms. Entries can use exact matching or regular expressions, can be bulk imported, and should be applied to both input and output filters when appropriate."
+            },
+            {
+                "id": 22,
+                "title": "Protected material and groundedness detection",
+                "keywords": [
+                    "protected material detection",
+                    "groundedness",
+                    "ungrounded output",
+                    "proprietary content"
+                ],
+                "content": "Protected material detection identifies proprietary or non-Microsoft text and code in generated results. Groundedness detection evaluates whether a response is supported by its source data. Both controls help reduce disclosure and unreliable output."
+            },
+            {
+                "id": 23,
+                "title": "Test and validate guardrails",
+                "keywords": [
+                    "Try it out",
+                    "guardrail testing",
+                    "guardrail validation",
+                    "false positive"
+                ],
+                "content": "Use the Guardrails and controls Try it out experience to test built-in and configured protections with representative text, code, image, and multimodal cases. Compare annotations and blocks, verify logging, and refine thresholds based on false positives and false negatives."
+            },
+            {
+                "id": 24,
+                "title": "Choose and refine guardrails",
+                "keywords": [
+                    "guardrail selection",
+                    "continuous assurance",
+                    "filter tuning",
+                    "risk tolerance"
+                ],
+                "content": "Choose controls according to the workload's users, data, purpose, and risk. Start with moderate thresholds or annotations, review observability data, and regularly update filters, blocklists, and actions as usage, threats, and policy requirements evolve."
+            }
+        ]
+    },
+    {
+        "category": "Secure Microsoft Foundry environments",
+        "link": "https://learn.microsoft.com/training/modules/azure-ai-foundry-secure-environment/",
+        "documents": [
+            {
+                "id": 25,
+                "title": "Microsoft Entra ID and least privilege",
+                "keywords": [
+                    "Microsoft Entra ID",
+                    "RBAC",
+                    "least privilege",
+                    "Conditional Access",
+                    "PIM"
+                ],
+                "content": "Use Microsoft Entra ID role-based access control at the smallest practical scope for Foundry resources and dependencies. Strengthen privileged access with managed identities, Conditional Access, Privileged Identity Management, and recurring access reviews."
+            },
+            {
+                "id": 26,
+                "title": "Foundry project access",
+                "keywords": [
+                    "Foundry project roles",
+                    "project access",
+                    "inherited access",
+                    "separation of duties"
+                ],
+                "content": "Foundry has resource-level Azure RBAC and project-level roles. Grant project access only to active contributors, inspect inherited access from broader scopes, separate administrative duties, and align permissions across Storage, Key Vault, networking, and Defender for Cloud."
+            },
+            {
+                "id": 27,
+                "title": "Secure secrets with Azure Key Vault",
+                "keywords": [
+                    "Azure Key Vault",
+                    "managed identity",
+                    "secret management",
+                    "Key Vault Secrets User"
+                ],
+                "content": "Store Foundry keys, passwords, certificates, tokens, and connection strings in Azure Key Vault instead of code or configuration files. Let workloads retrieve secrets through managed identities with least-privilege roles, logging, rotation, soft delete, and purge protection."
+            },
+            {
+                "id": 28,
+                "title": "Network isolation and Private Link",
+                "keywords": [
+                    "managed virtual network",
+                    "Private Link",
+                    "private endpoint",
+                    "network isolation",
+                    "DNS"
+                ],
+                "content": "Use network rules and managed virtual networks to control access to Foundry, and use Private Link for private connections to Storage, Key Vault, model services, and APIs. Configure private DNS correctly and restrict outbound traffic to approved destinations."
+            },
+            {
+                "id": 29,
+                "title": "Foundry diagnostic logging",
+                "keywords": [
+                    "diagnostic settings",
+                    "Azure Monitor",
+                    "Log Analytics",
+                    "Microsoft Sentinel",
+                    "audit logs"
+                ],
+                "content": "Enable diagnostic settings on Foundry and each connected service, then route logs and metrics to Log Analytics, Storage, Event Hubs, or a SIEM. Protect log access, enforce collection with Azure Policy, and retain data according to compliance and investigation needs."
+            }
+        ]
+    }
+]

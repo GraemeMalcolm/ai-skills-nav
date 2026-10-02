@@ -5,6 +5,7 @@ duration: 45 minutes
 experience_type: Hands-on lab
 role:
   - Business User
+  - Developer
 prerequisites:
   - Basic familiarity with generative AI models and access to the MAI Playground
 learning_outcomes:

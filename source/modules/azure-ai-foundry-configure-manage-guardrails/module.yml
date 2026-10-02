@@ -1,4 +1,5 @@
 title: Configure and manage guardrails in Microsoft Foundry
+avatar: rohan
 description: >
   Microsoft Foundry guardrails help secure AI workloads by applying configurable safety controls that evaluate both
   prompts and responses.
