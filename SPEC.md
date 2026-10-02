@@ -82,8 +82,6 @@ course_number: XX-0000
 credentials:
   - Optional credential name
 description: Course description
-level: 200
-duration: 1 day
 experience_type: Microsoft Official Curriculum
 topics:
   - Topic
@@ -103,7 +101,9 @@ playlists:
 
 Rules:
 
-- `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `role`, and `playlists` SHOULD be present.
+- `title`, `description`, `experience_type`, `topics`, `role`, and `playlists` SHOULD be present.
+- `level` is derived as the maximum level of the referenced playlists.
+- `duration` is derived as the sum of referenced playlist durations, rounded up to the nearest five minutes.
 - `course_number` is optional. When supplied, it MUST be a string.
 - `playlists` MUST be a non-empty array of existing playlist slugs.
 - `prerequisites` and `learning_outcomes` MUST each be a non-empty array of strings.
@@ -122,8 +122,6 @@ Each playlist folder MUST contain `playlist.yml` and `thumbnail.png`.
 ```yaml
 title: Playlist title
 description: Playlist description
-level: 200
-duration: 120 minutes
 experience_type: Microsoft Official Curriculum
 topics:
   - Topic
@@ -143,7 +141,9 @@ modules:
 
 Rules:
 
-- `title`, `description`, `level`, `duration`, `experience_type`, `topics`, `role`, and `modules` SHOULD be present.
+- `title`, `description`, `experience_type`, `topics`, `role`, and `modules` SHOULD be present.
+- `level` is derived as the maximum level of the referenced modules.
+- `duration` is derived as the sum of referenced module durations, rounded up to the nearest five minutes.
 - `modules` MUST be an array of existing module slugs.
 - `prerequisites` and `learning_outcomes` MUST each be a non-empty array of strings.
 - For a playlist with multiple modules, `learning_outcomes` MUST contain each child module's overall outcome in module order, followed by one overall playlist outcome.

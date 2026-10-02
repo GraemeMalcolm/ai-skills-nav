@@ -1,7 +1,5 @@
 title: Design and transform analytics data in Microsoft Fabric
 description: Choose an appropriate Microsoft Fabric data store, design dimensional models, and transform data using Dataflows Gen2, notebooks, and T-SQL.
-level: 200
-duration: 314 minutes
 experience_type: Learning Path
 role:
   - Data Analyst

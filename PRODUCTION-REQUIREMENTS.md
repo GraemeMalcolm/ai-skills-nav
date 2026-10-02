@@ -127,8 +127,6 @@ Course metadata uses the following source contract:
 | `course_number` | Zero or one string | No | Optional course identity and display metadata on course cards and detail pages. It is not part of general free-text search. When supplied, it must remain a string so values such as `AI-3026` retain formatting. |
 | `credentials` | List of strings | No | Associated credentials displayed on the course detail page in source order. An empty or absent list means that no credential is specified. |
 | `description` | One string | Yes | Course overview copy, catalog summary or tooltip, and searchable text. |
-| `level` | One string or number | Yes | Displayed difficulty/level and an exact-match catalog filter value. |
-| `duration` | One string | Yes | Human-readable estimated completion time. The production model should additionally support a normalized duration for sorting and analytics. |
 | `experience_type` | One string | Yes | Displayed experience type and catalog filter value. |
 | `topics` | List of strings | Yes | Search terms, topic presentation, recommendations, and future topic browsing. At least one value is required. |
 | `role` | List of strings | Yes | Intended learner roles shown in metadata and used as catalog filter values. At least one value is required. |
@@ -147,8 +145,6 @@ credentials:
      - Microsoft Applied Skill - Develop AI agents with Microsoft Foundry
      - Microsoft Certified - Azure AI Apps and Agrnt Developer Associate
 description: Learn to build, test, and deploy AI agents.
-level: 200
-duration: 1 day
 experience_type: Microsoft Official Curriculum
 topics:
      - Microsoft Foundry
@@ -162,6 +158,8 @@ playlists:
 ```
 
 **FR-COURSE-001** A course detail page must present its title, description, image, level, duration, experience type, roles, topics, credentials, and ordered playlists. It must present the course number when one is supplied.
+
+Course level is derived as the maximum child-playlist level. Course duration is derived by totaling child-playlist durations and rounding up to the nearest five minutes.
 
 **FR-COURSE-002** A learner must be able to begin or continue the course from its first effective learning step.
 
@@ -180,8 +178,6 @@ Playlist metadata uses the following source contract:
 | Stable identifier | One | Yes | Canonical identity for course references, routes, analytics, and sharing. In the current source layout this is the playlist folder name. |
 | `title` | One string | Yes | Playlist heading, card title, breadcrumbs, navigation label, and search text. |
 | `description` | One string | Yes | Playlist overview, catalog summary or tooltip, and search text. |
-| `level` | One string or number | Yes | Displayed level and catalog filter value. |
-| `duration` | One string | Yes | Human-readable estimated completion time. A normalized value should also be available in the production model. |
 | `experience_type` | One string | No | Experience type and catalog filter value to reflect the source or type of skilling - for example "Microsoft Official Curriculum", "Microsoft Short-Form Skilling", "Microsoft Labs", "LinkedIn Training", et.c. |
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
 | `role` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
@@ -193,13 +189,13 @@ Playlist metadata uses the following source contract:
 
 Playlist modality is not authored separately. It is the unique union of `modalities` from all referenced modules and is used for discovery and filtering.
 
+Playlist level is derived as the maximum child-module level. Playlist duration is derived by totaling child-module durations and rounding up to the nearest five minutes.
+
 Example:
 
 ```yaml
 title: Develop your first AI agent
 description: Learn how to develop AI agents with Microsoft Foundry.
-level: 200
-duration: 90 minutes
 experience_type: Microsoft Official Curriculum
 topics:
      - Microsoft Foundry

@@ -56,8 +56,6 @@ Create only `source/playlists/<slug>/playlist.yml`. Do not create or copy `thumb
 
 After resolving all attachments, read every selected module's `module.yml`, including newly created hidden modules. Aggregate in playlist module order.
 
-- `level`: Use the highest numeric child-module level. Stop and ask for correction if a level is absent or nonnumeric.
-- `duration`: Parse each child duration in the repository's `<number> minutes` format and sum the values. Round the total up to a multiple of 15 using `Math.ceil(total / 15) * 15`, then write `<rounded total> minutes`. A total already divisible by 15 remains unchanged. Stop and ask for correction rather than guessing if any duration cannot be parsed.
 - `role`: Take the discrete union of all non-empty child `role` values. Preserve first occurrence by module order and child list order.
 - `prerequisites`: Copy only the first module's non-empty `prerequisites`, preserving their order and exact wording. Do not inherit prerequisites from later modules. Remove exact duplicates while retaining the first occurrence. If the first module has no prerequisites, use `None`.
 - Module summary outcome: Select exactly one learning outcome from each module. For a module with one learning outcome, use that outcome. For a module with multiple outcomes, use its final learning outcome, following the repository convention that the final value is the module's summary outcome. Stop and ask for correction if a module has no learning outcomes.
@@ -74,8 +72,6 @@ Create `source/playlists/<playlist-slug>/playlist.yml` with this field order:
 ```yaml
 title: <playlist name>
 description: <generated description>
-level: <highest child level>
-duration: <sum rounded up to a multiple of 15 minutes>
 experience_type: <user-provided experience type>
 role:
   - <discrete inherited roles>
@@ -96,8 +92,6 @@ Quote scalar values when required for valid YAML. Do not add fields that were no
 2. Confirm every referenced module folder and `module.yml` exists.
 3. Parse the new `playlist.yml` as YAML and verify:
    - `title` and `experience_type` match the supplied values.
-   - `level` equals the highest child level.
-   - `duration` equals the sum of child durations rounded up to a multiple of 15 minutes.
    - Roles are the ordered discrete union of all module roles.
    - Prerequisites match only the first module's prerequisites, or `None` when it has none.
    - Learning outcomes contain exactly one summary outcome per module in module order, followed by exactly one cumulative playlist-wide outcome.
@@ -108,4 +102,4 @@ Quote scalar values when required for valid YAML. Do not add fields that were no
 
 ## Completion Report
 
-State the playlist title and slug, list its module slugs in order, identify hidden modules created from page attachments, summarize the calculated level and duration, and report the build result.
+State the playlist title and slug, list its module slugs in order, identify hidden modules created from page attachments, and report the build result. The build derives playlist level and duration from the selected modules.

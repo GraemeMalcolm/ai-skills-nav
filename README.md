@@ -24,13 +24,13 @@ Content is organized into the following hierarchy:
 
 Catalog source is stored under **[source](./source/)**:
 
-- `source/courses/<course>/course.yml` defines course metadata and playlist membership.
-- `source/playlists/<playlist>/playlist.yml` defines playlist metadata and module order.
+- `source/courses/<course>/course.yml` defines course metadata and playlist membership; level and duration are derived from its playlists.
+- `source/playlists/<playlist>/playlist.yml` defines playlist metadata and module order; level and duration are derived from its modules.
 - `source/modules/<module>/module.yml` defines module metadata and page order.
 - Markdown files in each module folder provide page content.
 - `thumbnail.png` and optional `media` folders provide visual assets.
 
-Each build also writes a version-controlled `catalog.json` at the repository root for reporting and other non-HTML consumers, plus an identical `dist/catalog.json` for deployment. The JSON artifact contains the normalized courses, playlists, modules, credentials, relationships, module pages, canonical URLs, aggregate filter values, and the same computed search/filter context embedded in catalog cards. Its `links` section indexes video, lab steps, lab host, and simulation URLs with the module slugs that reference each URL. Course, playlist, and module records include a `last_updated` ISO 8601 timestamp derived from the most recent Git commit affecting a file in that item's source folder; CI checks out full history so these dates remain accurate.
+Each build also writes a version-controlled `catalog.json` at the repository root for reporting and other non-HTML consumers, plus an identical `dist/catalog.json` for deployment. The JSON artifact contains the normalized courses, playlists, modules, credentials, relationships, module pages, canonical URLs, aggregate filter values, and the same computed search/filter context embedded in catalog cards. Durations are stored as minutes; playlist and course durations are child totals rounded up to five minutes, and their levels are the maximum child level. Its `links` section indexes video, lab steps, lab host, and simulation URLs with the module slugs that reference each URL. Course, playlist, and module records include a `last_updated` ISO 8601 timestamp derived from the most recent Git commit affecting a file in that item's source folder; CI checks out full history so these dates remain accurate.
 
 Additionally, reusable lab content and media are stored under `MicrosoftLearning` as a proxy for the current separate MicrosoftLearning GitHub repository for single-source labs. Labs are included in pages via an `INCLUDE` reference.
 
@@ -52,7 +52,7 @@ The catalog includes a mix of module types and subject areas, enabling explorati
 - The home banner provides an animated natural-language search prompt across all catalog items; the five example prompts run once per page load and settle on “Build the skills you need.”
 - Dedicated catalog pages place Search and Filter controls above the card grid. Search clear actions appear beneath the right edge of their search fields.
 - Keyword search covers titles, descriptions, topics, course numbers, and experience types where applicable, using case-insensitive AND matching after conversational stop words are removed.
-- Filters cover role, experience type, level, and modality. Effective page content is classified as video content, hands-on interactivity, quiz or assessment, and static text and graphics after recursive includes; module modalities are derived from their pages, and playlist and course modalities are derived from their modules.
+- Filters cover role, experience type, level, duration, and modality. Duration bands match the displayed units: up to 120 minutes, over 120 but under 360 minutes as hours, and 360 minutes or more as six-hour training days. Effective page content is classified as video content, hands-on interactivity, quiz or assessment, and static text and graphics after recursive includes; module modalities are derived from their pages, and playlist and course modalities are derived from their modules.
 - Catalog cards expose descriptions as tooltips.
 - Breadcrumbs provide context throughout the generated site.
 - Curated playlists include a collapsible navigation pane listing their modules in the defined order.

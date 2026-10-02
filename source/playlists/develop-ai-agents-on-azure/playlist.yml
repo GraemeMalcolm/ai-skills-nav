@@ -4,8 +4,6 @@ description: >-
   Extend agents with custom tools and MCP, ground responses with Foundry IQ and retrieval-augmented generation (RAG),
   publish agents to Microsoft Teams and Microsoft 365 Copilot with Work IQ, orchestrate agent-driven workflows, and
   develop single-agent and multi-agent solutions with Microsoft Agent Framework and the A2A protocol.
-level: 200
-duration: 600 minutes
 avatar: anton
 experience_type: Learning Path
 role:

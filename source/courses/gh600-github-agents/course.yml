@@ -3,8 +3,6 @@ course_number: GH-600
 credentials:
   - gh-600
 description: This course is designed to build practical skills in developing, deploying, and managing agentic AI systems within GitHub-based software development workflows. The course explores how to integrate AI agents into the software development lifecycle (SDLC), including designing agent architectures, configuring tools and environments, and managing agent memory, state, and execution. Students will learn how to evaluate and optimize agent performance, implement governance and guardrails, and coordinate multi-agent systems to ensure safe, reliable, and efficient outcomes. Through hands-on learning, participants will gain the skills needed to operate, supervise, and govern AI agents in production environments using GitHub as the control plane.
-level: 300
-duration: 1 day
 experience_type: Microsoft Official Curriculum
 role:
   - Developer
