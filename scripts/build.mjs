@@ -708,7 +708,7 @@ async function writePage(outputFile, html) {
 }
 
 function metadataLine(item) {
-  return [item.course_number, item.modality, item.level ? `Level ${item.level}` : "", formatDuration(item.duration)].filter(Boolean).map(escapeHtml).join(" · ");
+  return [item.course_number, item.modality, item.level ? `Level ${item.level}` : "", formatDuration(item.duration, itemCollectionType(item) === "courses")].filter(Boolean).map(escapeHtml).join(" · ");
 }
 
 function durationInMinutes(value, context = "Duration") {
@@ -725,10 +725,10 @@ function durationInMinutes(value, context = "Duration") {
   return amount;
 }
 
-function formatDuration(value) {
+function formatDuration(value, useTrainingDays = false) {
   if (value === undefined || value === null || value === "") return "";
   const minutes = durationInMinutes(value);
-  if (minutes >= 360) {
+  if (useTrainingDays || minutes >= 360) {
     const days = Number((minutes / 360).toFixed(2));
     return `${days} ${days === 1 ? "day" : "days"}`;
   }
@@ -739,7 +739,7 @@ function formatDuration(value) {
   return `${minutes} ${minutes === 1 ? "minute" : "minutes"}`;
 }
 
-function deriveCollectionMetadata(item, children, childType) {
+function deriveCollectionMetadata(item, children, childType, roundDuration) {
   const levels = children.map((child) => Number(child.level));
   if (levels.some((level) => !Number.isFinite(level))) {
     throw new Error(`${item.slug} references a ${childType} with an invalid level`);
@@ -748,7 +748,7 @@ function deriveCollectionMetadata(item, children, childType) {
   const totalMinutes = children.reduce((total, child) => (
     total + durationInMinutes(child.duration, `${childType} ${child.slug} duration`)
   ), 0);
-  item.duration = Math.ceil(totalMinutes / 5) * 5;
+  item.duration = roundDuration(totalMinutes);
 }
 
 function overviewFacts(item) {
@@ -1320,6 +1320,7 @@ function catalogMetadataValues(item, field) {
   }
   if (field === "duration") {
     if (item.duration === undefined || item.duration === null || item.duration === "") return [];
+    if (itemCollectionType(item) === "courses") return ["Days"];
     const minutes = durationInMinutes(item.duration, `${item.slug} duration`);
     if (minutes >= 360) return ["Days"];
     return [minutes > 120 ? "Hours" : "Minutes"];
@@ -1560,7 +1561,7 @@ async function build() {
       if (!module) throw new Error(`Playlist ${playlist.slug} references missing module ${slug}`);
       return module;
     });
-    deriveCollectionMetadata(playlist, childModules, "module");
+    deriveCollectionMetadata(playlist, childModules, "module", (minutes) => Math.ceil(minutes / 5) * 5);
     playlist.rating = averageRating(childModules);
     buildSearchContext(playlist, childModules);
   }
@@ -1579,7 +1580,9 @@ async function build() {
       if (!playlist) throw new Error(`Course ${course.slug} references missing playlist ${slug}`);
       return playlist;
     });
-    deriveCollectionMetadata(course, childPlaylists, "playlist");
+    deriveCollectionMetadata(course, childPlaylists, "playlist", (minutes) => (
+      minutes <= 180 ? 180 : Math.max(360, Math.round(minutes / 360) * 360)
+    ));
     course.rating = averageRating(childPlaylists);
     buildSearchContext(course, childPlaylists);
   }

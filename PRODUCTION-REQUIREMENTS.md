@@ -159,7 +159,7 @@ playlists:
 
 **FR-COURSE-001** A course detail page must present its title, description, image, level, duration, experience type, roles, topics, credentials, and ordered playlists. It must present the course number when one is supplied.
 
-Course level is derived as the maximum child-playlist level. Course duration is derived by totaling child-playlist durations and rounding up to the nearest five minutes.
+Course level is derived as the maximum child-playlist level. Course duration is derived by totaling child-playlist durations. Totals of three hours or less become a half training day; longer totals are at least one day and are rounded to the nearest whole six-hour training day.
 
 **FR-COURSE-002** A learner must be able to begin or continue the course from its first effective learning step.
 

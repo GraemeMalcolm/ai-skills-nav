@@ -103,7 +103,7 @@ Rules:
 
 - `title`, `description`, `experience_type`, `topics`, `role`, and `playlists` SHOULD be present.
 - `level` is derived as the maximum level of the referenced playlists.
-- `duration` is derived as the sum of referenced playlist durations, rounded up to the nearest five minutes.
+- `duration` is derived as the sum of referenced playlist durations. Totals of three hours or less become a half training day; longer totals are at least one day and are rounded to the nearest whole six-hour training day.
 - `course_number` is optional. When supplied, it MUST be a string.
 - `playlists` MUST be a non-empty array of existing playlist slugs.
 - `prerequisites` and `learning_outcomes` MUST each be a non-empty array of strings.
