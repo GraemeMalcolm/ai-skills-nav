@@ -7,7 +7,7 @@ role:
   - Developer
   - Solution Architect
 prerequisites:
-  - Familiarity with AI agent development.
+  - Familiarity with AI agent development and RAG.
 learning_outcomes:
   - Understand the key features and capabilities of Microsoft IQ.
 pages:

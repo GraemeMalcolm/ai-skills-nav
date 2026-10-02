@@ -4,7 +4,7 @@ level: 200
 duration: 30 minutes
 experience_type: Training module
 role:
-  - Security administrator
+  - Security Engineer
 prerequisites:
   - Basic cloud security knowledge and familiarity with Azure administration.
 learning_outcomes:
