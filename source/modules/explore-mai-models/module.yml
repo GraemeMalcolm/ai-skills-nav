@@ -4,7 +4,7 @@ level: 100
 duration: 45 minutes
 experience_type: Hands-on lab
 role:
-  - Business User
+  - Data scientist
   - Developer
 prerequisites:
   - Basic familiarity with generative AI models and access to the MAI Playground
