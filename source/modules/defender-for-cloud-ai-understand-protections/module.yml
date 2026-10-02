@@ -1,0 +1,33 @@
+title: Understand how Microsoft Defender for Cloud supports AI security and governance in Azure
+description: >
+  Microsoft Defender for Cloud plays a central role in securing AI workloads across Azure. Learn how Microsoft Defender
+  for Cloud supports AI security across Azure. Explore the layers of an AI workload, the unique risks AI systems
+  introduce, and the guardrails that protect model inputs and outputs. See how Microsoft Purview, Microsoft Entra ID,
+  and Microsoft Foundry work together to support a unified security and governance strategy.
+level: 200
+duration: 26 minutes
+experience_type: Training module
+role:
+  - Security Engineer
+prerequisites:
+  - Experience securing workloads and data in Azure
+  - >-
+    Familiarity with concepts such as identity and access management, network isolation, and cloud security posture
+    management (CSPM)
+  - Basic understanding of how AI workloads use Azure services such as Azure OpenAI or Azure AI Search
+learning_outcomes:
+  - Identify the layers that make up AI workloads in Azure
+  - Recognize security risks unique to AI, including prompt injection, data leakage, and model misuse
+  - Explain how Microsoft Foundry provides guardrails and observability for AI models
+  - >-
+    Describe how Microsoft Defender for Cloud, Microsoft Purview, and Microsoft Entra ID work together to secure and
+    govern AI workloads
+  - Summarize how these services align to create a unified, defense-in-depth strategy for AI security in Azure
+pages:
+  - introduction.md
+  - understand-ai-services-azure.md
+  - understand-ai-security-risks.md
+  - guardrails-protections-azure.md
+  - azure-security-governance-ai-workloads.md
+  - knowledge-check.md
+  - summary.md

@@ -1,0 +1,35 @@
+title: Configure and manage guardrails in Microsoft Foundry
+description: >
+  Microsoft Foundry guardrails help secure AI workloads by applying configurable safety controls that evaluate both
+  prompts and responses.
+
+  You'll learn how to understand built-in safety models, test and refine guardrails, create blocklists, configure
+  content filters, and validate that protections work as intended.
+
+  These capabilities help organizations prevent unsafe or policy-violating interactions, protect sensitive data, and
+  maintain trust in AI-assisted applications.
+level: 200
+duration: 48 minutes
+experience_type: Training module
+role:
+  - Security Engineer
+  - Developer
+prerequisites:
+  - Experience managing Azure AI or cloud-based workloads
+  - Familiarity with AI model deployment and data security concepts
+  - Awareness of organizational policy or compliance requirements related to AI use
+learning_outcomes:
+  - Explain how guardrails secure model interactions in Microsoft Foundry
+  - Describe safety controls such as content filters, blocklists, and Prompt Shields
+  - Configure and validate custom guardrails for different workload types
+  - Evaluate guardrail effectiveness and refine configurations for continuous assurance
+pages:
+  - introduction.md
+  - understand-guardrails.md
+  - understand-safety-controls.md
+  - try-guardrails.md
+  - create-manage-blocklist.md
+  - configure-content-filter.md
+  - choose-refine-guardrails.md
+  - knowledge-check.md
+  - summary.md

@@ -1,0 +1,35 @@
+title: Protect AI workloads with Microsoft Defender for Cloud
+description: >
+  Microsoft Defender for Cloud helps secure AI workloads by combining discovery, posture management, and runtime
+  protection in one platform.
+
+  You'll learn how to enable the AI workloads plan, review insights in the Data & AI security dashboard, assess posture
+  using Cloud Security Posture Management (CSPM), detect runtime threats with Cloud Workload Protection (CWP), and
+  investigate incidents in Microsoft Defender XDR.
+
+  These capabilities work together to identify configuration gaps, detect suspicious behavior, and provide end-to-end
+  visibility across your AI environments.
+level: 200
+duration: 38 minutes
+experience_type: Training module
+role:
+  - Security Engineer
+prerequisites:
+  - Experience managing Microsoft Defender for Cloud plans and Azure configurations
+  - Familiarity with Azure AI services such as Microsoft Foundry, Azure OpenAI, or Azure Machine Learning
+  - Basic understanding of threat detection, incident response, and cloud security posture management (CSPM)
+learning_outcomes:
+  - Enable and configure the AI workloads plan in Microsoft Defender for Cloud
+  - Review AI resource insights in the Data & AI security dashboard
+  - Assess and improve AI posture with Cloud Security Posture Management (CSPM)
+  - Detect and respond to runtime threats using Cloud Workload Protection (CWP)
+  - Investigate AI-related alerts and incidents in Microsoft Defender XDR
+pages:
+  - introduction.md
+  - enable-ai-workload-plan.md
+  - data-ai-security-dashboard.md
+  - assess-improve-ai-posture.md
+  - detect-ai-threats.md
+  - investigate-ai-alerts-xdr.md
+  - knowledge-check.md
+  - summary.md
