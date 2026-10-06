@@ -1,4 +1,4 @@
-import { copyFile, cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+?import { copyFile, cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { execFile } from "node:child_process";
 import path from "node:path";
@@ -606,7 +606,7 @@ function signInDialog(outputFile) {
   return `<div class="account-links"><a class="filter-trigger" href="#profile" data-profile-open data-auth-only hidden>Profile</a><a class="filter-trigger auth-link" href="#sign-in" data-auth-open>Sign-in</a></div>
   <dialog class="filter-dialog sign-in-dialog" data-sign-in-dialog aria-labelledby="sign-in-title">
     <form data-sign-in-form novalidate>
-      <header class="filter-dialog-header"><div><img class="sign-in-logo" src="${logo}" alt="Microsoft"><h2 id="sign-in-title">Sign-in</h2></div><button class="icon-button" type="button" aria-label="Close sign-in" data-sign-in-close>${icon("close")}</button></header>
+      <header class="filter-dialog-header"><div><img class="sign-in-logo" src="${logo}" alt="Microsoft"><div class="sign-in-title-row"><h2 id="sign-in-title">Sign-in</h2><span class="sign-in-help"><button type="button" aria-label="About signing in" aria-describedby="sign-in-help-tooltip">?</button><span id="sign-in-help-tooltip" role="tooltip">You can sign in using any email address and non-blank password. Using a microsoft.com or github.com address makes internal organizational skilling available in the catalog.</span></span></div></div><button class="icon-button" type="button" aria-label="Close sign-in" data-sign-in-close>${icon("close")}</button></header>
       <div class="filter-dialog-body sign-in-fields">
         <label><span>Email address</span><input type="email" name="email" autocomplete="email" data-sign-in-email required></label>
         <label><span>Password</span><input type="password" name="password" autocomplete="current-password" data-sign-in-password required></label>

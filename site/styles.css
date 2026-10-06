@@ -1189,6 +1189,60 @@ img {
   margin-bottom: 18px;
 }
 
+.sign-in-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sign-in-help {
+  position: relative;
+  display: inline-flex;
+  margin-top: 5px;
+}
+
+.sign-in-help button {
+  display: inline-grid;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font: 700 .75rem "Manrope", sans-serif;
+  cursor: help;
+}
+
+.sign-in-help [role="tooltip"] {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 8px);
+  left: 50%;
+  width: min(300px, calc(100vw - 80px));
+  padding: 10px 12px;
+  border-radius: 5px;
+  background: rgba(41, 40, 39, .96);
+  color: white;
+  font-size: .82rem;
+  font-weight: 400;
+  line-height: 1.45;
+  box-shadow: 0 8px 22px rgba(25, 23, 21, .22);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 5px);
+  transition: opacity .15s ease, transform .15s ease, visibility .15s;
+  pointer-events: none;
+}
+
+.sign-in-help:hover [role="tooltip"],
+.sign-in-help:focus-within [role="tooltip"] {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
 .sign-in-fields {
   display: grid;
   gap: 18px;
