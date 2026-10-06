@@ -9,7 +9,7 @@ role:
   - Developer
 avatar: anton
 prerequisites:
-  - Conceptual knowledge of generative AI.
+  - Conceptual knowledge of generative AI and agents.
   - Programming experience.
 learning_outcomes:
   - Describe key features of Microsoft Foundry.
