@@ -1,0 +1,26 @@
+title: Develop a text analysis agent with the Azure Language MCP server
+description: >-
+  Learn how to build an AI agent that uses the Azure Language MCP server to perform text analysis tasks like language
+  detection, entity recognition, and personal information redaction.
+level: 200
+duration: 52 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Be familiar with Azure services and the Microsoft Foundry portal.
+  - Have experience deploying generative AI models in Microsoft Foundry.
+  - Have some familiarity with Python programming.
+learning_outcomes:
+  - Describe the Azure Language MCP server and the text analysis capabilities it exposes.
+  - Explain how MCP enables dynamic tool discovery and selection by AI agents.
+  - Connect the Azure Language MCP server to an agent in Microsoft Foundry.
+  - Build a Python client application that invokes an agent to perform text analysis.
+pages:
+  - 01-introduction.md
+  - 02-understand-language-mcp.md
+  - 03-connect-use-language-mcp.md
+  - 04-exercise.md
+  - 05-knowledge-check.md
+  - 06-summary.md

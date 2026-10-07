@@ -1,0 +1,39 @@
+---
+title: Create a client application that uses an image generation model
+description: Use APIs and SDKs to consume image generation models.
+---
+
+::: zone pivot="Video"
+
+[!VIDEO https://learn-video.azurefd.net/vod/player?id=ab9152e1-da43-4764-aebe-6a84ecfba5ac]
+
+> **TIP**: See the **Text** tab for more details!
+
+::: zone-end
+
+::: zone pivot="Text"
+
+You can use a language-specific SDK (for example, the OpenAI Python SDK or the Azure OpenAI .NET SDK) to develop client applications that use models to generate images.
+
+For example, the following Python code uses the OpenAI *Images* API to submit a request to a model to generate image of a robot eating a cheeseburger:
+
+```python
+# Generate an image
+img_results = client.images.generate(
+    model="FLUX.1-Kontext-pro",
+    prompt="A robot eating a cheeseburger.",
+    n=1,
+    size="1024x1024",
+)
+
+# Save the generated image
+image_data = base64.b64decode(img_results.data[0].b64_json)
+with open("image.png", "wb") as image_file:
+    image_file.write(image_data)
+```
+
+The result is a binary stream containing the requested image:
+
+![An illustration of a robot eating a cheeseburger.](media/robot-eating-cheeseburger.png)
+
+::: zone-end

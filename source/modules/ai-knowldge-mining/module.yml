@@ -1,0 +1,28 @@
+title: Create a knowledge mining solution with Azure AI Search
+description: >-
+  Unlock the hidden insights in your data with Azure AI Search. In this module, you'll learn how to implement a
+  knowledge mining solution that extracts and enriches data, making it searchable and ready for deeper analysis.
+level: 200
+duration: 68 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Familiarity with Azure
+  - Some knowledge of AI concepts
+learning_outcomes:
+  - Implement indexing with Azure AI Search
+  - Use AI skills to enrich data in an index
+  - Search an index to find relevant information
+  - Persist extracted information in a knowledge store
+pages:
+  - 1-introduction.md
+  - 2-azure-ai-search.md
+  - 3-index.md
+  - 4-ai-skills.md
+  - 5-search-index.md
+  - 6-knowledge-store.md
+  - 7-exercise.md
+  - 8-knowledge-check.md
+  - 9-summary.md

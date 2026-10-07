@@ -4,7 +4,9 @@ import { fileURLToPath } from "node:url";
 import yaml from "js-yaml";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const inputRoot = path.join(root, "temp");
+const inputRoot = process.env.IMPORT_MODULE_INPUT_ROOT
+  ? path.resolve(root, process.env.IMPORT_MODULE_INPUT_ROOT)
+  : path.join(root, "temp");
 const outputRoot = path.join(root, "source", "modules");
 const avatar = process.env.IMPORT_MODULE_AVATAR ?? "anton";
 

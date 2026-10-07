@@ -1,0 +1,27 @@
+title: Extract data with Azure Document Intelligence
+description: >-
+  Azure Document Intelligence uses OCR and deep learning models to extract text, key-value pairs, tables, and structured
+  data from forms and documents. Learn how to use prebuilt and custom models to automate document processing.
+level: 200
+duration: 71 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Familiarity with Azure and the Azure portal.
+  - Programming experience with C# or Python.
+learning_outcomes:
+  - Describe the capabilities and components of Azure Document Intelligence.
+  - Use the Document Intelligence Studio to explore and test models.
+  - Use prebuilt models to extract data from common document types.
+  - Train and use custom models for industry-specific forms.
+pages:
+  - 1-introduction.md
+  - 2-what-is-document-intelligence.md
+  - 3-use-document-intelligence-studio.md
+  - 4-use-prebuilt-models.md
+  - 5-train-custom-models.md
+  - 6-exercise.md
+  - 7-knowledge-check.md
+  - 8-summary.md

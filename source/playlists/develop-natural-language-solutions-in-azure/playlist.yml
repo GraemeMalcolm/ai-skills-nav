@@ -1,0 +1,23 @@
+title: Develop natural language solutions in Azure
+description: Analyze text with Azure Language, build text analysis and speech agents with MCP, create speech-enabled applications, and develop real-time conversational Voice Live agents in Microsoft Foundry.
+experience_type: Learning Path
+role:
+  - Developer
+avatar: anton
+prerequisites:
+  - Familiarity with Microsoft Azure and Foundry
+  - Programming experience with Python or another language
+learning_outcomes:
+  - Analyze text by using Azure Language in Foundry Tools
+  - Build text analysis and speech agents by using Azure MCP servers
+  - Develop generative AI speech solutions
+  - Create applications that recognize and synthesize speech
+  - Develop real-time conversational agents with the Voice Live API and SDK
+  - Develop natural language processing AI solutions
+modules:
+  - analyze-text-ai-language
+  - develop-text-analysis-agent-language-mcp
+  - develop-generative-ai-audio-apps
+  - create-speech-enabled-apps
+  - develop-speech-agent-speech-mcp
+  - develop-voice-live-agent

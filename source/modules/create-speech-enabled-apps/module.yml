@@ -1,0 +1,33 @@
+title: Create speech-enabled apps with Azure Speech in Microsoft Foundry Tools
+description: >-
+  Azure Speech in Microsoft Foundry Tools enables you to build speech-enabled applications. This module focuses on using
+  the speech-to-text and text to speech APIs, which enable you to create apps that are capable of speech recognition and
+  speech synthesis.
+level: 200
+duration: 53 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+  - Data Scientist
+  - Solution Architect
+  - Student
+prerequisites:
+  - Be familiar with Azure services and the Azure portal
+  - Have programming experience
+learning_outcomes:
+  - Use a Microsoft Foundry resource for Azure Speech in Foundry Tools
+  - Implement speech recognition with the Azure Speech to text API
+  - Use the Text to speech API to implement speech synthesis
+  - Configure audio format and voices
+  - Use Speech Synthesis Markup Language (SSML)
+pages:
+  - 1-introduction.md
+  - 2-create-speech-service.md
+  - 3-speech-to-text.md
+  - 4-text-to-speech.md
+  - 5-audio-format-voices.md
+  - 6-speech-synthesis-markup.md
+  - 7-exercise-speech-app.md
+  - 8-knowledge-check.md
+  - 9-summary.md

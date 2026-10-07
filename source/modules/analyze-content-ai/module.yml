@@ -1,0 +1,23 @@
+title: Create a multimodal analysis solution with Azure Content Understanding
+description: Use Azure Content Understanding for multimodal content analysis and information extraction.
+level: 100
+duration: 60 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Be familiar with Azure services and the Azure portal.
+  - Have some familiarity with APIs.
+learning_outcomes:
+  - Describe capabilities of Azure Content Understanding.
+  - Use Azure Content Understanding to build a content analyzer.
+  - Consume a Content Understanding analyzer by using the API.
+pages:
+  - 01-introduction.md
+  - 02-content-understanding.md
+  - 03-create-analyzer.md
+  - 04-use-api.md
+  - 05-exercise.md
+  - 06-knowledge-check.md
+  - 07-summary.md

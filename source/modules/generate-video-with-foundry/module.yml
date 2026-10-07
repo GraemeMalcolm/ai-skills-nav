@@ -1,0 +1,23 @@
+title: Generate videos with Microsoft Foundry
+description: Learn how to generate videos from text prompts with Sora 2 in Microsoft Foundry.
+level: 200
+duration: 48 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Experience with deploying generative AI models in Microsoft Foundry.
+  - Programming experience.
+learning_outcomes:
+  - Deploy a video-generating AI model in Microsoft Foundry.
+  - Test a video-based prompt in the chat playground.
+  - Use the Azure OpenAI SDK to generate and remix videos in Python.
+pages:
+  - 1-introduction.md
+  - 2-deploy-video-model.md
+  - 3-generate-video-from-prompt.md
+  - 4-generate-video-in-python.md
+  - 5-exercise.md
+  - 6-knowledge-check.md
+  - 7-summary.md

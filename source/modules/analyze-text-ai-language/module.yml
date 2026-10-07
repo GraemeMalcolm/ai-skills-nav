@@ -1,0 +1,26 @@
+title: Analyze text with Azure Language in Foundry Tools
+description: >-
+  Azure Language in Foundry Tools enables you to create intelligent apps and services that extract semantic information
+  from text.
+level: 200
+duration: 46 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Familiarity with Microsoft Azure and the Azure portal.
+  - Programming experience.
+learning_outcomes:
+  - Detect language from text.
+  - Recognize named entities in text.
+  - Extract personally identifiable information (PII) in text.
+pages:
+  - 1-introduction.md
+  - 2-provision-resource.md
+  - 3-detect-language.md
+  - 6-extract-entities.md
+  - 7-extract-personal-information.md
+  - 8-exercise-analyze-text.md
+  - 9-knowledge-check.md
+  - 10-summary.md

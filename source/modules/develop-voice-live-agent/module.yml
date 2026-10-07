@@ -1,0 +1,27 @@
+title: Develop an Azure Speech Voice Live Agent in Microsoft Foundry
+description: >-
+  Learn how to develop a Voice Live agent using the Voice Live API and SDK. This module covers the fundamentals of the
+  Voice Live platform, including API integration, SDK usage, and building conversational AI agents.
+level: 200
+duration: 52 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Programming experience with languages such as Python, JavaScript, or C#.
+  - Familiarity with RESTful APIs and webhooks.
+  - Basic understanding of Azure services and cloud computing concepts.
+learning_outcomes:
+  - Describe the core components and capabilities of the Azure Speech Voice Live platform.
+  - Use the Voice Live API to create conversational AI solutions.
+  - Use the Voice Live SDK to build and deploy conversational AI solutions.
+  - Integrate Microsoft Foundry agents with the Voice Live API to create voice agents.
+pages:
+  - 1-introduction.md
+  - 2-voice-live-api.md
+  - 3-voice-live-sdk.md
+  - 3b-voice-live-agent.md
+  - 4-exercise-develop-agent.md
+  - 5-knowledge-check.md
+  - 6-summary.md

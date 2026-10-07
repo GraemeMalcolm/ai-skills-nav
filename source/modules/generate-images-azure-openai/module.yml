@@ -1,0 +1,24 @@
+title: Generate images with AI
+description: In Microsoft Foundry, you can use image generation models to create original images based on natural language prompts.
+level: 200
+duration: 33 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - >-
+    Before starting this module, you should be familiar with Microsoft Foundry. You should also have programming
+    experience.
+learning_outcomes:
+  - Describe the capabilities of image generation models
+  - Use the Images playground in Microsoft Foundry portal
+  - Integrate image generation models into your apps
+pages:
+  - 1-introduction.md
+  - 2-what-is-dall-e.md
+  - 3-dall-e-in-openai-studio.md
+  - 4-dall-e-rest-api.md
+  - 5-exercise-use-dall-e.md
+  - 6-knowledge-check.md
+  - 7-summary.md

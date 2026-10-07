@@ -1,0 +1,26 @@
+title: Extract insights from visual data on Azure
+description: Generate images and videos with Microsoft Foundry, analyze visual and multimodal content, extract structured document data, and create searchable knowledge mining solutions with Azure AI Search.
+experience_type: Learning Path
+role:
+  - Developer
+avatar: anton
+prerequisites:
+  - Familiarity with Microsoft Azure and the Azure portal
+  - Programming experience with Python or another language
+learning_outcomes:
+  - Develop generative AI vision solutions
+  - Generate images and videos with models in Microsoft Foundry
+  - Analyze images and multimodal content with Azure Content Understanding
+  - Build applications that use the Azure Content Understanding API
+  - Extract structured data from documents with Azure Document Intelligence
+  - Create knowledge mining solutions with Azure AI Search
+  - Develop multimodal AI solutions
+modules:
+  - develop-generative-ai-vision-apps
+  - generate-images-azure-openai
+  - generate-video-with-foundry
+  - analyze-images-with-content-understanding
+  - analyze-content-ai
+  - analyze-content-ai-api
+  - extract-data-with-document-intelligence
+  - ai-knowldge-mining

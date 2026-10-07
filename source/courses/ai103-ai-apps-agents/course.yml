@@ -15,6 +15,9 @@ learning_outcomes:
   - Develop agents with Microsoft Foundry
   - Develop speech and natural language processing (NLP) solutions with Microsoft Foundry
   - Develop computer vision and information extraction solutions with Microsoft Foundry
+  - Develop AI apps and agents with Microsoft Foundry
 playlists:
   - develop-generative-ai-apps-azure
   - develop-ai-agents-on-azure
+  - develop-natural-language-solutions-in-azure
+  - extract-insights-from-visual-data-on-azure

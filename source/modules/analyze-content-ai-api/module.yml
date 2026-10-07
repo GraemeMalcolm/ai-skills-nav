@@ -1,0 +1,22 @@
+title: Create an Azure Content Understanding client application
+description: Use the Azure Content Understanding API for multimodal content analysis and information extraction.
+level: 200
+duration: 60 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Be familiar with Azure services and the Azure portal.
+  - Have some familiarity with Python and APIs.
+learning_outcomes:
+  - Use the Azure Content Understanding API to build a content analyzer.
+  - Use the Azure Content Understanding API to consume an analyzer.
+pages:
+  - 01-introduction.md
+  - 02-prepare-content-understanding.md
+  - 03-create-analyzer.md
+  - 04-analyze.md
+  - 05-exercise.md
+  - 06-knowledge-check.md
+  - 07-summary.md

@@ -1,0 +1,27 @@
+title: Develop a speech agent with the Azure Speech MCP server
+description: >-
+  Learn how to build an AI agent that uses the Azure Speech MCP server to perform speech-to-text and text-to-speech
+  tasks.
+level: 200
+duration: 52 minutes
+experience_type: Training module
+avatar: anton
+role:
+  - Developer
+prerequisites:
+  - Be familiar with Azure services and the Microsoft Foundry portal.
+  - Have experience deploying generative AI models in Microsoft Foundry.
+  - Have some familiarity with Python programming.
+learning_outcomes:
+  - Describe the Azure Speech MCP server and the speech capabilities it exposes.
+  - Explain how MCP enables dynamic tool discovery and selection by AI agents.
+  - Set up Azure Blob Storage for audio file input and output.
+  - Connect the Azure Speech MCP server to an agent in Microsoft Foundry.
+  - Build a Python client application that invokes an agent to perform speech tasks.
+pages:
+  - 01-introduction.md
+  - 02-understand-speech-mcp.md
+  - 03-connect-use-speech-mcp.md
+  - 04-exercise.md
+  - 05-knowledge-check.md
+  - 06-summary.md
