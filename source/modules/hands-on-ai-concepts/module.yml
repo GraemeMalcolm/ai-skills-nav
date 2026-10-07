@@ -5,6 +5,7 @@ duration: 120 minutes
 experience_type: Hands-on lab
 role:
   - Developer
+  - Student
 avatar: anton
 prerequisites:
   - Basic awareness of AI and access to the provided lab environment

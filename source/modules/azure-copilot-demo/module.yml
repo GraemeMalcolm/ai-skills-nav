@@ -5,6 +5,7 @@ duration: 10 minutes
 experience_type: Video
 role:
   - Administrator
+  - Developer
 prerequisites:
   - Familiarity with Azure resources and basic cloud administration
 learning_outcomes:
