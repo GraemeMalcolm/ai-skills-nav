@@ -51,6 +51,7 @@ const experienceTypeFilterGroups = [
       { value: "Video", description: "Video-based skilling presentations" },
       { value: "Hands-on lab", description: "Practical interactive skilling" },
       { value: "Exam Prep", description: "Hints and tips for specific Microsoft exams" },
+      { value: "Course delivery", description: "Complete instructor-led course delivery content" },
       { value: "Any other module", description: "Modular skilling content", fallback: true },
     ],
   },
@@ -1091,9 +1092,15 @@ function pageOverviewContents(outputFile, pages, heading, targetForPage) {
   </section>`;
 }
 
-function courseOverview(outputFile, course, playlists, credentials) {
+function courseOverview(outputFile, course, playlists, credentials, courseDelivery) {
   const playlistList = overviewContents(outputFile, playlists, "playlists", "In this course:", (playlist) =>
     playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), playlist));
+  const courseDeliverySection = courseDelivery
+    ? `<section class="credential"><h2>Course delivery</h2><ul class="credential-resources"><li${accessData(courseDelivery)}><a href="${relativeUrl(outputFile, path.join(outputRoot, "modules", courseDelivery.slug, "index.html"))}">
+      <span class="credential-resource-thumbnail">${thumbnail(outputFile, courseDelivery, "modules")}</span>
+      <strong>${escapeHtml(courseDelivery.title)}</strong>
+    </a></li></ul></section>`
+    : "";
   const credentialContent = credentials.length
     ? `<ul class="credential-resources">${credentials.map((credential) => `<li${accessData(credential)}><a href="${relativeUrl(outputFile, path.join(outputRoot, "credentials", credential.slug, "index.html"))}">
       <span class="credential-resource-thumbnail">${thumbnail(outputFile, credential, "credentials")}</span>
@@ -1105,10 +1112,10 @@ function courseOverview(outputFile, course, playlists, credentials) {
   const nextTarget = firstPlaylist
     ? playlistEntryTarget(path.join(outputRoot, "courses", course.slug, "playlists"), firstPlaylist)
     : null;
-  return overview(outputFile, course, "courses", credentialSection, playlistList, pageNavigation(outputFile, null, nextTarget));
+  return overview(outputFile, course, "courses", `${courseDeliverySection}${credentialSection}`, playlistList, pageNavigation(outputFile, null, nextTarget));
 }
 
-function credentialOverview(outputFile, credential, courses, playlists, examPrep) {
+function credentialOverview(outputFile, credential, courses, playlists, examPrep, courseDelivery) {
   const practiceUrl = credential.practice || credential.pratice;
   const skills = credential.skills?.length
     ? `<section class="credential-skills"><h2>Skills measured:</h2><ul>${credential.skills.map((skill) => `<li>${escapeHtml(skill)}</li>`).join("")}</ul></section>`
@@ -1120,6 +1127,7 @@ function credentialOverview(outputFile, credential, courses, playlists, examPrep
     </a></li>`;
   const preparationItems = [
     ...courses.map((course) => resourceItem(course, "courses", `Course ${course.course_number}: ${course.title}`, path.join(outputRoot, "courses", course.slug, "index.html"))),
+    ...(courseDelivery ? [resourceItem(courseDelivery, "modules", `Course delivery: ${courseDelivery.title}`, path.join(outputRoot, "modules", courseDelivery.slug, "index.html"))] : []),
     ...(examPrep ? [resourceItem(examPrep, "modules", `Exam prep: ${examPrep.title.replace(/^Exam prep:\s*/i, "")}`, path.join(outputRoot, "modules", examPrep.slug, "index.html"))] : []),
     ...playlists.map((playlist) => resourceItem(playlist, "playlists", `Skilling playlist: ${playlist.title}`, path.join(outputRoot, "playlists", playlist.slug, "index.html"))),
     ...(practiceUrl ? [`<li><a href="${escapeHtml(practiceUrl)}" target="_blank" rel="noopener noreferrer">
@@ -1568,6 +1576,10 @@ async function build() {
   for (const course of courses) {
     if (!Array.isArray(course.playlists) || course.playlists.length === 0) throw new Error(`Course ${course.slug} must define at least one playlist`);
     if (course.credentials !== undefined && !Array.isArray(course.credentials)) throw new Error(`Course ${course.slug} credentials must be a list`);
+    if (course["course-delivery"] !== undefined && typeof course["course-delivery"] !== "string") throw new Error(`Course ${course.slug} course-delivery must be a module slug`);
+    const courseDelivery = course["course-delivery"] ? moduleMap.get(course["course-delivery"]) : undefined;
+    if (course["course-delivery"] && !courseDelivery) throw new Error(`Course ${course.slug} references missing course-delivery module ${course["course-delivery"]}`);
+    Object.defineProperty(course, "courseDelivery", { value: courseDelivery });
     Object.defineProperty(course, "credentialMemberships", {
       value: (course.credentials || []).map((slug) => {
         const credential = credentialMap.get(slug);
@@ -1600,6 +1612,10 @@ async function build() {
     if (credential.skills !== undefined && !Array.isArray(credential.skills)) throw new Error(`Credential ${credential.slug} skills must be a list`);
     if (credential.courses !== undefined && !Array.isArray(credential.courses)) throw new Error(`Credential ${credential.slug} courses must be a list`);
     if (credential.playlists !== undefined && !Array.isArray(credential.playlists)) throw new Error(`Credential ${credential.slug} playlists must be a list`);
+    if (credential["course-delivery"] !== undefined && typeof credential["course-delivery"] !== "string") throw new Error(`Credential ${credential.slug} course-delivery must be a module slug`);
+    const courseDelivery = credential["course-delivery"] ? moduleMap.get(credential["course-delivery"]) : undefined;
+    if (credential["course-delivery"] && !courseDelivery) throw new Error(`Credential ${credential.slug} references missing course-delivery module ${credential["course-delivery"]}`);
+    Object.defineProperty(credential, "courseDelivery", { value: courseDelivery });
     const childCourses = (credential.courses || []).map((slug) => {
       const course = courseMap.get(slug);
       if (!course) throw new Error(`Credential ${credential.slug} references missing course ${slug}`);
@@ -1742,7 +1758,7 @@ async function build() {
     const credentialExamPrep = typeof credential["exam-prep"] === "string" ? moduleMap.get(credential["exam-prep"]) : undefined;
     const credentialFile = path.join(outputRoot, "credentials", credential.slug, "index.html");
     const credentialBreadcrumbs = [{ label: "Credentials", target: credentialsFile }, { label: credential.title }];
-    await writePage(credentialFile, shell({ outputFile: credentialFile, title: credential.title, breadcrumbs: credentialBreadcrumbs, avatar: defaultAvatar, bodyClass: "learning-page", restrictedTo: credential.restricted_to, content: credentialOverview(credentialFile, credential, credentialCourses, credentialPlaylists, credentialExamPrep) }));
+    await writePage(credentialFile, shell({ outputFile: credentialFile, title: credential.title, breadcrumbs: credentialBreadcrumbs, avatar: defaultAvatar, bodyClass: "learning-page", restrictedTo: credential.restricted_to, content: credentialOverview(credentialFile, credential, credentialCourses, credentialPlaylists, credentialExamPrep, credential.courseDelivery) }));
   }
 
   for (const module of modules) {
@@ -1801,7 +1817,7 @@ async function build() {
     });
     const courseFile = path.join(outputRoot, "courses", course.slug, "index.html");
     const courseBreadcrumbs = [{ label: "Catalog", target: catalogFile }, { label: course.title }];
-    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, sidebar: courseSidebar(courseFile, course, coursePlaylists), avatar: course.avatarData, bodyClass: "learning-page", restrictedTo: course.restricted_to, content: courseOverview(courseFile, course, coursePlaylists, course.credentialMemberships) }));
+    await writePage(courseFile, shell({ outputFile: courseFile, title: course.title, breadcrumbs: courseBreadcrumbs, sidebar: courseSidebar(courseFile, course, coursePlaylists), avatar: course.avatarData, bodyClass: "learning-page", restrictedTo: course.restricted_to, content: courseOverview(courseFile, course, coursePlaylists, course.credentialMemberships, course.courseDelivery) }));
 
     const coursePlaylistsRoot = path.join(outputRoot, "courses", course.slug, "playlists");
     for (const [playlistIndex, playlist] of coursePlaylists.entries()) {
