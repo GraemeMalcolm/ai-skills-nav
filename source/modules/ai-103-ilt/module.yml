@@ -1,0 +1,42 @@
+title: "Course video: AI-103 - Develop AI apps and agents on Azure"
+description: "Learn how to build intelligent AI applications and agents with Azure AI Foundry. In this course, you'll explore generative AI, AI agents, Model Context Protocol (MCP), Microsoft Agent Framework, speech and language services, multimodal AI, content understanding, and Azure AI Search. By the end, you'll have the skills to design, build, deploy, and optimize AI-powered solutions that can reason, communicate, access knowledge, and automate real-world tasks using Azure AI services."
+level: 300
+duration: 660 minutes
+experience_type: Course delivery
+role:
+  - Developer
+prerequisites:
+  - Software development experience and foundational knowledge of generative AI, APIs, and Microsoft 365
+learning_outcomes:
+  - Develop generative AI solutions with Microsoft Foundry
+  - Develop agents with Microsoft Foundry
+  - Develop speech and natural language processing (NLP) solutions with Microsoft Foundry
+  - Develop computer vision and information extraction solutions with Microsoft Foundry
+pages:
+  - 01-video.md
+  - 02-video.md
+  - 03-video.md
+  - 04-video.md
+  - 05-video.md
+  - 06-video.md
+  - 07-video.md
+  - 08-video.md
+  - 09-video.md
+  - 10-video.md
+  - 11-video.md
+  - 12-video.md
+  - 13-video.md
+  - 14-video.md
+  - 15-video.md
+  - 16-video.md
+  - 17-video.md
+  - 18-video.md
+  - 19-video.md
+  - 20-video.md
+  - 21-video.md
+  - 22-video.md
+  - 23-video.md
+  - 24-video.md
+  - 25-video.md
+  - 26-video.md
+  - 27-video.md
