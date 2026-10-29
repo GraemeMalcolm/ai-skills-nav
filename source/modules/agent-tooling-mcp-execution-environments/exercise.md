@@ -9,5 +9,5 @@ GitHub Agentic Workflows enable AI-powered automation in GitHub repositories. In
 
 The workflow uses Mona's notes, the GitHub Blog, and the GitHub Changelog to draft current website updates. The proposed changes are submitted through a pull request so they can be reviewed before they are merged.
 
-[!GITHUB_SKILL[](https://github.com/skills/agentic-workflows-that-read-the-room)]
+[!GITHUB_SKILL[](https://github.com/skills/agentic-workflows-that-read-the-room#agentic-workflows-that-read-the-room)]
 
