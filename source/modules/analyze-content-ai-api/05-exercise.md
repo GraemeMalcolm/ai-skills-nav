@@ -9,6 +9,4 @@ In this exercise, you use the Azure Content Understanding API to extract informa
 
 > **NOTE**: To complete this lab, you need an **[Azure subscription](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn)** in which you have administrative access.
 
-Launch the exercise and follow the instructions.
-
-[![Button to launch exercise.](media/launch-exercise.png)](https://go.microsoft.com/fwlink/?linkid=2320464&azure-portal=true)
+[!LAB_STEPS[](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-information-extraction/refs/heads/main/Instructions/Exercises/02-content-understanding-api.md)]

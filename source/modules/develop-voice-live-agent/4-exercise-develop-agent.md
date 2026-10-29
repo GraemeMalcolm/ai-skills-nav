@@ -18,11 +18,4 @@ This exercise takes approximately **30** minutes to complete.
 
 ## Get started
 
-Select the **Launch Exercise** button to open the exercise instructions in a new browser window. When you're finished with the exercise, return here to:
-
-> [!div class="checklist"]
->
-> - Complete the module
-> - Earn a badge for completing this module
-
-[![Button to launch exercise.](media/launch-exercise.png)](https://go.microsoft.com/fwlink/?linkid=2356168&azure-portal=true)
+[!LAB_STEPS[](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-language/refs/heads/main/Instructions/Exercises/06-voice-live-agent.md)]

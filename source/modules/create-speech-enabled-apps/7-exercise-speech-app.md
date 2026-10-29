@@ -7,8 +7,6 @@ In this exercise, build a speech enabled app for both speech recognition and syn
 
 > **NOTE**: To complete this lab, you need an **[Azure subscription](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn)**.
 
-Launch the exercise and follow the instructions.
-
-[![Button to launch exercise.](media/launch-exercise.png)](https://go.microsoft.com/fwlink/?linkid=2356350&azure-portal=true)
+[!LAB_STEPS[](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-language/refs/heads/main/Instructions/Exercises/04-azure-speech.md)]
 
 > **TIP**: After completing the exercise, if you've finished exploring Foundry Tools, delete the Azure resources that you created during the exercise.

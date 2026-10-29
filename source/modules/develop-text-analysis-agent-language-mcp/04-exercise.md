@@ -9,6 +9,4 @@ In this exercise, you create an AI agent in Microsoft Foundry, connect it to the
 
 > **NOTE**: To complete this exercise, you need an **[Azure subscription](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn)** in which you have administrative access.
 
-Launch the exercise and follow the instructions.
-
-[![Button to launch exercise.](media/launch-exercise.png)](https://go.microsoft.com/fwlink/?linkid=2356518&azure-portal=true)
+[!LAB_STEPS[](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-language/refs/heads/main/Instructions/Exercises/02-language-agent.md)]
