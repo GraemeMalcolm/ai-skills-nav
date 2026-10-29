@@ -238,7 +238,7 @@ Module metadata uses the following source contract:
 | `pages` | Ordered list of page entries | Yes | Defines the module structure, overview page list, sidebar, and Previous/Next sequence. At least one entry is required. |
 | `thumbnail.png` or equivalent image reference | One asset | Yes | Module cards, module overview, and personal-playlist management. |
 
-Page modalities are derived at build time from the effective Markdown content after recursively resolving `[!INCLUDE]` tags. `[!VIDEO]` produces `Video content`; `[!LAB_STEPS]`, `[!LAB_HOST]`, or `[!SIMULATION]` produces `Hands-on interactivity`; a `::: knowledge-check` block produces `Quiz or assessment`; and `[!PDF]` or standard Markdown outside those custom constructs produces `Static text and graphics`. A page may have multiple modalities. Each page record in `catalog.json` contains its derived modalities, and each module contains the unique union of its page modalities for display and direct or transitive filtering.
+Page modalities are derived at build time from the effective Markdown content after recursively resolving `[!INCLUDE]` tags. `[!VIDEO]` produces `Video content`; `[!LAB_STEPS]`, `[!LAB_HOST]`, `[!SIMULATION]`, or `[!GITHUB_SKILL]` produces `Hands-on interactivity`; a `::: knowledge-check` block produces `Quiz or assessment`; and `[!PDF]` or standard Markdown outside those custom constructs produces `Static text and graphics`. A page may have multiple modalities. Each page record in `catalog.json` contains its derived modalities, and each module contains the unique union of its page modalities for display and direct or transitive filtering.
 
 A page entry may be a Markdown filename or an object. The object form supports `file` as the required source reference plus optional `title` and `description` values for navigation and overview presentation. These overrides do not replace page front matter or alter the canonical page body.
 
@@ -918,6 +918,8 @@ Expected rendering behavior:
 **FR-SIM-002** Simulation launch URLs must be fully qualified HTTP or HTTPS URLs and preserve all authored path, query-string, and fragment components when substituted for `{SIMULATION_URL}` in `templates/simulation.md`.
 
 **FR-SIM-003** Simulation template content must use the same recursive directive processing and template-relative media resolution as the hosted-lab template.
+
+**FR-SKILL-001** Authors must invoke the standard GitHub skill launcher with `[!GITHUB_SKILL[](<repo-url>)]`. The renderer must substitute the complete fully qualified HTTP(S) repository URL for every `{REPO_URL}` placeholder in `templates/github-skill.md`, using the same recursive processing, template-relative media resolution, and safe new-window behavior as simulations. Unsupported URLs must fail the build. GitHub skill directives count as `Hands-on interactivity` and their repository URLs are indexed under `links.github_skill` in the generated catalog.
 
 Example page combining hosted and self-directed lab choices:
 

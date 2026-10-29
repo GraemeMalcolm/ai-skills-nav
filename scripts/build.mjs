@@ -12,6 +12,7 @@ const sourceRoot = path.join(root, "source");
 const outputRoot = path.join(root, "dist");
 const hostedLabTemplate = path.join(root, "templates", "hosted-lab.md");
 const simulationTemplate = path.join(root, "templates", "simulation.md");
+const githubSkillTemplate = path.join(root, "templates", "github-skill.md");
 const execFileAsync = promisify(execFile);
 const contentRoots = [
   { name: "modules", directory: path.join(sourceRoot, "modules") },
@@ -236,7 +237,7 @@ async function includeSourceAttribution(includePath, included, outputFile) {
 }
 
 async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
-  const includePattern = /\[!(INCLUDE|LAB_STEPS|LAB_HOST|SIMULATION)(?:\[([^\]]*)\])?\(([^)]+)\)\]|\[!(INCLUDE|LAB_STEPS|LAB_HOST|SIMULATION)\s+([^\]]+)\]/gi;
+  const includePattern = /\[!(INCLUDE|LAB_STEPS|LAB_HOST|SIMULATION|GITHUB_SKILL)(?:\[([^\]]*)\])?\(([^)]+)\)\]|\[!(INCLUDE|LAB_STEPS|LAB_HOST|SIMULATION|GITHUB_SKILL)\s+([^\]]+)\]/gi;
   let result = "";
   let cursor = 0;
   for (const match of markdown.matchAll(includePattern)) {
@@ -255,13 +256,15 @@ async function expandIncludes(markdown, sourceFile, outputFile, stack = []) {
       cursor = match.index + match[0].length;
       continue;
     }
-    if (directive === "SIMULATION") {
+    if (directive === "SIMULATION" || directive === "GITHUB_SKILL") {
       if (!remoteReference) {
-        throw new Error(`SIMULATION must reference a fully-qualified HTTP(S) URL in ${sourceFile}`);
+        throw new Error(`${directive} must reference a fully-qualified HTTP(S) URL in ${sourceFile}`);
       }
-      const template = await readFile(simulationTemplate, "utf8");
-      const simulationMarkdown = template.replaceAll("{SIMULATION_URL}", includeReference);
-      result += await expandIncludes(simulationMarkdown, simulationTemplate, outputFile, [...stack, simulationTemplate]);
+      const templateFile = directive === "SIMULATION" ? simulationTemplate : githubSkillTemplate;
+      const placeholder = directive === "SIMULATION" ? "{SIMULATION_URL}" : "{REPO_URL}";
+      const template = await readFile(templateFile, "utf8");
+      const templateMarkdown = template.replaceAll(placeholder, includeReference);
+      result += await expandIncludes(templateMarkdown, templateFile, outputFile, [...stack, templateFile]);
       cursor = match.index + match[0].length;
       continue;
     }
@@ -1253,7 +1256,7 @@ async function getModulePages(module) {
 }
 
 const catalogFilterFields = ["role", "experience_type", "credential_type", "level", "modalities", "duration"];
-const catalogLinkTypes = ["video", "lab_steps", "lab_host", "simulation"];
+const catalogLinkTypes = ["video", "lab_steps", "lab_host", "simulation", "github_skill"];
 const catalogModalities = [
   "Video content",
   "Hands-on interactivity",
@@ -1265,7 +1268,7 @@ function extractCatalogLinks(markdown) {
   const links = Object.fromEntries(catalogLinkTypes.map((type) => [type, []]));
   const videoPattern = /^\s*\[!VIDEO\s*:?\s*(https?:\/\/[^\]\s]+)\]\s*$/gim;
   for (const match of markdown.matchAll(videoPattern)) links.video.push(match[1].trim());
-  const directivePattern = /\[!(LAB_STEPS|LAB_HOST|SIMULATION)(?:\[[^\]]*\])?\(([^)]+)\)\]|\[!(LAB_STEPS|LAB_HOST|SIMULATION)\s+([^\]]+)\]/gi;
+  const directivePattern = /\[!(LAB_STEPS|LAB_HOST|SIMULATION|GITHUB_SKILL)(?:\[[^\]]*\])?\(([^)]+)\)\]|\[!(LAB_STEPS|LAB_HOST|SIMULATION|GITHUB_SKILL)\s+([^\]]+)\]/gi;
   for (const match of markdown.matchAll(directivePattern)) {
     const type = (match[1] || match[3]).toLowerCase();
     links[type].push((match[2] || match[4]).trim());
@@ -1276,7 +1279,7 @@ function extractCatalogLinks(markdown) {
 function derivePageModalities(markdown, catalogLinks) {
   const modalities = [];
   if (catalogLinks.video.length) modalities.push("Video content");
-  if (catalogLinks.lab_steps.length || catalogLinks.lab_host.length || catalogLinks.simulation.length) {
+  if (catalogLinks.lab_steps.length || catalogLinks.lab_host.length || catalogLinks.simulation.length || catalogLinks.github_skill.length) {
     modalities.push("Hands-on interactivity");
   }
   if (/^::: knowledge-check\b/im.test(markdown)) modalities.push("Quiz or assessment");
@@ -1285,8 +1288,8 @@ function derivePageModalities(markdown, catalogLinks) {
     .replace(/^::: knowledge-check\b[^\r\n]*\r?\n[\s\S]*?^::: end-knowledge-check\s*$/gim, "")
     .replace(/^\s*\[!VIDEO\s*:?\s*https?:\/\/[^\]\s]+\]\s*$/gim, "")
     .replace(/^\s*\[!PDF\[\]\([^)]+\)\]\s*$/gim, "")
-    .replace(/^\s*\[!(?:LAB_STEPS|LAB_HOST|SIMULATION)(?:\[[^\]]*\])?\([^)]+\)\]\s*$/gim, "")
-    .replace(/^\s*\[!(?:LAB_STEPS|LAB_HOST|SIMULATION)\s+[^\]]+\]\s*$/gim, "")
+    .replace(/^\s*\[!(?:LAB_STEPS|LAB_HOST|SIMULATION|GITHUB_SKILL)(?:\[[^\]]*\])?\([^)]+\)\]\s*$/gim, "")
+    .replace(/^\s*\[!(?:LAB_STEPS|LAB_HOST|SIMULATION|GITHUB_SKILL)\s+[^\]]+\]\s*$/gim, "")
     .replace(/^::: (?:zone(?:-end)?\b.*|end-knowledge-check)\s*$/gim, "")
     .trim();
   if (/\[!PDF\[\]\([^)]+\)\]/i.test(markdown) || standardContent) {

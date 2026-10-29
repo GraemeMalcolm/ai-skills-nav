@@ -22,6 +22,4 @@ modules:
   - multi-agent-systems-orchestration
   - memory-state-evaluation
   - governance-guardrails-operations
-  - foundations-agentic-ai
-  - design-agent-architecture-integration
-  - agent-tooling-mcp-execution-environments
+

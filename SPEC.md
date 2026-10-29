@@ -195,7 +195,7 @@ Rules:
 - `avatar` is optional. When supplied, it MUST identify an existing avatar.
 - `restricted_to` is optional. When supplied, it MUST be a non-empty array of valid domain names.
 - `hidden` is optional. When `true`, the module MUST be excluded from discovery surfaces while its direct route and appearances inside parent items remain available.
-- Page modalities are derived from the effective Markdown content after recursively resolving `[!INCLUDE]` tags. A page receives `Video content` when it contains `[!VIDEO]`; `Hands-on interactivity` when it contains `[!LAB_STEPS]`, `[!LAB_HOST]`, or `[!SIMULATION]`; `Quiz or assessment` when it contains a `::: knowledge-check` block; and `Static text and graphics` when it contains `[!PDF]` or standard Markdown content outside those custom constructs. A page MAY have multiple modalities. Module modalities are the discrete union of their page modalities.
+- Page modalities are derived from the effective Markdown content after recursively resolving `[!INCLUDE]` tags. A page receives `Video content` when it contains `[!VIDEO]`; `Hands-on interactivity` when it contains `[!LAB_STEPS]`, `[!LAB_HOST]`, `[!SIMULATION]`, or `[!GITHUB_SKILL]`; `Quiz or assessment` when it contains a `::: knowledge-check` block; and `Static text and graphics` when it contains `[!PDF]` or standard Markdown content outside those custom constructs. A page MAY have multiple modalities. Module modalities are the discrete union of their page modalities.
 
 Course, playlist, and module home pages MUST list prerequisites and learning outcomes. When an item has multiple learning outcomes, the final value MUST be bold and prefixed with `Overall outcome:`. A single learning objective MUST be displayed without that prefix.
 
@@ -561,7 +561,7 @@ A leading slash denotes a repository-root-relative include. Includes MUST:
 - Rewrite included images relative to the included file.
 - Reject missing files, paths outside the repository, and recursive inclusion.
 
-### 9.3 Hosted labs and simulations
+### 9.3 Hosted labs, simulations, and GitHub skills
 
 A hosted-lab directive MUST use a fully qualified HTTP or HTTPS launch URL:
 
@@ -580,6 +580,14 @@ A simulation directive follows the same rendering and URL-validation rules:
 ```
 
 The renderer MUST read `templates/simulation.md`, replace every `{SIMULATION_URL}` placeholder with the directive URL, and resolve template-relative media from that template file.
+
+A GitHub skill directive follows the same rendering and URL-validation rules:
+
+```markdown
+[!GITHUB_SKILL[](https://github.com/skills/agentic-workflows-that-read-the-room)]
+```
+
+The renderer MUST read `templates/github-skill.md`, replace every `{REPO_URL}` placeholder with the complete repository URL, and recursively render the template at the directive position. Template-relative media MUST resolve from the template file, and new-window links MUST retain their safe target attributes. GitHub skill directives MUST be classified as `Hands-on interactivity` and indexed under `links.github_skill` in the generated catalog.
 
 ### 9.4 Videos
 
@@ -812,6 +820,7 @@ A conforming implementation MUST satisfy the following checks.
 - Include traversal and recursion fail the build.
 - Included image paths are rewritten from the included source.
 - Hosted-lab directives render `templates/hosted-lab.md` with the complete launch URL and template-relative image path.
+- GitHub skill directives render `templates/github-skill.md` with the complete repository URL, template-relative image path, and safe new-window link.
 - Video directives and privacy-enhanced YouTube embeds work.
 - Zone tabs are accessible, keyboard operable, and restore module preferences.
 - New-window links include `noopener noreferrer`.
