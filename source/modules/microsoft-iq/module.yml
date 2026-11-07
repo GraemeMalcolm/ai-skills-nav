@@ -9,6 +9,6 @@ role:
 prerequisites:
   - Familiarity with AI agent development and retrieval augmented generation (RAG) techniques.
 learning_outcomes:
-  - Understand the key features and capabilities of Microsoft IQ for AI agents.
+  - Understand the key features and capabilities of Microsoft IQ; a knowledge platform for AI agents.
 pages:
   - 01-microsoft-iq.md
