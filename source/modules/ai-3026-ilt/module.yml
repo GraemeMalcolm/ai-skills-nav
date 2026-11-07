@@ -1,0 +1,25 @@
+title: "Course video: AI-3026 - Develop AI agents on Azure"
+description: "Learn how to design and develop AI agents on Azure. Explore agent fundamentals, Azure AI Agent Service, custom tools, the Semantic Kernel SDK, and multi-agent orchestration through the complete AI-3026 course video series."
+level: 300
+duration: 147 minutes
+experience_type: Course delivery
+role:
+  - Developer
+prerequisites:
+  - Familiarity with generative AI concepts and software development
+learning_outcomes:
+  - Explain the concepts and use cases of AI agents on Azure.
+  - Develop an AI agent with Azure AI Agent Service.
+  - Extend AI agents by integrating custom tools and external data.
+  - Develop AI agents with the Semantic Kernel SDK.
+  - Orchestrate collaborating agents in a multi-agent solution.
+  - Develop extensible AI agent solutions on Azure.
+pages:
+  - 01-video.md
+  - 02-video.md
+  - 03-video.md
+  - 04-video.md
+  - 05-video.md
+  - 06-video.md
+  - 07-video.md
+  - 08-video.md

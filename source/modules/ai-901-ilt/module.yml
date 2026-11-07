@@ -14,6 +14,7 @@ learning_outcomes:
   - Explore generative AI models and agents in Azure.
   - Identify natural language processing, speech, and computer vision capabilities.
   - Describe how Azure extracts structured information from documents, audio, and video.
+  - Apply AI concepts and Azure AI capabilities to real-world scenarios.
 pages:
   - 01-video.md
   - 02-video.md

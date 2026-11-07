@@ -1,0 +1,24 @@
+title: "Course video: AB-730 - Transform business workflows with generative AI"
+description: "Transform everyday business workflows with generative AI and Microsoft 365 Copilot. Learn responsible AI fundamentals, prompting with Copilot Chat, business content creation, data analysis and visualization, meeting collaboration, and the design of practical Copilot-powered workflows through the complete AB-730 course video series."
+level: 200
+duration: 170 minutes
+experience_type: Course delivery
+role:
+  - Business User
+prerequisites:
+  - Familiarity with Microsoft 365 applications and basic generative AI concepts
+learning_outcomes:
+  - Explain generative AI capabilities, limitations, governance, and responsible use.
+  - Use Copilot Chat as an AI assistant for research, ideation, summarization, and decision-making.
+  - Draft and refine business content with Microsoft 365 Copilot.
+  - Analyze and visualize business data with Copilot in Excel.
+  - Improve meetings and collaboration with Copilot in Teams and Outlook.
+  - Design end-to-end Copilot-powered business workflows.
+pages:
+  - 01-video.md
+  - 02-video.md
+  - 03-video.md
+  - 04-video.md
+  - 05-video.md
+  - 06-video.md
+  - 07-video.md

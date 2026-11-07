@@ -1,0 +1,37 @@
+title: "Course video: DP-600 - Microsoft Fabric Analytics Engineer"
+description: "Develop the skills needed to implement enterprise analytics solutions with Microsoft Fabric. Explore Fabric administration, lakehouses, Apache Spark, Delta Lake, Dataflows Gen2, Data Factory pipelines, notebooks, medallion architecture, data warehouses, Power BI semantic models, performance optimization, security, and DP-600 exam preparation."
+level: 300
+duration: 480 minutes
+experience_type: Course delivery
+role:
+  - Data Analyst
+  - Data Engineer
+prerequisites:
+  - Data analytics and engineering experience with data lake, warehouse, and dimensional modeling concepts
+learning_outcomes:
+  - Administer Microsoft Fabric environments with appropriate security and governance.
+  - Build lakehouse solutions with Apache Spark, Delta Lake, and medallion architecture.
+  - Ingest and transform data with Dataflows Gen2, Data Factory pipelines, and notebooks.
+  - Load, query, monitor, and optimize Microsoft Fabric data warehouses.
+  - Design scalable, secure, and performant Power BI semantic models.
+  - Implement end-to-end analytics solutions with Microsoft Fabric.
+pages:
+  - 01-video.md
+  - 02-video.md
+  - 03-video.md
+  - 04-video.md
+  - 05-video.md
+  - 06-video.md
+  - 07-video.md
+  - 08-video.md
+  - 09-video.md
+  - 10-video.md
+  - 11-video.md
+  - 12-video.md
+  - 13-video.md
+  - 14-video.md
+  - 15-video.md
+  - 16-video.md
+  - 17-video.md
+  - 18-video.md
+  - 19-video.md
