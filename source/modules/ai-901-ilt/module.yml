@@ -1,0 +1,32 @@
+title: "Course video: AI-901 - Introduction to AI in Azure"
+description: "Build foundational knowledge of artificial intelligence and Azure AI. Explore responsible AI, Microsoft Foundry, generative AI, agents, natural language processing, text analysis, speech, computer vision, multimodal models, and information extraction through the complete AI-901 course video series."
+level: 200
+duration: 358 minutes
+experience_type: Course delivery
+role:
+  - Developer
+  - Student
+prerequisites:
+  - None
+learning_outcomes:
+  - Explain foundational AI concepts, workloads, and responsible AI principles.
+  - Describe how Microsoft Azure and Microsoft Foundry support AI application development.
+  - Explore generative AI models and agents in Azure.
+  - Identify natural language processing, speech, and computer vision capabilities.
+  - Describe how Azure extracts structured information from documents, audio, and video.
+pages:
+  - 01-video.md
+  - 02-video.md
+  - 03-video.md
+  - 04-video.md
+  - 05-video.md
+  - 06-video.md
+  - 07-video.md
+  - 08-video.md
+  - 09-video.md
+  - 10-video.md
+  - 11-video.md
+  - 12-video.md
+  - 13-video.md
+  - 14-video.md
+  - 15-video.md
