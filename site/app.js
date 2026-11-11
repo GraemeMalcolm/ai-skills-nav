@@ -1840,8 +1840,7 @@ const applyCatalogVisibility = () => {
     }
     if (matches && !isHomePage && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
-      // Parent cards inherit applicable child metadata, while experience type
-      // remains the parent card's own catalog classification.
+      // Playlists inherit module content types; courses do not.
       matches = activeFilterFields.every((field) => {
         if (isOrganizationCard) return true;
         if (isPersonalizedPage && field !== "modalities") return true;
@@ -1914,6 +1913,7 @@ function updateAccessAwareFilterOptions() {
   if (!filterForm) return;
   let selectionChanged = false;
   ["experience_type", "credential_type", "role"].forEach((field) => {
+    if (!activeFilterFields.includes(field)) return;
     const accessibleValues = new Set();
     filterForm.querySelectorAll(`input[name="${field}"]`).forEach((input) => {
       const label = input.closest("label");
@@ -2029,7 +2029,9 @@ if (filterDialog && filterForm && filterCards.length) {
 
   const readFilters = () => Object.fromEntries(filterFields.map((name) => [
     name,
-    name === "level"
+    !activeFilterFields.includes(name)
+      ? appliedFilters[name]
+      : name === "level"
       ? filterLevelMin && filterLevelMax && (filterLevelMin.value !== "100" || filterLevelMax.value !== "500") ? [filterLevelMin.value, filterLevelMax.value] : []
       : name === "duration"
         ? filterDurationMin && filterDurationMax && (filterDurationMin.value !== "0" || filterDurationMax.value !== "2") ? [durationLabels[Number(filterDurationMin.value)], durationLabels[Number(filterDurationMax.value)]] : []

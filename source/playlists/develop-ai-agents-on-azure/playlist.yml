@@ -5,7 +5,6 @@ description: >-
   publish agents to Microsoft Teams and Microsoft 365 Copilot with Work IQ, orchestrate agent-driven workflows, and
   develop single-agent and multi-agent solutions with Microsoft Agent Framework and the A2A protocol.
 avatar: anton
-experience_type: Learning Path
 role:
   - Developer
   - Data Scientist

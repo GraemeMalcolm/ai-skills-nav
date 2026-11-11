@@ -22,41 +22,6 @@ const contentRoots = [
   { name: "MicrosoftLearning", directory: path.join(root, "MicrosoftLearning") },
   { name: "avatars", directory: path.join(root, "avatars") },
 ];
-const experienceTypeFilterGroups = [
-  {
-    collectionType: "courses",
-    label: "Courses",
-    description: "Comprehensive self-paced or instructor-led training classes",
-    options: [
-      { value: "Microsoft Official Curriculum", description: "Official technical training for role readiness and credential preparation" },
-      { value: "Any other courses", description: "Role or workload focused training classes", fallback: true },
-    ],
-  },
-  {
-    collectionType: "playlists",
-    label: "Playlists",
-    description: "Ordered series of related modules",
-    options: [
-      { value: "Learning Path", description: "Official solution-focused skilling content" },
-      { value: "Skilling Playlist", description: "Curated collections of related content" },
-      { value: "Skilling Challenge", description: "Time-bound skilling challenges" },
-      { value: "Any other playlists", description: "Collections of modules", fallback: true },
-    ],
-  },
-  {
-    collectionType: "modules",
-    label: "Modules",
-    description: "Individual topic-based skilling",
-    options: [
-      { value: "Training module", description: "Official technical skilling in multi-modal formats" },
-      { value: "Video", description: "Video-based skilling presentations" },
-      { value: "Hands-on lab", description: "Practical interactive skilling" },
-      { value: "Exam Prep", description: "Hints and tips for specific Microsoft exams" },
-      { value: "Course delivery", description: "Complete instructor-led course delivery content" },
-      { value: "Any other module", description: "Modular skilling content", fallback: true },
-    ],
-  },
-];
 // Build-time role access summary used to limit Profile choices to roles backed
 // by public content or content authorized for the signed-in email domain.
 let profileRoleOptions = [];
@@ -815,8 +780,8 @@ function thumbnailTarget(item, type) {
     : type === "modules"
       ? experienceType === "training module" ? "ms-module.png" : "nav-module.png"
       : type === "playlists"
-        ? experienceType === "learning path" ? "ms-playlist.png" : "nav-playlist.png"
-        : experienceType === "microsoft official curriculum" ? "ms-course.png" : "nav-course.png";
+        ? "nav-playlist.png"
+        : "nav-course.png";
   return path.join(outputRoot, "assets", fallback);
 }
 
@@ -826,10 +791,9 @@ function thumbnail(outputFile, item, type) {
 
 function experienceTypeName(item, type) {
   if (type === "credentials") return item.credential_type || "Credential";
-  if (item.experience_type) return item.experience_type;
   if (type === "courses") return "Course";
   if (type === "playlists") return "Skilling Playlist";
-  return "Learning Experience";
+  return item.experience_type || "Learning Experience";
 }
 
 function itemCollectionType(item) {
@@ -968,16 +932,6 @@ function filterOptions(name, values, label, accessByValue = new Map()) {
   return `<fieldset class="filter-group"><legend>${escapeHtml(label)}</legend><div class="filter-options">${values.map((value) => `<label data-option-access-domains="${escapeHtml(JSON.stringify(accessByValue.get(value) || []))}"><input type="checkbox" name="${escapeHtml(name)}" value="${escapeHtml(value)}"><span>${escapeHtml(value)}</span></label>`).join("")}</div></fieldset>`;
 }
 
-function experienceTypeFilterOptions(values, accessByValue) {
-  const availableValues = new Set(values);
-  const availableGroups = experienceTypeFilterGroups.filter((group) => group.options.some((option) => availableValues.has(option.value)));
-  return `<fieldset class="filter-group"><legend>Experience type</legend><div class="experience-type-groups">${availableGroups.map((group) => `
-    <section class="filter-option-section">
-      <h3 title="${escapeHtml(group.description)}">${escapeHtml(group.label)}</h3>
-      <div class="filter-options">${group.options.filter((option) => availableValues.has(option.value)).map((option) => `<label title="${escapeHtml(option.description)}" data-option-access-domains="${escapeHtml(JSON.stringify(accessByValue.get(option.value) || []))}"><input type="checkbox" name="experience_type" value="${escapeHtml(option.value)}"><span>${escapeHtml(option.value)}</span></label>`).join("")}</div>
-    </section>`).join("")}</div></fieldset>`;
-}
-
 function modalityFilterOptions(values) {
   return `<fieldset class="filter-group" data-modalities-filter><legend>Modality</legend>
     <div class="filter-choice"><label><input type="radio" name="modalities-mode" value="all" checked><span>Show all skilling</span></label></div>
@@ -1016,13 +970,13 @@ function catalogFilterDialog(items, fields, subject) {
   const selectors = {
     modalities: (item) => item.searchContext?.filters.modalities || [],
     level: (item) => [item.level],
-    experience_type: (item) => catalogMetadataValues(item, "experience_type"),
+    experience_type: (item) => item.searchContext.filters.experience_type,
     credential_type: (item) => [item.credential_type],
     role: (item) => Array.isArray(item.role) ? item.role : [item.role],
   };
-  const labels = { level: "Level", experience_type: "Experience type", credential_type: "Credential type", role: "Role" };
+  const labels = { level: "Level", experience_type: "Content type", credential_type: "Credential type", role: "Role" };
   const optionAccess = (field, values) => new Map(values.map((value) => {
-    const owners = items.filter((item) => catalogMetadataValues(item, field).includes(value));
+    const owners = items.filter((item) => selectors[field](item).includes(value));
     const unrestricted = owners.some((item) => !item.restricted_to.length);
     const domains = unrestricted ? [] : [...new Set(owners.flatMap((item) => item.restricted_to))].sort();
     return [value, domains];
@@ -1034,7 +988,6 @@ function catalogFilterDialog(items, fields, subject) {
         ${fields.map((field) => {
     if (field === "duration") return durationFilterOptions();
     const values = uniqueValues(selectors[field]).map(String);
-    if (field === "experience_type") return experienceTypeFilterOptions(values, optionAccess(field, values));
     return field === "modalities" ? modalityFilterOptions(values) : field === "level" ? levelFilterOptions() : filterOptions(field, values, labels[field], optionAccess(field, values));
   }).join("")}
       </div>
@@ -1321,13 +1274,7 @@ function buildCatalogLinks(modules) {
 
 function catalogMetadataValues(item, field) {
   if (field === "experience_type") {
-    const collectionType = itemCollectionType(item);
-    const group = experienceTypeFilterGroups.find((candidate) => candidate.collectionType === collectionType);
-    if (!group) return [experienceTypeName(item, collectionType)];
-    const authoredType = experienceTypeName(item, collectionType).toLocaleLowerCase();
-    const option = group.options.find((candidate) => !candidate.fallback && candidate.value.toLocaleLowerCase() === authoredType)
-      || group.options.find((candidate) => candidate.fallback);
-    return option ? [option.value] : [];
+    return itemCollectionType(item) === "modules" && item.experience_type ? [item.experience_type] : [];
   }
   if (field === "duration") {
     if (item.duration === undefined || item.duration === null || item.duration === "") return [];
@@ -1356,7 +1303,9 @@ function buildSearchContext(item, children = []) {
       field,
       [...new Set([
         ...catalogMetadataValues(item, field),
-        ...(field === "experience_type" ? [] : children.flatMap((child) => child.searchContext.filters[field])),
+        ...(field !== "experience_type" || itemCollectionType(item) === "playlists"
+          ? children.flatMap((child) => child.searchContext.filters[field])
+          : []),
       ])].sort((left, right) => left.localeCompare(right, undefined, { numeric: true })),
     ])),
   };
@@ -1502,6 +1451,9 @@ async function build() {
   await validateAvatar(defaultAvatar, false);
   for (const [type, items] of [["Module", modules], ["Playlist", playlists], ["Course", courses], ["Credential", credentials]]) {
     for (const item of items) {
+      if (type !== "Module" && item.experience_type !== undefined) {
+        throw new Error(`${type} ${item.slug} must not define experience_type; only modules may define it`);
+      }
       if (type !== "Credential") {
         for (const field of ["prerequisites", "learning_outcomes"]) {
           if (!Array.isArray(item[field]) || item[field].length === 0 || item[field].some((value) => typeof value !== "string" || value.trim() === "")) {
@@ -1687,8 +1639,7 @@ async function build() {
     ${catalogFilterDialog(discoverableItems, ["role", "experience_type", "level", "duration", "modalities"], "the catalog")}`;
   await writePage(catalogFile, shell({ outputFile: catalogFile, title: "Catalog", breadcrumbs: [{ label: "Catalog" }], avatar: defaultAvatar, content: catalogContent, bodyClass: "catalog-page unified-catalog-page", hasModuleCards: true }));
 
-  const officialCurriculumType = "Microsoft Official Curriculum";
-  const officialCourses = discoverableCourses.filter((item) => item.experience_type === officialCurriculumType);
+  const officialCourses = discoverableCourses;
   const officialSearch = catalogSearch("official-curriculum-search-input", "Search official curriculum", "Search official curriculum");
   const officialTools = `<div class="catalog-section-tools catalog-intro-tools">${officialSearch}<button class="filter-trigger" type="button" data-filter-open>Filter<span class="filter-count" data-filter-count hidden></span></button></div>`;
   const trainingPartnersDialog = `<dialog class="filter-dialog training-partners-dialog" data-training-partners-dialog aria-labelledby="training-partners-title">

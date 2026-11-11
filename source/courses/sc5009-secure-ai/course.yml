@@ -4,7 +4,6 @@ course_number: SC-5009
 credentials:
   - apl-5009
 description: In this course, you'll learn how to secure and govern Microsoft Foundry solutions with Microsoft Defender for Cloud, configure workload protections and guardrails, and secure Foundry environments.
-experience_type: Microsoft Official Curriculum
 role:
   - Security Engineer
   - Developer

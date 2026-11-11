@@ -82,7 +82,6 @@ course_number: XX-0000
 credentials:
   - Optional credential name
 description: Course description
-experience_type: Microsoft Official Curriculum
 topics:
   - Topic
 role:
@@ -101,7 +100,8 @@ playlists:
 
 Rules:
 
-- `title`, `description`, `experience_type`, `topics`, `role`, and `playlists` SHOULD be present.
+- `title`, `description`, `topics`, `role`, and `playlists` SHOULD be present.
+- Courses MUST NOT author `experience_type`.
 - `level` is derived as the maximum level of the referenced playlists.
 - `duration` is derived as the sum of referenced playlist durations. Totals of three hours or less become a half training day; longer totals are at least one day and are rounded to the nearest whole six-hour training day.
 - `course_number` is optional. When supplied, it MUST be a string.
@@ -122,7 +122,6 @@ Each playlist folder MUST contain `playlist.yml` and `thumbnail.png`.
 ```yaml
 title: Playlist title
 description: Playlist description
-experience_type: Microsoft Official Curriculum
 topics:
   - Topic
 role:
@@ -141,7 +140,8 @@ modules:
 
 Rules:
 
-- `title`, `description`, `experience_type`, `topics`, `role`, and `modules` SHOULD be present.
+- `title`, `description`, `topics`, `role`, and `modules` SHOULD be present.
+- Playlists MUST NOT author `experience_type`. Their content-type filter values are the discrete union of their modules' `experience_type` values.
 - `level` is derived as the maximum level of the referenced modules.
 - `duration` is derived as the sum of referenced module durations, rounded up to the nearest five minutes.
 - `modules` MUST be an array of existing module slugs.
@@ -399,7 +399,7 @@ Cards MUST include:
 - Available metadata summary.
 - Description tooltip when a description exists.
 - Link to the item's detail route.
-- Authored experience type, falling back to `Course`, `Skilling Playlist`, or `Learning Experience` according to the card's content type.
+- `Course` for courses, `Skilling Playlist` for curated playlists, the authored `experience_type` for modules (falling back to `Learning Experience`), or `credential_type` for credentials (falling back to `Credential`).
 - For module cards, an overlaid add icon that appears on hover or keyboard focus and opens the same personal-playlist dialog available inside a module. The icon MUST remain visible on devices without hover support.
 
 Search text MUST concatenate title, course number when present, description, and topics. Search MUST:
@@ -425,11 +425,13 @@ your yours yourself yourselves
 3. Compose with currently applied filters.
 4. Provide a clear action that resets results and focuses the input.
 
-The Home filter choices MUST be generated from current metadata and sorted with locale-aware numeric ordering. Experience types MUST be grouped as Courses (`Microsoft Official Curriculum`, `Any other courses`), Playlists (`Learning Path`, `Skilling Playlist`, `Skilling Challenge`, `Any other playlists`), and Modules (`Training module`, `Video`, `Hands-on lab`, `Exam Prep`, `Any other module`), but a choice MUST appear only when at least one current item maps to it. Authored experience types outside the named choices MUST map to the corresponding `Any other` choice without changing the authored label shown on cards or detail pages. Each rendered experience type group heading and choice MUST provide its prescribed explanatory tooltip. Experience type and role choices MUST respect the content the current user can access, and an active choice that becomes inaccessible MUST be cleared. Applied filters MUST persist in local storage and remain active on the Home, Courses, Playlists, and Modules pages.
+The Home and Catalog filter choices MUST be generated from current metadata and sorted with locale-aware numeric ordering. The **Content type** choices MUST use modules' authored `experience_type` values without grouping by hierarchy or mapping to `Any other` choices. Selecting content types MUST match modules with those types and curated playlists containing at least one such module; courses MUST NOT match an active content-type selection. Content type and role choices MUST respect the content the current user can access, and an active choice that becomes inaccessible MUST be cleared. Applied filters MUST persist in local storage across discovery pages; pages without a content-type filter MUST ignore but preserve that selection.
 
 Required filter fields:
 
-- All content: role, experience type, level, and modality.
+- Home and Catalog: role, content type, level, duration, and modality.
+- Courses: role, level, duration, and modality, with no experience-type or content-type filter. The existing Official Curriculum listing MUST include all discoverable courses, independent of any former `experience_type` value.
+- Credentials: credential type and role. Credentials MUST retain `credential_type` and MUST NOT author `experience_type`.
 
 A module's modality values MUST be derived at build time as the unique union of its page modalities. A curated playlist MUST inherit the sorted, unique union of modalities derived for its modules. A course MUST inherit the sorted, unique union of modalities from all modules in its playlists. Modality filtering MUST apply to courses and playlists using these inherited values.
 
@@ -439,7 +441,7 @@ Multiple selections in one field use OR semantics. Different fields, and search 
 
 A course detail MUST show its thumbnail, title, description, level, duration, credential information, and ordered links to its self-paced playlists. It MUST show the course number when one is supplied.
 
-Course, curated playlist, and module home pages MUST show the authored `experience_type` above the title when supplied. When it is absent, they MUST use `Course`, `Skilling Playlist`, and `Learning Experience`, respectively.
+Course and curated playlist home pages MUST show `Course` and `Skilling Playlist` above the title, respectively. Module home pages MUST show the authored `experience_type`, falling back to `Learning Experience`. Credentials MUST continue to show `credential_type`, falling back to `Credential`.
 
 ### 7.4 Curated playlist detail
 

@@ -52,12 +52,14 @@ The catalog includes a mix of module types and subject areas, enabling explorati
 - The home banner provides an animated natural-language search prompt across all catalog items; the five example prompts run once per page load and settle on “Build the skills you need.”
 - Dedicated catalog pages place Search and Filter controls above the card grid. Search clear actions appear beneath the right edge of their search fields.
 - Keyword search covers titles, descriptions, topics, course numbers, and experience types where applicable, using case-insensitive AND matching after conversational stop words are removed.
-- Filters cover role, experience type, level, duration, and modality. Duration bands match the displayed units: up to 120 minutes, over 120 but under 360 minutes as hours, and 360 minutes or more as six-hour training days. Effective page content is classified as video content, hands-on interactivity, quiz or assessment, and static text and graphics after recursive includes; module modalities are derived from their pages, and playlist and course modalities are derived from their modules.
+- Home and Catalog filters cover role, content type, level, duration, and modality. Content type uses modules' authored `experience_type` values and matches modules and playlists containing them, not courses. Only modules author `experience_type`; credentials retain `credential_type`. The Courses listing includes all published courses and has no content-type filter. Duration bands match the displayed units: up to 120 minutes, over 120 but under 360 minutes as hours, and 360 minutes or more as six-hour training days. Effective page content is classified as video content, hands-on interactivity, quiz or assessment, and static text and graphics after recursive includes; module modalities are derived from their pages, and playlist and course modalities are derived from their modules.
 - Catalog cards expose descriptions as tooltips.
 - Breadcrumbs provide context throughout the generated site.
 - Curated playlists include a collapsible navigation pane listing their modules in the defined order.
 - A single-page module opens its content directly. A multi-page module opens an overview with a page list and **Start** action.
 - Multi-page modules provide **Previous**, **Next**, and page-selection controls.
+
+After building, run `node --test scripts/catalog.test.mjs` to check the metadata hierarchy and generated content-type filters.
 
 ### Accounts and personalization
 

@@ -4,7 +4,6 @@ credentials:
   - ai-901
 course-delivery: ai-901-ilt
 description: This course provides a foundational understanding of artificial intelligence (AI) concepts and services available in Microsoft Azure. Learners will explore core AI workloads, including computer vision, natural language processing, conversational AI, and responsible AI practices. The course prepares students for the AI-901 certification exam.
-experience_type: Microsoft Official Curriculum
 role:
   - Developer
 avatar: anton

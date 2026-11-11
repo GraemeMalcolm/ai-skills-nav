@@ -1,7 +1,7 @@
 ---
 name: create-playlist-from-attachments
 description: 'Create a new AI Skills Nav playlist from module.yml and module-page Markdown files attached to chat. Use when asked to assemble a playlist, learning path, or skilling collection from attached modules or selected pages in attachment order.'
-argument-hint: 'Attach module.yml files and/or module page Markdown files; optionally provide a playlist name and experience type.'
+argument-hint: 'Attach module.yml files and/or module page Markdown files; optionally provide a playlist name.'
 ---
 
 # Create Playlist From Attachments
@@ -17,12 +17,9 @@ Supported attachments are:
 
 At least one supported attachment is required. If there are no attachments, or none are supported, ask the user to attach at least one valid `module.yml` or module-page Markdown file before editing.
 
-The playlist also requires:
+The playlist also requires a playlist name, used as its title.
 
-- A playlist name, used as its title.
-- An experience type, such as `Learning Path` or `Sales Skilling`.
-
-Use values supplied in the user's request. If either is absent, ask for all missing values in one prompt before editing. Do not infer an experience type from child modules.
+Use the name supplied in the user's request. If it is absent, ask for it before editing. Do not author `experience_type` on playlists; the site's content-type filter derives its values from child modules.
 
 ## Resolve Attachments
 
@@ -72,7 +69,6 @@ Create `source/playlists/<playlist-slug>/playlist.yml` with this field order:
 ```yaml
 title: <playlist name>
 description: <generated description>
-experience_type: <user-provided experience type>
 role:
   - <discrete inherited roles>
 prerequisites:
@@ -91,7 +87,7 @@ Quote scalar values when required for valid YAML. Do not add fields that were no
 1. Confirm every attachment maps to the expected module position and every module slug is unique.
 2. Confirm every referenced module folder and `module.yml` exists.
 3. Parse the new `playlist.yml` as YAML and verify:
-   - `title` and `experience_type` match the supplied values.
+   - `title` matches the supplied name and `experience_type` is absent.
    - Roles are the ordered discrete union of all module roles.
    - Prerequisites match only the first module's prerequisites, or `None` when it has none.
    - Learning outcomes contain exactly one summary outcome per module in module order, followed by exactly one cumulative playlist-wide outcome.

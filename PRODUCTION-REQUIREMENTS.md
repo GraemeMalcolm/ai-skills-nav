@@ -127,7 +127,6 @@ Course metadata uses the following source contract:
 | `course_number` | Zero or one string | No | Optional course identity and display metadata on course cards and detail pages. It is not part of general free-text search. When supplied, it must remain a string so values such as `AI-3026` retain formatting. |
 | `credentials` | List of strings | No | Associated credentials displayed on the course detail page in source order. An empty or absent list means that no credential is specified. |
 | `description` | One string | Yes | Course overview copy, catalog summary or tooltip, and searchable text. |
-| `experience_type` | One string | Yes | Displayed experience type and catalog filter value. |
 | `topics` | List of strings | Yes | Search terms, topic presentation, recommendations, and future topic browsing. At least one value is required. |
 | `role` | List of strings | Yes | Intended learner roles shown in metadata and used as catalog filter values. At least one value is required. |
 | `restricted_to` | List of domain strings | No | Limits simulated browsing and discovery to signed-in email addresses whose domain matches one listed value. |
@@ -145,7 +144,6 @@ credentials:
      - Microsoft Applied Skill - Develop AI agents with Microsoft Foundry
      - Microsoft Certified - Azure AI Apps and Agrnt Developer Associate
 description: Learn to build, test, and deploy AI agents.
-experience_type: Microsoft Official Curriculum
 topics:
      - Microsoft Foundry
      - AI agents
@@ -157,7 +155,7 @@ playlists:
      - microsoft-iq
 ```
 
-**FR-COURSE-001** A course detail page must present its title, description, image, level, duration, experience type, roles, topics, credentials, and ordered playlists. It must present the course number when one is supplied.
+**FR-COURSE-001** A course detail page must present its title, description, image, level, duration, roles, topics, credentials, and ordered playlists. It must present the course number when one is supplied. Courses must not author `experience_type`.
 
 Course level is derived as the maximum child-playlist level. Course duration is derived by totaling child-playlist durations. Totals of three hours or less become a half training day; longer totals are at least one day and are rounded to the nearest whole six-hour training day.
 
@@ -165,7 +163,7 @@ Course level is derived as the maximum child-playlist level. Course duration is 
 
 **FR-COURSE-003** Course navigation must continue across playlist boundaries while preserving the source-defined order.
 
-**FR-CONTENT-001** Course, curated playlist, and module home pages must show the authored `experience_type` above the title when supplied. When absent, the labels must default to `Course`, `Skilling Playlist`, and `Learning Experience`, respectively.
+**FR-CONTENT-001** Course and curated playlist home pages must show `Course` and `Skilling Playlist` above the title, respectively. Module home pages must show the authored `experience_type`, falling back to `Learning Experience`. Only modules may author `experience_type`; credentials retain `credential_type`.
 
 ### 5.3 Curated playlist
 
@@ -178,7 +176,6 @@ Playlist metadata uses the following source contract:
 | Stable identifier | One | Yes | Canonical identity for course references, routes, analytics, and sharing. In the current source layout this is the playlist folder name. |
 | `title` | One string | Yes | Playlist heading, card title, breadcrumbs, navigation label, and search text. |
 | `description` | One string | Yes | Playlist overview, catalog summary or tooltip, and search text. |
-| `experience_type` | One string | No | Experience type and catalog filter value to reflect the source or type of skilling - for example "Microsoft Official Curriculum", "Microsoft Short-Form Skilling", "Microsoft Labs", "LinkedIn Training", et.c. |
 | `topics` | List of strings | Yes | Search text, topic presentation, and recommendations. At least one value is required. |
 | `role` | List of strings | Yes | Intended learner roles and catalog filter values. At least one value is required. |
 | `restricted_to` | List of domain strings | No | Limits simulated browsing and discovery to signed-in email addresses whose domain matches one listed value. |
@@ -196,7 +193,6 @@ Example:
 ```yaml
 title: Develop your first AI agent
 description: Learn how to develop AI agents with Microsoft Foundry.
-experience_type: Microsoft Official Curriculum
 topics:
      - Microsoft Foundry
      - AI agents
@@ -208,7 +204,7 @@ modules:
      - connect-agent-to-mcp-tools
 ```
 
-**FR-PLAYLIST-001** A multi-module playlist must provide an overview showing its metadata and ordered modules.
+**FR-PLAYLIST-001** A multi-module playlist must provide an overview showing its metadata and ordered modules. Playlists must not author `experience_type`; their content-type filter values are derived from their modules.
 
 **FR-PLAYLIST-002** A single-module playlist may take the learner directly to its module, provided playlist context remains visible and navigable.
 
@@ -369,7 +365,7 @@ Search and Filter controls must appear with the result collection heading rather
 
 **FR-CATALOG-005** Search must be case-insensitive, tolerate punctuation and common conversational words, and require all meaningful query terms to match.
 
-**FR-CATALOG-006** Filters must include role, experience type, level, and modality where those values apply.
+**FR-CATALOG-006** Home and Catalog filters must include role, content type, level, duration, and modality. The Courses page must omit the content-type filter and list all discoverable courses. Credentials must retain their credential-type filter.
 
 **FR-CATALOG-007** Playlist modality must be derived from its modules. Course modality must be derived from all modules in its playlists.
 
@@ -385,11 +381,11 @@ Search and Filter controls must appear with the result collection heading rather
 
 **FR-CATALOG-013** Client-side simulated access control must not be treated as protection for confidential source or generated content; production authorization requires server-side enforcement.
 
-**FR-CATALOG-014** Experience type filters must group the defined taxonomy under Courses, Playlists, and Modules, include only choices represented by at least one current item, map unlisted authored types to the corresponding `Any other` choice, and provide explanatory tooltips on each rendered group heading and choice. Experience type and role filter choices must respect content access for the current learner. If an access change makes an active value inaccessible, the filter must clear that selection.
+**FR-CATALOG-014** Content type filters must use modules' authored `experience_type` values without hierarchy groups or `Any other` mappings. Selected types must match modules of those types and playlists containing at least one matching module, not courses. Content type and role filter choices must respect content access for the current learner. If an access change makes an active value inaccessible, the filter must clear that selection. Pages without a content-type filter must ignore but preserve its persisted selection.
 
 **FR-CATALOG-015** Signed-in headers must replace Sign-in with Profile and Sign-out. Sign-out must clear the active identity and return the learner to Home from any route.
 
-**FR-CATALOG-016** Cards and detail overviews must display authored experience type when present. Missing values must fall back to `Course`, `Skilling Playlist`, and `Learning Experience` for their respective content types.
+**FR-CATALOG-016** Cards and detail overviews must display `Course` for courses, `Skilling Playlist` for curated playlists, authored `experience_type` for modules (falling back to `Learning Experience`), and `credential_type` for credentials (falling back to `Credential`).
 
 **FR-CATALOG-017** A course, playlist, or module with `hidden: true` must not appear on Home, Catalog, Official Curriculum, personalized skilling-plan discovery sections, or as a standalone search result. Its standalone route must still be generated and directly accessible. When a non-hidden parent references a hidden child, that child must remain visible and navigable within the parent.
 
@@ -417,8 +413,8 @@ Search is a free-text discovery mechanism, not a substitute for filtering and no
 
 | Content type | Searchable fields | Explicitly excluded examples |
 | --- | --- | --- |
-| Course | `title`, `course_number`, `description`, `topics`, `experience_type` or its fallback | `credentials`, `level`, `duration`, `role`, `avatar`, playlist references |
-| Curated playlist | `title`, `description`, `topics`, `experience_type` or its fallback | `level`, `duration`, `role`, derived modality, `avatar`, module references |
+| Course | `title`, `course_number`, `description`, `topics` | `credentials`, `level`, `duration`, `role`, `avatar`, playlist references |
+| Curated playlist | `title`, `description`, `topics` | `level`, `duration`, `role`, derived modality, `avatar`, module references |
 | Module | `title`, `description`, `topics`, `experience_type` or its fallback | Derived modalities, `level`, `duration`, `role`, `avatar`, page references and page body text |
 
 For example, a module with this metadata:
@@ -466,7 +462,7 @@ Filters provide structured refinement using the existing small set of stable cat
 | Filter | Authored or derived source | Applies to |
 | --- | --- | --- |
 | Role | Authored `role` | Courses, playlists, and modules |
-| Experience type | Authored `experience_type` | Courses, playlists, and modules |
+| Content type | Modules' authored `experience_type`; derived union for playlists | Modules and playlists on Home and Catalog; omitted on Courses |
 | Level | Authored `level` | Courses, playlists, and modules |
 | Modality | Derived from page directives for modules; derived union for playlists and courses | Courses, playlists, and modules |
 
