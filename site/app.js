@@ -1840,7 +1840,7 @@ const applyCatalogVisibility = () => {
     }
     if (matches && !isHomePage && card.matches("[data-filter-card]")) {
       // Selections are ORed within one field, then fields are ANDed together.
-      // Playlists inherit module content types; courses do not.
+      // Playlists and courses inherit their modules' content types.
       matches = activeFilterFields.every((field) => {
         if (isOrganizationCard) return true;
         if (isPersonalizedPage && field !== "modalities") return true;

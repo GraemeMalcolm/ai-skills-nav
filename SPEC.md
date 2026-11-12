@@ -425,7 +425,7 @@ your yours yourself yourselves
 3. Compose with currently applied filters.
 4. Provide a clear action that resets results and focuses the input.
 
-The Home and Catalog filter choices MUST be generated from current metadata and sorted with locale-aware numeric ordering. The **Content type** choices MUST use modules' authored `experience_type` values without grouping by hierarchy or mapping to `Any other` choices. Selecting content types MUST match modules with those types and curated playlists containing at least one such module; courses MUST NOT match an active content-type selection. Content type and role choices MUST respect the content the current user can access, and an active choice that becomes inaccessible MUST be cleared. Applied filters MUST persist in local storage across discovery pages; pages without a content-type filter MUST ignore but preserve that selection.
+The Home and Catalog filter choices MUST be generated from current metadata and sorted with locale-aware numeric ordering. The **Content type** choices MUST use modules' authored `experience_type` values without grouping by hierarchy or mapping to `Any other` choices. Selecting content types MUST match modules with those types, curated playlists containing at least one such module, and courses whose playlists contain at least one such module. Courses MUST inherit these filter values without authoring `experience_type`. Content type and role choices MUST respect the content the current user can access, and an active choice that becomes inaccessible MUST be cleared. Applied filters MUST persist in local storage across discovery pages; pages without a content-type filter MUST ignore but preserve that selection.
 
 Required filter fields:
 

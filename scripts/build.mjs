@@ -1303,7 +1303,7 @@ function buildSearchContext(item, children = []) {
       field,
       [...new Set([
         ...catalogMetadataValues(item, field),
-        ...(field !== "experience_type" || itemCollectionType(item) === "playlists"
+        ...(field !== "experience_type" || ["playlists", "courses"].includes(itemCollectionType(item))
           ? children.flatMap((child) => child.searchContext.filters[field])
           : []),
       ])].sort((left, right) => left.localeCompare(right, undefined, { numeric: true })),

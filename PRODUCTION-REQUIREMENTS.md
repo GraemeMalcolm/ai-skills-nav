@@ -381,7 +381,7 @@ Search and Filter controls must appear with the result collection heading rather
 
 **FR-CATALOG-013** Client-side simulated access control must not be treated as protection for confidential source or generated content; production authorization requires server-side enforcement.
 
-**FR-CATALOG-014** Content type filters must use modules' authored `experience_type` values without hierarchy groups or `Any other` mappings. Selected types must match modules of those types and playlists containing at least one matching module, not courses. Content type and role filter choices must respect content access for the current learner. If an access change makes an active value inaccessible, the filter must clear that selection. Pages without a content-type filter must ignore but preserve its persisted selection.
+**FR-CATALOG-014** Content type filters must use modules' authored `experience_type` values without hierarchy groups or `Any other` mappings. Selected types must match modules of those types, playlists containing at least one matching module, and courses whose playlists contain at least one matching module. Courses inherit these filter values without authoring `experience_type`. Content type and role filter choices must respect content access for the current learner. If an access change makes an active value inaccessible, the filter must clear that selection. Pages without a content-type filter must ignore but preserve its persisted selection.
 
 **FR-CATALOG-015** Signed-in headers must replace Sign-in with Profile and Sign-out. Sign-out must clear the active identity and return the learner to Home from any route.
 
@@ -462,7 +462,7 @@ Filters provide structured refinement using the existing small set of stable cat
 | Filter | Authored or derived source | Applies to |
 | --- | --- | --- |
 | Role | Authored `role` | Courses, playlists, and modules |
-| Content type | Modules' authored `experience_type`; derived union for playlists | Modules and playlists on Home and Catalog; omitted on Courses |
+| Content type | Modules' authored `experience_type`; derived union for playlists and courses | Modules, playlists, and courses on Home and Catalog; omitted on Courses |
 | Level | Authored `level` | Courses, playlists, and modules |
 | Modality | Derived from page directives for modules; derived union for playlists and courses | Courses, playlists, and modules |
 

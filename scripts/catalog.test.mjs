@@ -31,7 +31,7 @@ test("only modules author experience_type and credentials keep their credential_
   }
 });
 
-test("content types use authored module values and propagate to playlists only", async () => {
+test("content types propagate from modules through playlists to courses, but not credentials", async () => {
   for (const module of catalog.modules) {
     assert.deepEqual(module.search.filters.experience_type, module.experience_type ? [module.experience_type] : [], module.slug);
   }
@@ -40,8 +40,26 @@ test("content types use authored module values and propagate to playlists only",
     const expected = sortedUnique(modules.map((module) => module.experience_type).filter(Boolean));
     assert.deepEqual(sortedUnique(playlist.search.filters.experience_type), expected, playlist.slug);
   }
-  for (const item of [...catalog.courses, ...catalog.credentials]) {
+  for (const course of catalog.courses) {
+    const playlists = await Promise.all(course.playlists.map((slug) => readMetadata("playlists", slug, "playlist.yml")));
+    const modules = await Promise.all(playlists.flatMap((playlist) => playlist.modules).map((slug) => readMetadata("modules", slug, "module.yml")));
+    const expected = sortedUnique(modules.map((module) => module.experience_type).filter(Boolean));
+    assert.deepEqual(sortedUnique(course.search.filters.experience_type), expected, course.slug);
+  }
+  for (const item of catalog.credentials) {
     assert.deepEqual(item.search.filters.experience_type, [], item.slug);
+  }
+});
+
+test("Catalog includes every discoverable course with its inherited content types", async () => {
+  const html = await readFile(path.join(root, "dist", "catalog", "index.html"), "utf8");
+  const cards = [...html.matchAll(/<a\b[^>]*data-catalog-type="courses"[^>]*>/g)].map((match) => match[0]);
+  assert.equal(cards.length, catalog.courses.length);
+  for (const course of catalog.courses) {
+    const card = cards.find((card) => card.includes(`href="../courses/${course.slug}/index.html"`));
+    assert.ok(card, course.slug);
+    const types = JSON.parse(decodeAttribute(card.match(/data-experience_type="([^"]*)"/)[1]));
+    assert.deepEqual(types, course.search.filters.experience_type, course.slug);
   }
 });
 
